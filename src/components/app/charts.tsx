@@ -228,16 +228,16 @@ export function NetworkGraph({
   selected,
   scrub = 100,
 }: {
-  onSelect?: (id: string) => void;
-  selected?: string;
+  onSelect?: ((id: string) => void) | undefined;
+  selected?: string | undefined;
   scrub?: number;
 }) {
   const intensity = 0.4 + (scrub / 100) * 0.6;
   return (
     <svg viewBox="0 0 780 340" className="h-auto w-full" role="img" aria-label="Network state graph">
       {graphEdges.map(([a, b, wgt], i) => {
-        const n1 = graphNodes[a];
-        const n2 = graphNodes[b];
+        const n1 = graphNodes[a]!;
+        const n2 = graphNodes[b]!;
         return (
           <g key={i}>
             <line

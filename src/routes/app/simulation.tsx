@@ -34,7 +34,7 @@ const divergence = [
 ];
 
 function Simulation() {
-  const [applied, setApplied] = useState<string | null>(perturbations[1]);
+  const [applied, setApplied] = useState<string | null>(perturbations[1] ?? null);
   const [overlay, setOverlay] = useState(true);
 
   return (

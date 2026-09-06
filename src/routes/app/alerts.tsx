@@ -22,7 +22,7 @@ export const Route = createFileRoute("/app/alerts")({
 const columns = ["New", "Acknowledged", "Investigating", "Resolved"] as const;
 
 function AlertsQueue() {
-  const [selected, setSelected] = useState<Alert | null>(alerts[0]);
+  const [selected, setSelected] = useState<Alert | null>(alerts[0] ?? null);
 
   return (
     <>
