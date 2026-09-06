@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { FlatPanel, PageTitle } from "@/components/app/panels";
 import { pageHead } from "@/lib/head";
@@ -106,9 +106,8 @@ function Explorer() {
           </thead>
           <tbody>
             {rows.map((f) => (
-              <>
+              <Fragment key={f.src}>
                 <tr
-                  key={f.src}
                   onClick={() => setOpen(open === f.src ? null : f.src)}
                   className="cursor-pointer border-b border-fog-deep/40 hover:bg-paper/4"
                 >
@@ -130,7 +129,7 @@ function Explorer() {
                   })}
                 </tr>
                 {open === f.src ? (
-                  <tr key={f.src + "-detail"} className="border-b border-fog-deep/40 bg-void-700/40">
+                  <tr className="border-b border-fog-deep/40 bg-void-700/40">
                     <td colSpan={columns.length} className="px-4 py-4">
                       <p className="mb-2 text-[13px] font-medium">
                         Packet sequence — first 6 packets
@@ -150,7 +149,7 @@ function Explorer() {
                     </td>
                   </tr>
                 ) : null}
-              </>
+              </Fragment>
             ))}
           </tbody>
         </table>
