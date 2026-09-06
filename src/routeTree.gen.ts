@@ -14,6 +14,12 @@ import { Route as AppRouteImport } from './routes/app'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as TwoFactorRouteImport } from './routes/two-factor'
+import { Route as AppIndexRouteImport } from './routes/app/index'
+import { Route as AppBenchmarkRouteImport } from './routes/app/benchmark'
+import { Route as AppDashboardRouteImport } from './routes/app/dashboard'
+import { Route as AppExplainabilityRouteImport } from './routes/app/explainability'
+import { Route as AppExplorerRouteImport } from './routes/app/explorer'
+import { Route as AppIngestionRouteImport } from './routes/app/ingestion'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,40 +46,120 @@ const TwoFactorRoute = TwoFactorRouteImport.update({
   path: '/two-factor',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBenchmarkRoute = AppBenchmarkRouteImport.update({
+  id: '/benchmark',
+  path: '/benchmark',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppExplainabilityRoute = AppExplainabilityRouteImport.update({
+  id: '/explainability',
+  path: '/explainability',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppExplorerRoute = AppExplorerRouteImport.update({
+  id: '/explorer',
+  path: '/explorer',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppIngestionRoute = AppIngestionRouteImport.update({
+  id: '/ingestion',
+  path: '/ingestion',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/app': typeof AppRoute
+  '/app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/two-factor': typeof TwoFactorRoute
+  '/app/benchmark': typeof AppBenchmarkRoute
+  '/app/dashboard': typeof AppDashboardRoute
+  '/app/explainability': typeof AppExplainabilityRoute
+  '/app/explorer': typeof AppExplorerRoute
+  '/app/ingestion': typeof AppIngestionRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/app': typeof AppRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/two-factor': typeof TwoFactorRoute
+  '/app/benchmark': typeof AppBenchmarkRoute
+  '/app/dashboard': typeof AppDashboardRoute
+  '/app/explainability': typeof AppExplainabilityRoute
+  '/app/explorer': typeof AppExplorerRoute
+  '/app/ingestion': typeof AppIngestionRoute
+  '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/app': typeof AppRoute
+  '/app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/two-factor': typeof TwoFactorRoute
+  '/app/benchmark': typeof AppBenchmarkRoute
+  '/app/dashboard': typeof AppDashboardRoute
+  '/app/explainability': typeof AppExplainabilityRoute
+  '/app/explorer': typeof AppExplorerRoute
+  '/app/ingestion': typeof AppIngestionRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app' | '/login' | '/signup' | '/two-factor'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/login'
+    | '/signup'
+    | '/two-factor'
+    | '/app/benchmark'
+    | '/app/dashboard'
+    | '/app/explainability'
+    | '/app/explorer'
+    | '/app/ingestion'
+    | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app' | '/login' | '/signup' | '/two-factor'
-  id: '__root__' | '/' | '/app' | '/login' | '/signup' | '/two-factor'
+  to:
+    | '/'
+    | '/login'
+    | '/signup'
+    | '/two-factor'
+    | '/app/benchmark'
+    | '/app/dashboard'
+    | '/app/explainability'
+    | '/app/explorer'
+    | '/app/ingestion'
+    | '/app'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/login'
+    | '/signup'
+    | '/two-factor'
+    | '/app/benchmark'
+    | '/app/dashboard'
+    | '/app/explainability'
+    | '/app/explorer'
+    | '/app/ingestion'
+    | '/app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AppRoute: typeof AppRoute
+  AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
   TwoFactorRoute: typeof TwoFactorRoute
@@ -116,12 +202,74 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TwoFactorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/benchmark': {
+      id: '/app/benchmark'
+      path: '/benchmark'
+      fullPath: '/app/benchmark'
+      preLoaderRoute: typeof AppBenchmarkRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/dashboard': {
+      id: '/app/dashboard'
+      path: '/dashboard'
+      fullPath: '/app/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/explainability': {
+      id: '/app/explainability'
+      path: '/explainability'
+      fullPath: '/app/explainability'
+      preLoaderRoute: typeof AppExplainabilityRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/explorer': {
+      id: '/app/explorer'
+      path: '/explorer'
+      fullPath: '/app/explorer'
+      preLoaderRoute: typeof AppExplorerRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/ingestion': {
+      id: '/app/ingestion'
+      path: '/ingestion'
+      fullPath: '/app/ingestion'
+      preLoaderRoute: typeof AppIngestionRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppBenchmarkRoute: typeof AppBenchmarkRoute
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppExplainabilityRoute: typeof AppExplainabilityRoute
+  AppExplorerRoute: typeof AppExplorerRoute
+  AppIngestionRoute: typeof AppIngestionRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppBenchmarkRoute: AppBenchmarkRoute,
+  AppDashboardRoute: AppDashboardRoute,
+  AppExplainabilityRoute: AppExplainabilityRoute,
+  AppExplorerRoute: AppExplorerRoute,
+  AppIngestionRoute: AppIngestionRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AppRoute: AppRoute,
+  AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
   TwoFactorRoute: TwoFactorRoute,
