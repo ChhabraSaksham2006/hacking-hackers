@@ -10,33 +10,255 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppRouteImport } from './routes/app'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as TwoFactorRouteImport } from './routes/two-factor'
+import { Route as AppIndexRouteImport } from './routes/app/index'
+import { Route as AppAlertsRouteImport } from './routes/app/alerts'
+import { Route as AppAuditRouteImport } from './routes/app/audit'
+import { Route as AppBenchmarkRouteImport } from './routes/app/benchmark'
+import { Route as AppDashboardRouteImport } from './routes/app/dashboard'
+import { Route as AppExplainabilityRouteImport } from './routes/app/explainability'
+import { Route as AppExplorerRouteImport } from './routes/app/explorer'
+import { Route as AppIngestionRouteImport } from './routes/app/ingestion'
+import { Route as AppNetworkRouteImport } from './routes/app/network'
+import { Route as AppRbacRouteImport } from './routes/app/rbac'
+import { Route as AppReportsRouteImport } from './routes/app/reports'
+import { Route as AppSettingsRouteImport } from './routes/app/settings'
+import { Route as AppSimulationRouteImport } from './routes/app/simulation'
+import { Route as AppTopologyRouteImport } from './routes/app/topology'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TwoFactorRoute = TwoFactorRouteImport.update({
+  id: '/two-factor',
+  path: '/two-factor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAlertsRoute = AppAlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAuditRoute = AppAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBenchmarkRoute = AppBenchmarkRouteImport.update({
+  id: '/benchmark',
+  path: '/benchmark',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppExplainabilityRoute = AppExplainabilityRouteImport.update({
+  id: '/explainability',
+  path: '/explainability',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppExplorerRoute = AppExplorerRouteImport.update({
+  id: '/explorer',
+  path: '/explorer',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppIngestionRoute = AppIngestionRouteImport.update({
+  id: '/ingestion',
+  path: '/ingestion',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNetworkRoute = AppNetworkRouteImport.update({
+  id: '/network',
+  path: '/network',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRbacRoute = AppRbacRouteImport.update({
+  id: '/rbac',
+  path: '/rbac',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppReportsRoute = AppReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSimulationRoute = AppSimulationRouteImport.update({
+  id: '/simulation',
+  path: '/simulation',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTopologyRoute = AppTopologyRouteImport.update({
+  id: '/topology',
+  path: '/topology',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
+  '/two-factor': typeof TwoFactorRoute
+  '/app/alerts': typeof AppAlertsRoute
+  '/app/audit': typeof AppAuditRoute
+  '/app/benchmark': typeof AppBenchmarkRoute
+  '/app/dashboard': typeof AppDashboardRoute
+  '/app/explainability': typeof AppExplainabilityRoute
+  '/app/explorer': typeof AppExplorerRoute
+  '/app/ingestion': typeof AppIngestionRoute
+  '/app/network': typeof AppNetworkRoute
+  '/app/rbac': typeof AppRbacRoute
+  '/app/reports': typeof AppReportsRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/app/simulation': typeof AppSimulationRoute
+  '/app/topology': typeof AppTopologyRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
+  '/two-factor': typeof TwoFactorRoute
+  '/app/alerts': typeof AppAlertsRoute
+  '/app/audit': typeof AppAuditRoute
+  '/app/benchmark': typeof AppBenchmarkRoute
+  '/app/dashboard': typeof AppDashboardRoute
+  '/app/explainability': typeof AppExplainabilityRoute
+  '/app/explorer': typeof AppExplorerRoute
+  '/app/ingestion': typeof AppIngestionRoute
+  '/app/network': typeof AppNetworkRoute
+  '/app/rbac': typeof AppRbacRoute
+  '/app/reports': typeof AppReportsRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/app/simulation': typeof AppSimulationRoute
+  '/app/topology': typeof AppTopologyRoute
+  '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
+  '/two-factor': typeof TwoFactorRoute
+  '/app/alerts': typeof AppAlertsRoute
+  '/app/audit': typeof AppAuditRoute
+  '/app/benchmark': typeof AppBenchmarkRoute
+  '/app/dashboard': typeof AppDashboardRoute
+  '/app/explainability': typeof AppExplainabilityRoute
+  '/app/explorer': typeof AppExplorerRoute
+  '/app/ingestion': typeof AppIngestionRoute
+  '/app/network': typeof AppNetworkRoute
+  '/app/rbac': typeof AppRbacRoute
+  '/app/reports': typeof AppReportsRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/app/simulation': typeof AppSimulationRoute
+  '/app/topology': typeof AppTopologyRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/login'
+    | '/signup'
+    | '/two-factor'
+    | '/app/alerts'
+    | '/app/audit'
+    | '/app/benchmark'
+    | '/app/dashboard'
+    | '/app/explainability'
+    | '/app/explorer'
+    | '/app/ingestion'
+    | '/app/network'
+    | '/app/rbac'
+    | '/app/reports'
+    | '/app/settings'
+    | '/app/simulation'
+    | '/app/topology'
+    | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/login'
+    | '/signup'
+    | '/two-factor'
+    | '/app/alerts'
+    | '/app/audit'
+    | '/app/benchmark'
+    | '/app/dashboard'
+    | '/app/explainability'
+    | '/app/explorer'
+    | '/app/ingestion'
+    | '/app/network'
+    | '/app/rbac'
+    | '/app/reports'
+    | '/app/settings'
+    | '/app/simulation'
+    | '/app/topology'
+    | '/app'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/login'
+    | '/signup'
+    | '/two-factor'
+    | '/app/alerts'
+    | '/app/audit'
+    | '/app/benchmark'
+    | '/app/dashboard'
+    | '/app/explainability'
+    | '/app/explorer'
+    | '/app/ingestion'
+    | '/app/network'
+    | '/app/rbac'
+    | '/app/reports'
+    | '/app/settings'
+    | '/app/simulation'
+    | '/app/topology'
+    | '/app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  SignupRoute: typeof SignupRoute
+  TwoFactorRoute: typeof TwoFactorRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +270,177 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/two-factor': {
+      id: '/two-factor'
+      path: '/two-factor'
+      fullPath: '/two-factor'
+      preLoaderRoute: typeof TwoFactorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/alerts': {
+      id: '/app/alerts'
+      path: '/alerts'
+      fullPath: '/app/alerts'
+      preLoaderRoute: typeof AppAlertsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/audit': {
+      id: '/app/audit'
+      path: '/audit'
+      fullPath: '/app/audit'
+      preLoaderRoute: typeof AppAuditRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/benchmark': {
+      id: '/app/benchmark'
+      path: '/benchmark'
+      fullPath: '/app/benchmark'
+      preLoaderRoute: typeof AppBenchmarkRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/dashboard': {
+      id: '/app/dashboard'
+      path: '/dashboard'
+      fullPath: '/app/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/explainability': {
+      id: '/app/explainability'
+      path: '/explainability'
+      fullPath: '/app/explainability'
+      preLoaderRoute: typeof AppExplainabilityRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/explorer': {
+      id: '/app/explorer'
+      path: '/explorer'
+      fullPath: '/app/explorer'
+      preLoaderRoute: typeof AppExplorerRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/ingestion': {
+      id: '/app/ingestion'
+      path: '/ingestion'
+      fullPath: '/app/ingestion'
+      preLoaderRoute: typeof AppIngestionRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/network': {
+      id: '/app/network'
+      path: '/network'
+      fullPath: '/app/network'
+      preLoaderRoute: typeof AppNetworkRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/rbac': {
+      id: '/app/rbac'
+      path: '/rbac'
+      fullPath: '/app/rbac'
+      preLoaderRoute: typeof AppRbacRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/reports': {
+      id: '/app/reports'
+      path: '/reports'
+      fullPath: '/app/reports'
+      preLoaderRoute: typeof AppReportsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/settings': {
+      id: '/app/settings'
+      path: '/settings'
+      fullPath: '/app/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/simulation': {
+      id: '/app/simulation'
+      path: '/simulation'
+      fullPath: '/app/simulation'
+      preLoaderRoute: typeof AppSimulationRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/topology': {
+      id: '/app/topology'
+      path: '/topology'
+      fullPath: '/app/topology'
+      preLoaderRoute: typeof AppTopologyRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppAlertsRoute: typeof AppAlertsRoute
+  AppAuditRoute: typeof AppAuditRoute
+  AppBenchmarkRoute: typeof AppBenchmarkRoute
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppExplainabilityRoute: typeof AppExplainabilityRoute
+  AppExplorerRoute: typeof AppExplorerRoute
+  AppIngestionRoute: typeof AppIngestionRoute
+  AppNetworkRoute: typeof AppNetworkRoute
+  AppRbacRoute: typeof AppRbacRoute
+  AppReportsRoute: typeof AppReportsRoute
+  AppSettingsRoute: typeof AppSettingsRoute
+  AppSimulationRoute: typeof AppSimulationRoute
+  AppTopologyRoute: typeof AppTopologyRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAlertsRoute: AppAlertsRoute,
+  AppAuditRoute: AppAuditRoute,
+  AppBenchmarkRoute: AppBenchmarkRoute,
+  AppDashboardRoute: AppDashboardRoute,
+  AppExplainabilityRoute: AppExplainabilityRoute,
+  AppExplorerRoute: AppExplorerRoute,
+  AppIngestionRoute: AppIngestionRoute,
+  AppNetworkRoute: AppNetworkRoute,
+  AppRbacRoute: AppRbacRoute,
+  AppReportsRoute: AppReportsRoute,
+  AppSettingsRoute: AppSettingsRoute,
+  AppSimulationRoute: AppSimulationRoute,
+  AppTopologyRoute: AppTopologyRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  LoginRoute: LoginRoute,
+  SignupRoute: SignupRoute,
+  TwoFactorRoute: TwoFactorRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
