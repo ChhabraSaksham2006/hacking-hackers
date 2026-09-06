@@ -16,12 +16,16 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as TwoFactorRouteImport } from './routes/two-factor'
 import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as AppAlertsRouteImport } from './routes/app/alerts'
+import { Route as AppAuditRouteImport } from './routes/app/audit'
 import { Route as AppBenchmarkRouteImport } from './routes/app/benchmark'
 import { Route as AppDashboardRouteImport } from './routes/app/dashboard'
 import { Route as AppExplainabilityRouteImport } from './routes/app/explainability'
 import { Route as AppExplorerRouteImport } from './routes/app/explorer'
 import { Route as AppIngestionRouteImport } from './routes/app/ingestion'
 import { Route as AppNetworkRouteImport } from './routes/app/network'
+import { Route as AppRbacRouteImport } from './routes/app/rbac'
+import { Route as AppReportsRouteImport } from './routes/app/reports'
+import { Route as AppSettingsRouteImport } from './routes/app/settings'
 import { Route as AppSimulationRouteImport } from './routes/app/simulation'
 import { Route as AppTopologyRouteImport } from './routes/app/topology'
 
@@ -60,6 +64,11 @@ const AppAlertsRoute = AppAlertsRouteImport.update({
   path: '/alerts',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAuditRoute = AppAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppBenchmarkRoute = AppBenchmarkRouteImport.update({
   id: '/benchmark',
   path: '/benchmark',
@@ -90,6 +99,21 @@ const AppNetworkRoute = AppNetworkRouteImport.update({
   path: '/network',
   getParentRoute: () => AppRoute,
 } as any)
+const AppRbacRoute = AppRbacRouteImport.update({
+  id: '/rbac',
+  path: '/rbac',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppReportsRoute = AppReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppSimulationRoute = AppSimulationRouteImport.update({
   id: '/simulation',
   path: '/simulation',
@@ -108,12 +132,16 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/two-factor': typeof TwoFactorRoute
   '/app/alerts': typeof AppAlertsRoute
+  '/app/audit': typeof AppAuditRoute
   '/app/benchmark': typeof AppBenchmarkRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/explainability': typeof AppExplainabilityRoute
   '/app/explorer': typeof AppExplorerRoute
   '/app/ingestion': typeof AppIngestionRoute
   '/app/network': typeof AppNetworkRoute
+  '/app/rbac': typeof AppRbacRoute
+  '/app/reports': typeof AppReportsRoute
+  '/app/settings': typeof AppSettingsRoute
   '/app/simulation': typeof AppSimulationRoute
   '/app/topology': typeof AppTopologyRoute
   '/app/': typeof AppIndexRoute
@@ -124,12 +152,16 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/two-factor': typeof TwoFactorRoute
   '/app/alerts': typeof AppAlertsRoute
+  '/app/audit': typeof AppAuditRoute
   '/app/benchmark': typeof AppBenchmarkRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/explainability': typeof AppExplainabilityRoute
   '/app/explorer': typeof AppExplorerRoute
   '/app/ingestion': typeof AppIngestionRoute
   '/app/network': typeof AppNetworkRoute
+  '/app/rbac': typeof AppRbacRoute
+  '/app/reports': typeof AppReportsRoute
+  '/app/settings': typeof AppSettingsRoute
   '/app/simulation': typeof AppSimulationRoute
   '/app/topology': typeof AppTopologyRoute
   '/app': typeof AppIndexRoute
@@ -142,12 +174,16 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/two-factor': typeof TwoFactorRoute
   '/app/alerts': typeof AppAlertsRoute
+  '/app/audit': typeof AppAuditRoute
   '/app/benchmark': typeof AppBenchmarkRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/explainability': typeof AppExplainabilityRoute
   '/app/explorer': typeof AppExplorerRoute
   '/app/ingestion': typeof AppIngestionRoute
   '/app/network': typeof AppNetworkRoute
+  '/app/rbac': typeof AppRbacRoute
+  '/app/reports': typeof AppReportsRoute
+  '/app/settings': typeof AppSettingsRoute
   '/app/simulation': typeof AppSimulationRoute
   '/app/topology': typeof AppTopologyRoute
   '/app/': typeof AppIndexRoute
@@ -161,12 +197,16 @@ export interface FileRouteTypes {
     | '/signup'
     | '/two-factor'
     | '/app/alerts'
+    | '/app/audit'
     | '/app/benchmark'
     | '/app/dashboard'
     | '/app/explainability'
     | '/app/explorer'
     | '/app/ingestion'
     | '/app/network'
+    | '/app/rbac'
+    | '/app/reports'
+    | '/app/settings'
     | '/app/simulation'
     | '/app/topology'
     | '/app/'
@@ -177,12 +217,16 @@ export interface FileRouteTypes {
     | '/signup'
     | '/two-factor'
     | '/app/alerts'
+    | '/app/audit'
     | '/app/benchmark'
     | '/app/dashboard'
     | '/app/explainability'
     | '/app/explorer'
     | '/app/ingestion'
     | '/app/network'
+    | '/app/rbac'
+    | '/app/reports'
+    | '/app/settings'
     | '/app/simulation'
     | '/app/topology'
     | '/app'
@@ -194,12 +238,16 @@ export interface FileRouteTypes {
     | '/signup'
     | '/two-factor'
     | '/app/alerts'
+    | '/app/audit'
     | '/app/benchmark'
     | '/app/dashboard'
     | '/app/explainability'
     | '/app/explorer'
     | '/app/ingestion'
     | '/app/network'
+    | '/app/rbac'
+    | '/app/reports'
+    | '/app/settings'
     | '/app/simulation'
     | '/app/topology'
     | '/app/'
@@ -264,6 +312,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAlertsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/audit': {
+      id: '/app/audit'
+      path: '/audit'
+      fullPath: '/app/audit'
+      preLoaderRoute: typeof AppAuditRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/benchmark': {
       id: '/app/benchmark'
       path: '/benchmark'
@@ -306,6 +361,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppNetworkRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/rbac': {
+      id: '/app/rbac'
+      path: '/rbac'
+      fullPath: '/app/rbac'
+      preLoaderRoute: typeof AppRbacRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/reports': {
+      id: '/app/reports'
+      path: '/reports'
+      fullPath: '/app/reports'
+      preLoaderRoute: typeof AppReportsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/settings': {
+      id: '/app/settings'
+      path: '/settings'
+      fullPath: '/app/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/simulation': {
       id: '/app/simulation'
       path: '/simulation'
@@ -325,12 +401,16 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteChildren {
   AppAlertsRoute: typeof AppAlertsRoute
+  AppAuditRoute: typeof AppAuditRoute
   AppBenchmarkRoute: typeof AppBenchmarkRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppExplainabilityRoute: typeof AppExplainabilityRoute
   AppExplorerRoute: typeof AppExplorerRoute
   AppIngestionRoute: typeof AppIngestionRoute
   AppNetworkRoute: typeof AppNetworkRoute
+  AppRbacRoute: typeof AppRbacRoute
+  AppReportsRoute: typeof AppReportsRoute
+  AppSettingsRoute: typeof AppSettingsRoute
   AppSimulationRoute: typeof AppSimulationRoute
   AppTopologyRoute: typeof AppTopologyRoute
   AppIndexRoute: typeof AppIndexRoute
@@ -338,12 +418,16 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppAlertsRoute: AppAlertsRoute,
+  AppAuditRoute: AppAuditRoute,
   AppBenchmarkRoute: AppBenchmarkRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppExplainabilityRoute: AppExplainabilityRoute,
   AppExplorerRoute: AppExplorerRoute,
   AppIngestionRoute: AppIngestionRoute,
   AppNetworkRoute: AppNetworkRoute,
+  AppRbacRoute: AppRbacRoute,
+  AppReportsRoute: AppReportsRoute,
+  AppSettingsRoute: AppSettingsRoute,
   AppSimulationRoute: AppSimulationRoute,
   AppTopologyRoute: AppTopologyRoute,
   AppIndexRoute: AppIndexRoute,
