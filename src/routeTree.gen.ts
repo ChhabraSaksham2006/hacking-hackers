@@ -15,11 +15,15 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as TwoFactorRouteImport } from './routes/two-factor'
 import { Route as AppIndexRouteImport } from './routes/app/index'
+import { Route as AppAlertsRouteImport } from './routes/app/alerts'
 import { Route as AppBenchmarkRouteImport } from './routes/app/benchmark'
 import { Route as AppDashboardRouteImport } from './routes/app/dashboard'
 import { Route as AppExplainabilityRouteImport } from './routes/app/explainability'
 import { Route as AppExplorerRouteImport } from './routes/app/explorer'
 import { Route as AppIngestionRouteImport } from './routes/app/ingestion'
+import { Route as AppNetworkRouteImport } from './routes/app/network'
+import { Route as AppSimulationRouteImport } from './routes/app/simulation'
+import { Route as AppTopologyRouteImport } from './routes/app/topology'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -51,6 +55,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAlertsRoute = AppAlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppBenchmarkRoute = AppBenchmarkRouteImport.update({
   id: '/benchmark',
   path: '/benchmark',
@@ -76,6 +85,21 @@ const AppIngestionRoute = AppIngestionRouteImport.update({
   path: '/ingestion',
   getParentRoute: () => AppRoute,
 } as any)
+const AppNetworkRoute = AppNetworkRouteImport.update({
+  id: '/network',
+  path: '/network',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSimulationRoute = AppSimulationRouteImport.update({
+  id: '/simulation',
+  path: '/simulation',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTopologyRoute = AppTopologyRouteImport.update({
+  id: '/topology',
+  path: '/topology',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -83,11 +107,15 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/two-factor': typeof TwoFactorRoute
+  '/app/alerts': typeof AppAlertsRoute
   '/app/benchmark': typeof AppBenchmarkRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/explainability': typeof AppExplainabilityRoute
   '/app/explorer': typeof AppExplorerRoute
   '/app/ingestion': typeof AppIngestionRoute
+  '/app/network': typeof AppNetworkRoute
+  '/app/simulation': typeof AppSimulationRoute
+  '/app/topology': typeof AppTopologyRoute
   '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
@@ -95,11 +123,15 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/two-factor': typeof TwoFactorRoute
+  '/app/alerts': typeof AppAlertsRoute
   '/app/benchmark': typeof AppBenchmarkRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/explainability': typeof AppExplainabilityRoute
   '/app/explorer': typeof AppExplorerRoute
   '/app/ingestion': typeof AppIngestionRoute
+  '/app/network': typeof AppNetworkRoute
+  '/app/simulation': typeof AppSimulationRoute
+  '/app/topology': typeof AppTopologyRoute
   '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
@@ -109,11 +141,15 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/two-factor': typeof TwoFactorRoute
+  '/app/alerts': typeof AppAlertsRoute
   '/app/benchmark': typeof AppBenchmarkRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/explainability': typeof AppExplainabilityRoute
   '/app/explorer': typeof AppExplorerRoute
   '/app/ingestion': typeof AppIngestionRoute
+  '/app/network': typeof AppNetworkRoute
+  '/app/simulation': typeof AppSimulationRoute
+  '/app/topology': typeof AppTopologyRoute
   '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
@@ -124,11 +160,15 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/two-factor'
+    | '/app/alerts'
     | '/app/benchmark'
     | '/app/dashboard'
     | '/app/explainability'
     | '/app/explorer'
     | '/app/ingestion'
+    | '/app/network'
+    | '/app/simulation'
+    | '/app/topology'
     | '/app/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -136,11 +176,15 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/two-factor'
+    | '/app/alerts'
     | '/app/benchmark'
     | '/app/dashboard'
     | '/app/explainability'
     | '/app/explorer'
     | '/app/ingestion'
+    | '/app/network'
+    | '/app/simulation'
+    | '/app/topology'
     | '/app'
   id:
     | '__root__'
@@ -149,11 +193,15 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/two-factor'
+    | '/app/alerts'
     | '/app/benchmark'
     | '/app/dashboard'
     | '/app/explainability'
     | '/app/explorer'
     | '/app/ingestion'
+    | '/app/network'
+    | '/app/simulation'
+    | '/app/topology'
     | '/app/'
   fileRoutesById: FileRoutesById
 }
@@ -209,6 +257,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/alerts': {
+      id: '/app/alerts'
+      path: '/alerts'
+      fullPath: '/app/alerts'
+      preLoaderRoute: typeof AppAlertsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/benchmark': {
       id: '/app/benchmark'
       path: '/benchmark'
@@ -244,24 +299,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIngestionRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/network': {
+      id: '/app/network'
+      path: '/network'
+      fullPath: '/app/network'
+      preLoaderRoute: typeof AppNetworkRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/simulation': {
+      id: '/app/simulation'
+      path: '/simulation'
+      fullPath: '/app/simulation'
+      preLoaderRoute: typeof AppSimulationRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/topology': {
+      id: '/app/topology'
+      path: '/topology'
+      fullPath: '/app/topology'
+      preLoaderRoute: typeof AppTopologyRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
+  AppAlertsRoute: typeof AppAlertsRoute
   AppBenchmarkRoute: typeof AppBenchmarkRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppExplainabilityRoute: typeof AppExplainabilityRoute
   AppExplorerRoute: typeof AppExplorerRoute
   AppIngestionRoute: typeof AppIngestionRoute
+  AppNetworkRoute: typeof AppNetworkRoute
+  AppSimulationRoute: typeof AppSimulationRoute
+  AppTopologyRoute: typeof AppTopologyRoute
   AppIndexRoute: typeof AppIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAlertsRoute: AppAlertsRoute,
   AppBenchmarkRoute: AppBenchmarkRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppExplainabilityRoute: AppExplainabilityRoute,
   AppExplorerRoute: AppExplorerRoute,
   AppIngestionRoute: AppIngestionRoute,
+  AppNetworkRoute: AppNetworkRoute,
+  AppSimulationRoute: AppSimulationRoute,
+  AppTopologyRoute: AppTopologyRoute,
   AppIndexRoute: AppIndexRoute,
 }
 
