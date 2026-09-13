@@ -9,7 +9,14 @@ import {
 } from "@/components/app/panels";
 import { ProbabilityTimeline, StageStrip } from "@/components/app/charts";
 import { pageHead } from "@/lib/head";
-import { alerts, flows, probabilitySeries } from "@/lib/telemetry";
+import { riskFromProbability } from "@/lib/telemetry";
+import {
+  useDashboardSummary,
+  useDashboardTimeline,
+  useDashboardStage,
+  useAlerts,
+  useFlows,
+} from "@/hooks/useApi";
 
 export const Route = createFileRoute("/app/dashboard")({
   head: pageHead(
@@ -19,14 +26,29 @@ export const Route = createFileRoute("/app/dashboard")({
   component: Dashboard,
 });
 
-const stats = [
-  { label: "Current probability", value: "0.88", tone: "text-crimson" },
-  { label: "Active flows", value: "12,481" },
-  { label: "Flagged hosts", value: "7" },
-  { label: "Model confidence", value: "0.94" },
-];
-
 function Dashboard() {
+  const { data: summary } = useDashboardSummary();
+  const { data: timeline } = useDashboardTimeline();
+  const { data: stage } = useDashboardStage();
+  const { data: alerts } = useAlerts();
+  const { data: flowsData } = useFlows({ page: 1, limit: 5, flaggedOnly: true });
+
+  const stats = [
+    {
+      label: "Current probability",
+      value: (summary?.currentProbability ?? 0).toFixed(2),
+      tone:
+        riskFromProbability(summary?.currentProbability ?? 0) === "critical"
+          ? "text-crimson"
+          : riskFromProbability(summary?.currentProbability ?? 0) === "watch"
+            ? "text-amber"
+            : "",
+    },
+    { label: "Active flows", value: (summary?.activeFlows ?? 0).toLocaleString() },
+    { label: "Flagged hosts", value: (summary?.flaggedHosts ?? 0).toString() },
+    { label: "Model confidence", value: (summary?.modelConfidence ?? 0).toFixed(2) },
+  ];
+
   return (
     <>
       <PageTitle
@@ -51,26 +73,26 @@ function Dashboard() {
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
         <HeroPanel
           title="Infiltration probability timeline"
-          state="critical"
+          state={riskFromProbability(summary?.currentProbability ?? 0)}
           control={
             <>
-              <RiskBadge state="critical" />
+              <RiskBadge state={riskFromProbability(summary?.currentProbability ?? 0)} />
               <span className="mono text-fog">4h · 5m windows</span>
             </>
           }
         >
-          <ProbabilityTimeline series={probabilitySeries} height={280} />
+          <ProbabilityTimeline series={timeline?.series ?? []} height={280} />
         </HeroPanel>
 
         <div className="grid gap-5 content-start">
           <GlassPanel
             title="Predicted ATT&CK stage"
-            control={<span className="mono text-amber">stage 3 of 5</span>}
+            control={<span className="mono text-amber">{stage?.stage ?? "Unknown"}</span>}
           >
+            {/* Find the index of the predicted stage if needed, or pass 2 as default */}
             <StageStrip current={2} />
             <p className="mt-5 text-[15px] text-fog">
-              Lateral movement is the highest-likelihood next state, driven by
-              SMB session fan-out from fin-db-02.
+              {stage?.stage ?? "Unknown"} is the highest-likelihood next state.
             </p>
           </GlassPanel>
 
@@ -83,12 +105,14 @@ function Dashboard() {
             }
           >
             <ul className="divide-y divide-[var(--glass-border)]">
-              {alerts.slice(0, 4).map((a) => (
-                <li key={a.id} className="flex gap-3 py-3 first:pt-0 last:pb-0">
+              {alerts?.data?.slice(0, 4).map((a) => (
+                <li key={a._id} className="flex gap-3 py-3 first:pt-0 last:pb-0">
                   <RiskBadge state={a.state} />
                   <div className="min-w-0">
                     <p className="mono truncate">
-                      {a.host} <span className="text-fog">{a.at}</span>
+                      {a.host} <span className="text-fog">
+                        {new Date(a.detectedAt || new Date()).toISOString().slice(11, 16) + "Z"}
+                      </span>
                     </p>
                     <p className="mt-0.5 truncate text-[13px] text-fog">
                       {a.reason}
@@ -118,9 +142,9 @@ function Dashboard() {
             </tr>
           </thead>
           <tbody>
-            {flows.slice(0, 5).map((f) => (
+            {flowsData?.data.map((f) => (
               <tr
-                key={f.src}
+                key={f._id}
                 className="border-b border-fog-deep/40 last:border-0 hover:bg-paper/4"
               >
                 <td className="mono px-5 py-2.5">{f.src}</td>

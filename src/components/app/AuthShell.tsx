@@ -67,23 +67,21 @@ export function AuthShell({
   );
 }
 
+import type { InputHTMLAttributes } from "react";
+
 export function Field({
   label,
-  type = "text",
-  placeholder,
   hint,
+  ...props
 }: {
   label: string;
-  type?: string;
-  placeholder?: string;
   hint?: string;
-}) {
+} & InputHTMLAttributes<HTMLInputElement>) {
   return (
     <label className="block">
       <span className="text-[13px] font-medium">{label}</span>
       <input
-        type={type}
-        placeholder={placeholder}
+        {...props}
         className="mt-1.5 w-full rounded-md border border-fog-deep bg-void-700 px-3 py-2.5 text-[15px] outline-none placeholder:text-fog-deep focus:border-teal"
       />
       {hint ? <span className="mt-1 block text-[12px] text-fog">{hint}</span> : null}

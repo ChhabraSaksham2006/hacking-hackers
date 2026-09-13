@@ -1,6 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { AuthShell, Field } from "@/components/app/AuthShell";
 import { pageHead } from "@/lib/head";
+import { useRegister } from "@/hooks/useApi";
 
 export const Route = createFileRoute("/signup")({
   head: pageHead(
@@ -11,6 +13,48 @@ export const Route = createFileRoute("/signup")({
 });
 
 function SignupPage() {
+  const [orgName, setOrgName] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
+  const register = useRegister();
+  const router = useRouter();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    register.mutate(
+      { orgName, name, email, password },
+      {
+        onSuccess: () => {
+          setSuccess(true);
+        },
+        onError: (err) => {
+          setError(err.message || "Failed to register");
+        },
+      }
+    );
+  };
+
+  if (success) {
+    return (
+      <AuthShell title="Check your email" note="Your workspace has been requested.">
+        <div className="rounded-md bg-teal/10 p-4 text-[14px] text-teal">
+          Registration successful. Your default role is Analyst. You can now log in.
+        </div>
+        <Link
+          to="/login"
+          className="mt-6 block rounded-md bg-teal px-4 py-2.5 text-center text-[13px] font-medium text-void-900 hover:bg-teal/85"
+        >
+          Go to log in
+        </Link>
+      </AuthShell>
+    );
+  }
+
   return (
     <AuthShell
       title="Sign up"
@@ -24,29 +68,50 @@ function SignupPage() {
         </span>
       }
     >
-      <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-        <Field label="Organisation name" placeholder="Northwind Energy" />
-        <Field label="Work email" type="email" placeholder="analyst@company.com" />
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        {error ? (
+          <div className="rounded-md bg-crimson/10 p-3 text-[13px] text-crimson">
+            {error}
+          </div>
+        ) : null}
+        <Field
+          label="Organisation name"
+          placeholder="Northwind Energy"
+          value={orgName}
+          onChange={(e) => setOrgName(e.target.value)}
+          required
+        />
+        <Field
+          label="Your name"
+          placeholder="Jane Doe"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+        <Field
+          label="Work email"
+          type="email"
+          placeholder="analyst@company.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
         <Field
           label="Password"
           type="password"
           placeholder="••••••••••"
           hint="12 characters minimum, checked against known breach corpora."
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
         />
-        <label className="block">
-          <span className="text-[13px] font-medium">Requested role</span>
-          <select className="mt-1.5 w-full rounded-md border border-fog-deep bg-void-700 px-3 py-2.5 text-[15px] outline-none focus:border-teal">
-            <option>Analyst</option>
-            <option>SOC Lead</option>
-            <option>Admin</option>
-          </select>
-        </label>
-        <Link
-          to="/two-factor"
-          className="mt-2 block rounded-md bg-teal px-4 py-2.5 text-center text-[13px] font-medium text-void-900 hover:bg-teal/85"
+        <button
+          type="submit"
+          disabled={register.isPending}
+          className="mt-2 block w-full rounded-md bg-teal px-4 py-2.5 text-center text-[13px] font-medium text-void-900 hover:bg-teal/85 disabled:opacity-50"
         >
-          Request access
-        </Link>
+          {register.isPending ? "Requesting access..." : "Request access"}
+        </button>
       </form>
     </AuthShell>
   );

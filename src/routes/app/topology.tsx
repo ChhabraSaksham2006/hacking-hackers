@@ -1,7 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { FlatPanel, HeroPanel, PageTitle, RiskBadge } from "@/components/app/panels";
 import { pageHead } from "@/lib/head";
-import { segments, stateColorVar } from "@/lib/telemetry";
+import { stateColorVar } from "@/lib/telemetry";
+import { useSegments } from "@/hooks/useApi";
 
 export const Route = createFileRoute("/app/topology")({
   head: pageHead(
@@ -13,7 +14,8 @@ export const Route = createFileRoute("/app/topology")({
 
 function Topology() {
   const navigate = useNavigate();
-  const total = segments.reduce((s, x) => s + x.volume, 0);
+  const { data: segments = [] } = useSegments();
+  const total = segments.reduce((s, x) => s + x.trafficVolume, 0);
 
   return (
     <>
@@ -31,15 +33,15 @@ function Topology() {
                 onClick={() => navigate({ to: "/app/network" })}
                 className="rounded-[10px] border p-4 text-left transition-colors hover:brightness-125"
                 style={{
-                  flexBasis: `${Math.max(22, (s.volume / total) * 260)}%`,
-                  minHeight: 96 + s.volume * 2,
+                  flexBasis: `${Math.max(22, (s.trafficVolume / (total || 1)) * 260)}%`,
+                  minHeight: 96 + s.trafficVolume * 2,
                   borderColor: `color-mix(in oklab, ${stateColorVar[s.state]} 40%, transparent)`,
                   background: `color-mix(in oklab, ${stateColorVar[s.state]} 14%, transparent)`,
                 }}
               >
                 <p className="mono">{s.name}</p>
                 <p className="mt-1 text-[12px] text-fog">
-                  {s.hosts} hosts · {s.volume}% of traffic
+                  {s.hosts} hosts · {s.trafficVolume}% of traffic
                 </p>
                 <div className="mt-3">
                   <RiskBadge state={s.state} />
@@ -71,8 +73,8 @@ function Topology() {
                     </Link>
                   </td>
                   <td className="mono px-5 py-2.5 text-right">{s.hosts}</td>
-                  <td className="mono px-5 py-2.5 text-right">{s.alerts}</td>
-                  <td className="mono px-5 py-2.5 text-fog">{s.last}</td>
+                  <td className="mono px-5 py-2.5 text-right">{s.activeAlerts}</td>
+                  <td className="mono px-5 py-2.5 text-fog">{s.lastIncident}</td>
                 </tr>
               ))}
             </tbody>

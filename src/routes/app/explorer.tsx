@@ -2,7 +2,7 @@ import { Fragment, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { FlatPanel, PageTitle } from "@/components/app/panels";
 import { pageHead } from "@/lib/head";
-import { flows } from "@/lib/telemetry";
+import { useFlows } from "@/hooks/useApi";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/explorer")({
@@ -36,13 +36,16 @@ function Explorer() {
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState<string | null>(null);
 
-  const rows = flows.filter(
-    (f) =>
-      f.score >= minScore &&
-      (!flaggedOnly || f.score >= 0.65) &&
-      (search === "" ||
-        `${f.src} ${f.dst} ${f.proto}`.toLowerCase().includes(search.toLowerCase())),
-  );
+  const { data: flowsData } = useFlows({
+    page: 1,
+    limit: 50,
+    minScore,
+    flaggedOnly,
+    search,
+  });
+
+  const rows = flowsData?.data ?? [];
+  const total = flowsData?.pagination.total ?? 0;
 
   return (
     <>
@@ -83,7 +86,7 @@ function Explorer() {
           Flagged only
         </button>
         <span className="mono ml-auto text-fog">
-          {rows.length} / {flows.length} flows
+          {rows.length} / {total} flows
         </span>
       </div>
 
@@ -106,9 +109,9 @@ function Explorer() {
           </thead>
           <tbody>
             {rows.map((f) => (
-              <Fragment key={f.src}>
+              <Fragment key={f._id}>
                 <tr
-                  onClick={() => setOpen(open === f.src ? null : f.src)}
+                  onClick={() => setOpen(open === f._id ? null : f._id)}
                   className="cursor-pointer border-b border-fog-deep/40 hover:bg-paper/4"
                 >
                   {columns.map((c) => {
@@ -128,7 +131,7 @@ function Explorer() {
                     );
                   })}
                 </tr>
-                {open === f.src ? (
+                {open === f._id ? (
                   <tr className="border-b border-fog-deep/40 bg-void-700/40">
                     <td colSpan={columns.length} className="px-4 py-4">
                       <p className="mb-2 text-[13px] font-medium">

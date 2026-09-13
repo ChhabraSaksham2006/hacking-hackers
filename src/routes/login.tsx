@@ -1,6 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { AuthShell, Field } from "@/components/app/AuthShell";
 import { pageHead } from "@/lib/head";
+import { useLogin } from "@/hooks/useApi";
 
 export const Route = createFileRoute("/login")({
   head: pageHead(
@@ -11,6 +13,36 @@ export const Route = createFileRoute("/login")({
 });
 
 function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  
+  const login = useLogin();
+  const router = useRouter();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    login.mutate(
+      { email, password },
+      {
+        onSuccess: (data) => {
+          if (data.requiresTwoFactor) {
+            router.navigate({
+              to: "/two-factor",
+              search: { challengeId: data.challengeId },
+            });
+          } else {
+            router.navigate({ to: "/app/dashboard" });
+          }
+        },
+        onError: (err) => {
+          setError(err.message || "Failed to log in");
+        },
+      }
+    );
+  };
+
   return (
     <AuthShell
       title="Log in"
@@ -24,23 +56,40 @@ function LoginPage() {
         </span>
       }
     >
-      <form
-        className="space-y-4"
-        onSubmit={(e) => e.preventDefault()}
-      >
-        <Field label="Work email" type="email" placeholder="analyst@company.com" />
-        <Field label="Password" type="password" placeholder="••••••••••" />
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        {error ? (
+          <div className="rounded-md bg-crimson/10 p-3 text-[13px] text-crimson">
+            {error}
+          </div>
+        ) : null}
+        <Field
+          label="Work email"
+          type="email"
+          placeholder="analyst@company.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <Field
+          label="Password"
+          type="password"
+          placeholder="••••••••••"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
         <div className="flex items-center justify-between pt-1">
           <Link to="/two-factor" className="text-[13px] text-fog hover:text-paper">
             Forgot password
           </Link>
         </div>
-        <Link
-          to="/two-factor"
-          className="mt-2 block rounded-md bg-teal px-4 py-2.5 text-center text-[13px] font-medium text-void-900 hover:bg-teal/85"
+        <button
+          type="submit"
+          disabled={login.isPending}
+          className="mt-2 block w-full rounded-md bg-teal px-4 py-2.5 text-center text-[13px] font-medium text-void-900 hover:bg-teal/85 disabled:opacity-50"
         >
-          Continue to verification
-        </Link>
+          {login.isPending ? "Logging in..." : "Continue"}
+        </button>
       </form>
     </AuthShell>
   );

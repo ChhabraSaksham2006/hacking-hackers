@@ -9,7 +9,8 @@ import {
 } from "@/components/app/panels";
 import { ProbabilityTimeline } from "@/components/app/charts";
 import { pageHead } from "@/lib/head";
-import { alerts, probabilitySeries, type Alert } from "@/lib/telemetry";
+import { probabilitySeries } from "@/lib/telemetry";
+import { useAlerts, useUpdateAlert, type Alert } from "@/hooks/useApi";
 
 export const Route = createFileRoute("/app/alerts")({
   head: pageHead(
@@ -22,7 +23,10 @@ export const Route = createFileRoute("/app/alerts")({
 const columns = ["New", "Acknowledged", "Investigating", "Resolved"] as const;
 
 function AlertsQueue() {
-  const [selected, setSelected] = useState<Alert | null>(alerts[0] ?? null);
+  const { data: paginatedData } = useAlerts();
+  const alerts = paginatedData?.data ?? [];
+  const updateAlert = useUpdateAlert();
+  const [selected, setSelected] = useState<Alert | null>(null);
 
   return (
     <>
@@ -43,14 +47,14 @@ function AlertsQueue() {
               <div className="space-y-2">
                 {items.map((a) => (
                   <button
-                    key={a.id}
+                    key={a._id}
                     onClick={() => setSelected(a)}
                     className="w-full rounded-md border border-fog-deep bg-void-700 p-3 text-left hover:bg-paper/4"
                   >
                     <div className="flex items-center justify-between gap-2">
                       <RiskBadge state={a.state} />
                       <span className="mono flex size-6 items-center justify-center rounded-full bg-void-800 text-[11px] text-fog">
-                        {a.analyst}
+                        {a.assignedTo?.initials ?? "—"}
                       </span>
                     </div>
                     <p className="mono mt-2">{a.host}</p>
@@ -74,7 +78,7 @@ function AlertsQueue() {
           <HeroPanel
             state={selected.state}
             className="min-h-full"
-            title={selected.id}
+            title={selected.alertId}
             control={
               <button
                 onClick={() => setSelected(null)}
@@ -105,8 +109,8 @@ function AlertsQueue() {
               {[
                 ["Predicted stage", selected.stage],
                 ["Probability", selected.probability.toFixed(2)],
-                ["Detected", selected.at],
-                ["Assigned to", selected.analyst],
+                ["Detected", new Date(selected.detectedAt).toISOString().slice(11, 16) + "Z"],
+                ["Assigned to", selected.assignedTo?.name || "Unassigned"],
               ].map(([k, v]) => (
                 <div
                   key={k}
@@ -128,8 +132,19 @@ function AlertsQueue() {
             </label>
 
             <div className="mt-4 flex flex-wrap gap-2">
-              <ActionButton>Acknowledge alert</ActionButton>
-              <ActionButton variant="ghost">Mark investigating</ActionButton>
+              <ActionButton 
+                onClick={() => updateAlert.mutate({ id: selected.alertId, status: "Acknowledged" })}
+                disabled={updateAlert.isPending}
+              >
+                Acknowledge alert
+              </ActionButton>
+              <ActionButton 
+                variant="ghost"
+                onClick={() => updateAlert.mutate({ id: selected.alertId, status: "Investigating" })}
+                disabled={updateAlert.isPending}
+              >
+                Mark investigating
+              </ActionButton>
               <ActionButton variant="ghost">Assign to…</ActionButton>
             </div>
           </HeroPanel>

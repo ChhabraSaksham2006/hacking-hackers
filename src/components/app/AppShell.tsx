@@ -15,9 +15,10 @@ import {
   Table2,
   Upload,
   Users,
+  LogOut,
 } from "lucide-react";
 import type { ReactNode } from "react";
-import { alerts } from "@/lib/telemetry";
+import { useAlerts, useAuthMe, useLogout } from "@/hooks/useApi";
 import { cn } from "@/lib/utils";
 import { ConsolePanel } from "./ConsolePanel";
 
@@ -39,7 +40,10 @@ const nav = [
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const openAlerts = alerts.filter((a) => a.status !== "Resolved").length;
+  const { data: alerts } = useAlerts();
+  const { data: user } = useAuthMe();
+  const logout = useLogout();
+  const openAlerts = alerts?.data?.filter((a) => a.status !== "Resolved").length ?? 0;
 
   return (
     <div className="network-field min-h-screen">
@@ -80,12 +84,25 @@ export function AppShell({ children }: { children: ReactNode }) {
               );
             })}
           </ul>
+          
+          <div className="border-t border-fog-deep/50 py-2">
+            <button
+              onClick={() => logout.mutate()}
+              disabled={logout.isPending}
+              className="flex w-full items-center gap-3 overflow-hidden border-l-2 border-transparent py-2.5 pr-3 pl-[24px] text-left text-[13px] font-medium text-fog whitespace-nowrap transition-colors hover:text-paper"
+            >
+              <LogOut className="size-4 shrink-0" strokeWidth={1.75} />
+              <span className="opacity-0 transition-opacity group-hover/rail:opacity-100">
+                Log out
+              </span>
+            </button>
+          </div>
         </nav>
 
         <div className="flex min-w-0 flex-1 flex-col">
           <header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-4 border-b border-fog-deep/50 bg-void-900/75 px-6 backdrop-blur-md">
             <div className="flex items-center gap-4 text-[13px]">
-              <span className="font-medium">Northwind Energy</span>
+              <span className="font-medium">{user?.org?.name ?? "Northwind Energy"}</span>
               <span className="h-4 w-px bg-fog-deep" />
               <span className="text-fog">
                 <span className="mono text-crimson">{openAlerts}</span> open
@@ -93,9 +110,9 @@ export function AppShell({ children }: { children: ReactNode }) {
               </span>
             </div>
             <div className="flex items-center gap-3 text-[13px]">
-              <span className="text-fog">SOC Lead</span>
+              <span className="text-fog">{user?.role ?? "SOC Lead"}</span>
               <span className="mono flex size-8 items-center justify-center rounded-full bg-void-700 text-[11px] text-paper">
-                SC
+                {user?.initials ?? "SC"}
               </span>
             </div>
           </header>
