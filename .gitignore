@@ -44,4 +44,4 @@ env/
 venv/
 .venv/
 .pytest_cache/
-
+*.tsbuildinfo
