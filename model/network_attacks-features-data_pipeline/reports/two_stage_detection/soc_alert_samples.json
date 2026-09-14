@@ -1,0 +1,120 @@
+{
+  "A": [
+    {
+      "incident_id": "INC-000000",
+      "start_time_sec": 0.0,
+      "duration_sec": 58916.0,
+      "peak_risk": 0.9999,
+      "family": "DoS",
+      "mitre_tactic": "Impact (Network Denial of Service)",
+      "mitre_technique": "T1498",
+      "delta_evidence": {
+        "zero_payload_ratio": 0.1513,
+        "fwd_byte_ratio": 0.1193,
+        "flow_iat_std": 0.1105,
+        "pkt_len_mean": 0.0986,
+        "handshake_completion_ratio": 0.0965
+      }
+    }
+  ],
+  "B": [
+    {
+      "incident_id": "INC-000000",
+      "start_time_sec": 0.0,
+      "duration_sec": 16222.0,
+      "peak_risk": 0.9995,
+      "family": "WebAttack",
+      "mitre_tactic": "Initial Access (Exploit Public-Facing Application)",
+      "mitre_technique": "T1190",
+      "delta_evidence": {
+        "rst_ratio": 0.6604,
+        "syn_count": 0.2559,
+        "udp_ratio": 0.238,
+        "auth_port_ratio": 0.2014,
+        "rst_to_syn_ratio": 0.1842
+      }
+    },
+    {
+      "incident_id": "INC-013983",
+      "start_time_sec": 27966.0,
+      "duration_sec": 32318.0,
+      "peak_risk": 1.0,
+      "family": "DDoS",
+      "mitre_tactic": "Impact (Endpoint Denial of Service)",
+      "mitre_technique": "T1499",
+      "delta_evidence": {
+        "rst_ratio": 0.5182,
+        "syn_count": 0.2163,
+        "auth_port_ratio": 0.197,
+        "flow_iat_mean": 0.161,
+        "fwd_byte_ratio": 0.1549
+      }
+    },
+    {
+      "incident_id": "INC-034657",
+      "start_time_sec": 69314.0,
+      "duration_sec": 34408.0,
+      "peak_risk": 1.0,
+      "family": "DDoS",
+      "mitre_tactic": "Impact (Endpoint Denial of Service)",
+      "mitre_technique": "T1499",
+      "delta_evidence": {
+        "rst_ratio": 0.5098,
+        "fwd_byte_ratio": 0.2547,
+        "syn_count": 0.2236,
+        "syn_ratio": 0.2128,
+        "total_ip_bytes": 0.1776
+      }
+    }
+  ],
+  "C": [
+    {
+      "incident_id": "INC-000000",
+      "start_time_sec": 0.0,
+      "duration_sec": 16220.0,
+      "peak_risk": 0.9996,
+      "family": "BruteForce",
+      "mitre_tactic": "Credential Access (Brute Force)",
+      "mitre_technique": "T1110",
+      "delta_evidence": {
+        "rst_ratio": 0.7858,
+        "udp_ratio": 0.2358,
+        "auth_port_ratio": 0.2143,
+        "rst_to_syn_ratio": 0.1855,
+        "fwd_byte_ratio": 0.1639
+      }
+    },
+    {
+      "incident_id": "INC-013983",
+      "start_time_sec": 27966.0,
+      "duration_sec": 32316.0,
+      "peak_risk": 1.0,
+      "family": "DDoS",
+      "mitre_tactic": "Impact (Endpoint Denial of Service)",
+      "mitre_technique": "T1499",
+      "delta_evidence": {
+        "rst_ratio": 0.5475,
+        "fwd_byte_ratio": 0.214,
+        "auth_port_ratio": 0.197,
+        "flow_iat_mean": 0.1627,
+        "flow_count": 0.1417
+      }
+    },
+    {
+      "incident_id": "INC-034657",
+      "start_time_sec": 69314.0,
+      "duration_sec": 34406.0,
+      "peak_risk": 1.0,
+      "family": "DDoS",
+      "mitre_tactic": "Impact (Endpoint Denial of Service)",
+      "mitre_technique": "T1499",
+      "delta_evidence": {
+        "rst_ratio": 0.4827,
+        "fwd_byte_ratio": 0.3255,
+        "syn_ratio": 0.2276,
+        "udp_ratio": 0.1682,
+        "flow_iat_mean": 0.1551
+      }
+    }
+  ]
+}

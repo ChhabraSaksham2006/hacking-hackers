@@ -1,0 +1,24 @@
+features:
+  curated_subset_count: 54
+  imputation_strategy: median
+  metadata_columns:
+  - Timestamp
+  - Label
+  multicollinear_dropped:
+  - Subflow Fwd Pkts
+  - Subflow Bwd Pkts
+  - Subflow Bwd Byts
+  - Fwd Header Len
+  - Subflow Fwd Byts
+  - Bwd Header Len
+  raw_count: 80
+  scaling_strategy: robust_standard
+  zero_variance_dropped:
+  - Bwd URG Flags
+  - Bwd Byts/b Avg
+  - Fwd Pkts/b Avg
+  - Bwd Pkts/b Avg
+  - Bwd PSH Flags
+  - Fwd Byts/b Avg
+  - Bwd Blk Rate Avg
+  - Fwd Blk Rate Avg

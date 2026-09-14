@@ -34,7 +34,7 @@ const dataSourceSchema = new Schema<IDataSource>(
     type: {
       type: String,
       required: true,
-      enum: ['PCAP', 'Network sensor', 'API'],
+      enum: ['PCAP', 'Network sensor', 'API', 'S3', 'IPFIX'],
     },
     status: {
       type: String,

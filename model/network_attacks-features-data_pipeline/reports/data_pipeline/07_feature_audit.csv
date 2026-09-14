@@ -1,0 +1,81 @@
+feature_name,category,retained_or_dropped,scientific_justification
+Dst Port,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Protocol,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Timestamp,Metadata / Target,METADATA (Preserve for indexing/labels),Required for timestamp sequencing and ground-truth evaluation.
+Flow Duration,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Tot Fwd Pkts,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Tot Bwd Pkts,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+TotLen Fwd Pkts,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+TotLen Bwd Pkts,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Fwd Pkt Len Max,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Fwd Pkt Len Min,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Fwd Pkt Len Mean,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Fwd Pkt Len Std,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Bwd Pkt Len Max,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Bwd Pkt Len Min,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Bwd Pkt Len Mean,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Bwd Pkt Len Std,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Flow Byts/s,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Flow Pkts/s,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Flow IAT Mean,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Flow IAT Std,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Flow IAT Max,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Flow IAT Min,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Fwd IAT Tot,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Fwd IAT Mean,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Fwd IAT Std,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Fwd IAT Max,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Fwd IAT Min,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Bwd IAT Tot,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Bwd IAT Mean,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Bwd IAT Std,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Bwd IAT Max,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Bwd IAT Min,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Fwd PSH Flags,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Bwd PSH Flags,Zero Variance,DROP,Strictly 0 across entire 16M flow dataset; provides zero discriminative information.
+Fwd URG Flags,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Bwd URG Flags,Zero Variance,DROP,Strictly 0 across entire 16M flow dataset; provides zero discriminative information.
+Fwd Header Len,Multicollinear Redundancy,DROP,Mathematically identical to primary packet/byte columns (r = 1.0).
+Bwd Header Len,Multicollinear Redundancy,DROP,Mathematically identical to primary packet/byte columns (r = 1.0).
+Fwd Pkts/s,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Bwd Pkts/s,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Pkt Len Min,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Pkt Len Max,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Pkt Len Mean,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Pkt Len Std,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Pkt Len Var,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+FIN Flag Cnt,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+SYN Flag Cnt,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+RST Flag Cnt,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+PSH Flag Cnt,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+ACK Flag Cnt,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+URG Flag Cnt,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+CWE Flag Count,Near-Zero Variance Flag,RETAIN (Flag Feature),Rare TCP flag anomaly indicator.
+ECE Flag Cnt,Near-Zero Variance Flag,RETAIN (Flag Feature),Rare TCP flag anomaly indicator.
+Down/Up Ratio,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Pkt Size Avg,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Fwd Seg Size Avg,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Bwd Seg Size Avg,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Fwd Byts/b Avg,Zero Variance,DROP,Strictly 0 across entire 16M flow dataset; provides zero discriminative information.
+Fwd Pkts/b Avg,Zero Variance,DROP,Strictly 0 across entire 16M flow dataset; provides zero discriminative information.
+Fwd Blk Rate Avg,Zero Variance,DROP,Strictly 0 across entire 16M flow dataset; provides zero discriminative information.
+Bwd Byts/b Avg,Zero Variance,DROP,Strictly 0 across entire 16M flow dataset; provides zero discriminative information.
+Bwd Pkts/b Avg,Zero Variance,DROP,Strictly 0 across entire 16M flow dataset; provides zero discriminative information.
+Bwd Blk Rate Avg,Zero Variance,DROP,Strictly 0 across entire 16M flow dataset; provides zero discriminative information.
+Subflow Fwd Pkts,Multicollinear Redundancy,DROP,Mathematically identical to primary packet/byte columns (r = 1.0).
+Subflow Fwd Byts,Multicollinear Redundancy,DROP,Mathematically identical to primary packet/byte columns (r = 1.0).
+Subflow Bwd Pkts,Multicollinear Redundancy,DROP,Mathematically identical to primary packet/byte columns (r = 1.0).
+Subflow Bwd Byts,Multicollinear Redundancy,DROP,Mathematically identical to primary packet/byte columns (r = 1.0).
+Init Fwd Win Byts,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Init Bwd Win Byts,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Fwd Act Data Pkts,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Fwd Seg Size Min,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Active Mean,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Active Std,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Active Max,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Active Min,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Idle Mean,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Idle Std,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Idle Max,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Idle Min,Behavioral Network Feature,RETAIN (54-Feature Core Set),Dynamic flow metric essential for temporal state aggregation.
+Label,Metadata / Target,METADATA (Preserve for indexing/labels),Required for timestamp sequencing and ground-truth evaluation.

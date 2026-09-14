@@ -1,0 +1,374 @@
+episode_id,day,attack_family,attack_type,start_window_idx,end_window_idx,duration_windows,duration_minutes,prev_benign_windows,prev_benign_minutes,is_isolated_onset
+EP_0001,Friday-02-03-2018,Botnet,Bot,0,5228,5229,174.3,0,0.0,False
+EP_0002,Friday-02-03-2018,Botnet,Bot,5241,5245,5,0.17,12,0.4,True
+EP_0003,Friday-02-03-2018,Botnet,Bot,16600,20193,3594,119.8,11354,378.47,True
+EP_0004,Friday-02-03-2018,Botnet,Bot,20205,21594,1390,46.33,11,0.37,True
+EP_0005,Friday-16-02-2018,DoS,DoS attacks-Hulk,1343,1446,104,3.47,1343,44.77,True
+EP_0006,Friday-16-02-2018,DoS,DoS attacks-SlowHTTPTest,16547,17928,1382,46.07,15100,503.33,True
+EP_0007,Friday-23-02-2018,WebAttack,Brute Force -XSS,28,35,8,0.27,28,0.93,True
+EP_0008,Friday-23-02-2018,WebAttack,Brute Force -XSS,54,59,6,0.2,18,0.6,True
+EP_0009,Friday-23-02-2018,WebAttack,Brute Force -XSS,83,87,5,0.17,23,0.77,True
+EP_0010,Friday-23-02-2018,WebAttack,Brute Force -XSS,112,116,5,0.17,24,0.8,True
+EP_0011,Friday-23-02-2018,WebAttack,Brute Force -XSS,140,145,6,0.2,23,0.77,True
+EP_0012,Friday-23-02-2018,WebAttack,Brute Force -XSS,169,173,5,0.17,23,0.77,True
+EP_0013,Friday-23-02-2018,WebAttack,Brute Force -XSS,198,202,5,0.17,24,0.8,True
+EP_0014,Friday-23-02-2018,WebAttack,Brute Force -XSS,227,231,5,0.17,24,0.8,True
+EP_0015,Friday-23-02-2018,WebAttack,Brute Force -XSS,255,260,6,0.2,23,0.77,True
+EP_0016,Friday-23-02-2018,WebAttack,Brute Force -XSS,284,289,6,0.2,23,0.77,True
+EP_0017,Friday-23-02-2018,WebAttack,Brute Force -XSS,313,317,5,0.17,23,0.77,True
+EP_0018,Friday-23-02-2018,WebAttack,Brute Force -XSS,342,346,5,0.17,24,0.8,True
+EP_0019,Friday-23-02-2018,WebAttack,Brute Force -XSS,370,375,6,0.2,23,0.77,True
+EP_0020,Friday-23-02-2018,WebAttack,Brute Force -XSS,399,403,5,0.17,23,0.77,True
+EP_0021,Friday-23-02-2018,WebAttack,Brute Force -XSS,428,433,6,0.2,24,0.8,True
+EP_0022,Friday-23-02-2018,WebAttack,Brute Force -XSS,457,461,5,0.17,23,0.77,True
+EP_0023,Friday-23-02-2018,WebAttack,Brute Force -XSS,485,489,5,0.17,23,0.77,True
+EP_0024,Friday-23-02-2018,WebAttack,Brute Force -XSS,514,518,5,0.17,24,0.8,True
+EP_0025,Friday-23-02-2018,WebAttack,Brute Force -XSS,542,547,6,0.2,23,0.77,True
+EP_0026,Friday-23-02-2018,WebAttack,Brute Force -XSS,571,575,5,0.17,23,0.77,True
+EP_0027,Friday-23-02-2018,WebAttack,Brute Force -XSS,599,604,6,0.2,23,0.77,True
+EP_0028,Friday-23-02-2018,WebAttack,Brute Force -XSS,628,632,5,0.17,23,0.77,True
+EP_0029,Friday-23-02-2018,WebAttack,Brute Force -XSS,657,661,5,0.17,24,0.8,True
+EP_0030,Friday-23-02-2018,WebAttack,Brute Force -XSS,686,690,5,0.17,24,0.8,True
+EP_0031,Friday-23-02-2018,WebAttack,Brute Force -XSS,714,719,6,0.2,23,0.77,True
+EP_0032,Friday-23-02-2018,WebAttack,Brute Force -XSS,744,748,5,0.17,24,0.8,True
+EP_0033,Friday-23-02-2018,WebAttack,Brute Force -XSS,773,777,5,0.17,24,0.8,True
+EP_0034,Friday-23-02-2018,WebAttack,Brute Force -XSS,802,807,6,0.2,24,0.8,True
+EP_0035,Friday-23-02-2018,WebAttack,Brute Force -XSS,831,836,6,0.2,23,0.77,True
+EP_0036,Friday-23-02-2018,WebAttack,Brute Force -XSS,860,864,5,0.17,23,0.77,True
+EP_0037,Friday-23-02-2018,WebAttack,Brute Force -XSS,889,893,5,0.17,24,0.8,True
+EP_0038,Friday-23-02-2018,WebAttack,Brute Force -XSS,918,922,5,0.17,24,0.8,True
+EP_0039,Friday-23-02-2018,WebAttack,Brute Force -XSS,946,950,5,0.17,23,0.77,True
+EP_0040,Friday-23-02-2018,WebAttack,Brute Force -XSS,975,979,5,0.17,24,0.8,True
+EP_0041,Friday-23-02-2018,WebAttack,Brute Force -XSS,1003,1007,5,0.17,23,0.77,True
+EP_0042,Friday-23-02-2018,WebAttack,Brute Force -XSS,1032,1036,5,0.17,24,0.8,True
+EP_0043,Friday-23-02-2018,WebAttack,Brute Force -XSS,1061,1065,5,0.17,24,0.8,True
+EP_0044,Friday-23-02-2018,WebAttack,Brute Force -XSS,1090,1094,5,0.17,24,0.8,True
+EP_0045,Friday-23-02-2018,WebAttack,Brute Force -XSS,1119,1123,5,0.17,24,0.8,True
+EP_0046,Friday-23-02-2018,WebAttack,Brute Force -XSS,1148,1152,5,0.17,24,0.8,True
+EP_0047,Friday-23-02-2018,WebAttack,Brute Force -XSS,1177,1181,5,0.17,24,0.8,True
+EP_0048,Friday-23-02-2018,WebAttack,Brute Force -XSS,1205,1210,6,0.2,23,0.77,True
+EP_0049,Friday-23-02-2018,WebAttack,Brute Force -XSS,1234,1238,5,0.17,23,0.77,True
+EP_0050,Friday-23-02-2018,WebAttack,Brute Force -XSS,1249,1253,5,0.17,10,0.33,True
+EP_0051,Friday-23-02-2018,WebAttack,Brute Force -XSS,1263,1267,5,0.17,9,0.3,False
+EP_0052,Friday-23-02-2018,WebAttack,Brute Force -XSS,1291,1296,6,0.2,23,0.77,True
+EP_0053,Friday-23-02-2018,WebAttack,Brute Force -XSS,1320,1324,5,0.17,23,0.77,True
+EP_0054,Friday-23-02-2018,WebAttack,Brute Force -XSS,1348,1353,6,0.2,23,0.77,True
+EP_0055,Friday-23-02-2018,WebAttack,Brute Force -XSS,1377,1381,5,0.17,23,0.77,True
+EP_0056,Friday-23-02-2018,WebAttack,Brute Force -XSS,1406,1411,6,0.2,24,0.8,True
+EP_0057,Friday-23-02-2018,WebAttack,Brute Force -XSS,1435,1439,5,0.17,23,0.77,True
+EP_0058,Friday-23-02-2018,WebAttack,Brute Force -XSS,1464,1468,5,0.17,24,0.8,True
+EP_0059,Friday-23-02-2018,WebAttack,Brute Force -XSS,1493,1497,5,0.17,24,0.8,True
+EP_0060,Friday-23-02-2018,WebAttack,Brute Force -XSS,1521,1525,5,0.17,23,0.77,True
+EP_0061,Friday-23-02-2018,WebAttack,Brute Force -XSS,1550,1554,5,0.17,24,0.8,True
+EP_0062,Friday-23-02-2018,WebAttack,Brute Force -XSS,1578,1583,6,0.2,23,0.77,True
+EP_0063,Friday-23-02-2018,WebAttack,Brute Force -XSS,1607,1611,5,0.17,23,0.77,True
+EP_0064,Friday-23-02-2018,WebAttack,Brute Force -XSS,1636,1640,5,0.17,24,0.8,True
+EP_0065,Friday-23-02-2018,WebAttack,Brute Force -XSS,1664,1668,5,0.17,23,0.77,True
+EP_0066,Friday-23-02-2018,WebAttack,Brute Force -XSS,1693,1698,6,0.2,24,0.8,True
+EP_0067,Friday-23-02-2018,WebAttack,Brute Force -XSS,1722,1726,5,0.17,23,0.77,True
+EP_0068,Friday-23-02-2018,WebAttack,Brute Force -XSS,1751,1756,6,0.2,24,0.8,True
+EP_0069,Friday-23-02-2018,WebAttack,Brute Force -XSS,1780,1784,5,0.17,23,0.77,True
+EP_0070,Friday-23-02-2018,WebAttack,Brute Force -XSS,1809,1813,5,0.17,24,0.8,True
+EP_0071,Friday-23-02-2018,WebAttack,Brute Force -XSS,1838,1842,5,0.17,24,0.8,True
+EP_0072,Friday-23-02-2018,WebAttack,Brute Force -XSS,1866,1871,6,0.2,23,0.77,True
+EP_0073,Friday-23-02-2018,WebAttack,Brute Force -XSS,1896,1900,5,0.17,24,0.8,True
+EP_0074,Friday-23-02-2018,WebAttack,Brute Force -XSS,1924,1929,6,0.2,23,0.77,True
+EP_0075,Friday-23-02-2018,WebAttack,Brute Force -XSS,1954,1958,5,0.17,24,0.8,True
+EP_0076,Friday-23-02-2018,WebAttack,Brute Force -XSS,1962,1966,5,0.17,3,0.1,False
+EP_0077,Friday-23-02-2018,WebAttack,Brute Force -XSS,1982,1990,9,0.3,15,0.5,True
+EP_0078,Friday-23-02-2018,WebAttack,Brute Force -XSS,2011,2015,5,0.17,20,0.67,True
+EP_0079,Friday-23-02-2018,WebAttack,Brute Force -XSS,2040,2045,6,0.2,24,0.8,True
+EP_0080,Friday-23-02-2018,WebAttack,Brute Force -XSS,2069,2073,5,0.17,23,0.77,True
+EP_0081,Friday-23-02-2018,WebAttack,Brute Force -XSS,2098,2102,5,0.17,24,0.8,True
+EP_0082,Friday-23-02-2018,WebAttack,SQL Injection,3757,3763,7,0.23,1654,55.13,True
+EP_0083,Friday-23-02-2018,WebAttack,SQL Injection,3766,3772,7,0.23,2,0.07,False
+EP_0084,Friday-23-02-2018,WebAttack,SQL Injection,3782,3808,27,0.9,9,0.3,False
+EP_0085,Friday-23-02-2018,WebAttack,SQL Injection,3836,3842,7,0.23,27,0.9,True
+EP_0086,Friday-23-02-2018,WebAttack,SQL Injection,3844,3851,8,0.27,1,0.03,False
+EP_0087,Friday-23-02-2018,WebAttack,SQL Injection,3863,3873,11,0.37,11,0.37,True
+EP_0088,Friday-23-02-2018,WebAttack,SQL Injection,3959,3963,5,0.17,85,2.83,True
+EP_0089,Friday-23-02-2018,WebAttack,SQL Injection,3980,3996,17,0.57,16,0.53,True
+EP_0090,Friday-23-02-2018,WebAttack,SQL Injection,4008,4012,5,0.17,11,0.37,True
+EP_0091,Friday-23-02-2018,WebAttack,SQL Injection,4046,4050,5,0.17,33,1.1,True
+EP_0092,Friday-23-02-2018,WebAttack,SQL Injection,4053,4059,7,0.23,2,0.07,False
+EP_0093,Friday-23-02-2018,WebAttack,SQL Injection,4061,4065,5,0.17,1,0.03,False
+EP_0094,Friday-23-02-2018,WebAttack,SQL Injection,4076,4089,14,0.47,10,0.33,True
+EP_0095,Friday-23-02-2018,WebAttack,SQL Injection,4101,4122,22,0.73,11,0.37,True
+EP_0096,Friday-23-02-2018,WebAttack,Brute Force -Web,14908,14912,5,0.17,10785,359.5,True
+EP_0097,Friday-23-02-2018,WebAttack,Brute Force -Web,16112,16116,5,0.17,1199,39.97,True
+EP_0098,Friday-23-02-2018,WebAttack,Brute Force -Web,16274,16278,5,0.17,157,5.23,True
+EP_0099,Friday-23-02-2018,WebAttack,Brute Force -Web,16281,16285,5,0.17,2,0.07,False
+EP_0100,Friday-23-02-2018,WebAttack,Brute Force -Web,16299,16303,5,0.17,13,0.43,True
+EP_0101,Friday-23-02-2018,WebAttack,Brute Force -Web,16323,16327,5,0.17,19,0.63,True
+EP_0102,Friday-23-02-2018,WebAttack,Brute Force -Web,16331,16335,5,0.17,3,0.1,False
+EP_0103,Friday-23-02-2018,WebAttack,Brute Force -Web,16358,16367,10,0.33,22,0.73,True
+EP_0104,Friday-23-02-2018,WebAttack,Brute Force -Web,16382,16393,12,0.4,14,0.47,True
+EP_0105,Friday-23-02-2018,WebAttack,Brute Force -Web,16406,16410,5,0.17,12,0.4,True
+EP_0106,Friday-23-02-2018,WebAttack,Brute Force -Web,16415,16422,8,0.27,4,0.13,False
+EP_0107,Friday-23-02-2018,WebAttack,Brute Force -Web,16443,16451,9,0.3,20,0.67,True
+EP_0108,Friday-23-02-2018,WebAttack,Brute Force -Web,16464,16468,5,0.17,12,0.4,True
+EP_0109,Friday-23-02-2018,WebAttack,Brute Force -Web,16472,16477,6,0.2,3,0.1,False
+EP_0110,Friday-23-02-2018,WebAttack,Brute Force -Web,16488,16492,5,0.17,10,0.33,True
+EP_0111,Friday-23-02-2018,WebAttack,Brute Force -Web,16501,16506,6,0.2,8,0.27,False
+EP_0112,Friday-23-02-2018,WebAttack,Brute Force -Web,16528,16534,7,0.23,21,0.7,True
+EP_0113,Friday-23-02-2018,WebAttack,Brute Force -Web,16547,16551,5,0.17,12,0.4,True
+EP_0114,Friday-23-02-2018,WebAttack,Brute Force -Web,16558,16565,8,0.27,6,0.2,False
+EP_0115,Friday-23-02-2018,WebAttack,Brute Force -Web,16571,16575,5,0.17,5,0.17,False
+EP_0116,Friday-23-02-2018,WebAttack,Brute Force -Web,16587,16594,8,0.27,11,0.37,True
+EP_0117,Friday-23-02-2018,WebAttack,Brute Force -Web,16611,16620,10,0.33,16,0.53,True
+EP_0118,Friday-23-02-2018,WebAttack,Brute Force -Web,16629,16633,5,0.17,8,0.27,False
+EP_0119,Friday-23-02-2018,WebAttack,Brute Force -Web,16644,16651,8,0.27,10,0.33,True
+EP_0120,Friday-23-02-2018,WebAttack,Brute Force -Web,16654,16658,5,0.17,2,0.07,False
+EP_0121,Friday-23-02-2018,WebAttack,Brute Force -Web,16673,16680,8,0.27,14,0.47,True
+EP_0122,Friday-23-02-2018,WebAttack,Brute Force -Web,16693,16706,14,0.47,12,0.4,True
+EP_0123,Friday-23-02-2018,WebAttack,Brute Force -Web,16712,16716,5,0.17,5,0.17,False
+EP_0124,Friday-23-02-2018,WebAttack,Brute Force -Web,16730,16740,11,0.37,13,0.43,True
+EP_0125,Friday-23-02-2018,WebAttack,Brute Force -Web,16759,16763,5,0.17,18,0.6,True
+EP_0126,Friday-23-02-2018,WebAttack,Brute Force -Web,16776,16785,10,0.33,12,0.4,True
+EP_0127,Friday-23-02-2018,WebAttack,Brute Force -Web,16787,16792,6,0.2,1,0.03,False
+EP_0128,Friday-23-02-2018,WebAttack,Brute Force -Web,16794,16798,5,0.17,1,0.03,False
+EP_0129,Friday-23-02-2018,WebAttack,Brute Force -Web,16816,16823,8,0.27,17,0.57,True
+EP_0130,Friday-23-02-2018,WebAttack,Brute Force -Web,16845,16849,5,0.17,21,0.7,True
+EP_0131,Friday-23-02-2018,WebAttack,Brute Force -Web,16855,16862,8,0.27,5,0.17,False
+EP_0132,Friday-23-02-2018,WebAttack,Brute Force -Web,16866,16870,5,0.17,3,0.1,False
+EP_0133,Friday-23-02-2018,WebAttack,Brute Force -Web,16873,16881,9,0.3,2,0.07,False
+EP_0134,Friday-23-02-2018,WebAttack,Brute Force -Web,16901,16909,9,0.3,19,0.63,True
+EP_0135,Friday-23-02-2018,WebAttack,Brute Force -Web,16930,16937,8,0.27,20,0.67,True
+EP_0136,Friday-23-02-2018,WebAttack,Brute Force -Web,16941,16945,5,0.17,3,0.1,False
+EP_0137,Friday-23-02-2018,WebAttack,Brute Force -Web,16950,16954,5,0.17,4,0.13,False
+EP_0138,Friday-23-02-2018,WebAttack,Brute Force -Web,16958,16965,8,0.27,3,0.1,False
+EP_0139,Friday-23-02-2018,WebAttack,Brute Force -Web,16984,16991,8,0.27,18,0.6,True
+EP_0140,Friday-23-02-2018,WebAttack,Brute Force -Web,17016,17027,12,0.4,24,0.8,True
+EP_0141,Friday-23-02-2018,WebAttack,Brute Force -Web,17030,17039,10,0.33,2,0.07,False
+EP_0142,Friday-23-02-2018,WebAttack,Brute Force -Web,17042,17049,8,0.27,2,0.07,False
+EP_0143,Friday-23-02-2018,WebAttack,Brute Force -Web,17066,17070,5,0.17,16,0.53,True
+EP_0144,Friday-23-02-2018,WebAttack,Brute Force -Web,17073,17078,6,0.2,2,0.07,False
+EP_0145,Friday-23-02-2018,WebAttack,Brute Force -Web,17102,17110,9,0.3,23,0.77,True
+EP_0146,Friday-23-02-2018,WebAttack,Brute Force -Web,17119,17128,10,0.33,8,0.27,False
+EP_0147,Friday-23-02-2018,WebAttack,Brute Force -Web,17131,17138,8,0.27,2,0.07,False
+EP_0148,Friday-23-02-2018,WebAttack,Brute Force -Web,17149,17153,5,0.17,10,0.33,True
+EP_0149,Friday-23-02-2018,WebAttack,Brute Force -Web,17160,17164,5,0.17,6,0.2,False
+EP_0150,Friday-23-02-2018,WebAttack,Brute Force -Web,17188,17196,9,0.3,23,0.77,True
+EP_0151,Friday-23-02-2018,WebAttack,Brute Force -Web,17203,17211,9,0.3,6,0.2,False
+EP_0152,Friday-23-02-2018,WebAttack,Brute Force -Web,17217,17224,8,0.27,5,0.17,False
+EP_0153,Friday-23-02-2018,WebAttack,Brute Force -Web,17231,17235,5,0.17,6,0.2,False
+EP_0154,Friday-23-02-2018,WebAttack,Brute Force -Web,17246,17250,5,0.17,10,0.33,True
+EP_0155,Friday-23-02-2018,WebAttack,Brute Force -Web,17271,17282,12,0.4,20,0.67,True
+EP_0156,Friday-23-02-2018,WebAttack,Brute Force -Web,17288,17294,7,0.23,5,0.17,False
+EP_0157,Friday-23-02-2018,WebAttack,Brute Force -Web,17303,17308,6,0.2,8,0.27,False
+EP_0158,Friday-23-02-2018,WebAttack,Brute Force -Web,17314,17318,5,0.17,5,0.17,False
+EP_0159,Friday-23-02-2018,WebAttack,Brute Force -Web,17332,17337,6,0.2,13,0.43,True
+EP_0160,Friday-23-02-2018,WebAttack,Brute Force -Web,17353,17357,5,0.17,15,0.5,True
+EP_0161,Friday-23-02-2018,WebAttack,Brute Force -Web,17361,17365,5,0.17,3,0.1,False
+EP_0162,Friday-23-02-2018,WebAttack,Brute Force -Web,17372,17376,5,0.17,6,0.2,False
+EP_0163,Friday-23-02-2018,WebAttack,Brute Force -Web,17390,17394,5,0.17,13,0.43,True
+EP_0164,Friday-23-02-2018,WebAttack,Brute Force -Web,17396,17400,5,0.17,1,0.03,False
+EP_0165,Friday-23-02-2018,WebAttack,Brute Force -Web,17419,17423,5,0.17,18,0.6,True
+EP_0166,Friday-23-02-2018,WebAttack,Brute Force -Web,17436,17440,5,0.17,12,0.4,True
+EP_0167,Friday-23-02-2018,WebAttack,Brute Force -Web,17447,17461,15,0.5,6,0.2,False
+EP_0168,Friday-23-02-2018,WebAttack,Brute Force -Web,17476,17483,8,0.27,14,0.47,True
+EP_0169,Friday-23-02-2018,WebAttack,Brute Force -Web,17505,17512,8,0.27,21,0.7,True
+EP_0170,Friday-23-02-2018,WebAttack,Brute Force -Web,17518,17522,5,0.17,5,0.17,False
+EP_0171,Friday-23-02-2018,WebAttack,Brute Force -Web,17534,17545,12,0.4,11,0.37,True
+EP_0172,Friday-23-02-2018,WebAttack,Brute Force -Web,17561,17567,7,0.23,15,0.5,True
+EP_0173,Friday-23-02-2018,WebAttack,Brute Force -Web,17591,17598,8,0.27,23,0.77,True
+EP_0174,Friday-23-02-2018,WebAttack,Brute Force -Web,17601,17605,5,0.17,2,0.07,False
+EP_0175,Friday-23-02-2018,WebAttack,Brute Force -Web,17620,17630,11,0.37,14,0.47,True
+EP_0176,Friday-23-02-2018,WebAttack,Brute Force -Web,17644,17656,13,0.43,13,0.43,True
+EP_0177,Friday-23-02-2018,WebAttack,Brute Force -Web,17678,17682,5,0.17,21,0.7,True
+EP_0178,Friday-23-02-2018,WebAttack,Brute Force -Web,17684,17688,5,0.17,1,0.03,False
+EP_0179,Friday-23-02-2018,WebAttack,Brute Force -Web,17702,17714,13,0.43,13,0.43,True
+EP_0180,Friday-23-02-2018,WebAttack,Brute Force -Web,17726,17730,5,0.17,11,0.37,True
+EP_0181,Friday-23-02-2018,WebAttack,Brute Force -Web,17735,17742,8,0.27,4,0.13,False
+EP_0182,Friday-23-02-2018,WebAttack,Brute Force -Web,17764,17771,8,0.27,21,0.7,True
+EP_0183,Friday-23-02-2018,WebAttack,Brute Force -Web,17785,17789,5,0.17,13,0.43,True
+EP_0184,Friday-23-02-2018,WebAttack,SQL Injection,17793,17800,8,0.27,3,0.1,False
+EP_0185,Friday-23-02-2018,WebAttack,Brute Force -Web,17809,17813,5,0.17,8,0.27,False
+EP_0186,Friday-23-02-2018,WebAttack,Brute Force -Web,17822,17826,5,0.17,8,0.27,False
+EP_0187,Friday-23-02-2018,WebAttack,Brute Force -Web,17849,17855,7,0.23,22,0.73,True
+EP_0188,Friday-23-02-2018,WebAttack,Brute Force -Web,17867,17871,5,0.17,11,0.37,True
+EP_0189,Friday-23-02-2018,WebAttack,Brute Force -Web,17879,17884,6,0.2,7,0.23,False
+EP_0190,Friday-23-02-2018,WebAttack,Brute Force -Web,17891,17895,5,0.17,6,0.2,False
+EP_0191,Friday-23-02-2018,WebAttack,Brute Force -Web,17909,17916,8,0.27,13,0.43,True
+EP_0192,Friday-23-02-2018,WebAttack,Brute Force -Web,17931,17935,5,0.17,14,0.47,True
+EP_0193,Friday-23-02-2018,WebAttack,Brute Force -Web,17938,17945,8,0.27,2,0.07,False
+EP_0194,Friday-23-02-2018,WebAttack,Brute Force -Web,17950,17954,5,0.17,4,0.13,False
+EP_0195,Friday-23-02-2018,WebAttack,Brute Force -Web,17964,17971,8,0.27,9,0.3,False
+EP_0196,Friday-23-02-2018,WebAttack,Brute Force -Web,17974,17978,5,0.17,2,0.07,False
+EP_0197,Friday-23-02-2018,WebAttack,Brute Force -Web,17995,18002,8,0.27,16,0.53,True
+EP_0198,Friday-23-02-2018,WebAttack,Brute Force -Web,18024,18031,8,0.27,21,0.7,True
+EP_0199,Friday-23-02-2018,WebAttack,Brute Force -Web,18053,18057,5,0.17,21,0.7,True
+EP_0200,Friday-23-02-2018,WebAttack,Brute Force -Web,18082,18089,8,0.27,24,0.8,True
+EP_0201,Thursday-01-03-2018,Infiltration,Infilteration,1796,4709,2914,97.13,1796,59.87,True
+EP_0202,Thursday-01-03-2018,Infiltration,Infilteration,16106,17849,1744,58.13,11396,379.87,True
+EP_0203,Thursday-15-02-2018,DoS,DoS attacks-GoldenEye,15227,15336,110,3.67,15227,507.57,True
+EP_0204,Thursday-15-02-2018,DoS,DoS attacks-GoldenEye,15528,15617,90,3.0,191,6.37,True
+EP_0205,Thursday-15-02-2018,DoS,DoS attacks-GoldenEye,15878,16115,238,7.93,260,8.67,True
+EP_0206,Thursday-15-02-2018,DoS,DoS attacks-GoldenEye,16285,16289,5,0.17,169,5.63,True
+EP_0207,Thursday-15-02-2018,DoS,DoS attacks-Slowloris,18002,19260,1259,41.97,1712,57.07,True
+EP_0208,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1545,1552,8,0.27,1545,51.5,True
+EP_0209,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1572,1576,5,0.17,19,0.63,True
+EP_0210,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1588,1594,7,0.23,11,0.37,True
+EP_0211,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1615,1619,5,0.17,20,0.67,True
+EP_0212,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1628,1632,5,0.17,8,0.27,False
+EP_0213,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1653,1658,6,0.2,20,0.67,True
+EP_0214,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1682,1686,5,0.17,23,0.77,True
+EP_0215,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1711,1715,5,0.17,24,0.8,True
+EP_0216,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1740,1744,5,0.17,24,0.8,True
+EP_0217,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1768,1773,6,0.2,23,0.77,True
+EP_0218,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1798,1802,5,0.17,24,0.8,True
+EP_0219,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1826,1830,5,0.17,23,0.77,True
+EP_0220,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1855,1859,5,0.17,24,0.8,True
+EP_0221,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1883,1888,6,0.2,23,0.77,True
+EP_0222,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1912,1916,5,0.17,23,0.77,True
+EP_0223,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1940,1945,6,0.2,23,0.77,True
+EP_0224,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1969,1973,5,0.17,23,0.77,True
+EP_0225,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1998,2002,5,0.17,24,0.8,True
+EP_0226,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2027,2031,5,0.17,24,0.8,True
+EP_0227,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2056,2060,5,0.17,24,0.8,True
+EP_0228,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2085,2089,5,0.17,24,0.8,True
+EP_0229,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2113,2117,5,0.17,23,0.77,True
+EP_0230,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2143,2147,5,0.17,25,0.83,True
+EP_0231,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2173,2177,5,0.17,25,0.83,True
+EP_0232,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2202,2206,5,0.17,24,0.8,True
+EP_0233,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2232,2236,5,0.17,25,0.83,True
+EP_0234,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2262,2266,5,0.17,25,0.83,True
+EP_0235,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2291,2296,6,0.2,24,0.8,True
+EP_0236,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2321,2325,5,0.17,24,0.8,True
+EP_0237,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2351,2356,6,0.2,25,0.83,True
+EP_0238,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2381,2385,5,0.17,24,0.8,True
+EP_0239,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2412,2417,6,0.2,26,0.87,True
+EP_0240,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2442,2446,5,0.17,24,0.8,True
+EP_0241,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2472,2476,5,0.17,25,0.83,True
+EP_0242,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2502,2506,5,0.17,25,0.83,True
+EP_0243,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2534,2538,5,0.17,27,0.9,True
+EP_0244,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2564,2568,5,0.17,25,0.83,True
+EP_0245,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2594,2598,5,0.17,25,0.83,True
+EP_0246,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2625,2629,5,0.17,26,0.87,True
+EP_0247,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2655,2660,6,0.2,25,0.83,True
+EP_0248,Thursday-22-02-2018,WebAttack,SQL Injection,5831,5849,19,0.63,3170,105.67,True
+EP_0249,Thursday-22-02-2018,WebAttack,SQL Injection,5891,5895,5,0.17,41,1.37,True
+EP_0250,Thursday-22-02-2018,WebAttack,SQL Injection,5900,5910,11,0.37,4,0.13,False
+EP_0251,Thursday-22-02-2018,WebAttack,SQL Injection,5921,5927,7,0.23,10,0.33,True
+EP_0252,Thursday-22-02-2018,WebAttack,SQL Injection,5937,5952,16,0.53,9,0.3,False
+EP_0253,Thursday-22-02-2018,WebAttack,SQL Injection,5962,5966,5,0.17,9,0.3,False
+EP_0254,Thursday-22-02-2018,WebAttack,SQL Injection,5979,5986,8,0.27,12,0.4,True
+EP_0255,Thursday-22-02-2018,WebAttack,SQL Injection,5995,6004,10,0.33,8,0.27,False
+EP_0256,Thursday-22-02-2018,WebAttack,SQL Injection,6008,6012,5,0.17,3,0.1,False
+EP_0257,Thursday-22-02-2018,WebAttack,SQL Injection,6023,6027,5,0.17,10,0.33,True
+EP_0258,Thursday-22-02-2018,WebAttack,SQL Injection,6056,6066,11,0.37,28,0.93,True
+EP_0259,Thursday-22-02-2018,WebAttack,SQL Injection,6137,6141,5,0.17,70,2.33,True
+EP_0260,Thursday-22-02-2018,WebAttack,SQL Injection,6231,6235,5,0.17,89,2.97,True
+EP_0261,Thursday-22-02-2018,WebAttack,Brute Force -Web,16608,16624,17,0.57,10372,345.73,True
+EP_0262,Thursday-22-02-2018,WebAttack,Brute Force -Web,16667,16673,7,0.23,42,1.4,True
+EP_0263,Thursday-22-02-2018,WebAttack,Brute Force -Web,16731,16735,5,0.17,57,1.9,True
+EP_0264,Thursday-22-02-2018,WebAttack,Brute Force -Web,16750,16754,5,0.17,14,0.47,True
+EP_0265,Thursday-22-02-2018,WebAttack,Brute Force -Web,16778,16782,5,0.17,23,0.77,True
+EP_0266,Thursday-22-02-2018,WebAttack,Brute Force -Web,16806,16813,8,0.27,23,0.77,True
+EP_0267,Thursday-22-02-2018,WebAttack,Brute Force -Web,16835,16842,8,0.27,21,0.7,True
+EP_0268,Thursday-22-02-2018,WebAttack,Brute Force -Web,16864,16871,8,0.27,21,0.7,True
+EP_0269,Thursday-22-02-2018,WebAttack,Brute Force -Web,16893,16897,5,0.17,21,0.7,True
+EP_0270,Thursday-22-02-2018,WebAttack,Brute Force -Web,16921,16926,6,0.2,23,0.77,True
+EP_0271,Thursday-22-02-2018,WebAttack,Brute Force -Web,16951,16955,5,0.17,24,0.8,True
+EP_0272,Thursday-22-02-2018,WebAttack,Brute Force -Web,16979,16986,8,0.27,23,0.77,True
+EP_0273,Thursday-22-02-2018,WebAttack,Brute Force -Web,17008,17015,8,0.27,21,0.7,True
+EP_0274,Thursday-22-02-2018,WebAttack,Brute Force -Web,17037,17042,6,0.2,21,0.7,True
+EP_0275,Thursday-22-02-2018,WebAttack,Brute Force -Web,17066,17071,6,0.2,23,0.77,True
+EP_0276,Thursday-22-02-2018,WebAttack,Brute Force -Web,17095,17102,8,0.27,23,0.77,True
+EP_0277,Thursday-22-02-2018,WebAttack,Brute Force -Web,17124,17128,5,0.17,21,0.7,True
+EP_0278,Thursday-22-02-2018,WebAttack,Brute Force -Web,17153,17157,5,0.17,24,0.8,True
+EP_0279,Thursday-22-02-2018,WebAttack,Brute Force -Web,17181,17186,6,0.2,23,0.77,True
+EP_0280,Thursday-22-02-2018,WebAttack,Brute Force -Web,17210,17215,6,0.2,23,0.77,True
+EP_0281,Thursday-22-02-2018,WebAttack,Brute Force -Web,17239,17244,6,0.2,23,0.77,True
+EP_0282,Thursday-22-02-2018,WebAttack,Brute Force -Web,17268,17275,8,0.27,23,0.77,True
+EP_0283,Thursday-22-02-2018,WebAttack,Brute Force -Web,17297,17301,5,0.17,21,0.7,True
+EP_0284,Thursday-22-02-2018,WebAttack,Brute Force -Web,17326,17330,5,0.17,24,0.8,True
+EP_0285,Thursday-22-02-2018,WebAttack,Brute Force -Web,17355,17359,5,0.17,24,0.8,True
+EP_0286,Thursday-22-02-2018,WebAttack,Brute Force -Web,17383,17388,6,0.2,23,0.77,True
+EP_0287,Thursday-22-02-2018,WebAttack,Brute Force -Web,17412,17420,9,0.3,23,0.77,True
+EP_0288,Thursday-22-02-2018,WebAttack,Brute Force -Web,17442,17446,5,0.17,21,0.7,True
+EP_0289,Thursday-22-02-2018,WebAttack,Brute Force -Web,17470,17475,6,0.2,23,0.77,True
+EP_0290,Thursday-22-02-2018,WebAttack,Brute Force -Web,17499,17504,6,0.2,23,0.77,True
+EP_0291,Thursday-22-02-2018,WebAttack,Brute Force -Web,17528,17533,6,0.2,23,0.77,True
+EP_0292,Thursday-22-02-2018,WebAttack,Brute Force -Web,17557,17562,6,0.2,23,0.77,True
+EP_0293,Thursday-22-02-2018,WebAttack,Brute Force -Web,17586,17591,6,0.2,23,0.77,True
+EP_0294,Thursday-22-02-2018,WebAttack,Brute Force -Web,17615,17619,5,0.17,23,0.77,True
+EP_0295,Thursday-22-02-2018,WebAttack,Brute Force -Web,17644,17648,5,0.17,24,0.8,True
+EP_0296,Thursday-22-02-2018,WebAttack,Brute Force -Web,17672,17677,6,0.2,23,0.77,True
+EP_0297,Thursday-22-02-2018,WebAttack,Brute Force -Web,17701,17708,8,0.27,23,0.77,True
+EP_0298,Thursday-22-02-2018,WebAttack,Brute Force -Web,17730,17737,8,0.27,21,0.7,True
+EP_0299,Thursday-22-02-2018,WebAttack,Brute Force -Web,17759,17764,6,0.2,21,0.7,True
+EP_0300,Thursday-22-02-2018,WebAttack,Brute Force -Web,17789,17796,8,0.27,24,0.8,True
+EP_0301,Thursday-22-02-2018,WebAttack,Brute Force -Web,17818,17825,8,0.27,21,0.7,True
+EP_0302,Thursday-22-02-2018,WebAttack,Brute Force -Web,17848,17855,8,0.27,22,0.73,True
+EP_0303,Thursday-22-02-2018,WebAttack,Brute Force -Web,17878,17885,8,0.27,22,0.73,True
+EP_0304,Thursday-22-02-2018,WebAttack,Brute Force -Web,17908,17915,8,0.27,22,0.73,True
+EP_0305,Thursday-22-02-2018,WebAttack,Brute Force -Web,17939,17946,8,0.27,23,0.77,True
+EP_0306,Thursday-22-02-2018,WebAttack,Brute Force -Web,17970,17977,8,0.27,23,0.77,True
+EP_0307,Thursday-22-02-2018,WebAttack,Brute Force -Web,18001,18008,8,0.27,23,0.77,True
+EP_0308,Thursday-22-02-2018,WebAttack,Brute Force -Web,18032,18039,8,0.27,23,0.77,True
+EP_0309,Thursday-22-02-2018,WebAttack,Brute Force -Web,18065,18072,8,0.27,25,0.83,True
+EP_0310,Thursday-22-02-2018,WebAttack,Brute Force -Web,18082,18088,7,0.23,9,0.3,False
+EP_0311,Thursday-22-02-2018,WebAttack,Brute Force -Web,18111,18118,8,0.27,22,0.73,True
+EP_0312,Thursday-22-02-2018,WebAttack,Brute Force -Web,18140,18145,6,0.2,21,0.7,True
+EP_0313,Thursday-22-02-2018,WebAttack,Brute Force -Web,18169,18173,5,0.17,23,0.77,True
+EP_0314,Thursday-22-02-2018,WebAttack,Brute Force -Web,18198,18205,8,0.27,24,0.8,True
+EP_0315,Thursday-22-02-2018,WebAttack,Brute Force -Web,18227,18232,6,0.2,21,0.7,True
+EP_0316,Thursday-22-02-2018,WebAttack,Brute Force -Web,18256,18263,8,0.27,23,0.77,True
+EP_0317,Thursday-22-02-2018,WebAttack,SQL Injection,18285,18292,8,0.27,21,0.7,True
+EP_0318,Thursday-22-02-2018,WebAttack,Brute Force -Web,18314,18321,8,0.27,21,0.7,True
+EP_0319,Thursday-22-02-2018,WebAttack,Brute Force -Web,18343,18348,6,0.2,21,0.7,True
+EP_0320,Thursday-22-02-2018,WebAttack,Brute Force -Web,18372,18377,6,0.2,23,0.77,True
+EP_0321,Thursday-22-02-2018,WebAttack,Brute Force -Web,18401,18406,6,0.2,23,0.77,True
+EP_0322,Thursday-22-02-2018,WebAttack,Brute Force -Web,18430,18435,6,0.2,23,0.77,True
+EP_0323,Thursday-22-02-2018,WebAttack,Brute Force -Web,18459,18466,8,0.27,23,0.77,True
+EP_0324,Thursday-22-02-2018,WebAttack,Brute Force -Web,18488,18493,6,0.2,21,0.7,True
+EP_0325,Thursday-22-02-2018,WebAttack,Brute Force -Web,18517,18522,6,0.2,23,0.77,True
+EP_0326,Thursday-22-02-2018,WebAttack,Brute Force -Web,18546,18553,8,0.27,23,0.77,True
+EP_0327,Thursday-22-02-2018,WebAttack,Brute Force -Web,18575,18582,8,0.27,21,0.7,True
+EP_0328,Thursday-22-02-2018,WebAttack,Brute Force -Web,18604,18611,8,0.27,21,0.7,True
+EP_0329,Thursday-22-02-2018,WebAttack,Brute Force -Web,18633,18637,5,0.17,21,0.7,True
+EP_0330,Thursday-22-02-2018,WebAttack,Brute Force -Web,18662,18669,8,0.27,24,0.8,True
+EP_0331,Thursday-22-02-2018,WebAttack,Brute Force -Web,18691,18695,5,0.17,21,0.7,True
+EP_0332,Wednesday-14-02-2018,BruteForce,SSH-Bruteforce,1836,1840,5,0.17,1836,61.2,True
+EP_0333,Wednesday-14-02-2018,BruteForce,SSH-Bruteforce,1851,4575,2725,90.83,10,0.33,True
+EP_0334,Wednesday-14-02-2018,BruteForce,FTP-BruteForce,17199,20115,2917,97.23,12623,420.77,True
+EP_0335,Wednesday-21-02-2018,DDoS,DDOS attack-HOIC,457,1131,675,22.5,457,15.23,True
+EP_0336,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,14788,14819,32,1.07,13656,455.2,True
+EP_0337,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,14823,14832,10,0.33,3,0.1,False
+EP_0338,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,14848,14879,32,1.07,15,0.5,True
+EP_0339,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,14883,14892,10,0.33,3,0.1,False
+EP_0340,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,14908,14939,32,1.07,15,0.5,True
+EP_0341,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,14944,14952,9,0.3,4,0.13,False
+EP_0342,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,14968,14999,32,1.07,15,0.5,True
+EP_0343,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15004,15012,9,0.3,4,0.13,False
+EP_0344,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15029,15059,31,1.03,16,0.53,True
+EP_0345,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15064,15072,9,0.3,4,0.13,False
+EP_0346,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15089,15119,31,1.03,16,0.53,True
+EP_0347,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15124,15132,9,0.3,4,0.13,False
+EP_0348,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15149,15179,31,1.03,16,0.53,True
+EP_0349,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15184,15192,9,0.3,4,0.13,False
+EP_0350,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15209,15239,31,1.03,16,0.53,True
+EP_0351,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15244,15252,9,0.3,4,0.13,False
+EP_0352,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15269,15299,31,1.03,16,0.53,True
+EP_0353,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15304,15313,10,0.33,4,0.13,False
+EP_0354,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15329,15360,32,1.07,15,0.5,True
+EP_0355,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15365,15373,9,0.3,4,0.13,False
+EP_0356,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15389,15420,32,1.07,15,0.5,True
+EP_0357,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15425,15433,9,0.3,4,0.13,False
+EP_0358,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15449,15480,32,1.07,15,0.5,True
+EP_0359,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15485,15493,9,0.3,4,0.13,False
+EP_0360,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15509,15540,32,1.07,15,0.5,True
+EP_0361,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15545,15553,9,0.3,4,0.13,False
+EP_0362,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15569,15600,32,1.07,15,0.5,True
+EP_0363,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15605,15614,10,0.33,4,0.13,False
+EP_0364,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15629,15660,32,1.07,14,0.47,True
+EP_0365,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15665,15674,10,0.33,4,0.13,False
+EP_0366,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15689,15720,32,1.07,14,0.47,True
+EP_0367,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15725,15734,10,0.33,4,0.13,False
+EP_0368,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15749,15780,32,1.07,14,0.47,True
+EP_0369,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15786,15794,9,0.3,5,0.17,False
+EP_0370,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15800,15804,5,0.17,5,0.17,False
+EP_0371,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15811,15822,12,0.4,6,0.2,False
+EP_0372,Wednesday-28-02-2018,Infiltration,Infilteration,1256,2999,1744,58.13,1256,41.87,True
+EP_0373,Wednesday-28-02-2018,Infiltration,Infilteration,17696,19949,2254,75.13,14696,489.87,True

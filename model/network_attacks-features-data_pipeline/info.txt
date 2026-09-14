@@ -1,0 +1,2031 @@
+Topic 1 — Part 2: TCP
+
+TCP is probably the single most important protocol for your project because many attack behaviors become visible through TCP connection patterns, flags, ports, timing, and failures.
+
+We'll build it from first principles.
+
+1. IP gets you to a machine; ports get you to an application
+
+Suppose a server has IP:
+
+10.0.0.8
+
+That machine may simultaneously be running:
+
+SSH       → port 22
+HTTP      → port 80
+HTTPS     → port 443
+SMB       → port 445
+RDP       → port 3389
+
+So:
+
+IP address → which machine?
+Port       → which service/application?
+
+For example:
+
+192.168.1.5:52031  →  10.0.0.8:443
+        ↑                       ↑
+   source port            destination port
+
+The client usually chooses a temporary ephemeral port, while the server listens on a known port.
+
+A TCP connection is essentially identified by:
+
+(src IP, src port, dst IP, dst port)
+
+along with TCP as the protocol.
+
+This is sometimes called the connection's 4-tuple.
+
+2. Why do we need TCP?
+
+IP basically provides best-effort packet delivery.
+
+Packets could:
+
+disappear,
+arrive twice,
+arrive out of order.
+
+Applications such as SSH can't simply tolerate:
+
+packet 1
+packet 4
+packet 2
+packet 3
+
+and hope everything works.
+
+TCP provides a reliable, ordered byte stream.
+
+Conceptually:
+
+Application
+    ↓
+   TCP
+    ↓
+    IP
+    ↓
+Network
+
+TCP handles things including:
+
+connection establishment
+reliability
+ordering
+retransmissions
+flow control
+connection termination
+
+And fortunately for us, much of this behavior produces useful security telemetry.
+
+3. TCP three-way handshake
+
+Before two hosts communicate over TCP, they normally establish a connection.
+
+Suppose:
+
+Client A                         Server B
+10.0.0.5                        10.0.0.8:443
+Step 1 — SYN
+
+Client says:
+
+I want to establish a TCP connection.
+
+A ---------------- SYN ----------------> B
+Step 2 — SYN-ACK
+
+Server responds:
+
+I received your request and agree.
+
+A <------------- SYN + ACK ------------ B
+Step 3 — ACK
+
+Client confirms:
+
+A ---------------- ACK ----------------> B
+
+Connection established.
+
+CLIENT                              SERVER
+
+   | -------- SYN -----------------> |
+   | <------- SYN ACK -------------- |
+   | -------- ACK -----------------> |
+   |                                 |
+   | ===== Connection established ==|
+
+This simple mechanism becomes extremely important for intrusion detection.
+
+4. TCP flags
+
+The TCP header contains several flags. The most important ones for you are:
+
+Flag	Meaning
+SYN	Start/synchronize connection
+ACK	Acknowledge received data
+FIN	Gracefully close connection
+RST	Immediately reset connection
+PSH	Deliver data to application promptly
+URG	Urgent data
+
+You'll commonly encounter combinations:
+
+SYN
+SYN ACK
+ACK
+FIN ACK
+RST
+PSH ACK
+
+Your challenge explicitly mentions:
+
+TCP flag bitmask (SYN, ACK, FIN, RST, PSH, URG)
+
+So you should not just extract:
+
+flags = 18
+
+You will likely derive features such as:
+
+syn_count
+ack_count
+rst_count
+fin_count
+
+syn_ratio
+rst_ratio
+syn_ack_ratio
+
+over flows/windows.
+
+5. Why SYN behavior exposes scanning
+
+Suppose normal traffic looks like:
+
+A → B:443       SYN
+B → A           SYN-ACK
+A → B           ACK
+
+A → C:80        SYN
+C → A           SYN-ACK
+A → C           ACK
+
+Now consider:
+
+A → B:21       SYN
+A → B:22       SYN
+A → B:23       SYN
+A → B:24       SYN
+A → B:25       SYN
+A → B:26       SYN
+A → B:27       SYN
+A → B:28       SYN
+...
+
+Host A is rapidly trying many destination ports.
+
+This is potentially a port scan.
+
+From raw traffic:
+
+dst_port = [21,22,23,24,25,26,...]
+
+you derive behavior:
+
+unique_dst_ports = 400
+SYN_count = 410
+connections_completed = 7
+
+So potentially:
+
+$$ \text{SYN completion ratio} = \frac{\text{completed handshakes}} {\text{SYN attempts}} $$
+
+Normal host:
+
+$$ \frac{90}{100}=0.90 $$
+
+Scanning host:
+
+$$ \frac{7}{410}\approx0.017 $$
+
+That's vastly more informative than simply knowing that a SYN packet occurred.
+
+6. Horizontal vs vertical scanning
+
+This distinction will matter later.
+
+Vertical scan
+
+One machine probes many ports on one machine:
+
+Attacker
+   |
+   +----> Server A : 21
+   +----> Server A : 22
+   +----> Server A : 80
+   +----> Server A : 443
+   +----> Server A : 445
+   +----> Server A : 3389
+
+Question being asked by attacker:
+
+What services is this machine running?
+
+Feature:
+
+unique_dst_ports_per_dst_ip
+Horizontal scan
+
+One machine probes the same port across many machines:
+
+Attacker
+   |
+   +----> Host A :445
+   +----> Host B :445
+   +----> Host C :445
+   +----> Host D :445
+   +----> Host E :445
+
+Question:
+
+Which machines have this service exposed?
+
+Feature:
+
+unique_dst_ips_per_dst_port
+
+This distinction is a perfect example of why cybersecurity knowledge affects feature engineering.
+
+7. RST — connection reset
+
+Suppose:
+
+A → B:9999    SYN
+
+but nothing is listening on that port.
+
+B may respond:
+
+A ← B         RST
+
+Essentially:
+
+No connection here.
+
+So imagine:
+
+SYN SYN SYN SYN SYN SYN SYN...
+             ↓
+RST RST RST RST RST RST...
+
+A high number of failed/reset connections can indicate scanning or other abnormal behavior.
+
+Possible features:
+
+RST_count
+RST/SYN_ratio
+failed_connection_rate
+
+But here's a crucial principle:
+
+High RST count ≠ attack.
+
+Normal software can generate failed connections.
+
+Your model should learn behavior in context:
+
+RST spike
++
+many destination ports
++
+many destination IPs
++
+high SYN rate
++
+short IAT
+
+Now the evidence becomes much stronger.
+
+8. TCP sequence numbers
+
+TCP needs to know where data belongs in the byte stream.
+
+Simplified example:
+
+A → B
+SEQ = 1000
+Data = 500 bytes
+
+The next expected byte is:
+
+1500
+
+B can respond:
+
+ACK = 1500
+
+meaning approximately:
+
+I have received everything through byte 1499; send me byte 1500 onward.
+
+So:
+
+A                         B
+
+SEQ=1000, 500 bytes
+------------------------->
+
+             ACK=1500
+<-------------------------
+
+If segments arrive out of order, TCP can reconstruct the stream using sequence numbers.
+
+For your ML pipeline, you probably won't feed raw sequence numbers directly because their absolute values usually don't convey attack semantics.
+
+But they help derive more useful things such as:
+
+retransmissions
+out-of-order packets
+duplicate ACKs
+9. Retransmissions
+
+Suppose A sends:
+
+SEQ=1000
+
+but the packet gets lost.
+
+A doesn't receive the expected acknowledgment.
+
+Eventually:
+
+A → B    SEQ=1000
+
+again.
+
+That's a retransmission.
+
+Some retransmissions are perfectly normal.
+
+But unusually high retransmission behavior may indicate:
+
+congestion,
+poor network conditions,
+overloaded services,
+certain attack conditions,
+abnormal communication.
+
+And your problem explicitly asks for:
+
+retransmission counts
+
+Possible features:
+
+retransmission_count
+retransmission_ratio
+
+retransmission_rate =
+retransmissions / total_tcp_segments
+10. TCP window size
+
+TCP also performs flow control.
+
+Imagine the receiver says:
+
+I currently have space for 32 KB more data.
+
+The TCP header communicates this through its advertised receive window.
+
+Simplified:
+
+Sender                       Receiver
+
+        data
+------------------------>
+
+        ACK
+        Window = 32768
+<------------------------
+
+The sender knows approximately how much unacknowledged data it can send without overwhelming the receiver.
+
+The challenge specifically mentions:
+
+TCP window size
+
+You might extract:
+
+window_size_mean
+window_size_std
+window_size_min
+window_size_max
+
+Again, the absolute value isn't automatically malicious.
+
+It contributes to the model's understanding of traffic/session characteristics.
+
+11. TCP connection termination
+
+Normal TCP connection closure commonly uses FIN/ACK exchanges.
+
+Simplified:
+
+A                            B
+
+FIN ------------------------>
+
+    <------------------- ACK
+
+    <------------------- FIN
+
+ACK ------------------------>
+
+So you can distinguish between connections that:
+
+completed normally
+reset abruptly
+never completed handshake
+remained open
+
+These are potentially useful behavioral features.
+
+For a flow:
+
+handshake_completed = true
+normal_termination = true
+duration = 2.7 sec
+
+versus:
+
+handshake_completed = false
+RST_received = true
+duration = 0.013 sec
+
+Hundreds of the latter in a few seconds tell a very different story.
+
+12. Inter-arrival time — extremely important for your project
+
+Suppose packets arrive at:
+
+1.00 sec
+1.10 sec
+1.20 sec
+1.30 sec
+
+Inter-arrival times:
+
+0.10
+0.10
+0.10
+
+Therefore:
+
+$$ IAT_{mean}=0.1 $$
+
+and variance is almost zero.
+
+Another traffic pattern:
+
+1
+7
+19
+20
+48
+
+has very different timing.
+
+Your prompt explicitly requires:
+
+IAT mean
+IAT variance
+IAT max
+
+Why?
+
+Because two traffic sequences could contain exactly the same packets but behave differently temporally.
+
+Consider:
+
+100 SYNs in 0.2 seconds
+
+versus:
+
+100 SYNs over 4 hours
+
+A static feature like:
+
+SYN_count = 100
+
+doesn't distinguish them.
+
+Timing features do.
+
+13. Slow attacks illustrate why temporal modeling matters
+
+Suppose an attacker deliberately avoids:
+
+500 ports / second
+
+because it's easy to detect.
+
+Instead:
+
+port 22
+
+... 30 seconds ...
+
+port 80
+
+... 45 seconds ...
+
+port 443
+
+... 60 seconds ...
+
+port 445
+
+A simple 5-second threshold-based IDS may see:
+
+Window 1: 1 connection
+Window 2: 1 connection
+Window 3: 1 connection
+
+Everything looks harmless.
+
+But a temporal model observing:
+
+$$ S_{t-20},S_{t-19},...,S_t $$
+
+may learn:
+
+This host is slowly accumulating connections to unusual destination ports.
+
+This is exactly where your world-model idea starts becoming useful.
+
+14. TCP flow
+
+Suppose we observe 10,000 packets between:
+
+10.0.0.1:53120 → 10.0.0.8:443
+
+We don't necessarily want the model processing every packet individually.
+
+Those packets can be aggregated into a flow.
+
+A simplified flow record could look like:
+
+src_ip        = 10.0.0.1
+dst_ip        = 10.0.0.8
+
+src_port      = 53120
+dst_port      = 443
+
+protocol      = TCP
+
+duration      = 3.42 sec
+
+forward_pkts  = 71
+backward_pkts = 54
+
+forward_bytes = 82 KB
+backward_bytes= 350 KB
+
+SYN_count     = 2
+ACK_count     = 103
+RST_count     = 0
+
+IAT_mean      = ...
+IAT_std       = ...
+
+retransmits   = 2
+
+We'll formally study flows later in Topic 3, so don't worry about all the details yet.
+
+15. Now think like the world model
+
+Suppose within a time window host A produces:
+
+connections            = 450
+unique_dst_ips          = 79
+unique_dst_ports        = 112
+
+SYN_count               = 447
+ACK_count               = 39
+RST_count               = 314
+
+handshake_success_rate  = 0.07
+
+IAT_mean                = 8ms
+
+Don't immediately say:
+
+Attack.
+
+Instead, think:
+
+What network state does this represent?
+
+Perhaps:
+
+State S_t
+
+Host A:
+    extremely high fanout
+    extremely high SYN activity
+    very low handshake completion
+    many resets
+    rapid connection attempts
+
+Your system might therefore estimate:
+
+P(Recon | S_t) = 0.91
+
+More importantly, after learning transitions:
+
+S(t-3) → S(t-2) → S(t-1) → S(t)
+
+it might forecast:
+
+               now
+                ↓
+Recon → Recon → Recon
+                |
+                ↓
+           Initial Access
+                |
+                ↓
+         Lateral Movement
+
+P(lateral movement
+  within next K windows) = 0.68
+
+That's the distinction between your desired system and ordinary intrusion classification.
+
+TCP features you should remember
+
+For now, I'd keep this mental feature family:
+
+IDENTITY
+src/dst IP
+src/dst port
+
+FLAGS
+SYN
+ACK
+RST
+FIN
+PSH
+URG
+
+CONNECTION
+duration
+handshake success/failure
+termination type
+
+VOLUME
+packets
+bytes
+
+TIMING
+IAT mean
+IAT variance
+IAT max
+packet rate
+connection rate
+
+RELIABILITY
+retransmissions
+duplicate ACKs
+
+FLOW CONTROL
+TCP window size
+
+BEHAVIORAL
+unique destination IPs
+unique destination ports
+SYN/ACK ratio
+RST/SYN ratio
+destination fanout
+port entropy
+
+The last category is where your eventual feature engineering becomes particularly valuable.
+
+One subtle correction before moving forward
+
+Don't build rules such as:
+
+if SYN/ACK > X:
+    attack
+
+Those features are evidence, not proofs.
+
+Your model should ultimately learn combinations and transitions:
+
+$$ P(S_{t+1}\mid S_{t-L+1},...,S_t) $$
+
+where an evolving combination of TCP behaviors is what matters.
+
+We have now covered the TCP foundation needed to understand attack telemetry. Next within Topic 1 is UDP + ports/sockets, which is shorter but important because DNS and several attack patterns rely heavily on UDP. After that we'll move into DNS → HTTP/HTTPS → SSH → SMB → RDP, where the security implications become much more concrete.
+
+Yesterday 12:18 PM
+I don't have much time to learn , let's do all the important parts
+
+Yes. Then we should change strategy. You do not need a cybersecurity course for this project. You need the subset that helps you interpret telemetry and engineer meaningful temporal features.
+
+We've already done IP + TCP. Here's the compressed version of the remaining important theory.
+
+1. UDP — only what you need
+
+Unlike TCP, UDP has:
+
+no handshake
+no ACK/retransmission mechanism at the transport layer
+no connection establishment
+low overhead
+TCP:
+A → SYN → B
+A ← SYN-ACK
+A → ACK
+A → DATA
+
+UDP:
+A → DATA → B
+
+UDP is common for DNS, streaming, VoIP, DHCP, etc.
+
+Security-relevant features:
+
+UDP packets/sec
+UDP bytes/sec
+unique UDP destinations
+unique destination ports
+request/response ratio
+UDP flow duration
+UDP IAT
+
+Large abnormal UDP volumes can appear in DoS/amplification scenarios, while DNS behavior is especially important.
+
+That's enough UDP for now.
+
+2. DNS — very important
+
+DNS converts:
+
+google.com
+    ↓
+142.x.x.x
+
+Normally:
+
+Client → DNS server
+"What is example.com?"
+
+DNS server → Client
+"93.x.x.x"
+
+Usually UDP/53, although DNS can also use TCP and encrypted DNS mechanisms exist.
+
+Why DNS matters for security
+
+A compromised machine often needs to locate attacker-controlled infrastructure.
+
+Normal:
+
+PC → google.com
+PC → github.com
+PC → microsoft.com
+
+Suspicious patterns might look like:
+
+PC → ajd82js92.example.com
+PC → 92jskw02.example.com
+PC → ak29dj29.example.com
+PC → 1jsk20sk.example.com
+
+Potential features:
+
+DNS requests/minute
+unique domains
+unique subdomains
+domain/query length
+character entropy
+NXDOMAIN rate
+query/response size
+rare destination domains
+DNS IAT
+
+Another interesting behavior is DNS tunneling, where data is encoded into DNS queries.
+
+For example, conceptually:
+
+encoded-secret-data.attacker-domain.com
+
+Therefore unusually long/high-entropy subdomains + high DNS activity can be informative.
+
+Don't implement a complete DNS-security engine initially. Just preserve/extract enough DNS telemetry if your dataset supports it.
+
+3. HTTP/HTTPS
+
+HTTP is application-layer web communication.
+
+Conceptually:
+
+Client → GET /login
+Server → 200 OK
+
+HTTP normally uses port 80.
+
+HTTPS is:
+
+HTTP
+ ↓
+TLS encryption
+ ↓
+TCP
+
+commonly on 443.
+
+Important problem
+
+With HTTPS, you generally cannot simply inspect the encrypted application payload from ordinary network telemetry.
+
+But metadata remains useful:
+
+destination
+connection frequency
+bytes sent
+bytes received
+duration
+packet sizes
+timing
+TLS metadata when available
+
+This teaches you an important principle for your project:
+
+Network attack detection doesn't necessarily require reading packet payloads.
+
+Encrypted C2 can still produce unusual behavioral patterns.
+
+4. SSH, SMB and RDP — know these three ports
+
+You don't need protocol internals right now.
+
+SSH — port 22
+
+Remote shell / remote administration.
+
+Admin PC ──SSH──> Linux Server
+
+Potential attack behavior:
+
+Attacker → server:22
+Attacker → server:22
+Attacker → server:22
+...
+
+possibly brute-force behavior.
+
+Relevant features:
+
+connection attempts
+failed connections
+unique sources
+IAT
+connection duration
+SMB — port 445
+
+Windows file/resource sharing.
+
+This is particularly important for lateral movement.
+
+Imagine:
+
+Internet
+   ↓
+PC A compromised
+   ↓
+PC A → PC B :445
+     → PC C :445
+     → PC D :445
+     → PC E :445
+
+That sudden internal SMB fanout can be a strong signal of propagation/discovery/lateral movement.
+
+Potential features:
+
+unique internal dst IPs on port 445
+SMB connections/min
+new SMB relationships
+failed SMB connections
+SMB bytes transferred
+RDP — port 3389
+
+Windows remote desktop.
+
+Laptop → Windows server:3389
+
+Suspicious behavior might include unusual hosts suddenly attempting RDP connections across internal machines.
+
+Features:
+
+RDP attempts
+unique RDP destinations
+new RDP relationships
+connection failures
+timing
+Ports worth remembering
+
+For this project, this is enough initially:
+
+Port	Service
+22	SSH
+53	DNS
+80	HTTP
+443	HTTPS
+445	SMB
+3389	RDP
+
+Don't memorize 100 ports.
+
+5. Now the important part: attacker progression
+
+This is far more important than learning additional protocols.
+
+Think of an attack as a movie, not an image.
+
+Stage A — Reconnaissance
+
+Attacker needs to discover:
+
+What machines/services exist?
+
+You may observe:
+
+A → B:21 SYN
+A → B:22 SYN
+A → B:80 SYN
+A → B:443 SYN
+A → B:445 SYN
+
+or:
+
+A → B:445
+A → C:445
+A → D:445
+A → E:445
+
+Features:
+
+unique_dst_ports ↑
+unique_dst_ips ↑
+SYN rate ↑
+failed connections ↑
+RST rate ↑
+connection IAT ↓
+port entropy ↑
+6. Initial Access / brute-force-like behavior
+
+Now the attacker has discovered something interesting:
+
+Server B has SSH
+
+Traffic changes from:
+
+A → many machines/ports
+
+toward repeated interaction:
+
+A → B:22
+A → B:22
+A → B:22
+A → B:22
+...
+
+Potential features:
+
+repeated connections to same service
+connection rate
+failure rate
+IAT
+session durations
+
+If authentication logs are available, they are even better:
+
+login failures
+unique usernames
+successful login after failures
+
+And now you can see why temporal modeling matters:
+
+t1                  t2
+
+wide scanning   →   concentrated attempts
+
+That transition itself carries information.
+
+7. Lateral movement
+
+Suppose machine B gets compromised.
+
+The attacker now explores the internal network:
+
+          B
+       /  |  \
+     C    D    E
+     |         |
+    :445      :3389
+
+Now the interesting entity isn't just one flow.
+
+It's the communication graph changing.
+
+Before:
+
+A → B
+
+After compromise:
+
+A → B
+    ├──→ C
+    ├──→ D
+    ├──→ E
+    └──→ F
+
+Features:
+
+new_internal_connections
+unique_internal_destinations
+new_edges
+SMB fanout
+RDP fanout
+SSH fanout
+internal connection failure rate
+
+This is why GNNs are attractive for your challenge.
+
+8. Command & Control — C2
+
+A compromised machine may communicate with attacker infrastructure.
+
+One classic behavioral pattern is beaconing:
+
+Compromised PC → C2
+
+      30 sec
+
+Compromised PC → C2
+
+      30 sec
+
+Compromised PC → C2
+
+      30 sec
+
+That gives:
+
+IAT:
+30.1
+29.9
+30.0
+30.1
+29.9
+
+So:
+
+IAT variance ≈ very small
+
+Potential features:
+
+periodicity
+IAT mean
+IAT variance
+destination rarity
+repeated external destination
+bytes per connection
+packet-size consistency
+
+A Transformer/LSTM can potentially learn these temporal patterns.
+
+9. Exfiltration
+
+Eventually data may leave the organization.
+
+Example:
+
+Internal PC
+     |
+     |  3 MB
+     |  5 MB
+     |  40 MB
+     |  900 MB  ← unusual
+     ↓
+External host
+
+Useful features:
+
+outbound bytes
+inbound bytes
+
+outbound / inbound ratio
+
+long connections
+unusual destination
+transfer volume vs historical baseline
+
+The baseline comparison is particularly valuable.
+
+900 MB from a backup server might be normal.
+
+900 MB from a receptionist's workstation at 3 AM could be highly unusual.
+
+So derive:
+
+$$ z=\frac{x-\mu_{\text{host}}}{\sigma_{\text{host}}+\epsilon} $$
+
+where possible.
+
+10. This is your attack "movie"
+
+The most important thing you've learned so far is this:
+
+NORMAL
+  ↓
+
+RECON
+many IPs/ports
+high SYN
+failed connections
+  ↓
+
+ACCESS ATTEMPT
+repeated targeting
+specific service
+  ↓
+
+LATERAL MOVEMENT
+new internal connections
+SMB/RDP/SSH fanout
+  ↓
+
+C2
+periodic external communication
+rare destinations
+  ↓
+
+EXFILTRATION
+abnormal outbound transfer
+
+The stages are not guaranteed to occur in exactly this linear order, but this is an excellent working mental model.
+
+Your model's advantage comes from recognizing:
+
+S1 → S2 → S3
+
+rather than asking whether an isolated S3 is malicious.
+
+11. MITRE ATT&CK — learn the concept, don't memorize it
+
+MITRE ATT&CK provides a standardized vocabulary describing adversary behavior.
+
+For this challenge, understand three levels:
+
+TACTIC
+"What is attacker trying to achieve?"
+
+        ↓
+
+TECHNIQUE
+"How are they doing it?"
+
+        ↓
+
+TELEMETRY
+"What observable evidence do I see?"
+
+For example:
+
+Goal:
+Discovery
+
+        ↓
+
+Behavior:
+Network/service discovery
+
+        ↓
+
+Telemetry:
+many destination IPs
+many ports
+SYN attempts
+connection failures
+
+Your output can ultimately map your simplified predicted states to the attack stages required by the problem.
+
+Don't spend days memorizing MITRE technique IDs. Use the MITRE ATT&CK Enterprise Matrix as a reference while building.
+
+12. IDS vs IPS
+
+Very simple distinction:
+
+IDS — Intrusion Detection System
+
+Traffic
+   ↓
+IDS
+   ↓
+"WARNING: suspicious activity"
+
+Detects/reports.
+
+IPS — Intrusion Prevention System
+
+Traffic
+   ↓
+IPS
+   ↓
+Detect
+   ↓
+Block/drop
+
+Your project is much closer to a predictive IDS / decision-support system.
+
+13. Signature vs anomaly detection
+
+Traditional signature:
+
+IF known pattern X
+THEN attack
+
+Great for known attacks, weaker for unseen behavior.
+
+Anomaly detection asks:
+
+Is this behavior unusual compared with what I expect?
+
+For example:
+
+Normal host:
+3-10 destinations/min
+
+Current:
+723 destinations/min
+
+Your project goes another step:
+
+Given the abnormal evolution I'm observing, where is this network likely to go next?
+
+That's the key conceptual difference.
+
+14. Packet → Flow → Window → State
+
+This is perhaps the most important data-engineering concept.
+
+Packet
+
+One observation:
+
+timestamp
+src_ip
+dst_ip
+src_port
+dst_port
+TCP flags
+TTL
+window size
+payload size
+
+Thousands/millions of these occur.
+
+Flow
+
+Aggregate communication:
+
+src/dst
+ports
+protocol
+
+duration
+packets
+bytes
+IAT
+flags
+retransmissions
+Window
+
+Aggregate activity during, say:
+
+[t, t+5 seconds)
+
+Example:
+
+connections = 572
+unique_ips = 82
+unique_ports = 103
+SYN_ratio = .71
+RST_ratio = .42
+bytes_out = ...
+Network state
+
+Now combine host/flow/window information:
+
+$$ S_t $$
+
+and build:
+
+$$ S_{t-L+1},...,S_t $$
+
+to predict:
+
+$$ S_{t+1},...,S_{t+K}. $$
+
+This is the dataset your Transformer should ultimately see, rather than an arbitrary collection of independent rows.
+
+15. Feature engineering: concentrate here
+
+I would divide your features into six families.
+
+Volume
+
+packet_count
+flow_count
+bytes_in
+bytes_out
+packets/sec
+bytes/sec
+
+Connectivity
+
+unique_src_ips
+unique_dst_ips
+unique_src_ports
+unique_dst_ports
+new_dst_ips
+destination fanout
+
+TCP behavior
+
+SYN ratio
+ACK ratio
+RST ratio
+FIN ratio
+handshake completion ratio
+retransmission ratio
+
+Timing
+
+IAT mean
+IAT std
+IAT max
+flow duration
+connection rate
+periodicity
+
+Directional
+
+in/out packet ratio
+in/out byte ratio
+bidirectional flow ratio
+
+Baseline/change
+
+traffic vs host baseline
+new destination ratio
+new port ratio
+new internal edges
+feature deltas from previous window
+rolling mean/std
+
+I particularly recommend explicitly adding delta features:
+
+$$ \Delta x_t=x_t-x_{t-1} $$
+
+because your problem is about state transitions.
+
+For example:
+
+unique_dst_ips:
+
+t-3     4
+t-2     5
+t-1    29
+t      87
+
+The sequence itself tells an interesting story.
+
+16. Graph representation — only what you need
+
+Represent:
+
+Host/IP = node
+Communication = edge
+
+Example:
+
+        B
+       / \
+      A   C
+          |
+          D
+
+Node features:
+
+packets sent
+bytes sent
+SYN rate
+unique ports
+failed connections
+
+Edge features:
+
+src → dst
+bytes
+packets
+protocol
+port
+duration
+IAT
+
+At each time:
+
+$$ G_t=(V,E_t) $$
+
+so your network becomes:
+
+$$ G_1\rightarrow G_2\rightarrow G_3\rightarrow... $$
+
+You do not need a GNN initially.
+
+A temporal Transformer over well-designed state vectors is substantially easier to build and debug. Graph-derived features such as:
+
+degree
+new edge count
+internal fanout
+external fanout
+
+can be fed into the Transformer without requiring a GNN.
+
+That's probably what I'd do for a first strong prototype.
+
+17. Explainability
+
+You have three major choices.
+
+Feature importance
+
+Simplest:
+
+Prediction: 87% lateral movement risk
+
+Important:
+new_internal_dst       0.31
+SMB_fanout             0.24
+SYN_rate               0.17
+failed_connections     0.11
+...
+SHAP
+
+SHAP tries to quantify how individual features pushed a prediction relative to a baseline.
+
+Conceptually:
+
+Base risk                   20%
+
+SMB fanout        +25%
+new internal IPs  +19%
+RST ratio         +11%
+normal IAT         -4%
+
+Prediction                  71%
+
+For your demo, this is extremely understandable.
+
+Attention
+
+A Transformer can additionally indicate which historical states/windows received stronger attention.
+
+For example:
+
+t-5  ██
+t-4  █
+t-3  ███
+t-2  ███████
+t-1  █████████
+t    ███████
+
+That potentially lets you explain:
+
+The forecast was strongly influenced by the sudden behavioral transition during the previous two windows.
+
+Be careful, though: attention weights are not automatically faithful causal explanations. SHAP/feature attribution is safer to present as your primary feature-level explanation.
+
+18. What I would actually build
+
+Given limited time, I would not start with GNN + Transformer + latent world model + everything simultaneously.
+
+Build:
+
+PCAP / CIC dataset
+        ↓
+Packet + Flow features
+        ↓
+5s/10s temporal aggregation
+        ↓
+Host/network state vector S_t
+        ↓
+[S_t-L ... S_t]
+        ↓
+Temporal Transformer
+        ↓
+┌─────────────────────────────┐
+│ Next-state prediction       │
+│ Attack-stage probability    │
+│ Infiltration probability    │
+└─────────────────────────────┘
+        ↓
+K-step rollout
+        ↓
+SHAP / feature attribution
+        ↓
+Streamlit dashboard
+
+Then, if time remains:
+
+graph-derived features
+        ↓
+degree
+fanout
+new edges
+internal/external connectivity
+        ↓
+add to S_t
+
+Only after the system works would I consider a full temporal GNN.
+
+What you now know vs what remains
+
+We've compressed most of 1, 3, 4, 5, 6, 8, 9 and 10 into the essentials.
+
+There are two things I would not compress too aggressively, because they're practical and could make or break the project:
+
+Topic 2: Wireshark + PCAP analysis — you should actually look at packets and understand what your extractor is processing.
+
+Topic 7: CIC-IDS-2018 / CTU-13 dataset construction and leakage — arguably even more important. If we construct the training data incorrectly, we can get a beautiful 99% F1 model that has learned almost nothing about forecasting.
+
+So I'd move directly to Wireshark/PCAP practical analysis, then immediately to CIC-IDS-2018/CTU-13 and exactly how I think you should turn them into (past states → future states) training samples.
+
+Yesterday 1:48 PM
+Can you also tell me other attacker mindsets , or usually what patterns they follow 
+
+Yes. For your project, this is one of the most valuable things to understand: don't memorize attacks; understand what information or capability the attacker needs next. That need often creates observable network behavior.
+
+A useful abstraction is:
+
+Attacker = repeatedly reduce uncertainty → gain capability → expand control → achieve objective → avoid detection.
+
+4
+1. "What exists?" — discovery mindset
+
+Initially the attacker may know very little:
+
+I know organization X
+        ↓
+What IPs are alive?
+        ↓
+What ports are open?
+        ↓
+What services are running?
+        ↓
+Which versions?
+        ↓
+Which ones might be useful?
+
+This produces patterns such as one→many hosts, one→many ports, many SYNs, many failures/resets, increasing destination fanout, sequential/randomized port probing.
+
+But sophisticated reconnaissance may deliberately be slow:
+
+port 22
+     ↓ 40 sec
+port 443
+     ↓ 2 min
+port 445
+
+So your model needs multiple temporal scales. A 5-second window alone can miss low-and-slow behavior.
+
+2. "I found something interesting — focus on it"
+
+Recon traffic might be broad:
+
+A → B
+A → C
+A → D
+A → E
+A → F
+
+Then suddenly:
+
+A → D:22
+A → D:22
+A → D:22
+A → D:22
+
+This broad → narrow transition can be more informative than either state independently.
+
+Features worth considering:
+
+destination concentration
+port concentration
+repeated-target ratio
+change in destination entropy
+
+Your world model could learn:
+
+$$ \text{broad recon}\rightarrow\text{target concentration} $$
+
+as an indication of progression.
+
+3. "Can I obtain access?"
+
+Now activity can become repetitive around a particular service/account/host.
+
+If authentication telemetry is available:
+
+FAIL
+FAIL
+FAIL
+FAIL
+SUCCESS
+
+is particularly valuable.
+
+Not because five failures are inherently malicious, but because:
+
+recon
+ ↓
+target identified
+ ↓
+repeated failures
+ ↓
+successful authentication
+
+is a meaningful sequence.
+
+This suggests a very useful general feature:
+
+failure → success transition
+
+rather than merely:
+
+number_of_failures
+4. "I'm inside. Where am I?"
+
+An important insight: compromise doesn't end reconnaissance.
+
+The attacker now needs to understand the internal environment.
+
+So you might observe a second reconnaissance phase:
+
+External reconnaissance
+        ↓
+Initial access
+        ↓
+INTERNAL reconnaissance
+        ↓
+Lateral movement
+
+A previously ordinary workstation may suddenly begin contacting many internal systems.
+
+That's extremely useful for your project:
+
+$$ \Delta\text{internal fanout}\uparrow $$
+
+and
+
+$$ \text{new internal edges}\uparrow $$
+
+may matter more than absolute traffic volume.
+
+5. "What other machines can I reach?"
+
+This is lateral movement.
+
+Before:
+
+             Server
+                ↑
+Employee PC ----+
+
+After compromise:
+
+              PC-A
+          /    |    \
+       PC-B  Server-C  PC-D
+        :445   :3389    :445
+
+Look for role changes.
+
+A workstation that historically behaves like a client:
+
+A → DNS
+A → web
+A → company services
+
+suddenly behaves like:
+
+A → 17 internal machines:445
+A → 8 machines:3389
+A → 12 machines:22
+
+That's potentially much stronger than "port 445 appeared".
+
+So consider:
+
+$$ \text{behavior deviation from host baseline} $$
+
+and even:
+
+host_role_change_score
+6. "Which machine is valuable?"
+
+Attackers aren't necessarily interested in every compromised computer equally.
+
+They may move toward systems containing useful data or privileges.
+
+From the network perspective, you might see a progression:
+
+workstation
+    ↓
+application server
+    ↓
+database/file server
+
+This gives you an interesting graph concept:
+
+Does communication progressively move toward unusual/high-value parts of the network?
+
+If asset roles are available, they can become powerful contextual features.
+
+7. "How do I maintain communication?" — C2
+
+Once something is compromised, an attacker may need persistent communication.
+
+A simplistic C2 channel might beacon:
+
+PC → X
+30 sec
+PC → X
+30 sec
+PC → X
+30 sec
+
+A more evasive one might deliberately jitter timing:
+
+28 sec
+37 sec
+25 sec
+42 sec
+31 sec
+
+because perfect periodicity is easy to detect.
+
+Therefore don't create:
+
+low IAT variance = C2
+
+Instead consider several behavioral dimensions together:
+
+repeated rare destination
+long-lived relationship
+regular-ish timing
+similar packet sizes
+low-volume repeated traffic
+unusual external endpoint
+8. "Blend in"
+
+This is a major attacker mindset relevant to your challenge.
+
+A naive attacker might use unusual ports/protocols.
+
+A more careful attacker asks:
+
+What traffic already looks normal here?
+
+Hence malicious communication may use common protocols/ports such as HTTPS or DNS.
+
+Therefore:
+
+dst_port == 443
+
+tells you very little.
+
+You care about:
+
+Who contacted it?
+Was destination previously seen?
+How frequently?
+How much data?
+At what times?
+How does this compare with this host's history?
+What happened immediately before this behavior?
+
+This is one of the strongest arguments for your world-model approach.
+
+9. "Go slow enough to stay below thresholds"
+
+Imagine an IDS rule:
+
+> 100 connection attempts/minute
+→ alert
+
+The attacker can simply do:
+
+10/minute
+
+A static threshold fails.
+
+But over 30 minutes:
+
+10 + 10 + 10 + ... = systematic probing
+
+So I would seriously consider multi-scale states:
+
+Short-term:
+5 sec
+
+Medium:
+1 min
+
+Long:
+10–30 min
+
+Then state \(S_t\) could contain rolling statistics over several horizons.
+
+This could be a very strong architectural feature.
+
+10. "Use normal administrative behavior"
+
+Another important concept is living off the land.
+
+Attackers may leverage legitimate services/tools instead of producing obviously exotic traffic.
+
+Network behavior might therefore superficially resemble:
+
+SSH
+RDP
+SMB
+HTTPS
+DNS
+
+The abnormality is in who is doing it, when, toward whom, and in what sequence.
+
+For example:
+
+Normal:
+Admin-PC → Server:3389
+
+Interesting:
+Reception-PC → 15 Servers:3389
+
+Same protocol.
+
+Completely different context.
+
+This leads to an excellent feature family:
+
+first_seen_relationship
+rare_src_dst_pair
+host_service_novelty
+destination novelty
+time-of-day deviation
+host role deviation
+11. "Prepare data, then move it"
+
+Exfiltration doesn't necessarily mean:
+
+suddenly upload 100 GB
+
+You may see preparation followed by transfer:
+
+normal
+ ↓
+internal server access ↑
+ ↓
+internal inbound bytes ↑
+ ↓
+quiet period
+ ↓
+external outbound bytes ↑
+ ↓
+sustained external connection
+
+So again, the sequence matters.
+
+Potential state progression:
+
+$$ \text{internal collection} \rightarrow \text{staging} \rightarrow \text{external transfer} $$
+
+Even if you can't directly identify "collection," changing traffic directionality can help.
+
+12. "Test, fail, adapt"
+
+Real attackers don't necessarily follow a perfect script.
+
+You could see:
+
+Recon
+ ↓
+Attempt SSH
+ ↓
+fails
+ ↓
+Recon again
+ ↓
+try another machine
+ ↓
+fails
+ ↓
+try SMB
+ ↓
+success
+ ↓
+lateral movement
+
+Therefore don't hard-code:
+
+$$ Recon\rightarrow Access\rightarrow Lateral\rightarrow C2 $$
+
+as the only legal sequence.
+
+Your world model should learn a distribution over possible next states:
+
+$$ P(S_{t+1}|S_{\leq t}) $$
+
+Perhaps:
+
+Current: Recon
+
+Next:
+Recon continues       0.43
+Initial Access        0.31
+Return to normal      0.18
+Other                 0.08
+
+That's much closer to what the challenge means by forecasting.
+
+The attacker patterns I'd actually engineer
+
+If time is limited, remember these patterns:
+
+Pattern	What you observe	Useful derived feature
+One → many hosts	Host discovery	destination fanout
+One → many ports	Service discovery	port fanout
+Broad → narrow	Target selected	destination concentration
+Repeated failures	Access attempts	failure rate
+Failure → success	Possible breakthrough	transition feature
+External → internal recon	Post-access discovery	internal fanout delta
+New internal relationships	Lateral movement	new-edge rate
+Client changes role	Compromised host behavior	role-deviation score
+Repeated external contact	Possible C2	destination persistence
+Periodic-ish traffic	Beaconing	autocorrelation/IAT stats
+Rare destination	New infrastructure	destination novelty
+Gradual probing	Evasion	long-window activity
+Common protocol + unusual context	Blend-in behavior	contextual anomaly
+Internal bytes → outbound bytes	Collection/exfiltration	directionality change
+Large unusual outbound transfer	Exfiltration	baseline-relative bytes
+One bigger insight
+
+I'd actually design your feature engineering around five questions the attacker repeatedly answers:
+
+1. DISCOVERY
+   "What can I reach?"
+        ↓
+   fanout / scans / new destinations
+
+2. SELECTION
+   "What should I attack?"
+        ↓
+   traffic concentration
+
+3. ACCESS
+   "Can I control it?"
+        ↓
+   repeated attempts / failure→success
+
+4. EXPANSION
+   "What can this machine reach?"
+        ↓
+   new internal edges / role changes
+
+5. OBJECTIVE
+   "Can I communicate/steal data?"
+        ↓
+   C2 persistence / abnormal outbound traffic
+
+This is more useful for your model than memorizing dozens of attack names.
+
+And it suggests something interesting for the architecture: don't only predict the MITRE stage. Predict intermediate behavioral state variables such as fanout, destination novelty, failure rate, new-edge rate, outbound deviation, etc. Then the model is genuinely learning how the network state evolves, while the attack-stage head interprets that predicted future state. That's much closer to a defensible "world model" than simply putting a Transformer in front of a six-class classifier.

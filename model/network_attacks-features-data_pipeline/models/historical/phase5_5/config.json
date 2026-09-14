@@ -1,0 +1,7 @@
+{
+  "k": 10,
+  "lambda_attack": 5.0,
+  "use_pos_weight": true,
+  "seed": 42,
+  "epochs": 5
+}

@@ -1,0 +1,801 @@
+canonical_schema:
+  Dst Port:
+    original_dtype: int64 / float64
+    canonical_dtype: int32
+    semantic_type: NetworkIdentifier (L4 Service Port)
+    role: Feature (Service Identifier)
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Protocol:
+    original_dtype: int64 / float64
+    canonical_dtype: int32
+    semantic_type: NetworkIdentifier (IP Protocol Number)
+    role: 'Feature (Protocol Type: TCP=6, UDP=17, ICMP=1)'
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Timestamp:
+    original_dtype: object (string)
+    canonical_dtype: datetime64[ns]
+    semantic_type: TemporalWallClock
+    role: Metadata (Chronological Index)
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Flow Duration:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Tot Fwd Pkts:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Tot Bwd Pkts:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  TotLen Fwd Pkts:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  TotLen Bwd Pkts:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Fwd Pkt Len Max:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Fwd Pkt Len Min:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Fwd Pkt Len Mean:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Fwd Pkt Len Std:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Bwd Pkt Len Max:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Bwd Pkt Len Min:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Bwd Pkt Len Mean:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Bwd Pkt Len Std:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Flow Byts/s:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 36307
+    inf_count: 13353
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Flow Pkts/s:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 36307
+    inf_count: 36307
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Flow IAT Mean:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Flow IAT Std:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Flow IAT Max:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Flow IAT Min:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Fwd IAT Tot:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Fwd IAT Mean:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Fwd IAT Std:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Fwd IAT Max:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Fwd IAT Min:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Bwd IAT Tot:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Bwd IAT Mean:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Bwd IAT Std:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Bwd IAT Max:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Bwd IAT Min:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Fwd PSH Flags:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Bwd PSH Flags:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: true
+    multicollinear_duplicate: false
+    notes: Zero variance column across full benchmark; candidate for drop
+  Fwd URG Flags:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Bwd URG Flags:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: true
+    multicollinear_duplicate: false
+    notes: Zero variance column across full benchmark; candidate for drop
+  Fwd Header Len:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: true
+    notes: Exact multicollinear duplicate (r = 1.0); candidate for drop
+  Bwd Header Len:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: true
+    notes: Exact multicollinear duplicate (r = 1.0); candidate for drop
+  Fwd Pkts/s:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Bwd Pkts/s:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Pkt Len Min:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Pkt Len Max:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Pkt Len Mean:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Pkt Len Std:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Pkt Len Var:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  FIN Flag Cnt:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  SYN Flag Cnt:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  RST Flag Cnt:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  PSH Flag Cnt:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  ACK Flag Cnt:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  URG Flag Cnt:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  CWE Flag Count:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  ECE Flag Cnt:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Down/Up Ratio:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Pkt Size Avg:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Fwd Seg Size Avg:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Bwd Seg Size Avg:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Fwd Byts/b Avg:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: true
+    multicollinear_duplicate: false
+    notes: Zero variance column across full benchmark; candidate for drop
+  Fwd Pkts/b Avg:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: true
+    multicollinear_duplicate: false
+    notes: Zero variance column across full benchmark; candidate for drop
+  Fwd Blk Rate Avg:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: true
+    multicollinear_duplicate: false
+    notes: Zero variance column across full benchmark; candidate for drop
+  Bwd Byts/b Avg:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: true
+    multicollinear_duplicate: false
+    notes: Zero variance column across full benchmark; candidate for drop
+  Bwd Pkts/b Avg:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: true
+    multicollinear_duplicate: false
+    notes: Zero variance column across full benchmark; candidate for drop
+  Bwd Blk Rate Avg:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: true
+    multicollinear_duplicate: false
+    notes: Zero variance column across full benchmark; candidate for drop
+  Subflow Fwd Pkts:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: true
+    notes: Exact multicollinear duplicate (r = 1.0); candidate for drop
+  Subflow Fwd Byts:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: true
+    notes: Exact multicollinear duplicate (r = 1.0); candidate for drop
+  Subflow Bwd Pkts:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: true
+    notes: Exact multicollinear duplicate (r = 1.0); candidate for drop
+  Subflow Bwd Byts:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: true
+    notes: Exact multicollinear duplicate (r = 1.0); candidate for drop
+  Init Fwd Win Byts:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Init Bwd Win Byts:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Fwd Act Data Pkts:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Fwd Seg Size Min:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Active Mean:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Active Std:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Active Max:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Active Min:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Idle Mean:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Idle Std:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Idle Max:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Idle Min:
+    original_dtype: float64
+    canonical_dtype: float32
+    semantic_type: ContinuousFlowTelemetry
+    role: Feature
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature
+  Label:
+    original_dtype: object (string)
+    canonical_dtype: string (category)
+    semantic_type: GroundTruthCategorical
+    role: Target / Ground Truth
+    missing_count: 0
+    inf_count: 0
+    zero_variance: false
+    multicollinear_duplicate: false
+    notes: Active behavioral feature

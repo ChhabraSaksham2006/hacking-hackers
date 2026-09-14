@@ -1,0 +1,101 @@
+attack_type,history_step,seconds_before_forecast,saliency_weight
+PortScan,0,20,0.0381
+PortScan,1,18,0.0531
+PortScan,2,16,0.0672
+PortScan,3,14,0.0848
+PortScan,4,12,0.089
+PortScan,5,10,0.1084
+PortScan,6,8,0.1188
+PortScan,7,6,0.1432
+PortScan,8,4,0.1481
+PortScan,9,2,0.1494
+DoS Hulk,0,20,0.0303
+DoS Hulk,1,18,0.0441
+DoS Hulk,2,16,0.0651
+DoS Hulk,3,14,0.0743
+DoS Hulk,4,12,0.0905
+DoS Hulk,5,10,0.1193
+DoS Hulk,6,8,0.1248
+DoS Hulk,7,6,0.1343
+DoS Hulk,8,4,0.1507
+DoS Hulk,9,2,0.1665
+DoS GoldenEye,0,20,0.0425
+DoS GoldenEye,1,18,0.0515
+DoS GoldenEye,2,16,0.0709
+DoS GoldenEye,3,14,0.0824
+DoS GoldenEye,4,12,0.0889
+DoS GoldenEye,5,10,0.1177
+DoS GoldenEye,6,8,0.1269
+DoS GoldenEye,7,6,0.1342
+DoS GoldenEye,8,4,0.1374
+DoS GoldenEye,9,2,0.1476
+DDoS LOIC,0,20,0.0347
+DDoS LOIC,1,18,0.0461
+DDoS LOIC,2,16,0.0609
+DDoS LOIC,3,14,0.079
+DDoS LOIC,4,12,0.0962
+DDoS LOIC,5,10,0.1158
+DDoS LOIC,6,8,0.1217
+DDoS LOIC,7,6,0.1251
+DDoS LOIC,8,4,0.153
+DDoS LOIC,9,2,0.1674
+SSH-Patator,0,20,0.0439
+SSH-Patator,1,18,0.0561
+SSH-Patator,2,16,0.0705
+SSH-Patator,3,14,0.0773
+SSH-Patator,4,12,0.0856
+SSH-Patator,5,10,0.1009
+SSH-Patator,6,8,0.1274
+SSH-Patator,7,6,0.1371
+SSH-Patator,8,4,0.1492
+SSH-Patator,9,2,0.1519
+FTP-Patator,0,20,0.0416
+FTP-Patator,1,18,0.056
+FTP-Patator,2,16,0.0684
+FTP-Patator,3,14,0.0855
+FTP-Patator,4,12,0.0987
+FTP-Patator,5,10,0.0958
+FTP-Patator,6,8,0.1121
+FTP-Patator,7,6,0.1426
+FTP-Patator,8,4,0.1506
+FTP-Patator,9,2,0.1489
+Web Attack,0,20,0.0322
+Web Attack,1,18,0.0484
+Web Attack,2,16,0.0657
+Web Attack,3,14,0.0809
+Web Attack,4,12,0.088
+Web Attack,5,10,0.1058
+Web Attack,6,8,0.1216
+Web Attack,7,6,0.1458
+Web Attack,8,4,0.1513
+Web Attack,9,2,0.1602
+Infiltration,0,20,0.0394
+Infiltration,1,18,0.0528
+Infiltration,2,16,0.0694
+Infiltration,3,14,0.0778
+Infiltration,4,12,0.0977
+Infiltration,5,10,0.0984
+Infiltration,6,8,0.1137
+Infiltration,7,6,0.137
+Infiltration,8,4,0.1484
+Infiltration,9,2,0.1654
+Heartbleed,0,20,0.0367
+Heartbleed,1,18,0.0513
+Heartbleed,2,16,0.0671
+Heartbleed,3,14,0.0826
+Heartbleed,4,12,0.0858
+Heartbleed,5,10,0.1063
+Heartbleed,6,8,0.1213
+Heartbleed,7,6,0.1383
+Heartbleed,8,4,0.1413
+Heartbleed,9,2,0.1694
+Botnet,0,20,0.0481
+Botnet,1,18,0.0624
+Botnet,2,16,0.0729
+Botnet,3,14,0.0819
+Botnet,4,12,0.0948
+Botnet,5,10,0.1067
+Botnet,6,8,0.1131
+Botnet,7,6,0.1247
+Botnet,8,4,0.144
+Botnet,9,2,0.1515

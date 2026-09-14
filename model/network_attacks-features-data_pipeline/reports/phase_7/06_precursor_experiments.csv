@@ -1,0 +1,6 @@
+experiment_id,model,horizon,precursor_window,loss_type,lambda_onset,precursor_weight,focal_gamma,threshold,PR_AUC,ROC_AUC,precision,recall,F1,FPR,false_alarms_per_hour,event_count,event_recall,median_lead_time,mean_lead_time,state_MAE,state_MSE,seed,status
+E602_PrecursorWeight_2x,SparseRSSM,20,60s,weighted_precursor,1.0,2.0,,0.02,0.0013,0.5924,0.0018,1.0,0.0036,0.6718,1207.7,7,1.0,20.0,15.7,0.2552,0.604,42,VALID
+E602_PrecursorWeight_5x,SparseRSSM,20,60s,weighted_precursor,1.0,5.0,,0.05,0.0013,0.5805,0.0018,1.0,0.0036,0.6693,1203.23,7,1.0,20.0,15.7,0.256,0.6058,42,VALID
+E602_PrecursorWeight_10x,SparseRSSM,20,60s,weighted_precursor,1.0,10.0,,0.07,0.0013,0.5869,0.002,1.0,0.0039,0.6126,1101.27,7,1.0,20.0,15.7,0.2753,0.617,42,VALID
+E603_PrecursorWindow_20s,SparseRSSM,20,20s,weighted_precursor,1.0,10.0,,0.09,0.0014,0.6012,0.0012,0.3818,0.0024,0.3891,699.48,7,0.8571,20.0,15.0,0.2553,0.6127,42,VALID
+E603_PrecursorWindow_120s,SparseRSSM,20,120s,weighted_precursor,1.0,10.0,,0.06,0.0014,0.6056,0.0011,0.2909,0.0022,0.3204,576.02,7,0.5714,5.0,8.0,0.2658,0.6273,42,VALID

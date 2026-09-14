@@ -1,0 +1,44 @@
+{
+  "onset_probability": 0.5391,
+  "risk_level": "CRITICAL_ATTACK_IMMINENT",
+  "lead_time_seconds": 20.0,
+  "detection_threshold": 0.04,
+  "is_alert": true,
+  "mitre_candidates": [
+    {
+      "technique_id": "T1071",
+      "confidence": 0.3142,
+      "description": "Application Layer Protocol / C2 (Command & Control) — covert channel or beacon"
+    },
+    {
+      "technique_id": "T1046",
+      "confidence": 0.2758,
+      "description": "Network Service Scanning (Discovery) — port scanning / service enumeration"
+    },
+    {
+      "technique_id": "T1110",
+      "confidence": 0.2012,
+      "description": "Brute Force (Credential Access) — repeated authentication attempts"
+    },
+    {
+      "technique_id": "T1498",
+      "confidence": 0.1334,
+      "description": "Network Denial of Service (Impact) — volumetric flood or amplification"
+    },
+    {
+      "technique_id": "T1190",
+      "confidence": 0.0754,
+      "description": "Exploit Public-Facing Application (Initial Access) — protocol abuse / exploit"
+    }
+  ],
+  "model_outputs": {
+    "K_steps_forecasted": 10,
+    "forecasted_state_mae_expected": 0.2766,
+    "x_recon_shape": [1, 54]
+  },
+  "scientific_notes": {
+    "mitre_attribution_method": "deterministic_heuristic_delta_scoring — NOT a trained classifier",
+    "causal_inference_claim": "NONE — attention weights and delta magnitudes are NOT causal",
+    "multi_seed_variance": "Event recall ranges 71.43%—100.0% across seeds 42/123/2025"
+  }
+}

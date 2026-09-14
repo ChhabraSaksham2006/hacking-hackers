@@ -1,0 +1,3 @@
+model_name,variant,horizon_k,lead_time_seconds,val_f1,val_pr_auc,val_roc_auc,test_f1,test_pr_auc,test_roc_auc,test_recall,test_precision,test_accuracy,optimal_threshold
+Random_Forest,Static_54D,300,600.0,0.1459,0.0892,0.6462,0.4425,0.5334,0.7597,0.3697,0.5509,0.7291,0.0688
+Random_Forest,Static_37D,300,600.0,0.1457,0.0883,0.6449,0.4332,0.5372,0.7556,0.3573,0.5501,0.7282,0.0688

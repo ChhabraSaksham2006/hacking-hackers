@@ -1,0 +1,33 @@
+{
+  "phase": "5.5",
+  "git_commit": "6d20a8e",
+  "experiment_id": "E004_K10",
+  "val_threshold_f1": 0.01,
+  "val_threshold_fpr5": 0.48,
+  "val_best_f1": 0.1439,
+  "test_f1": 0.4832,
+  "test_pr_auc": 0.5462,
+  "test_recall": 0.4947,
+  "test_precision": 0.4723,
+  "test_state_mae": 0.292,
+  "multi_seed_f1_mean": 0.2711,
+  "multi_seed_f1_std": 0.0309,
+  "dataset": "CSE-CIC-IDS2018",
+  "split": {
+    "train": [
+      "Wednesday-14-02-2018.parquet",
+      "Thursday-15-02-2018.parquet",
+      "Friday-16-02-2018.parquet",
+      "Wednesday-21-02-2018.parquet",
+      "Thursday-22-02-2018.parquet"
+    ],
+    "val": [
+      "Friday-23-02-2018.parquet"
+    ],
+    "test": [
+      "Wednesday-28-02-2018.parquet",
+      "Thursday-01-03-2018.parquet",
+      "Friday-02-03-2018.parquet"
+    ]
+  }
+}

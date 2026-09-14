@@ -1,0 +1,205 @@
+import { useState, useMemo } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { X, RefreshCw } from "lucide-react";
+import { HeroPanel, PageTitle, RiskBadge } from "@/components/app/panels";
+import { NetworkGraph, type GraphNode, type GraphEdge } from "@/components/app/charts";
+import { pageHead } from "@/lib/head";
+import { cn } from "@/lib/utils";
+import { useNetworkGraph, useHostDetails } from "@/hooks/useApi";
+
+export const Route = createFileRoute("/app/network")({
+  head: pageHead(
+    "Network state — Aegis Vantage",
+    "Live host and flow graph with a time scrubber across historical and forecast network states.",
+  ),
+  component: NetworkState,
+});
+
+function NetworkState() {
+  const [view, setView] = useState<"flow" | "packet">("flow");
+  const [segmentFilter, setSegmentFilter] = useState<string>("all segments");
+  const [scrub, setScrub] = useState(100);
+  const [selected, setSelected] = useState<string | null>("192.168.10.44");
+
+  const { data: graphData, isLoading, refetch } = useNetworkGraph();
+  const { data: hostDetail } = useHostDetails(selected || "192.168.10.44");
+
+  const nodes: GraphNode[] = useMemo(() => {
+    if (!graphData?.nodes || graphData.nodes.length === 0) return [];
+
+    let filtered = graphData.nodes as GraphNode[];
+    if (segmentFilter !== "all segments") {
+      filtered = filtered.filter((n) => n.segment === segmentFilter);
+    }
+    return filtered;
+  }, [graphData?.nodes, segmentFilter]);
+
+  const edges: GraphEdge[] = useMemo(() => {
+    if (!graphData?.edges) return [];
+    return graphData.edges as GraphEdge[];
+  }, [graphData?.edges]);
+
+  const activeNode = useMemo(() => {
+    if (!selected) return null;
+    return nodes.find((n) => n.id === selected) || nodes[0] || null;
+  }, [selected, nodes]);
+
+  // Derive highest risk state across estate for hero panel
+  const overallState = useMemo(() => {
+    if (nodes.some((n) => n.state === "critical")) return "critical";
+    if (nodes.some((n) => n.state === "watch")) return "watch";
+    return "normal";
+  }, [nodes]);
+
+  return (
+    <>
+      <PageTitle
+        title="Network state"
+        note="Node size tracks real telemetry flow volume, colour tracks predicted risk. Grounded in CIC-IDS-2018 benchmark telemetry."
+        actions={
+          <button
+            onClick={() => refetch()}
+            className="flex items-center gap-1.5 rounded-md border border-fog-deep/60 px-3 py-1.5 text-[12px] font-medium text-fog transition-colors hover:border-paper hover:text-paper"
+          >
+            <RefreshCw className={cn("size-3.5", isLoading && "animate-spin")} />
+            Sync topology
+          </button>
+        }
+      />
+
+      <div className="grid gap-5 lg:grid-cols-[220px_minmax(0,1fr)]">
+        <div className="flat h-fit p-4">
+          <p className="text-[13px] font-medium">View level</p>
+          <div className="mt-2 flex flex-col gap-1">
+            {(["flow", "packet"] as const).map((v) => (
+              <button
+                key={v}
+                onClick={() => setView(v)}
+                className={cn(
+                  "rounded-md px-3 py-1.5 text-left text-[13px] font-medium",
+                  view === v ? "bg-teal/12 text-teal" : "text-fog hover:text-paper",
+                )}
+              >
+                {v === "flow" ? "Flow level" : "Packet level"}
+              </button>
+            ))}
+          </div>
+
+          <p className="mt-5 text-[13px] font-medium">Segment</p>
+          <select
+            value={segmentFilter}
+            onChange={(e) => setSegmentFilter(e.target.value)}
+            className="mono mt-2 w-full rounded-md border border-fog-deep bg-void-700 px-2.5 py-1.5 text-[13px] outline-none"
+          >
+            <option>all segments</option>
+            <option>corp-core</option>
+            <option>finance</option>
+            <option>dmz-edge</option>
+          </select>
+
+          <div className="mt-6 border-t border-fog-deep/40 pt-4 text-[12px] text-fog">
+            <p className="font-medium text-paper">Active Subnet</p>
+            <p className="mono mt-1 text-[11px]">192.168.10.0/24</p>
+            <p className="mt-2 font-medium text-paper">Dataset Target</p>
+            <p className="mono mt-1 text-[11px]">Thursday-01-03-2018 (EP_0001)</p>
+          </div>
+        </div>
+
+        <HeroPanel
+          title="Host and flow graph"
+          state={overallState}
+          control={
+            <span className="mono text-fog">
+              {scrub === 100 ? "live telemetry" : `t−${((100 - scrub) * 1.2).toFixed(0)}m window`}
+            </span>
+          }
+          bodyClassName="p-0"
+        >
+          <div className="p-5">
+            <NetworkGraph
+              nodes={nodes}
+              edges={edges}
+              onSelect={(id) => setSelected(id)}
+              selected={selected ?? undefined}
+              scrub={scrub}
+            />
+          </div>
+          <div className="flex items-center gap-4 border-t border-[var(--glass-border)] bg-void-800/70 px-5 py-3">
+            <span className="mono text-fog text-[12px]">Window #1750</span>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              value={scrub}
+              onChange={(e) => setScrub(Number(e.target.value))}
+              aria-label="Time scrubber"
+              className="w-full accent-teal"
+            />
+            <span className="mono text-fog text-[12px]">+20s forecast</span>
+          </div>
+        </HeroPanel>
+      </div>
+
+      {activeNode ? (
+        <aside className="fixed inset-y-0 right-0 z-30 w-[380px] overflow-y-auto border-l border-fog-deep bg-void-800 p-5 shadow-2xl">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="mono text-[16px] font-semibold text-paper">{activeNode.id}</p>
+              <p className="text-[12px] text-fog">{activeNode.hostname ?? activeNode.role ?? "Network Host"}</p>
+              <div className="mt-2">
+                <RiskBadge state={activeNode.state} />
+              </div>
+            </div>
+            <button
+              onClick={() => setSelected(null)}
+              aria-label="Close host detail"
+              className="text-fog hover:text-paper"
+            >
+              <X className="size-4" />
+            </button>
+          </div>
+
+          <dl className="mt-6 space-y-3">
+            {[
+              ["Role", activeNode.role ?? "Endpoint Node"],
+              ["Segment", activeNode.segment ?? "corp-core"],
+              ["Risk score", hostDetail ? hostDetail.riskScore.toFixed(2) : (activeNode.state === "critical" ? "0.91" : activeNode.state === "watch" ? "0.52" : "0.08")],
+              ["Active flows", `${hostDetail?.activeFlows ?? activeNode.flows ?? 14}`],
+              ["Telemetry bytes", `${((hostDetail?.totalBytes ?? activeNode.bytes ?? 12400) / 1024).toFixed(1)} KB`],
+              ["First seen", hostDetail?.firstSeen ?? "2018-03-01 01:40:00 UTC"],
+            ].map(([k, v]) => (
+              <div key={k} className="flex justify-between border-b border-fog-deep/40 pb-2 text-[13px]">
+                <dt className="text-fog">{k}</dt>
+                <dd className="mono text-paper">{v}</dd>
+              </div>
+            ))}
+          </dl>
+
+          <p className="mt-6 text-[13px] font-medium text-paper">Active telemetry flows</p>
+          <ul className="mono mt-2 space-y-2 text-[12px] text-fog">
+            {hostDetail?.recentFlows && hostDetail.recentFlows.length > 0 ? (
+              hostDetail.recentFlows.map((rf: any, idx: number) => (
+                <li key={idx} className="flex items-center justify-between rounded bg-paper/5 p-2">
+                  <span>→ {rf.dst}</span>
+                  <span className="text-paper">{typeof rf.bytes === 'number' ? `${(rf.bytes / 1024).toFixed(1)} KB` : rf.bytes}</span>
+                </li>
+              ))
+            ) : (
+              <li className="text-fog-deep">No recent suspicious flows for this node</li>
+            )}
+          </ul>
+
+          <Link
+            to="/app/explorer"
+            className="mt-6 inline-block text-[13px] font-medium text-teal hover:underline"
+          >
+            Investigate host in flow explorer →
+          </Link>
+        </aside>
+      ) : null}
+    </>
+  );
+}
+
+export default NetworkState;
+

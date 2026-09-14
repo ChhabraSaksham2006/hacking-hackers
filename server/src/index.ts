@@ -9,6 +9,7 @@ import { connectDB } from './config/db.js';
 import { corsOptions } from './config/cors.js';
 import { errorHandler, AppError } from './middleware/errorHandler.js';
 import mongoose from 'mongoose';
+import { dashboardStore } from './models/dashboardModel.js';
 
 // ── Route Imports ───────────────────────────────────────
 import authRouter from './routes/auth.js';
@@ -82,6 +83,7 @@ app.use(errorHandler);
 // ── Start server ────────────────────────────────────────
 async function start() {
   await connectDB();
+  await dashboardStore.init();
 
   const server = app.listen(env.PORT, () => {
     console.log(`🚀 Aegis Vantage API running on port ${env.PORT}`);
@@ -89,9 +91,19 @@ async function start() {
     console.log(`   Frontend:    ${env.FRONTEND_URL}`);
   });
 
+  // Master Clock / Ticker Loop: step simulation every 3,000 ms
+  const ticker = setInterval(async () => {
+    try {
+      await dashboardStore.stepForward();
+    } catch (err) {
+      console.error('Ticker step error:', err);
+    }
+  }, 3000);
+
   // Graceful shutdown
   const shutdown = async () => {
     console.log('\n🛑 SIGTERM / SIGINT received. Shutting down gracefully...');
+    clearInterval(ticker);
     server.close(async () => {
       console.log('   Express server closed.');
       await mongoose.connection.close();

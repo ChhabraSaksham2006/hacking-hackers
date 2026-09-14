@@ -1,0 +1,23 @@
+{
+  "train": {
+    "n_sequences": 101845,
+    "n_attack_k1": 11001,
+    "n_benign_k1": 90844,
+    "attack_rate_k1": 0.108,
+    "pos_weight": 8.26
+  },
+  "val": {
+    "n_sequences": 21536,
+    "n_attack_k1": 1289,
+    "n_benign_k1": 20247,
+    "attack_rate_k1": 0.0599,
+    "pos_weight": 15.71
+  },
+  "test": {
+    "n_sequences": 64608,
+    "n_attack_k1": 18815,
+    "n_benign_k1": 45793,
+    "attack_rate_k1": 0.2912,
+    "pos_weight": 2.43
+  }
+}

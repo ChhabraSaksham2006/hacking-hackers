@@ -1,0 +1,374 @@
+event_id,split,session,attack_family,attack_label,onset_window_idx,onset_timestamp,duration_windows,duration_minutes,prev_benign_windows,prev_benign_minutes,is_isolated_onset
+TRAIN_Wednesday-_1836,TRAIN,Wednesday-14-02-2018,BruteForce,SSH-Bruteforce,1836,2018-02-14 02:01:12,5,0.17,1836,61.2,True
+TRAIN_Wednesday-_1851,TRAIN,Wednesday-14-02-2018,BruteForce,SSH-Bruteforce,1851,2018-02-14 02:01:42,2725,90.83,10,0.33,True
+TRAIN_Wednesday-_17199,TRAIN,Wednesday-14-02-2018,BruteForce,FTP-BruteForce,17199,2018-02-14 10:33:18,2917,97.23,12623,420.77,True
+TRAIN_Thursday-1_15227,TRAIN,Thursday-15-02-2018,DoS,DoS attacks-GoldenEye,15227,2018-02-15 09:27:34,110,3.67,15227,507.57,True
+TRAIN_Thursday-1_15528,TRAIN,Thursday-15-02-2018,DoS,DoS attacks-GoldenEye,15528,2018-02-15 09:37:36,90,3.0,191,6.37,True
+TRAIN_Thursday-1_15878,TRAIN,Thursday-15-02-2018,DoS,DoS attacks-GoldenEye,15878,2018-02-15 09:49:16,238,7.93,260,8.67,True
+TRAIN_Thursday-1_16285,TRAIN,Thursday-15-02-2018,DoS,DoS attacks-GoldenEye,16285,2018-02-15 10:02:50,5,0.17,169,5.63,True
+TRAIN_Thursday-1_18002,TRAIN,Thursday-15-02-2018,DoS,DoS attacks-Slowloris,18002,2018-02-15 11:00:04,1259,41.97,1712,57.07,True
+TRAIN_Friday-16-_1343,TRAIN,Friday-16-02-2018,DoS,DoS attacks-Hulk,1343,2018-02-16 01:45:18,104,3.47,1343,44.77,True
+TRAIN_Friday-16-_16547,TRAIN,Friday-16-02-2018,DoS,DoS attacks-SlowHTTPTest,16547,2018-02-16 10:12:06,1382,46.07,15100,503.33,True
+TRAIN_Wednesday-_457,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-HOIC,457,2018-02-21 02:11:00,675,22.5,457,15.23,True
+TRAIN_Wednesday-_14788,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,14788,2018-02-21 10:08:42,32,1.07,13656,455.2,True
+TRAIN_Wednesday-_14823,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,14823,2018-02-21 10:09:52,10,0.33,3,0.1,False
+TRAIN_Wednesday-_14848,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,14848,2018-02-21 10:10:42,32,1.07,15,0.5,True
+TRAIN_Wednesday-_14883,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,14883,2018-02-21 10:11:52,10,0.33,3,0.1,False
+TRAIN_Wednesday-_14908,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,14908,2018-02-21 10:12:42,32,1.07,15,0.5,True
+TRAIN_Wednesday-_14944,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,14944,2018-02-21 10:13:54,9,0.3,4,0.13,False
+TRAIN_Wednesday-_14968,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,14968,2018-02-21 10:14:42,32,1.07,15,0.5,True
+TRAIN_Wednesday-_15004,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15004,2018-02-21 10:15:54,9,0.3,4,0.13,False
+TRAIN_Wednesday-_15029,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15029,2018-02-21 10:16:44,31,1.03,16,0.53,True
+TRAIN_Wednesday-_15064,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15064,2018-02-21 10:17:54,9,0.3,4,0.13,False
+TRAIN_Wednesday-_15089,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15089,2018-02-21 10:18:44,31,1.03,16,0.53,True
+TRAIN_Wednesday-_15124,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15124,2018-02-21 10:19:54,9,0.3,4,0.13,False
+TRAIN_Wednesday-_15149,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15149,2018-02-21 10:20:44,31,1.03,16,0.53,True
+TRAIN_Wednesday-_15184,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15184,2018-02-21 10:21:54,9,0.3,4,0.13,False
+TRAIN_Wednesday-_15209,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15209,2018-02-21 10:22:44,31,1.03,16,0.53,True
+TRAIN_Wednesday-_15244,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15244,2018-02-21 10:23:54,9,0.3,4,0.13,False
+TRAIN_Wednesday-_15269,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15269,2018-02-21 10:24:44,31,1.03,16,0.53,True
+TRAIN_Wednesday-_15304,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15304,2018-02-21 10:25:54,10,0.33,4,0.13,False
+TRAIN_Wednesday-_15329,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15329,2018-02-21 10:26:44,32,1.07,15,0.5,True
+TRAIN_Wednesday-_15365,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15365,2018-02-21 10:27:56,9,0.3,4,0.13,False
+TRAIN_Wednesday-_15389,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15389,2018-02-21 10:28:44,32,1.07,15,0.5,True
+TRAIN_Wednesday-_15425,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15425,2018-02-21 10:29:56,9,0.3,4,0.13,False
+TRAIN_Wednesday-_15449,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15449,2018-02-21 10:30:44,32,1.07,15,0.5,True
+TRAIN_Wednesday-_15485,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15485,2018-02-21 10:31:56,9,0.3,4,0.13,False
+TRAIN_Wednesday-_15509,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15509,2018-02-21 10:32:44,32,1.07,15,0.5,True
+TRAIN_Wednesday-_15545,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15545,2018-02-21 10:33:56,9,0.3,4,0.13,False
+TRAIN_Wednesday-_15569,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15569,2018-02-21 10:34:44,32,1.07,15,0.5,True
+TRAIN_Wednesday-_15605,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15605,2018-02-21 10:35:56,10,0.33,4,0.13,False
+TRAIN_Wednesday-_15629,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15629,2018-02-21 10:36:44,32,1.07,14,0.47,True
+TRAIN_Wednesday-_15665,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15665,2018-02-21 10:37:56,10,0.33,4,0.13,False
+TRAIN_Wednesday-_15689,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15689,2018-02-21 10:38:44,32,1.07,14,0.47,True
+TRAIN_Wednesday-_15725,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15725,2018-02-21 10:39:56,10,0.33,4,0.13,False
+TRAIN_Wednesday-_15749,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15749,2018-02-21 10:40:44,32,1.07,14,0.47,True
+TRAIN_Wednesday-_15786,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15786,2018-02-21 10:41:58,9,0.3,5,0.17,False
+TRAIN_Wednesday-_15800,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15800,2018-02-21 10:42:26,5,0.17,5,0.17,False
+TRAIN_Wednesday-_15811,TRAIN,Wednesday-21-02-2018,DDoS,DDOS attack-LOIC-UDP,15811,2018-02-21 10:42:48,12,0.4,6,0.2,False
+TRAIN_Thursday-2_1545,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1545,2018-02-22 01:51:30,8,0.27,1545,51.5,True
+TRAIN_Thursday-2_1572,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1572,2018-02-22 01:52:24,5,0.17,19,0.63,True
+TRAIN_Thursday-2_1588,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1588,2018-02-22 01:52:56,7,0.23,11,0.37,True
+TRAIN_Thursday-2_1615,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1615,2018-02-22 01:53:50,5,0.17,20,0.67,True
+TRAIN_Thursday-2_1628,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1628,2018-02-22 01:54:16,5,0.17,8,0.27,False
+TRAIN_Thursday-2_1653,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1653,2018-02-22 01:55:06,6,0.2,20,0.67,True
+TRAIN_Thursday-2_1682,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1682,2018-02-22 01:56:04,5,0.17,23,0.77,True
+TRAIN_Thursday-2_1711,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1711,2018-02-22 01:57:02,5,0.17,24,0.8,True
+TRAIN_Thursday-2_1740,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1740,2018-02-22 01:58:00,5,0.17,24,0.8,True
+TRAIN_Thursday-2_1768,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1768,2018-02-22 01:58:56,6,0.2,23,0.77,True
+TRAIN_Thursday-2_1798,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1798,2018-02-22 01:59:56,5,0.17,24,0.8,True
+TRAIN_Thursday-2_1826,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1826,2018-02-22 02:00:52,5,0.17,23,0.77,True
+TRAIN_Thursday-2_1855,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1855,2018-02-22 02:01:50,5,0.17,24,0.8,True
+TRAIN_Thursday-2_1883,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1883,2018-02-22 02:02:46,6,0.2,23,0.77,True
+TRAIN_Thursday-2_1912,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1912,2018-02-22 02:03:44,5,0.17,23,0.77,True
+TRAIN_Thursday-2_1940,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1940,2018-02-22 02:04:40,6,0.2,23,0.77,True
+TRAIN_Thursday-2_1969,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1969,2018-02-22 02:05:38,5,0.17,23,0.77,True
+TRAIN_Thursday-2_1998,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,1998,2018-02-22 02:06:36,5,0.17,24,0.8,True
+TRAIN_Thursday-2_2027,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2027,2018-02-22 02:07:34,5,0.17,24,0.8,True
+TRAIN_Thursday-2_2056,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2056,2018-02-22 02:08:32,5,0.17,24,0.8,True
+TRAIN_Thursday-2_2085,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2085,2018-02-22 02:09:30,5,0.17,24,0.8,True
+TRAIN_Thursday-2_2113,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2113,2018-02-22 02:10:26,5,0.17,23,0.77,True
+TRAIN_Thursday-2_2143,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2143,2018-02-22 02:11:26,5,0.17,25,0.83,True
+TRAIN_Thursday-2_2173,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2173,2018-02-22 02:12:26,5,0.17,25,0.83,True
+TRAIN_Thursday-2_2202,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2202,2018-02-22 02:13:24,5,0.17,24,0.8,True
+TRAIN_Thursday-2_2232,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2232,2018-02-22 02:14:24,5,0.17,25,0.83,True
+TRAIN_Thursday-2_2262,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2262,2018-02-22 02:15:24,5,0.17,25,0.83,True
+TRAIN_Thursday-2_2291,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2291,2018-02-22 02:16:22,6,0.2,24,0.8,True
+TRAIN_Thursday-2_2321,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2321,2018-02-22 02:17:22,5,0.17,24,0.8,True
+TRAIN_Thursday-2_2351,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2351,2018-02-22 02:18:22,6,0.2,25,0.83,True
+TRAIN_Thursday-2_2381,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2381,2018-02-22 02:19:22,5,0.17,24,0.8,True
+TRAIN_Thursday-2_2412,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2412,2018-02-22 02:20:24,6,0.2,26,0.87,True
+TRAIN_Thursday-2_2442,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2442,2018-02-22 02:21:24,5,0.17,24,0.8,True
+TRAIN_Thursday-2_2472,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2472,2018-02-22 02:22:24,5,0.17,25,0.83,True
+TRAIN_Thursday-2_2502,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2502,2018-02-22 02:23:24,5,0.17,25,0.83,True
+TRAIN_Thursday-2_2534,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2534,2018-02-22 02:24:28,5,0.17,27,0.9,True
+TRAIN_Thursday-2_2564,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2564,2018-02-22 02:25:28,5,0.17,25,0.83,True
+TRAIN_Thursday-2_2594,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2594,2018-02-22 02:26:28,5,0.17,25,0.83,True
+TRAIN_Thursday-2_2625,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2625,2018-02-22 02:27:30,5,0.17,26,0.87,True
+TRAIN_Thursday-2_2655,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -XSS,2655,2018-02-22 02:28:30,6,0.2,25,0.83,True
+TRAIN_Thursday-2_5831,TRAIN,Thursday-22-02-2018,WebAttack,SQL Injection,5831,2018-02-22 04:14:22,19,0.63,3170,105.67,True
+TRAIN_Thursday-2_5891,TRAIN,Thursday-22-02-2018,WebAttack,SQL Injection,5891,2018-02-22 04:16:22,5,0.17,41,1.37,True
+TRAIN_Thursday-2_5900,TRAIN,Thursday-22-02-2018,WebAttack,SQL Injection,5900,2018-02-22 04:16:40,11,0.37,4,0.13,False
+TRAIN_Thursday-2_5921,TRAIN,Thursday-22-02-2018,WebAttack,SQL Injection,5921,2018-02-22 04:17:22,7,0.23,10,0.33,True
+TRAIN_Thursday-2_5937,TRAIN,Thursday-22-02-2018,WebAttack,SQL Injection,5937,2018-02-22 04:17:54,16,0.53,9,0.3,False
+TRAIN_Thursday-2_5962,TRAIN,Thursday-22-02-2018,WebAttack,SQL Injection,5962,2018-02-22 04:18:44,5,0.17,9,0.3,False
+TRAIN_Thursday-2_5979,TRAIN,Thursday-22-02-2018,WebAttack,SQL Injection,5979,2018-02-22 04:19:18,8,0.27,12,0.4,True
+TRAIN_Thursday-2_5995,TRAIN,Thursday-22-02-2018,WebAttack,SQL Injection,5995,2018-02-22 04:19:50,10,0.33,8,0.27,False
+TRAIN_Thursday-2_6008,TRAIN,Thursday-22-02-2018,WebAttack,SQL Injection,6008,2018-02-22 04:20:16,5,0.17,3,0.1,False
+TRAIN_Thursday-2_6023,TRAIN,Thursday-22-02-2018,WebAttack,SQL Injection,6023,2018-02-22 04:20:46,5,0.17,10,0.33,True
+TRAIN_Thursday-2_6056,TRAIN,Thursday-22-02-2018,WebAttack,SQL Injection,6056,2018-02-22 04:21:52,11,0.37,28,0.93,True
+TRAIN_Thursday-2_6137,TRAIN,Thursday-22-02-2018,WebAttack,SQL Injection,6137,2018-02-22 04:24:34,5,0.17,70,2.33,True
+TRAIN_Thursday-2_6231,TRAIN,Thursday-22-02-2018,WebAttack,SQL Injection,6231,2018-02-22 04:27:42,5,0.17,89,2.97,True
+TRAIN_Thursday-2_16608,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,16608,2018-02-22 10:13:36,17,0.57,10372,345.73,True
+TRAIN_Thursday-2_16667,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,16667,2018-02-22 10:15:34,7,0.23,42,1.4,True
+TRAIN_Thursday-2_16731,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,16731,2018-02-22 10:17:42,5,0.17,57,1.9,True
+TRAIN_Thursday-2_16750,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,16750,2018-02-22 10:18:20,5,0.17,14,0.47,True
+TRAIN_Thursday-2_16778,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,16778,2018-02-22 10:19:16,5,0.17,23,0.77,True
+TRAIN_Thursday-2_16806,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,16806,2018-02-22 10:20:12,8,0.27,23,0.77,True
+TRAIN_Thursday-2_16835,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,16835,2018-02-22 10:21:10,8,0.27,21,0.7,True
+TRAIN_Thursday-2_16864,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,16864,2018-02-22 10:22:08,8,0.27,21,0.7,True
+TRAIN_Thursday-2_16893,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,16893,2018-02-22 10:23:06,5,0.17,21,0.7,True
+TRAIN_Thursday-2_16921,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,16921,2018-02-22 10:24:02,6,0.2,23,0.77,True
+TRAIN_Thursday-2_16951,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,16951,2018-02-22 10:25:02,5,0.17,24,0.8,True
+TRAIN_Thursday-2_16979,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,16979,2018-02-22 10:25:58,8,0.27,23,0.77,True
+TRAIN_Thursday-2_17008,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17008,2018-02-22 10:26:56,8,0.27,21,0.7,True
+TRAIN_Thursday-2_17037,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17037,2018-02-22 10:27:54,6,0.2,21,0.7,True
+TRAIN_Thursday-2_17066,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17066,2018-02-22 10:28:52,6,0.2,23,0.77,True
+TRAIN_Thursday-2_17095,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17095,2018-02-22 10:29:50,8,0.27,23,0.77,True
+TRAIN_Thursday-2_17124,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17124,2018-02-22 10:30:48,5,0.17,21,0.7,True
+TRAIN_Thursday-2_17153,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17153,2018-02-22 10:31:46,5,0.17,24,0.8,True
+TRAIN_Thursday-2_17181,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17181,2018-02-22 10:32:42,6,0.2,23,0.77,True
+TRAIN_Thursday-2_17210,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17210,2018-02-22 10:33:40,6,0.2,23,0.77,True
+TRAIN_Thursday-2_17239,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17239,2018-02-22 10:34:38,6,0.2,23,0.77,True
+TRAIN_Thursday-2_17268,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17268,2018-02-22 10:35:36,8,0.27,23,0.77,True
+TRAIN_Thursday-2_17297,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17297,2018-02-22 10:36:34,5,0.17,21,0.7,True
+TRAIN_Thursday-2_17326,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17326,2018-02-22 10:37:32,5,0.17,24,0.8,True
+TRAIN_Thursday-2_17355,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17355,2018-02-22 10:38:30,5,0.17,24,0.8,True
+TRAIN_Thursday-2_17383,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17383,2018-02-22 10:39:26,6,0.2,23,0.77,True
+TRAIN_Thursday-2_17412,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17412,2018-02-22 10:40:24,9,0.3,23,0.77,True
+TRAIN_Thursday-2_17442,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17442,2018-02-22 10:41:24,5,0.17,21,0.7,True
+TRAIN_Thursday-2_17470,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17470,2018-02-22 10:42:20,6,0.2,23,0.77,True
+TRAIN_Thursday-2_17499,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17499,2018-02-22 10:43:18,6,0.2,23,0.77,True
+TRAIN_Thursday-2_17528,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17528,2018-02-22 10:44:16,6,0.2,23,0.77,True
+TRAIN_Thursday-2_17557,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17557,2018-02-22 10:45:14,6,0.2,23,0.77,True
+TRAIN_Thursday-2_17586,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17586,2018-02-22 10:46:12,6,0.2,23,0.77,True
+TRAIN_Thursday-2_17615,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17615,2018-02-22 10:47:10,5,0.17,23,0.77,True
+TRAIN_Thursday-2_17644,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17644,2018-02-22 10:48:08,5,0.17,24,0.8,True
+TRAIN_Thursday-2_17672,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17672,2018-02-22 10:49:04,6,0.2,23,0.77,True
+TRAIN_Thursday-2_17701,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17701,2018-02-22 10:50:02,8,0.27,23,0.77,True
+TRAIN_Thursday-2_17730,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17730,2018-02-22 10:51:00,8,0.27,21,0.7,True
+TRAIN_Thursday-2_17759,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17759,2018-02-22 10:51:58,6,0.2,21,0.7,True
+TRAIN_Thursday-2_17789,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17789,2018-02-22 10:52:58,8,0.27,24,0.8,True
+TRAIN_Thursday-2_17818,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17818,2018-02-22 10:53:56,8,0.27,21,0.7,True
+TRAIN_Thursday-2_17848,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17848,2018-02-22 10:54:56,8,0.27,22,0.73,True
+TRAIN_Thursday-2_17878,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17878,2018-02-22 10:55:56,8,0.27,22,0.73,True
+TRAIN_Thursday-2_17908,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17908,2018-02-22 10:56:56,8,0.27,22,0.73,True
+TRAIN_Thursday-2_17939,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17939,2018-02-22 10:57:58,8,0.27,23,0.77,True
+TRAIN_Thursday-2_17970,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,17970,2018-02-22 10:59:00,8,0.27,23,0.77,True
+TRAIN_Thursday-2_18001,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,18001,2018-02-22 11:00:02,8,0.27,23,0.77,True
+TRAIN_Thursday-2_18032,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,18032,2018-02-22 11:01:04,8,0.27,23,0.77,True
+TRAIN_Thursday-2_18065,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,18065,2018-02-22 11:02:10,8,0.27,25,0.83,True
+TRAIN_Thursday-2_18082,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,18082,2018-02-22 11:02:44,7,0.23,9,0.3,False
+TRAIN_Thursday-2_18111,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,18111,2018-02-22 11:03:42,8,0.27,22,0.73,True
+TRAIN_Thursday-2_18140,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,18140,2018-02-22 11:04:40,6,0.2,21,0.7,True
+TRAIN_Thursday-2_18169,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,18169,2018-02-22 11:05:38,5,0.17,23,0.77,True
+TRAIN_Thursday-2_18198,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,18198,2018-02-22 11:06:36,8,0.27,24,0.8,True
+TRAIN_Thursday-2_18227,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,18227,2018-02-22 11:07:34,6,0.2,21,0.7,True
+TRAIN_Thursday-2_18256,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,18256,2018-02-22 11:08:32,8,0.27,23,0.77,True
+TRAIN_Thursday-2_18285,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,18285,2018-02-22 11:09:30,8,0.27,21,0.7,True
+TRAIN_Thursday-2_18314,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,18314,2018-02-22 11:10:28,8,0.27,21,0.7,True
+TRAIN_Thursday-2_18343,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,18343,2018-02-22 11:11:26,6,0.2,21,0.7,True
+TRAIN_Thursday-2_18372,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,18372,2018-02-22 11:12:24,6,0.2,23,0.77,True
+TRAIN_Thursday-2_18401,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,18401,2018-02-22 11:13:22,6,0.2,23,0.77,True
+TRAIN_Thursday-2_18430,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,18430,2018-02-22 11:14:20,6,0.2,23,0.77,True
+TRAIN_Thursday-2_18459,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,18459,2018-02-22 11:15:18,8,0.27,23,0.77,True
+TRAIN_Thursday-2_18488,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,18488,2018-02-22 11:16:16,6,0.2,21,0.7,True
+TRAIN_Thursday-2_18517,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,18517,2018-02-22 11:17:14,6,0.2,23,0.77,True
+TRAIN_Thursday-2_18546,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,18546,2018-02-22 11:18:12,8,0.27,23,0.77,True
+TRAIN_Thursday-2_18575,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,18575,2018-02-22 11:19:10,8,0.27,21,0.7,True
+TRAIN_Thursday-2_18604,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,18604,2018-02-22 11:20:08,8,0.27,21,0.7,True
+TRAIN_Thursday-2_18633,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,18633,2018-02-22 11:21:06,5,0.17,21,0.7,True
+TRAIN_Thursday-2_18662,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,18662,2018-02-22 11:22:04,8,0.27,24,0.8,True
+TRAIN_Thursday-2_18691,TRAIN,Thursday-22-02-2018,WebAttack,Brute Force -Web,18691,2018-02-22 11:23:02,5,0.17,21,0.7,True
+VAL_Friday-23-_28,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,28,2018-02-23 01:00:56,8,0.27,28,0.93,True
+VAL_Friday-23-_54,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,54,2018-02-23 01:01:48,6,0.2,18,0.6,True
+VAL_Friday-23-_83,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,83,2018-02-23 01:02:46,5,0.17,23,0.77,True
+VAL_Friday-23-_112,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,112,2018-02-23 01:03:44,5,0.17,24,0.8,True
+VAL_Friday-23-_140,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,140,2018-02-23 01:04:40,6,0.2,23,0.77,True
+VAL_Friday-23-_169,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,169,2018-02-23 01:05:38,5,0.17,23,0.77,True
+VAL_Friday-23-_198,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,198,2018-02-23 01:06:36,5,0.17,24,0.8,True
+VAL_Friday-23-_227,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,227,2018-02-23 01:07:34,5,0.17,24,0.8,True
+VAL_Friday-23-_255,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,255,2018-02-23 01:08:30,6,0.2,23,0.77,True
+VAL_Friday-23-_284,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,284,2018-02-23 01:09:28,6,0.2,23,0.77,True
+VAL_Friday-23-_313,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,313,2018-02-23 01:10:26,5,0.17,23,0.77,True
+VAL_Friday-23-_342,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,342,2018-02-23 01:11:24,5,0.17,24,0.8,True
+VAL_Friday-23-_370,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,370,2018-02-23 01:12:20,6,0.2,23,0.77,True
+VAL_Friday-23-_399,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,399,2018-02-23 01:13:18,5,0.17,23,0.77,True
+VAL_Friday-23-_428,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,428,2018-02-23 01:14:16,6,0.2,24,0.8,True
+VAL_Friday-23-_457,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,457,2018-02-23 01:15:14,5,0.17,23,0.77,True
+VAL_Friday-23-_485,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,485,2018-02-23 01:16:10,5,0.17,23,0.77,True
+VAL_Friday-23-_514,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,514,2018-02-23 01:17:08,5,0.17,24,0.8,True
+VAL_Friday-23-_542,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,542,2018-02-23 01:18:04,6,0.2,23,0.77,True
+VAL_Friday-23-_571,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,571,2018-02-23 01:19:02,5,0.17,23,0.77,True
+VAL_Friday-23-_599,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,599,2018-02-23 01:19:58,6,0.2,23,0.77,True
+VAL_Friday-23-_628,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,628,2018-02-23 01:20:56,5,0.17,23,0.77,True
+VAL_Friday-23-_657,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,657,2018-02-23 01:21:54,5,0.17,24,0.8,True
+VAL_Friday-23-_686,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,686,2018-02-23 01:22:52,5,0.17,24,0.8,True
+VAL_Friday-23-_714,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,714,2018-02-23 01:23:48,6,0.2,23,0.77,True
+VAL_Friday-23-_744,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,744,2018-02-23 01:24:48,5,0.17,24,0.8,True
+VAL_Friday-23-_773,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,773,2018-02-23 01:25:46,5,0.17,24,0.8,True
+VAL_Friday-23-_802,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,802,2018-02-23 01:26:44,6,0.2,24,0.8,True
+VAL_Friday-23-_831,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,831,2018-02-23 01:27:42,6,0.2,23,0.77,True
+VAL_Friday-23-_860,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,860,2018-02-23 01:28:40,5,0.17,23,0.77,True
+VAL_Friday-23-_889,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,889,2018-02-23 01:29:38,5,0.17,24,0.8,True
+VAL_Friday-23-_918,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,918,2018-02-23 01:30:36,5,0.17,24,0.8,True
+VAL_Friday-23-_946,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,946,2018-02-23 01:31:32,5,0.17,23,0.77,True
+VAL_Friday-23-_975,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,975,2018-02-23 01:32:30,5,0.17,24,0.8,True
+VAL_Friday-23-_1003,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1003,2018-02-23 01:33:26,5,0.17,23,0.77,True
+VAL_Friday-23-_1032,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1032,2018-02-23 01:34:24,5,0.17,24,0.8,True
+VAL_Friday-23-_1061,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1061,2018-02-23 01:35:22,5,0.17,24,0.8,True
+VAL_Friday-23-_1090,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1090,2018-02-23 01:36:20,5,0.17,24,0.8,True
+VAL_Friday-23-_1119,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1119,2018-02-23 01:37:18,5,0.17,24,0.8,True
+VAL_Friday-23-_1148,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1148,2018-02-23 01:38:16,5,0.17,24,0.8,True
+VAL_Friday-23-_1177,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1177,2018-02-23 01:39:14,5,0.17,24,0.8,True
+VAL_Friday-23-_1205,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1205,2018-02-23 01:40:10,6,0.2,23,0.77,True
+VAL_Friday-23-_1234,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1234,2018-02-23 01:41:08,5,0.17,23,0.77,True
+VAL_Friday-23-_1249,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1249,2018-02-23 01:41:38,5,0.17,10,0.33,True
+VAL_Friday-23-_1263,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1263,2018-02-23 01:42:06,5,0.17,9,0.3,False
+VAL_Friday-23-_1291,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1291,2018-02-23 01:43:02,6,0.2,23,0.77,True
+VAL_Friday-23-_1320,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1320,2018-02-23 01:44:00,5,0.17,23,0.77,True
+VAL_Friday-23-_1348,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1348,2018-02-23 01:44:56,6,0.2,23,0.77,True
+VAL_Friday-23-_1377,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1377,2018-02-23 01:45:54,5,0.17,23,0.77,True
+VAL_Friday-23-_1406,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1406,2018-02-23 01:46:52,6,0.2,24,0.8,True
+VAL_Friday-23-_1435,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1435,2018-02-23 01:47:50,5,0.17,23,0.77,True
+VAL_Friday-23-_1464,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1464,2018-02-23 01:48:48,5,0.17,24,0.8,True
+VAL_Friday-23-_1493,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1493,2018-02-23 01:49:46,5,0.17,24,0.8,True
+VAL_Friday-23-_1521,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1521,2018-02-23 01:50:42,5,0.17,23,0.77,True
+VAL_Friday-23-_1550,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1550,2018-02-23 01:51:40,5,0.17,24,0.8,True
+VAL_Friday-23-_1578,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1578,2018-02-23 01:52:36,6,0.2,23,0.77,True
+VAL_Friday-23-_1607,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1607,2018-02-23 01:53:34,5,0.17,23,0.77,True
+VAL_Friday-23-_1636,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1636,2018-02-23 01:54:32,5,0.17,24,0.8,True
+VAL_Friday-23-_1664,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1664,2018-02-23 01:55:28,5,0.17,23,0.77,True
+VAL_Friday-23-_1693,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1693,2018-02-23 01:56:26,6,0.2,24,0.8,True
+VAL_Friday-23-_1722,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1722,2018-02-23 01:57:24,5,0.17,23,0.77,True
+VAL_Friday-23-_1751,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1751,2018-02-23 01:58:22,6,0.2,24,0.8,True
+VAL_Friday-23-_1780,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1780,2018-02-23 01:59:20,5,0.17,23,0.77,True
+VAL_Friday-23-_1809,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1809,2018-02-23 02:00:18,5,0.17,24,0.8,True
+VAL_Friday-23-_1838,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1838,2018-02-23 02:01:16,5,0.17,24,0.8,True
+VAL_Friday-23-_1866,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1866,2018-02-23 02:02:12,6,0.2,23,0.77,True
+VAL_Friday-23-_1896,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1896,2018-02-23 02:03:12,5,0.17,24,0.8,True
+VAL_Friday-23-_1924,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1924,2018-02-23 02:04:08,6,0.2,23,0.77,True
+VAL_Friday-23-_1954,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1954,2018-02-23 02:05:08,5,0.17,24,0.8,True
+VAL_Friday-23-_1962,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1962,2018-02-23 02:05:24,5,0.17,3,0.1,False
+VAL_Friday-23-_1982,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,1982,2018-02-23 02:06:04,9,0.3,15,0.5,True
+VAL_Friday-23-_2011,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,2011,2018-02-23 02:07:02,5,0.17,20,0.67,True
+VAL_Friday-23-_2040,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,2040,2018-02-23 02:08:00,6,0.2,24,0.8,True
+VAL_Friday-23-_2069,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,2069,2018-02-23 02:08:58,5,0.17,23,0.77,True
+VAL_Friday-23-_2098,VAL,Friday-23-02-2018,WebAttack,Brute Force -XSS,2098,2018-02-23 02:09:56,5,0.17,24,0.8,True
+VAL_Friday-23-_3757,VAL,Friday-23-02-2018,WebAttack,SQL Injection,3757,2018-02-23 03:05:14,7,0.23,1654,55.13,True
+VAL_Friday-23-_3766,VAL,Friday-23-02-2018,WebAttack,SQL Injection,3766,2018-02-23 03:05:32,7,0.23,2,0.07,False
+VAL_Friday-23-_3782,VAL,Friday-23-02-2018,WebAttack,SQL Injection,3782,2018-02-23 03:06:04,27,0.9,9,0.3,False
+VAL_Friday-23-_3836,VAL,Friday-23-02-2018,WebAttack,SQL Injection,3836,2018-02-23 03:07:52,7,0.23,27,0.9,True
+VAL_Friday-23-_3844,VAL,Friday-23-02-2018,WebAttack,SQL Injection,3844,2018-02-23 03:08:08,8,0.27,1,0.03,False
+VAL_Friday-23-_3863,VAL,Friday-23-02-2018,WebAttack,SQL Injection,3863,2018-02-23 03:08:46,11,0.37,11,0.37,True
+VAL_Friday-23-_3959,VAL,Friday-23-02-2018,WebAttack,SQL Injection,3959,2018-02-23 03:11:58,5,0.17,85,2.83,True
+VAL_Friday-23-_3980,VAL,Friday-23-02-2018,WebAttack,SQL Injection,3980,2018-02-23 03:12:40,17,0.57,16,0.53,True
+VAL_Friday-23-_4008,VAL,Friday-23-02-2018,WebAttack,SQL Injection,4008,2018-02-23 03:13:36,5,0.17,11,0.37,True
+VAL_Friday-23-_4046,VAL,Friday-23-02-2018,WebAttack,SQL Injection,4046,2018-02-23 03:14:52,5,0.17,33,1.1,True
+VAL_Friday-23-_4053,VAL,Friday-23-02-2018,WebAttack,SQL Injection,4053,2018-02-23 03:15:06,7,0.23,2,0.07,False
+VAL_Friday-23-_4061,VAL,Friday-23-02-2018,WebAttack,SQL Injection,4061,2018-02-23 03:15:22,5,0.17,1,0.03,False
+VAL_Friday-23-_4076,VAL,Friday-23-02-2018,WebAttack,SQL Injection,4076,2018-02-23 03:15:52,14,0.47,10,0.33,True
+VAL_Friday-23-_4101,VAL,Friday-23-02-2018,WebAttack,SQL Injection,4101,2018-02-23 03:16:42,22,0.73,11,0.37,True
+VAL_Friday-23-_14908,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,14908,2018-02-23 09:16:56,5,0.17,10785,359.5,True
+VAL_Friday-23-_16112,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16112,2018-02-23 09:57:04,5,0.17,1199,39.97,True
+VAL_Friday-23-_16274,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16274,2018-02-23 10:02:28,5,0.17,157,5.23,True
+VAL_Friday-23-_16281,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16281,2018-02-23 10:02:42,5,0.17,2,0.07,False
+VAL_Friday-23-_16299,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16299,2018-02-23 10:03:18,5,0.17,13,0.43,True
+VAL_Friday-23-_16323,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16323,2018-02-23 10:04:06,5,0.17,19,0.63,True
+VAL_Friday-23-_16331,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16331,2018-02-23 10:04:22,5,0.17,3,0.1,False
+VAL_Friday-23-_16358,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16358,2018-02-23 10:05:16,10,0.33,22,0.73,True
+VAL_Friday-23-_16382,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16382,2018-02-23 10:06:04,12,0.4,14,0.47,True
+VAL_Friday-23-_16406,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16406,2018-02-23 10:06:52,5,0.17,12,0.4,True
+VAL_Friday-23-_16415,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16415,2018-02-23 10:07:10,8,0.27,4,0.13,False
+VAL_Friday-23-_16443,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16443,2018-02-23 10:08:06,9,0.3,20,0.67,True
+VAL_Friday-23-_16464,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16464,2018-02-23 10:08:48,5,0.17,12,0.4,True
+VAL_Friday-23-_16472,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16472,2018-02-23 10:09:04,6,0.2,3,0.1,False
+VAL_Friday-23-_16488,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16488,2018-02-23 10:09:36,5,0.17,10,0.33,True
+VAL_Friday-23-_16501,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16501,2018-02-23 10:10:02,6,0.2,8,0.27,False
+VAL_Friday-23-_16528,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16528,2018-02-23 10:10:56,7,0.23,21,0.7,True
+VAL_Friday-23-_16547,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16547,2018-02-23 10:11:34,5,0.17,12,0.4,True
+VAL_Friday-23-_16558,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16558,2018-02-23 10:11:56,8,0.27,6,0.2,False
+VAL_Friday-23-_16571,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16571,2018-02-23 10:12:22,5,0.17,5,0.17,False
+VAL_Friday-23-_16587,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16587,2018-02-23 10:12:54,8,0.27,11,0.37,True
+VAL_Friday-23-_16611,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16611,2018-02-23 10:13:42,10,0.33,16,0.53,True
+VAL_Friday-23-_16629,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16629,2018-02-23 10:14:18,5,0.17,8,0.27,False
+VAL_Friday-23-_16644,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16644,2018-02-23 10:14:48,8,0.27,10,0.33,True
+VAL_Friday-23-_16654,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16654,2018-02-23 10:15:08,5,0.17,2,0.07,False
+VAL_Friday-23-_16673,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16673,2018-02-23 10:15:46,8,0.27,14,0.47,True
+VAL_Friday-23-_16693,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16693,2018-02-23 10:16:26,14,0.47,12,0.4,True
+VAL_Friday-23-_16712,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16712,2018-02-23 10:17:04,5,0.17,5,0.17,False
+VAL_Friday-23-_16730,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16730,2018-02-23 10:17:40,11,0.37,13,0.43,True
+VAL_Friday-23-_16759,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16759,2018-02-23 10:18:38,5,0.17,18,0.6,True
+VAL_Friday-23-_16776,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16776,2018-02-23 10:19:12,10,0.33,12,0.4,True
+VAL_Friday-23-_16787,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16787,2018-02-23 10:19:34,6,0.2,1,0.03,False
+VAL_Friday-23-_16794,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16794,2018-02-23 10:19:48,5,0.17,1,0.03,False
+VAL_Friday-23-_16816,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16816,2018-02-23 10:20:32,8,0.27,17,0.57,True
+VAL_Friday-23-_16845,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16845,2018-02-23 10:21:30,5,0.17,21,0.7,True
+VAL_Friday-23-_16855,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16855,2018-02-23 10:21:50,8,0.27,5,0.17,False
+VAL_Friday-23-_16866,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16866,2018-02-23 10:22:12,5,0.17,3,0.1,False
+VAL_Friday-23-_16873,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16873,2018-02-23 10:22:26,9,0.3,2,0.07,False
+VAL_Friday-23-_16901,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16901,2018-02-23 10:23:22,9,0.3,19,0.63,True
+VAL_Friday-23-_16930,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16930,2018-02-23 10:24:20,8,0.27,20,0.67,True
+VAL_Friday-23-_16941,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16941,2018-02-23 10:24:42,5,0.17,3,0.1,False
+VAL_Friday-23-_16950,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16950,2018-02-23 10:25:00,5,0.17,4,0.13,False
+VAL_Friday-23-_16958,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16958,2018-02-23 10:25:16,8,0.27,3,0.1,False
+VAL_Friday-23-_16984,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,16984,2018-02-23 10:26:08,8,0.27,18,0.6,True
+VAL_Friday-23-_17016,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17016,2018-02-23 10:27:12,12,0.4,24,0.8,True
+VAL_Friday-23-_17030,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17030,2018-02-23 10:27:40,10,0.33,2,0.07,False
+VAL_Friday-23-_17042,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17042,2018-02-23 10:28:04,8,0.27,2,0.07,False
+VAL_Friday-23-_17066,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17066,2018-02-23 10:28:52,5,0.17,16,0.53,True
+VAL_Friday-23-_17073,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17073,2018-02-23 10:29:06,6,0.2,2,0.07,False
+VAL_Friday-23-_17102,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17102,2018-02-23 10:30:04,9,0.3,23,0.77,True
+VAL_Friday-23-_17119,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17119,2018-02-23 10:30:38,10,0.33,8,0.27,False
+VAL_Friday-23-_17131,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17131,2018-02-23 10:31:02,8,0.27,2,0.07,False
+VAL_Friday-23-_17149,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17149,2018-02-23 10:31:38,5,0.17,10,0.33,True
+VAL_Friday-23-_17160,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17160,2018-02-23 10:32:00,5,0.17,6,0.2,False
+VAL_Friday-23-_17188,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17188,2018-02-23 10:32:56,9,0.3,23,0.77,True
+VAL_Friday-23-_17203,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17203,2018-02-23 10:33:26,9,0.3,6,0.2,False
+VAL_Friday-23-_17217,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17217,2018-02-23 10:33:54,8,0.27,5,0.17,False
+VAL_Friday-23-_17231,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17231,2018-02-23 10:34:22,5,0.17,6,0.2,False
+VAL_Friday-23-_17246,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17246,2018-02-23 10:34:52,5,0.17,10,0.33,True
+VAL_Friday-23-_17271,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17271,2018-02-23 10:35:42,12,0.4,20,0.67,True
+VAL_Friday-23-_17288,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17288,2018-02-23 10:36:16,7,0.23,5,0.17,False
+VAL_Friday-23-_17303,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17303,2018-02-23 10:36:46,6,0.2,8,0.27,False
+VAL_Friday-23-_17314,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17314,2018-02-23 10:37:08,5,0.17,5,0.17,False
+VAL_Friday-23-_17332,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17332,2018-02-23 10:37:44,6,0.2,13,0.43,True
+VAL_Friday-23-_17353,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17353,2018-02-23 10:38:26,5,0.17,15,0.5,True
+VAL_Friday-23-_17361,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17361,2018-02-23 10:38:42,5,0.17,3,0.1,False
+VAL_Friday-23-_17372,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17372,2018-02-23 10:39:04,5,0.17,6,0.2,False
+VAL_Friday-23-_17390,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17390,2018-02-23 10:39:40,5,0.17,13,0.43,True
+VAL_Friday-23-_17396,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17396,2018-02-23 10:39:52,5,0.17,1,0.03,False
+VAL_Friday-23-_17419,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17419,2018-02-23 10:40:38,5,0.17,18,0.6,True
+VAL_Friday-23-_17436,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17436,2018-02-23 10:41:12,5,0.17,12,0.4,True
+VAL_Friday-23-_17447,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17447,2018-02-23 10:41:34,15,0.5,6,0.2,False
+VAL_Friday-23-_17476,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17476,2018-02-23 10:42:32,8,0.27,14,0.47,True
+VAL_Friday-23-_17505,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17505,2018-02-23 10:43:30,8,0.27,21,0.7,True
+VAL_Friday-23-_17518,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17518,2018-02-23 10:43:56,5,0.17,5,0.17,False
+VAL_Friday-23-_17534,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17534,2018-02-23 10:44:28,12,0.4,11,0.37,True
+VAL_Friday-23-_17561,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17561,2018-02-23 10:45:22,7,0.23,15,0.5,True
+VAL_Friday-23-_17591,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17591,2018-02-23 10:46:22,8,0.27,23,0.77,True
+VAL_Friday-23-_17601,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17601,2018-02-23 10:46:42,5,0.17,2,0.07,False
+VAL_Friday-23-_17620,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17620,2018-02-23 10:47:20,11,0.37,14,0.47,True
+VAL_Friday-23-_17644,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17644,2018-02-23 10:48:08,13,0.43,13,0.43,True
+VAL_Friday-23-_17678,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17678,2018-02-23 10:49:16,5,0.17,21,0.7,True
+VAL_Friday-23-_17684,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17684,2018-02-23 10:49:28,5,0.17,1,0.03,False
+VAL_Friday-23-_17702,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17702,2018-02-23 10:50:04,13,0.43,13,0.43,True
+VAL_Friday-23-_17726,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17726,2018-02-23 10:50:52,5,0.17,11,0.37,True
+VAL_Friday-23-_17735,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17735,2018-02-23 10:51:10,8,0.27,4,0.13,False
+VAL_Friday-23-_17764,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17764,2018-02-23 10:52:08,8,0.27,21,0.7,True
+VAL_Friday-23-_17785,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17785,2018-02-23 10:52:50,5,0.17,13,0.43,True
+VAL_Friday-23-_17793,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17793,2018-02-23 10:53:06,8,0.27,3,0.1,False
+VAL_Friday-23-_17809,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17809,2018-02-23 10:53:38,5,0.17,8,0.27,False
+VAL_Friday-23-_17822,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17822,2018-02-23 10:54:04,5,0.17,8,0.27,False
+VAL_Friday-23-_17849,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17849,2018-02-23 10:54:58,7,0.23,22,0.73,True
+VAL_Friday-23-_17867,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17867,2018-02-23 10:55:34,5,0.17,11,0.37,True
+VAL_Friday-23-_17879,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17879,2018-02-23 10:55:58,6,0.2,7,0.23,False
+VAL_Friday-23-_17891,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17891,2018-02-23 10:56:22,5,0.17,6,0.2,False
+VAL_Friday-23-_17909,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17909,2018-02-23 10:56:58,8,0.27,13,0.43,True
+VAL_Friday-23-_17931,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17931,2018-02-23 10:57:42,5,0.17,14,0.47,True
+VAL_Friday-23-_17938,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17938,2018-02-23 10:57:56,8,0.27,2,0.07,False
+VAL_Friday-23-_17950,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17950,2018-02-23 10:58:20,5,0.17,4,0.13,False
+VAL_Friday-23-_17964,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17964,2018-02-23 10:58:48,8,0.27,9,0.3,False
+VAL_Friday-23-_17974,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17974,2018-02-23 10:59:08,5,0.17,2,0.07,False
+VAL_Friday-23-_17995,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,17995,2018-02-23 10:59:50,8,0.27,16,0.53,True
+VAL_Friday-23-_18024,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,18024,2018-02-23 11:00:48,8,0.27,21,0.7,True
+VAL_Friday-23-_18053,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,18053,2018-02-23 11:01:46,5,0.17,21,0.7,True
+VAL_Friday-23-_18082,VAL,Friday-23-02-2018,WebAttack,Brute Force -Web,18082,2018-02-23 11:02:44,8,0.27,24,0.8,True
+TEST_Wednesday-_1256,TEST,Wednesday-28-02-2018,Infiltration,Infilteration,1256,2018-02-28 01:41:52,1744,58.13,1256,41.87,True
+TEST_Wednesday-_17696,TEST,Wednesday-28-02-2018,Infiltration,Infilteration,17696,2018-02-28 10:49:52,2254,75.13,14696,489.87,True
+TEST_Thursday-0_1796,TEST,Thursday-01-03-2018,Infiltration,Infilteration,1796,2018-03-01 01:59:52,2914,97.13,1796,59.87,True
+TEST_Thursday-0_16106,TEST,Thursday-01-03-2018,Infiltration,Infilteration,16106,2018-03-01 09:56:52,1744,58.13,11396,379.87,True
+TEST_Friday-02-_0,TEST,Friday-02-03-2018,Botnet,Bot,0,2018-03-02 01:00:00,5229,174.3,0,0.0,False
+TEST_Friday-02-_5241,TEST,Friday-02-03-2018,Botnet,Bot,5241,2018-03-02 03:54:42,5,0.17,12,0.4,True
+TEST_Friday-02-_16600,TEST,Friday-02-03-2018,Botnet,Bot,16600,2018-03-02 10:13:20,3594,119.8,11354,378.47,True
+TEST_Friday-02-_20205,TEST,Friday-02-03-2018,Botnet,Bot,20205,2018-03-02 12:13:30,1390,46.33,11,0.37,True

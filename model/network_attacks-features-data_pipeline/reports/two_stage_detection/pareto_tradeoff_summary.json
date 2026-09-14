@@ -1,0 +1,92 @@
+{
+  "A": [
+    {
+      "tau_warn": 0.15,
+      "tau_precursor": 0.08,
+      "tau_confirm_high": 0.5,
+      "tau_confirm_dyn": 0.15,
+      "state_div_pct": 40.0,
+      "precision": 0.5397170837867247,
+      "recall": 0.8809946714031972,
+      "f1_score": 0.6693657219973008,
+      "onset_recall": 0.8888888888888888,
+      "lead_time": 20.0,
+      "incident_fa_per_hour": 0.6689791873141724,
+      "window_fa_per_hour": 39.69276511397423
+    }
+  ],
+  "B": [
+    {
+      "tau_warn": 0.15,
+      "tau_precursor": 0.08,
+      "tau_confirm_high": 0.5,
+      "tau_confirm_dyn": 0.15,
+      "state_div_pct": 50.0,
+      "precision": 0.078125,
+      "recall": 0.682699767261443,
+      "f1_score": 0.14020552855891022,
+      "onset_recall": 0.8785714285714286,
+      "lead_time": 20.0,
+      "incident_fa_per_hour": 79.30190486325424,
+      "window_fa_per_hour": 911.3014791954879
+    },
+    {
+      "tau_warn": 0.25,
+      "tau_precursor": 0.08,
+      "tau_confirm_high": 0.5,
+      "tau_confirm_dyn": 0.2,
+      "state_div_pct": 40.0,
+      "precision": 0.07338563669281835,
+      "recall": 0.4716834755624515,
+      "f1_score": 0.12701065385418842,
+      "onset_recall": 0.8071428571428572,
+      "lead_time": 20.0,
+      "incident_fa_per_hour": 100.65978503777802,
+      "window_fa_per_hour": 676.7478982654038
+    }
+  ],
+  "C": [
+    {
+      "tau_warn": 0.15,
+      "tau_precursor": 0.08,
+      "tau_confirm_high": 0.5,
+      "tau_confirm_dyn": 0.15,
+      "state_div_pct": 40.0,
+      "precision": 0.07655437791129413,
+      "recall": 0.8797517455391777,
+      "f1_score": 0.14085206806607872,
+      "onset_recall": 0.9642857142857143,
+      "lead_time": 20.0,
+      "incident_fa_per_hour": 30.456528679365757,
+      "window_fa_per_hour": 1194.0300095775249
+    },
+    {
+      "tau_warn": 0.15,
+      "tau_precursor": 0.08,
+      "tau_confirm_high": 0.5,
+      "tau_confirm_dyn": 0.15,
+      "state_div_pct": 60.0,
+      "precision": 0.07547974413646055,
+      "recall": 0.8238944918541505,
+      "f1_score": 0.1382902532716974,
+      "onset_recall": 0.9642857142857143,
+      "lead_time": 20.0,
+      "incident_fa_per_hour": 53.251037565180376,
+      "window_fa_per_hour": 1140.204320527828
+    },
+    {
+      "tau_warn": 0.4,
+      "tau_precursor": 0.08,
+      "tau_confirm_high": 0.5,
+      "tau_confirm_dyn": 0.3,
+      "state_div_pct": 40.0,
+      "precision": 0.0717125382262997,
+      "recall": 0.3638479441427463,
+      "f1_score": 0.11981095925405542,
+      "onset_recall": 0.8142857142857143,
+      "lead_time": 20.0,
+      "incident_fa_per_hour": 123.55006917101203,
+      "window_fa_per_hour": 537.1075875279345
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+# Python & Jupyter environment
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+env/
+venv/
+
+# Large Raw & Processed Datasets (Never commit to Git)
+data/raw/
+data/interim/
+data/processed/*.parquet
+data/processed/signals/
+data/processed_cic/
+data/backup_darpa_week1/
+data/week1/
+data/CIC-IDS2017/
+data/test_samples/
+data/csv/
+*.csv
+*.parquet
+*.pcap
+*.gz
+*.pt
+*.joblib
+
+# Track metadata, reports, configuration files, and processed temporal state parquets
+!data/metadata/*.csv
+!data/metadata/*.yaml
+!data/episodes/*.csv
+!data/benchmark_splits/*.parquet
+!configs/*.yaml
+!reports/**/*.csv
+!reports/**/*.md
+!reports/**/*.json
+!data/processed/temporal_states/*.parquet
+!artifacts/**/*
+!artifacts/**/model.pt
+!deployment/model/model.pt
+!deployment/preprocessing/scaler.pkl
+!models/scalers/*.joblib
+!models/final/model.pt
+!models/final/scaler.pkl
+!models/historical/**/model.pt
+!models/historical/**/scaler.pkl
+!FINAL_RESEARCH_MASTER_WORKBOOK.xlsx
+
+# Ignore legacy scratch results and large checkpoints
+results_*/
+legacy/

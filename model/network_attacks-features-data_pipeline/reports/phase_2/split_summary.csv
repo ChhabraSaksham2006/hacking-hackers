@@ -1,0 +1,4 @@
+setting,leakage_passed,violation_details,total_sequences,train_sequences,val_sequences,test_sequences,train_attack_sequences,val_attack_sequences,test_attack_sequences,train_onset_precursors,val_onset_precursors,test_onset_precursors,episodes_in_train,episodes_in_val,episodes_in_test
+A,True,[],123447,85048,8941,29458,7050,563,4678,2275,270,290,256,53,52
+B,True,[],188349,102045,21576,64728,11034,1289,18855,1450,1400,70,171,194,8
+C,True,[],188349,102045,21576,64728,11034,1289,18855,1450,1400,70,171,194,8

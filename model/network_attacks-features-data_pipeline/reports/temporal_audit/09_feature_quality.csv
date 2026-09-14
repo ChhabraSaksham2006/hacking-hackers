@@ -1,0 +1,55 @@
+feature_idx,feature_name,feature_category,missing_pct,infinite_pct,zero_pct,variance,unique_count,min_value,median_value,p95_value,max_value,is_constant,is_near_constant
+1,flow_count,Base Behavioral Macro-State,0.0000%,0.0000%,35.33%,1.349135e+06,2002,0.0000e+00,9.7000e+01,6.2000e+02,6.5182e+04,False,False
+2,total_ip_bytes,Base Behavioral Macro-State,0.0000%,0.0000%,36.65%,3.822339e+13,110089,0.0000e+00,1.0560e+05,5.9314e+06,3.2067e+08,False,False
+3,total_packets,Base Behavioral Macro-State,0.0000%,0.0000%,35.33%,1.004382e+10,16463,0.0000e+00,8.2400e+02,1.0159e+04,4.0824e+06,False,False
+4,flow_rate,Base Behavioral Macro-State,0.0000%,0.0000%,35.33%,1.349135e+04,2002,0.0000e+00,9.7000e+00,6.2000e+01,6.5182e+03,False,False
+5,byte_rate,Base Behavioral Macro-State,0.0000%,0.0000%,36.65%,3.822339e+11,110089,0.0000e+00,1.0560e+04,5.9314e+05,3.2067e+07,False,False
+6,packet_rate,Base Behavioral Macro-State,0.0000%,0.0000%,35.33%,1.004382e+08,16463,0.0000e+00,8.2400e+01,1.0159e+03,4.0824e+05,False,False
+7,tcp_ratio,Base Behavioral Macro-State,0.0000%,0.0000%,36.39%,1.497379e-01,41409,0.0000e+00,5.9922e-01,9.6774e-01,1.0000e+00,False,False
+8,udp_ratio,Base Behavioral Macro-State,0.0000%,0.0000%,38.97%,3.571845e-02,40590,0.0000e+00,7.0175e-02,5.1136e-01,1.0000e+00,False,False
+9,icmp_ratio,Base Behavioral Macro-State,0.0000%,0.0000%,100.00%,0.000000e+00,1,0.0000e+00,0.0000e+00,0.0000e+00,0.0000e+00,True,True
+10,unique_dst_ports,Base Behavioral Macro-State,0.0000%,0.0000%,35.33%,7.223950e+04,521,0.0000e+00,1.8000e+01,8.7000e+01,1.4071e+04,False,False
+11,port_concentration,Base Behavioral Macro-State,0.0000%,0.0000%,35.33%,5.865506e-02,30428,0.0000e+00,2.7072e-01,6.7594e-01,1.0000e+00,False,False
+12,dst_port_entropy,Base Behavioral Macro-State,0.0000%,0.0000%,35.33%,2.874908e+00,114408,-1.4428e-12,2.5418e+00,4.2973e+00,9.9615e+00,False,False
+13,auth_port_ratio,Base Behavioral Macro-State,0.0000%,0.0000%,37.40%,3.556894e-02,33365,0.0000e+00,7.4324e-02,4.9865e-01,1.0000e+00,False,False
+14,syn_count,Base Behavioral Macro-State,0.0000%,0.0000%,44.82%,1.338422e+02,159,0.0000e+00,1.0000e+00,3.0000e+01,3.4200e+02,False,False
+15,ack_count,Base Behavioral Macro-State,0.0000%,0.0000%,38.03%,1.119231e+06,750,0.0000e+00,2.6000e+01,1.7700e+02,5.1562e+04,False,False
+16,rst_count,Base Behavioral Macro-State,0.0000%,0.0000%,38.70%,5.449288e+04,529,0.0000e+00,9.0000e+00,8.2000e+01,4.0010e+03,False,False
+17,fin_count,Base Behavioral Macro-State,0.0000%,0.0000%,70.86%,8.620628e+00,77,0.0000e+00,0.0000e+00,4.0000e+00,3.0300e+02,False,False
+18,psh_count,Base Behavioral Macro-State,0.0000%,0.0000%,36.58%,7.110904e+04,1019,0.0000e+00,3.6000e+01,2.6600e+02,1.4116e+04,False,False
+19,syn_ratio,Base Behavioral Macro-State,0.0000%,0.0000%,44.82%,9.722739e-05,51426,0.0000e+00,7.4738e-04,1.6317e-02,5.0000e-01,False,False
+20,ack_ratio,Base Behavioral Macro-State,0.0000%,0.0000%,38.03%,8.318262e-04,80269,0.0000e+00,1.4933e-02,7.5559e-02,5.0000e-01,False,False
+21,rst_ratio,Base Behavioral Macro-State,0.0000%,0.0000%,38.70%,2.194343e-04,68814,0.0000e+00,4.5908e-03,3.6786e-02,5.0000e-01,False,False
+22,rst_to_syn_ratio,Base Behavioral Macro-State,0.0000%,0.0000%,44.82%,1.815195e+03,7846,0.0000e+00,5.0000e-01,1.9500e+01,4.0010e+03,False,False
+23,handshake_completion_ratio,Base Behavioral Macro-State,0.0000%,0.0000%,44.82%,5.785425e+04,10820,0.0000e+00,2.6250e+00,3.5000e+01,4.5959e+04,False,False
+24,fwd_packet_ratio,Base Behavioral Macro-State,0.0000%,0.0000%,35.33%,7.541404e-02,93378,0.0000e+00,4.9644e-01,6.3895e-01,1.0000e+00,False,False
+25,fwd_byte_ratio,Base Behavioral Macro-State,0.0000%,0.0000%,36.65%,4.079116e-02,116195,0.0000e+00,1.1038e-01,4.7114e-01,1.0000e+00,False,False
+26,down_up_ratio_mean,Base Behavioral Macro-State,0.0000%,0.0000%,36.86%,1.855735e-01,42565,0.0000e+00,3.1579e-01,7.5232e-01,3.6400e+01,False,False
+27,down_up_ratio_std,Base Behavioral Macro-State,0.0000%,0.0000%,37.52%,5.749523e-01,76113,0.0000e+00,4.5878e-01,6.7262e-01,7.0808e+01,False,False
+28,pkt_len_mean,Base Behavioral Macro-State,0.0000%,0.0000%,36.65%,2.307874e+03,116372,0.0000e+00,5.4924e+01,1.0758e+02,6.7480e+02,False,False
+29,pkt_len_std,Base Behavioral Macro-State,0.0000%,0.0000%,37.46%,3.748379e+03,116266,0.0000e+00,8.4174e+01,1.5577e+02,7.4699e+02,False,False
+30,pkt_len_max,Base Behavioral Macro-State,0.0000%,0.0000%,36.65%,9.084802e+05,225,0.0000e+00,1.4600e+03,1.4600e+03,6.5160e+04,False,False
+31,pkt_len_min,Base Behavioral Macro-State,0.0000%,0.0000%,99.30%,6.129712e+02,11,0.0000e+00,0.0000e+00,0.0000e+00,5.0000e+02,False,False
+32,zero_payload_ratio,Base Behavioral Macro-State,0.0000%,0.0000%,36.71%,4.408690e-02,37962,0.0000e+00,2.1162e-01,5.0025e-01,1.0000e+00,False,False
+33,flow_iat_mean,Base Behavioral Macro-State,0.0000%,0.0000%,35.33%,3.385128e+13,118743,0.0000e+00,1.5261e+06,1.5393e+07,5.8800e+07,False,False
+34,flow_iat_std,Base Behavioral Macro-State,0.0000%,0.0000%,36.17%,1.421852e+12,117952,0.0000e+00,4.4767e+05,1.8831e+06,5.2700e+07,False,False
+35,flow_iat_max,Base Behavioral Macro-State,0.0000%,0.0000%,35.33%,1.658863e+15,24344,0.0000e+00,5.8952e+07,1.0530e+08,1.2000e+08,False,False
+36,flow_iat_min,Base Behavioral Macro-State,0.0000%,0.0000%,94.08%,9.805698e+12,328,-2.2280e+03,0.0000e+00,1.0000e+00,5.6319e+07,False,False
+37,active_connection_lifetime_mean,Base Behavioral Macro-State,0.0000%,0.0000%,35.33%,1.827563e+14,118701,0.0000e+00,8.7977e+06,2.4308e+07,1.1988e+08,False,False
+38,delta_flow_count,Velocity Delta (Delta S_t),0.0000%,0.0000%,37.98%,1.057913e+04,895,-9.6030e+03,0.0000e+00,6.1000e+01,1.6608e+04,False,False
+39,delta_total_ip_bytes,Velocity Delta (Delta S_t),0.0000%,0.0000%,37.29%,6.224261e+12,89541,-2.2203e+08,0.0000e+00,3.5071e+05,2.2201e+08,False,False
+40,delta_total_packets,Velocity Delta (Delta S_t),0.0000%,0.0000%,36.60%,2.948496e+08,10653,-9.8077e+05,0.0000e+00,9.9200e+02,9.8077e+05,False,False
+41,delta_flow_rate,Velocity Delta (Delta S_t),0.0000%,0.0000%,37.98%,1.057913e+02,3250,-9.6030e+02,0.0000e+00,6.1000e+00,1.6608e+03,False,False
+42,delta_byte_rate,Velocity Delta (Delta S_t),0.0000%,0.0000%,37.29%,6.224261e+10,106010,-2.2203e+07,0.0000e+00,3.5071e+04,2.2201e+07,False,False
+43,delta_packet_rate,Velocity Delta (Delta S_t),0.0000%,0.0000%,36.60%,2.948496e+06,23686,-9.8077e+04,0.0000e+00,9.9200e+01,9.8077e+04,False,False
+44,delta_dst_port_entropy,Velocity Delta (Delta S_t),0.0000%,0.0000%,37.42%,6.185938e-02,114528,-7.0018e+00,0.0000e+00,3.3279e-01,8.2409e+00,False,False
+45,delta_port_concentration,Velocity Delta (Delta S_t),0.0000%,0.0000%,37.79%,6.846804e-03,105435,-1.0000e+00,0.0000e+00,7.0657e-02,1.0000e+00,False,False
+46,delta_auth_port_ratio,Velocity Delta (Delta S_t),0.0000%,0.0000%,38.54%,2.744761e-03,108971,-1.0000e+00,0.0000e+00,4.7836e-02,1.0000e+00,False,False
+47,delta_syn_ratio,Velocity Delta (Delta S_t),0.0000%,0.0000%,43.51%,3.565083e-05,104966,-5.0000e-01,0.0000e+00,3.2100e-03,5.0000e-01,False,False
+48,delta_ack_ratio,Velocity Delta (Delta S_t),0.0000%,0.0000%,38.15%,1.582161e-04,115808,-5.0000e-01,0.0000e+00,1.2572e-02,5.0000e-01,False,False
+49,delta_rst_ratio,Velocity Delta (Delta S_t),0.0000%,0.0000%,38.66%,1.747740e-05,114590,-5.0000e-01,0.0000e+00,4.7489e-03,4.1666e-01,False,False
+50,delta_rst_to_syn_ratio,Velocity Delta (Delta S_t),0.0000%,0.0000%,45.57%,7.437077e+02,57105,-3.9990e+03,0.0000e+00,4.2500e+00,3.9950e+03,False,False
+51,delta_fwd_packet_ratio,Velocity Delta (Delta S_t),0.0000%,0.0000%,37.29%,4.610985e-03,111368,-1.0000e+00,0.0000e+00,3.5955e-02,1.0000e+00,False,False
+52,delta_pkt_len_mean,Velocity Delta (Delta S_t),0.0000%,0.0000%,37.31%,4.001046e+02,115954,-6.7480e+02,0.0000e+00,1.1783e+01,6.7480e+02,False,False
+53,delta_flow_iat_mean,Velocity Delta (Delta S_t),0.0000%,0.0000%,36.23%,5.724070e+12,119167,-5.8800e+07,0.0000e+00,1.6004e+06,5.6312e+07,False,False
+54,delta_active_connection_lifetime_mean,Velocity Delta (Delta S_t),0.0000%,0.0000%,36.23%,3.125002e+13,119031,-1.1757e+08,0.0000e+00,3.1982e+06,1.1975e+08,False,False

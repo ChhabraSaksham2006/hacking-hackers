@@ -1,0 +1,100 @@
+# SIH26153 — AI-Based Network Attack Forecasting from Network Traffic Data
+# Configuration: Baseline Model Suite & Experimental Matrix
+
+experiment_metadata:
+  project: SIH26153
+  phase: Phase 4 — Baseline Forecasting Model Suite
+  random_seed: 42
+  state_dimension_D: 54
+  base_dimension_D: 37
+  lookback_steps_P: 10
+  forecast_horizons_K: [1, 3, 5, 10, 25, 50, 100, 200]
+  horizons_lead_seconds:
+    K_1: 2.0
+    K_3: 6.0
+    K_5: 10.0
+    K_10: 20.0
+
+dataset_split:
+  train_days:
+    - Wednesday-14-02-2018.parquet  # FTP/SSH Brute Force
+    - Thursday-15-02-2018.parquet   # DoS GoldenEye/Slowloris
+    - Friday-16-02-2018.parquet     # DoS SlowHTTPTest/Hulk
+    - Wednesday-21-02-2018.parquet  # DDoS HOIC/LOIC-UDP
+    - Thursday-22-02-2018.parquet   # Brute Force Web/XSS/SQLi
+  val_days:
+    - Friday-23-02-2018.parquet      # Web Attacks (Brute Web, XSS, SQLi)
+  test_days:
+    - Wednesday-28-02-2018.parquet  # Multi-stage Infiltration Day 1
+    - Thursday-01-03-2018.parquet   # Multi-stage Infiltration Day 2
+    - Friday-02-03-2018.parquet     # Botnet ARES C2
+
+models:
+  baseline_0_persistence:
+    type: persistence_and_majority
+    description: Persistence (y_{t+K} = y_t) and Majority (y_{t+K} = 0) empirical lower bounds
+
+  baseline_1_logistic_regression:
+    C: 1.0
+    max_iter: 500
+    solver: lbfgs
+    variants:
+      - static_54d
+      - static_37d
+      - flattened_temporal_540d
+      - class_weighted_54d
+
+  baseline_2_random_forest:
+    n_estimators: 100
+    max_depth: 15
+    min_samples_split: 10
+    n_jobs: -1
+    random_state: 42
+    variants:
+      - static_54d
+      - static_37d
+      - flattened_temporal_540d
+
+  baseline_3_gru:
+    input_dim: 54
+    hidden_dim: 128
+    num_layers: 2
+    dropout: 0.1
+    batch_size: 256
+    lr: 0.001
+    weight_decay: 0.0001
+    epochs: 15
+    patience: 4
+    variants:
+      - full_history_54d
+      - short_history_3step_54d
+      - base_features_37d
+      - class_weighted_54d
+
+  baseline_4_transformer:
+    input_dim: 54
+    d_model: 128
+    nhead: 4
+    num_layers: 2
+    dim_feedforward: 256
+    dropout: 0.1
+    batch_size: 256
+    lr: 0.001
+    weight_decay: 0.0001
+    epochs: 15
+    patience: 4
+    variants:
+      - full_history_54d
+      - short_history_3step_54d
+      - base_features_37d
+      - class_weighted_54d
+
+evaluation:
+  threshold_selection_criterion: max_validation_f1
+  freeze_threshold_for_test: true
+  multi_horizon_lead_times: [1, 3, 5, 10, 25, 50, 100, 200]
+  ood_breakdown_groups:
+    - Benign_Background
+    - Validation_Web_Attacks
+    - Test_Infiltration_Days
+    - Test_Botnet_ARES

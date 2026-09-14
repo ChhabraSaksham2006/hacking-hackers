@@ -1,45 +1,36 @@
 import { Router } from 'express';
-import { authenticate } from '../middleware/auth.js';
-import { requirePermission } from '../middleware/rbac.js';
 import {
-  getDashboardSummary,
-  getDashboardTimeline,
-  getDashboardStage,
-} from '../services/dashboardService.js';
+  getSummary,
+  getTimeline,
+  getStages,
+  getAlerts,
+  getFlows,
+  getFullState,
+  stepForward,
+  resetBaseline,
+  jumpAttack,
+  streamDashboard,
+} from '../controllers/dashboardController.js';
 
 const router = Router();
 
-// All dashboard routes require authentication + alerts.read
-router.use(authenticate, requirePermission('alerts.read'));
+// ── Real-time SSE Stream ─────────────────────────────────
+router.get('/stream', streamDashboard);
 
-// GET /api/dashboard/summary
-router.get('/summary', async (req, res, next) => {
-  try {
-    const summary = await getDashboardSummary(req.user!.orgId);
-    res.json(summary);
-  } catch (err) {
-    next(err);
-  }
-});
+// ── Granular REST Endpoints ──────────────────────────────
+router.get('/summary', getSummary);
+router.get('/timeline', getTimeline);
+router.get('/stages', getStages);
+router.get('/stage', getStages); // Backward compatible alias
+router.get('/alerts', getAlerts);
+router.get('/flows', getFlows);
 
-// GET /api/dashboard/timeline
-router.get('/timeline', async (req, res, next) => {
-  try {
-    const timeline = await getDashboardTimeline(req.user!.orgId);
-    res.json(timeline);
-  } catch (err) {
-    next(err);
-  }
-});
+// ── Simulation / Replay Actions ──────────────────────────
+router.post('/step', stepForward);
+router.post('/reset', resetBaseline);
+router.post('/jump', jumpAttack);
 
-// GET /api/dashboard/stage
-router.get('/stage', async (req, res, next) => {
-  try {
-    const stage = await getDashboardStage(req.user!.orgId);
-    res.json(stage);
-  } catch (err) {
-    next(err);
-  }
-});
+// ── Consolidated Full Snapshot ───────────────────────────
+router.get('/', getFullState);
 
 export default router;

@@ -1,0 +1,265 @@
+# ==============================================================================
+# BENCHMARK CONTRACT SPECIFICATION — SIH26153 NETWORK ATTACK FORECASTING
+# ==============================================================================
+# Project: SIH26153 — AI-Based Network Attack Forecasting from Network Traffic Data
+# Organization: NTRO | Smart India Hackathon (SIH) 2026
+# Version: 2.0-hardened
+# Date: 2026-09-12
+# Status: FROZEN RESEARCH CONTRACT
+# ==============================================================================
+
+benchmark_metadata:
+  contract_version: "2.0-hardened"
+  project_id: "SIH26153"
+  project_title: "AI based Network Attack Forecasting from Network Traffic Data"
+  target_organization: "NTRO"
+  dataset_source: "CSE-CIC-IDS2018 (Canonical Temporal Telemetry)"
+  total_capture_days: 9
+  total_raw_windows: 188520
+  total_attack_episodes: 373
+  total_isolated_onsets: 292
+
+# ==============================================================================
+# 1. FROZEN GLOBAL TEMPORAL CONSTANTS
+# ==============================================================================
+temporal_contract:
+  window_duration_seconds: 10.0      # W: Duration of sliding window
+  stride_seconds: 2.0               # S: Stride between consecutive windows
+  overlap_ratio: 0.80               # Overlap between consecutive windows (80%)
+  
+  lookback_steps_P: 10              # P: 10 historical lookback steps (20.0 seconds)
+  lookback_duration_seconds: 20.0
+  
+  forecast_horizon_steps_K: 10      # K: 10 rollout forecast steps (20.0 seconds)
+  forecast_duration_seconds: 20.0
+  
+  evaluated_rollout_steps: [1, 3, 5, 10]
+  step_duration_mapping:
+    k_1: 2.0    # 1 step = 2 seconds ahead
+    k_3: 6.0    # 3 steps = 6 seconds ahead
+    k_5: 10.0   # 5 steps = 10 seconds ahead
+    k_10: 20.0  # 10 steps = 20 seconds ahead
+
+# ==============================================================================
+# 2. FROZEN 54-DIMENSIONAL PHYSICAL NETWORK STATE CONTRACT
+# ==============================================================================
+state_representation:
+  total_state_dimensions: 54
+  base_physical_features: 37
+  delta_velocity_features: 17
+  
+  feature_index_mapping:
+    base_features:
+      0: flow_count
+      1: total_ip_bytes
+      2: total_packets
+      3: flow_rate
+      4: byte_rate
+      5: packet_rate
+      6: tcp_ratio
+      7: udp_ratio
+      8: icmp_ratio
+      9: unique_dst_ports
+      10: port_concentration
+      11: dst_port_entropy
+      12: auth_port_ratio
+      13: syn_count
+      14: ack_count
+      15: rst_count
+      16: fin_count
+      17: psh_count
+      18: syn_ratio
+      19: ack_ratio
+      20: rst_ratio
+      21: rst_to_syn_ratio
+      22: handshake_completion_ratio
+      23: fwd_packet_ratio
+      24: fwd_byte_ratio
+      25: down_up_ratio_mean
+      26: down_up_ratio_std
+      27: pkt_len_mean
+      28: pkt_len_std
+      29: pkt_len_max
+      30: pkt_len_min
+      31: zero_payload_ratio
+      32: flow_iat_mean
+      33: flow_iat_std
+      34: flow_iat_max
+      35: flow_iat_min
+      36: active_connection_lifetime_mean
+    delta_features:
+      37: delta_flow_count
+      38: delta_total_ip_bytes
+      39: delta_total_packets
+      40: delta_flow_rate
+      41: delta_byte_rate
+      42: delta_packet_rate
+      43: delta_dst_port_entropy
+      44: delta_port_concentration
+      45: delta_auth_port_ratio
+      46: delta_syn_ratio
+      47: delta_ack_ratio
+      48: delta_rst_ratio
+      49: delta_rst_to_syn_ratio
+      50: delta_fwd_packet_ratio
+      51: delta_pkt_len_mean
+      52: delta_flow_iat_mean
+      53: delta_active_connection_lifetime_mean
+
+# ==============================================================================
+# 3. THREAT FAMILIES & MITRE ATT&CK ONTOLOGY
+# ==============================================================================
+threat_ontology:
+  num_classes: 7
+  classes:
+    0:
+      name: Benign
+      description: Normal enterprise traffic
+      mitre_technique_id: "None"
+      mitre_tactic: "Normal Operations"
+    1:
+      name: DoS
+      subtypes: ["DoS attacks-Hulk", "DoS attacks-GoldenEye", "DoS attacks-Slowloris", "DoS attacks-SlowHTTPTest"]
+      mitre_technique_id: "T1498"
+      mitre_tactic: "Impact (Network Denial of Service)"
+    2:
+      name: DDoS
+      subtypes: ["DDOS attack-HOIC", "DDOS attack-LOIC-HTTP", "DDOS attack-LOIC-UDP"]
+      mitre_technique_id: "T1499"
+      mitre_tactic: "Impact (Endpoint Denial of Service)"
+    3:
+      name: BruteForce
+      subtypes: ["FTP-Patator", "SSH-Patator"]
+      mitre_technique_id: "T1110"
+      mitre_tactic: "Credential Access (Brute Force)"
+    4:
+      name: WebAttack
+      subtypes: ["Brute Force -Web", "Brute Force -XSS", "SQL Injection"]
+      mitre_technique_id: "T1190"
+      mitre_tactic: "Initial Access (Exploit Public-Facing Application)"
+    5:
+      name: Infiltration
+      subtypes: ["Infiltration"]
+      mitre_technique_id: "T1071"
+      mitre_tactic: "Command and Control (Standard Application Layer Protocol)"
+    6:
+      name: Botnet
+      subtypes: ["Bot"]
+      mitre_technique_id: "T1584"
+      mitre_tactic: "Resource Development (Compromise Infrastructure: Botnet)"
+
+# ==============================================================================
+# 4. BENCHMARK SETTINGS SPECIFICATION
+# ==============================================================================
+benchmark_settings:
+  setting_a:
+    name: "Setting A — Seen Attack Generalization"
+    description: "Evaluates ability to forecast recurrences and new episodes of known attack types with identical training/testing attack taxonomy."
+    split_strategy: "70% Train / 15% Val / 15% Test chronological split of known attack episodes."
+    included_families: ["BruteForce", "DoS", "DDoS", "WebAttack"]
+    training_episodes: 255
+    validation_episodes: 56
+    testing_episodes: 62
+    testing_isolated_onsets: 50
+    embargo_buffer_windows: 20  # >= P + K to prevent sequence overlap
+
+  setting_b:
+    name: "Setting B — Mixed Generalization"
+    description: "Simulates realistic enterprise deployment where the model trains on earlier operational days and evaluates on future days containing both known and newly emerging threats."
+    split_strategy: "Chronological multi-day split: Days 1-5 Train, Day 6 Val, Days 7-9 Mixed Test."
+    train_days: ["Wednesday-14-02-2018", "Thursday-15-02-2018", "Friday-16-02-2018", "Wednesday-21-02-2018", "Thursday-22-02-2018"]
+    val_days: ["Friday-23-02-2018"]
+    test_days: ["Wednesday-28-02-2018", "Thursday-01-03-2018", "Friday-02-03-2018"]
+    evaluation_reporting: "Split into overall metrics, known family metrics, and unseen family metrics."
+
+  setting_c:
+    name: "Setting C — Strict Out-of-Distribution / Zero-Day Generalization"
+    description: "Strict zero-day intrusion forecasting benchmark. Model is trained only on DoS, DDoS, Brute Force, and Web Attacks, and evaluated exclusively on unseen Infiltration and Botnet attack episodes."
+    split_strategy: "Known families in Train/Val; Unseen families (Infiltration & Botnet) strictly isolated to Test."
+    train_days: ["Wednesday-14-02-2018", "Thursday-15-02-2018", "Friday-16-02-2018", "Wednesday-21-02-2018", "Thursday-22-02-2018"]
+    val_days: ["Friday-23-02-2018"]
+    test_days: ["Wednesday-28-02-2018", "Thursday-01-03-2018", "Friday-02-03-2018"]
+    test_target_families: ["Infiltration", "Botnet"]
+    test_isolated_onsets: 7
+
+# ==============================================================================
+# 5. TARGET FORECASTING TASKS & EVALUATION SCHEMAS
+# ==============================================================================
+forecasting_tasks:
+  task_1_state_rollout:
+    target_name: "Continuous Multi-Horizon State Forecasting"
+    mathematical_form: "hat_S_{t+1:t+K} in R^{K x 54}"
+    ground_truth: "S_{t+1:t+K} in R^{K x 54}"
+    loss_functions: ["MSE", "MAE"]
+    primary_metrics:
+      - overall_mae
+      - overall_mse
+      - horizon_mae_k1
+      - horizon_mae_k3
+      - horizon_mae_k5
+      - horizon_mae_k10
+
+  task_2_attack_occurrence:
+    target_name: "Binary Attack Occurrence Forecasting"
+    mathematical_form: "hat_p_{t+K} in [0, 1]"
+    ground_truth: "y_{t+K} in {0, 1}"
+    loss_function: "BCEWithLogitsLoss / FocalLoss"
+    primary_metrics:
+      - precision
+      - recall
+      - macro_f1
+      - pr_auc
+      - roc_auc
+      - false_positive_rate_fpr
+
+  task_3_family_classification:
+    target_name: "Threat Family Multi-Class Classification"
+    mathematical_form: "hat_c_{t+K} in Delta^6"
+    ground_truth: "c_{t+K} in {0, 1, 2, 3, 4, 5, 6}"
+    loss_function: "CrossEntropyLoss"
+    primary_metrics:
+      - multiclass_macro_f1
+      - per_family_f1
+      - per_family_recall
+      - confusion_matrix
+
+  task_4_onset_early_warning:
+    target_name: "Proactive Attack Onset Early Warning"
+    mathematical_form: "tau-calibrated warning trigger t_warn prior to onset t_onset"
+    ground_truth: "Isolated attack onsets (preceded by >= 10 benign windows)"
+    primary_metrics:
+      - onset_event_recall          # Fraction of attack onsets predicted >= 2s prior
+      - median_lead_time_seconds    # Median warning lead time (seconds)
+      - mean_lead_time_seconds      # Mean warning lead time (seconds)
+      - false_alarms_per_hour       # FA/hr during benign operations
+      - mean_time_between_fa_hours  # MTBFA (hours)
+
+  task_5_zero_day_generalization:
+    target_name: "Zero-Day Threat Anomaly & Precursor Detection"
+    mathematical_form: "Energy / Latent NLL / Recon Anomaly Score on Setting C"
+    ground_truth: "Infiltration and Botnet test onsets"
+    primary_metrics:
+      - zero_day_onset_recall
+      - zero_day_pr_auc
+      - zero_day_fpr
+
+# ==============================================================================
+# 6. ANTI-LEAKAGE AND SCIENTIFIC RIGOR RULES
+# ==============================================================================
+scientific_rules:
+  rule_1_zero_episode_fragmentation:
+    enforced: true
+    description: "An attack episode must reside entirely within Train, Val, or Test. No episode is ever split."
+  rule_2_training_only_normalization:
+    enforced: true
+    description: "StandardScaler mean and std are computed strictly on the designated Training split. Test and Val are transformed using fitted Training scalers."
+  rule_3_validation_only_threshold_tuning:
+    enforced: true
+    description: "Decision thresholds (tau) for binary classification and onset detection must be calibrated solely on the Validation split."
+  rule_4_temporal_embargo_buffers:
+    enforced: true
+    buffer_windows: 20
+    description: "A minimum embargo buffer of P + K = 20 windows (40s) is enforced at all within-day split boundaries so no sliding window sequence spans across partitions."
+  rule_5_unadulterated_ground_truth:
+    enforced: true
+    description: "No metrics may be fabricated or inferred from partial evaluations. Every reported metric must have a verifiable JSON/CSV execution artifact."

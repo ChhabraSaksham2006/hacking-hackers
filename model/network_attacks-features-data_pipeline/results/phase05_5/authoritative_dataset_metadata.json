@@ -1,0 +1,37 @@
+{
+  "dataset_name": "CSE-CIC-IDS2018",
+  "temporal_window_seconds": 10.0,
+  "temporal_stride_seconds": 2.0,
+  "lookback_steps_P": 10,
+  "state_dimension_D": 54,
+  "total_flow_sessions": 9,
+  "total_temporal_windows": 188520,
+  "splits": {
+    "train_days": [
+      "Wednesday-14-02-2018.parquet",
+      "Thursday-15-02-2018.parquet",
+      "Friday-16-02-2018.parquet",
+      "Wednesday-21-02-2018.parquet",
+      "Thursday-22-02-2018.parquet"
+    ],
+    "val_days": [
+      "Friday-23-02-2018.parquet"
+    ],
+    "test_days": [
+      "Wednesday-28-02-2018.parquet",
+      "Thursday-01-03-2018.parquet",
+      "Friday-02-03-2018.parquet"
+    ]
+  },
+  "sequence_counts_kmax_50": {
+    "train": 101845,
+    "val": 21536,
+    "test": 64608
+  },
+  "attack_prevalence": {
+    "train_attack_rate": 0.108,
+    "val_attack_rate": 0.0599,
+    "test_attack_rate": 0.2912
+  },
+  "computed_train_pos_weight": 8.26
+}

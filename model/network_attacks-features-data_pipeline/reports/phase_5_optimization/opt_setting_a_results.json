@@ -1,0 +1,192 @@
+{
+  "model_family": "SparseRSSM_Optimized",
+  "setting": "A",
+  "parameters": 280382,
+  "sparsity_ratio": 0.8,
+  "use_attention": true,
+  "training_time_seconds": 169.52,
+  "best_epoch": 4,
+  "best_val_loss": 0.85285,
+  "calibrated_threshold_tau": 0.15,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 2.68817,
+      "val_loss": 1.10379,
+      "epoch_seconds": 30.63
+    },
+    {
+      "epoch": 2,
+      "train_loss": 1.31933,
+      "val_loss": 0.92203,
+      "epoch_seconds": 34.16
+    },
+    {
+      "epoch": 3,
+      "train_loss": 1.13781,
+      "val_loss": 0.87518,
+      "epoch_seconds": 38.49
+    },
+    {
+      "epoch": 4,
+      "train_loss": 1.06705,
+      "val_loss": 0.85285,
+      "epoch_seconds": 38.42
+    }
+  ],
+  "metrics": {
+    "state_forecasting": {
+      "overall_state_mae": 0.22468,
+      "overall_state_mse": 0.373581,
+      "mae_k1": 0.232188,
+      "mse_k1": 0.362296,
+      "mae_k3": 0.22161,
+      "mse_k3": 0.368468,
+      "mae_k5": 0.223943,
+      "mse_k5": 0.375639,
+      "mae_k10": 0.225571,
+      "mse_k10": 0.380217
+    },
+    "binary_classification": {
+      "threshold_tau": 0.15,
+      "precision": 0.513619,
+      "recall": 0.987602,
+      "f1_score": 0.675784,
+      "accuracy": 0.849515,
+      "pr_auc": 0.970824,
+      "roc_auc": 0.990846,
+      "false_positive_rate_fpr": 0.176554,
+      "false_negative_rate_fnr": 0.012398,
+      "true_positives": 4620,
+      "false_positives": 4375,
+      "true_negatives": 20405,
+      "false_negatives": 58
+    },
+    "family_classification": {
+      "family_macro_f1": 0.511818,
+      "family_weighted_f1": 0.910471,
+      "family_overall_accuracy": 0.929561,
+      "per_family_metrics": {
+        "Benign": {
+          "f1": 0.9892,
+          "precision": 0.9859,
+          "recall": 0.9925,
+          "support": 24780
+        },
+        "DoS": {
+          "f1": 0.7753,
+          "precision": 0.6618,
+          "recall": 0.9359,
+          "support": 2917
+        },
+        "DDoS": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 1382
+        },
+        "BruteForce": {
+          "f1": 0.7945,
+          "precision": 0.6591,
+          "recall": 1.0,
+          "support": 58
+        },
+        "WebAttack": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 321
+        },
+        "Infiltration": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0
+        },
+        "Botnet": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0
+        }
+      },
+      "confusion_matrix": [
+        [
+          24595,
+          29,
+          45,
+          30,
+          81,
+          0,
+          0
+        ],
+        [
+          14,
+          2730,
+          173,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          16,
+          1366,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          58,
+          0,
+          0,
+          0
+        ],
+        [
+          321,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    "onset_early_warning": {
+      "onset_threshold_tau": 0.15,
+      "total_test_isolated_onsets": 29,
+      "detected_test_onsets": 28,
+      "onset_event_recall": 0.9655,
+      "median_lead_time_seconds": 20.0,
+      "mean_lead_time_seconds": 20.0,
+      "total_pure_benign_hours": 13.59,
+      "total_false_alarms": 4087,
+      "false_alarms_per_hour": 300.8096,
+      "mean_time_between_fa_hours": 0.0033
+    }
+  }
+}

@@ -1,0 +1,19 @@
+dataset:
+  interim_dir: data/interim
+  metadata_dir: data/metadata
+  name: CSE-CIC-IDS2018
+  official_source: s3://cse-cic-ids2018/Processed Traffic Data for ML Algorithms/
+  processed_dir: data/processed
+  raw_dir: data/raw/cse_cic_ids2018
+  test_days:
+  - Wednesday-28-02-2018
+  - Thursday-01-03-2018
+  - Friday-02-03-2018
+  train_days:
+  - Wednesday-14-02-2018
+  - Thursday-15-02-2018
+  - Friday-16-02-2018
+  - Wednesday-21-02-2018
+  - Thursday-22-02-2018
+  val_days:
+  - Friday-23-02-2018

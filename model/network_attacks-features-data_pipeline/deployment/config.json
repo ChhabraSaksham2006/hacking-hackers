@@ -1,0 +1,92 @@
+{
+  "project": "SIH26153 \u2014 AI-Based Network Attack Forecasting",
+  "phase": "Phase 7: Operational Early-Warning & Behavioral Attribution",
+  "model_architecture": "SparseRSSM",
+  "model_file": "model/model.pt",
+  "scaler_file": "preprocessing/scaler.pkl",
+  "state_schema_file": "state_schema.json",
+  "dataset": "CSE-CIC-IDS2018",
+  "git_commit": "d2c7da5",
+  "git_branch": "features/data_pipeline",
+
+  "model_hyperparameters": {
+    "state_dim": 54,
+    "latent_dim": 128,
+    "hidden_dim": 128,
+    "sparsity_ratio": 1.0,
+    "use_attention": false,
+    "num_stage_classes": 5,
+    "K_train": 10,
+    "K_inference": 10
+  },
+
+  "training": {
+    "dataset": "CSE-CIC-IDS2018",
+    "train_days": ["Wed-14-02", "Thu-15-02", "Fri-16-02", "Wed-21-02", "Thu-22-02"],
+    "val_day": ["Fri-23-02"],
+    "test_days": ["Wed-28-02", "Thu-01-03", "Fri-02-03"],
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "batch_size": 256,
+    "epochs": 5,
+    "loss_function": "SparseRSSM.loss()",
+    "lambda_state": 1.0,
+    "lambda_attack": 1.0,
+    "precursor_weight": 10.0,
+    "precursor_window_seconds": 60.0,
+    "pos_weight": 8.26,
+    "seed": 42
+  },
+
+  "inference": {
+    "input_shape": [1, 10, 54],
+    "input_description": "Batch of 1 sequence of 10 consecutive 2-second network state windows, each 54-D",
+    "pure_benign_history_required": true,
+    "normalization": "apply preprocessing/scaler.pkl (StandardScaler fitted on train only)",
+    "output_keys": {
+      "x_recon": "shape (1, 54) — reconstructed current state",
+      "states": "list of 10 tensors each (1, 54) — K=10 step forecasted physical states",
+      "attack": "list of 10 tensors each (1, 1) — onset logits per step",
+      "onset_probability": "sigmoid(max over K attack logits) — single scalar attack onset probability"
+    }
+  },
+
+  "operational_settings": {
+    "calibrated_threshold_max_f1": 0.04,
+    "tier1_aggregation": "10s_alert_cooldown",
+    "tier1_event_recall": 1.0,
+    "tier1_false_alarms_per_hour": 229.02,
+    "tier1_fpr": 0.1274,
+    "tier1_median_lead_time_sec": 14.0,
+    "tier2_aggregation": "60s_alert_cooldown",
+    "tier2_event_recall": 0.5714,
+    "tier2_false_alarms_per_hour": 39.89,
+    "tier2_fpr": 0.0222,
+    "tier2_median_lead_time_sec": 12.0,
+    "champion_aggregation": "2_consecutive_plus_60s_cooldown",
+    "champion_event_recall": 0.2857,
+    "champion_false_alarms_per_hour": 39.57,
+    "champion_fpr": 0.0220,
+    "champion_median_lead_time_sec": 5.0
+  },
+
+  "performance": {
+    "test_state_mae": 0.2766,
+    "test_state_mse": 0.6155,
+    "test_event_count": 7,
+    "test_attack_families": ["Infiltration", "Botnet"],
+    "ood_note": "All 7 test episodes are fully out-of-distribution relative to training attack families"
+  },
+
+  "mitre_attribution": {
+    "method": "deterministic_heuristic_delta_scoring",
+    "warning": "NOT a trained MITRE classifier. Evidence-based scoring using forecasted state delta magnitudes.",
+    "techniques": [
+      "T1046 — Network Service Scanning (Discovery)",
+      "T1110 — Brute Force (Credential Access)",
+      "T1498 — Denial of Service (Impact)",
+      "T1071 — Application Layer Protocol / C2 (Command and Control)",
+      "T1190 — Exploit Public-Facing Application (Initial Access)"
+    ]
+  }
+}

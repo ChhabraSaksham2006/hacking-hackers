@@ -1,0 +1,7 @@
+model_name,model_family,operational_layer,event_recall,events_detected,total_events,window_f1,window_precision,window_recall,fpr,false_alarms_per_hour,median_lead_time_sec,state_mae
+Majority Baseline,Rule-Based Zero,None (Raw),0.0,0,7,0.0,0.0,0.0,0.0,0.0,0.0,N/A
+Logistic Regression,Linear (540-D Lookback),None (Raw),0.4286,3,7,0.0047,0.0024,0.2727,0.1399,251.48,6.0,N/A
+Random Forest,Tree Ensemble (54-D State),None (Raw),0.8571,6,7,0.0039,0.0019,0.6182,0.3831,688.73,19.0,N/A
+Phase 6 SparseRSSM Baseline,Temporal World Model,None (Raw Threshold 0.07),1.0,7,7,0.0039,0.002,1.0,0.6126,1101.27,20.0,0.2766
+Phase 7 SparseRSSM (Calibrated OP: FPR<=5%),Temporal World Model,Calibrated Threshold Constraint,0.0,0,7,0.0,0.0,0.0,0.0,0.0,0.0,0.2766
+Phase 7 Champion Aggregated World Model,Temporal World Model + Aggregation,2-Consecutive + 60s Cooldown + MITRE Attribution,0.2857,2,7,0.0038,0.002,0.0364,0.022,39.57,5.0,0.2766

@@ -1,0 +1,71 @@
+[
+  {
+    "setting": "A",
+    "status": "PASSED",
+    "train_size": 85048,
+    "val_size": 8941,
+    "test_size": 29458,
+    "test_attack_sequences": 4678,
+    "test_onset_precursors": 290,
+    "shape_x": [
+      256,
+      10,
+      54
+    ],
+    "shape_y_states": [
+      256,
+      10,
+      54
+    ],
+    "has_nan": false,
+    "throughput_samples_per_sec": 5118.2,
+    "pos_weight": 11.06,
+    "elapsed_seconds": 4.78
+  },
+  {
+    "setting": "B",
+    "status": "PASSED",
+    "train_size": 102045,
+    "val_size": 21576,
+    "test_size": 64728,
+    "test_attack_sequences": 18855,
+    "test_onset_precursors": 70,
+    "shape_x": [
+      256,
+      10,
+      54
+    ],
+    "shape_y_states": [
+      256,
+      10,
+      54
+    ],
+    "has_nan": false,
+    "throughput_samples_per_sec": 4328.2,
+    "pos_weight": 8.25,
+    "elapsed_seconds": 5.45
+  },
+  {
+    "setting": "C",
+    "status": "PASSED",
+    "train_size": 102045,
+    "val_size": 21576,
+    "test_size": 64728,
+    "test_attack_sequences": 18855,
+    "test_onset_precursors": 70,
+    "shape_x": [
+      256,
+      10,
+      54
+    ],
+    "shape_y_states": [
+      256,
+      10,
+      54
+    ],
+    "has_nan": false,
+    "throughput_samples_per_sec": 4510.8,
+    "pos_weight": 8.25,
+    "elapsed_seconds": 5.51
+  }
+]

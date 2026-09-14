@@ -1,0 +1,149 @@
+/**
+ * dashboardApi.ts
+ * ===============
+ * API client and Server-Sent Events (SSE) streaming subscriber for Aegis Vantage Dashboard.
+ */
+
+export interface DashboardSummary {
+  infiltrationProbability: number;
+  infiltrationProbabilityPct: string;
+  activeFlows: string;
+  flaggedHosts: string;
+  modelConfidence: string;
+  leadTimeSeconds: number;
+  currentStage: string;
+  riskLevel: 'normal' | 'watch' | 'critical';
+  threshold: number;
+}
+
+export interface MitreStage {
+  id: string;
+  label: string;
+  active: boolean;
+}
+
+export interface DashboardAlert {
+  id: number;
+  level: 'normal' | 'watch' | 'critical';
+  host: string;
+  stage: string;
+  ts: string;
+  reason: string;
+}
+
+export interface DashboardFlow {
+  src: string;
+  dst: string;
+  proto: string;
+  flags: string;
+  bytes: string;
+  prob: number;
+}
+
+export interface FullDashboardState {
+  step_index: number;
+  actual_window_index: number;
+  timestamp: string;
+  latest_probability: number;
+  summary: DashboardSummary;
+  stages: MitreStage[];
+  recentAlerts: DashboardAlert[];
+  recentFlows: DashboardFlow[];
+  timeline: number[];
+}
+
+export async function fetchFullDashboardState(): Promise<FullDashboardState> {
+  const res = await fetch('/api/dashboard', { credentials: 'include' });
+  if (!res.ok) throw new Error('Failed to fetch full dashboard state');
+  return res.json();
+}
+
+export async function fetchDashboardSummary(): Promise<any> {
+  const res = await fetch('/api/dashboard/summary', { credentials: 'include' });
+  if (!res.ok) throw new Error('Failed to fetch dashboard summary');
+  return res.json();
+}
+
+export async function fetchDashboardTimeline(): Promise<{ series: number[]; windowStart: string; windowEnd: string }> {
+  const res = await fetch('/api/dashboard/timeline', { credentials: 'include' });
+  if (!res.ok) throw new Error('Failed to fetch dashboard timeline');
+  return res.json();
+}
+
+export async function fetchDashboardStages(): Promise<any> {
+  const res = await fetch('/api/dashboard/stages', { credentials: 'include' });
+  if (!res.ok) throw new Error('Failed to fetch dashboard stages');
+  return res.json();
+}
+
+export async function stepDashboard(): Promise<any> {
+  const res = await fetch('/api/dashboard/step', {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (!res.ok) throw new Error('Failed to step simulation');
+  return res.json();
+}
+
+export async function resetDashboard(): Promise<any> {
+  const res = await fetch('/api/dashboard/reset', {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (!res.ok) throw new Error('Failed to reset simulation');
+  return res.json();
+}
+
+export async function jumpDashboard(): Promise<any> {
+  const res = await fetch('/api/dashboard/jump', {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (!res.ok) throw new Error('Failed to jump simulation to attack onset');
+  return res.json();
+}
+
+/**
+ * Subscribes to the live SSE stream (/api/dashboard/stream).
+ * Returns an unsubscribe callback function that cleanly terminates the EventSource.
+ */
+export function subscribeDashboardStream(
+  onUpdate: (state: FullDashboardState) => void,
+  onError?: (err: Event) => void,
+): () => void {
+  let eventSource: EventSource | null = null;
+  let isClosed = false;
+
+  try {
+    eventSource = new EventSource('/api/dashboard/stream', { withCredentials: true });
+
+    eventSource.onmessage = (event) => {
+      if (isClosed || !event.data) return;
+      try {
+        const payload = JSON.parse(event.data) as FullDashboardState;
+        onUpdate(payload);
+      } catch (err) {
+        console.error('Failed to parse SSE payload:', err);
+      }
+    };
+
+    eventSource.onerror = (err) => {
+      if (onError && !isClosed) {
+        onError(err);
+      }
+    };
+  } catch (e) {
+    console.error('Error establishing SSE stream:', e);
+  }
+
+  return () => {
+    isClosed = true;
+    if (eventSource) {
+      eventSource.close();
+      eventSource = null;
+    }
+  };
+}

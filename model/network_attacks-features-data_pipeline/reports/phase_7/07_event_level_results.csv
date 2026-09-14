@@ -1,0 +1,8 @@
+event_id,session,split,attack_family,attack_label,onset_window,onset_timestamp,duration_minutes,prev_benign_minutes,detected_raw_threshold,lead_time_raw_sec,detected_champion_aggregator,lead_time_aggregator_sec,detection_status
+TEST_Wednesday-_1256,Wednesday-28-02-2018,TEST,Infiltration,Infilteration,1256,2018-02-28 01:41:52,58.13,41.87,True,20.0,False,0.0,DETECTED_RAW_ONLY
+TEST_Wednesday-_17696,Wednesday-28-02-2018,TEST,Infiltration,Infilteration,17696,2018-02-28 10:49:52,75.13,489.87,True,20.0,False,0.0,DETECTED_RAW_ONLY
+TEST_Thursday-0_1796,Thursday-01-03-2018,TEST,Infiltration,Infilteration,1796,2018-03-01 01:59:52,97.13,59.87,True,20.0,False,0.0,DETECTED_RAW_ONLY
+TEST_Thursday-0_16106,Thursday-01-03-2018,TEST,Infiltration,Infilteration,16106,2018-03-01 09:56:52,58.13,379.87,True,20.0,False,0.0,DETECTED_RAW_ONLY
+TEST_Friday-02-_5241,Friday-02-03-2018,TEST,Botnet,Bot,5241,2018-03-02 03:54:42,0.17,0.4,True,6.0,True,6.0,DETECTED_ADVANCE_WARNING
+TEST_Friday-02-_16600,Friday-02-03-2018,TEST,Botnet,Bot,16600,2018-03-02 10:13:20,119.8,378.47,True,20.0,False,0.0,DETECTED_RAW_ONLY
+TEST_Friday-02-_20205,Friday-02-03-2018,TEST,Botnet,Bot,20205,2018-03-02 12:13:30,46.33,0.37,True,4.0,True,4.0,DETECTED_ADVANCE_WARNING

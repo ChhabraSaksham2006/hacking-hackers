@@ -1,0 +1,8 @@
+{
+  "k": 50,
+  "k_train_actual": 50,
+  "lambda_attack": 5.0,
+  "use_pos_weight": true,
+  "epochs": 5,
+  "seed": 42
+}

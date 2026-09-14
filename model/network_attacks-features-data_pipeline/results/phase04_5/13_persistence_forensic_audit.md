@@ -1,0 +1,71 @@
+# Phase 4.5 Forensic Audit: Report 13 — Persistence Forecaster Deep-Dive
+
+**Project:** SIH26153 — AI-Based Network Attack Forecasting
+**Investigation Target:** Explaining the Near-Perfect Persistence Baseline Score ($F_1 > 0.999$, PR-AUC > 0.999) on the Test Partition
+
+## 1. Executive Forensic Finding
+
+The near-perfect performance of the Persistence baseline ($y_{t+K} = y_t$) on the Test partition is **NOT** a software bug, **NOT** feature leakage, and **NOT** an artifact of the 80% window overlap. Rather, it is an inherent mathematical property of **Macroscopic Attack Run Durations** in the CSE-CIC-IDS2018 dataset.
+
+- In the Test partition (64,785 windows), there are **18,874 total attack windows** distributed across only **8 contiguous attack episodes**.
+- The mean attack run length in Test is **2,360 windows (4,720 seconds = 78.6 minutes)**.
+- Out of 18,873 positive future targets at $K=1$, **18,866 (99.96%)** are **Attack Continuations** ($y_t=1 \to y_{t+1}=1$), while only **7 (0.04%)** are **Attack Onsets** ($y_t=0 \to y_{t+1}=1$).
+- Consequently, a naive persistence model that predicts *'the future state equals the current state'* is correct 99.96% of the time on attack windows and 99.98% of the time on benign windows, failing only at the 7 start boundaries and 7 end boundaries.
+
+## 2. Attack Run Length & Episode Distribution Across All 9 Days
+
+| day        | session              | dominant_family   |   total_windows |   attack_windows |   attack_pct |   num_attack_episodes |   atk_run_min_w |   atk_run_mean_w |   atk_run_median_w |   atk_run_max_w |   atk_run_max_sec |   num_benign_episodes |   ben_run_mean_w |   ben_run_max_w |
+|:-----------|:---------------------|:------------------|----------------:|-----------------:|-------------:|----------------------:|----------------:|-----------------:|-------------------:|----------------:|------------------:|----------------------:|-----------------:|----------------:|
+| 2018-02-14 | Wednesday-14-02-2018 | BruteForce        |           21595 |             5647 |        26.15 |                     3 |               5 |           1882.3 |               2725 |            2917 |              5834 |                     4 |           3987   |           12623 |
+| 2018-02-15 | Thursday-15-02-2018  | DoS               |           21595 |             1702 |         7.88 |                     5 |               5 |            340.4 |                110 |            1259 |              2518 |                     6 |           3315.5 |           15227 |
+| 2018-02-16 | Friday-16-02-2018    | DoS               |           21532 |             1486 |         6.9  |                     2 |             104 |            743   |                743 |            1382 |              2764 |                     3 |           6682   |           15100 |
+| 2018-02-21 | Wednesday-21-02-2018 | DDoS              |           15823 |             1390 |         8.78 |                    37 |               5 |             37.6 |                 12 |             675 |              1350 |                    37 |            390.1 |           13656 |
+| 2018-02-22 | Thursday-22-02-2018  | WebAttack         |           21595 |              809 |         3.75 |                   124 |               5 |              6.5 |                  6 |              19 |                38 |                   125 |            166.3 |           10372 |
+| 2018-02-23 | Friday-23-02-2018    | WebAttack         |           21595 |             1289 |         5.97 |                   194 |               5 |              6.6 |                  5 |              27 |                54 |                   195 |            104.1 |           10785 |
+| 2018-02-28 | Wednesday-28-02-2018 | Infiltration      |           21595 |             3998 |        18.51 |                     2 |            1744 |           1999   |               1999 |            2254 |              4508 |                     3 |           5865.7 |           14696 |
+| 2018-03-01 | Thursday-01-03-2018  | Infiltration      |           21595 |             4658 |        21.57 |                     2 |            1744 |           2329   |               2329 |            2914 |              5828 |                     3 |           5645.7 |           11396 |
+| 2018-03-02 | Friday-02-03-2018    | Botnet            |           21595 |            10218 |        47.32 |                     4 |               5 |           2554.5 |               2492 |            5229 |             10458 |                     3 |           3792.3 |           11354 |
+
+## 3. Transition Probability Matrix $P(y_{t+K} \mid y_t)$ & Positive Target Composition
+
+| split   |   horizon_k |   lead_sec |   total_windows |   future_attack_windows |   P(y_future=1 | y_curr=1) [Continuation] |   P(y_future=1 | y_curr=0) [Onset] |   P(y_future=0 | y_curr=0) [Benign Stability] |   P(y_future=0 | y_curr=1) [Cessation] |   pct_future_is_continuation |   pct_future_is_onset |    TP |   FP |   FN |     TN |   persistence_precision |   persistence_recall |   persistence_f1 |   persistence_accuracy |
+|:--------|------------:|-----------:|----------------:|------------------------:|------------------------------------------:|-----------------------------------:|----------------------------------------------:|---------------------------------------:|-----------------------------:|----------------------:|------:|-----:|-----:|-------:|------------------------:|---------------------:|-----------------:|-----------------------:|
+| TRAIN   |           1 |          2 |          102135 |                   11034 |                                  0.984592 |                           0.001877 |                                      0.998123 |                               0.015408 |                        98.45 |                  1.55 | 10863 |  170 |  171 |  90931 |                0.984592 |             0.984502 |         0.984547 |               0.996661 |
+| TRAIN   |           3 |          6 |          102125 |                   11034 |                                  0.953767 |                           0.005632 |                                      0.994368 |                               0.046233 |                        95.35 |                  4.65 | 10521 |  510 |  513 |  90581 |                0.953767 |             0.953507 |         0.953637 |               0.989983 |
+| TRAIN   |           5 |         10 |          102115 |                   11034 |                                  0.924835 |                           0.009156 |                                      0.990844 |                               0.075165 |                        92.44 |                  7.56 | 10200 |  829 |  834 |  90252 |                0.924835 |             0.924415 |         0.924625 |               0.983714 |
+| TRAIN   |          10 |         20 |          102090 |                   11034 |                                  0.901125 |                           0.012079 |                                      0.987921 |                               0.098875 |                        90.03 |                  9.97 |  9934 | 1090 | 1100 |  89966 |                0.901125 |             0.900308 |         0.900716 |               0.978548 |
+| VAL     |           1 |          2 |           21594 |                    1289 |                                  0.849496 |                           0.009554 |                                      0.990446 |                               0.150504 |                        84.95 |                 15.05 |  1095 |  194 |  194 |  20111 |                0.849496 |             0.849496 |         0.849496 |               0.982032 |
+| VAL     |           3 |          6 |           21592 |                    1289 |                                  0.567106 |                           0.027484 |                                      0.972516 |                               0.432894 |                        56.71 |                 43.29 |   731 |  558 |  558 |  19745 |                0.567106 |             0.567106 |         0.567106 |               0.948314 |
+| VAL     |           5 |         10 |           21590 |                    1289 |                                  0.309542 |                           0.04384  |                                      0.95616  |                               0.690458 |                        30.95 |                 69.05 |   399 |  890 |  890 |  19411 |                0.309542 |             0.309542 |         0.309542 |               0.917554 |
+| VAL     |          10 |         20 |           21585 |                    1289 |                                  0.220326 |                           0.049517 |                                      0.950483 |                               0.779674 |                        22.03 |                 77.97 |   284 | 1005 | 1005 |  19291 |                0.220326 |             0.220326 |         0.220326 |               0.90688  |
+| TEST    |           1 |          2 |           64782 |                   18873 |                                  0.999629 |                           0.000152 |                                      0.999848 |                               0.000371 |                        99.96 |                  0.04 | 18866 |    7 |    7 |  45902 |                0.999629 |             0.999629 |         0.999629 |               0.999784 |
+| TEST    |           3 |          6 |           64776 |                   18871 |                                  0.998887 |                           0.000457 |                                      0.999543 |                               0.001113 |                        99.89 |                  0.11 | 18850 |   21 |   21 |  45884 |                0.998887 |             0.998887 |         0.998887 |               0.999352 |
+| TEST    |           5 |         10 |           64770 |                   18869 |                                  0.998145 |                           0.000763 |                                      0.999237 |                               0.001855 |                        99.81 |                  0.19 | 18834 |   35 |   35 |  45866 |                0.998145 |             0.998145 |         0.998145 |               0.998919 |
+| TEST    |          10 |         20 |           64755 |                   18864 |                                  0.996554 |                           0.001416 |                                      0.998584 |                               0.003446 |                        99.66 |                  0.34 | 18799 |   65 |   65 |  45826 |                0.996554 |             0.996554 |         0.996554 |               0.997992 |
+| ALL     |           1 |          2 |          188511 |                   31196 |                                  0.988107 |                           0.002365 |                                      0.997635 |                               0.011893 |                        98.81 |                  1.19 | 30824 |  371 |  372 | 156944 |                0.988107 |             0.988075 |         0.988091 |               0.996059 |
+| ALL     |           3 |          6 |          188493 |                   31194 |                                  0.965086 |                           0.006942 |                                      0.993058 |                               0.034914 |                        96.5  |                  3.5  | 30102 | 1089 | 1092 | 156210 |                0.965086 |             0.964993 |         0.96504  |               0.988429 |
+| ALL     |           5 |         10 |          188475 |                   31192 |                                  0.943759 |                           0.011183 |                                      0.988817 |                               0.056241 |                        94.36 |                  5.64 | 29433 | 1754 | 1759 | 155529 |                0.943759 |             0.943607 |         0.943683 |               0.981361 |
+| ALL     |          10 |         20 |          188430 |                   31187 |                                  0.930718 |                           0.013799 |                                      0.986201 |                               0.069282 |                        93.04 |                  6.96 | 29017 | 2160 | 2170 | 155083 |                0.930718 |             0.93042  |         0.930569 |               0.977021 |
+
+## 4. The Validation vs Test Paradox
+
+A critical validation of this finding is observed by comparing the Validation and Test sets:
+- **Validation Set (Feb 23 - Web Attacks):** Mean attack run length is only **6.6 windows (13.2 seconds)**. As lead time increases from $K=1$ (+2s) to $K=10$ (+20s), Persistence $F_1$ collapses from **0.8495 down to 0.2203**, because by +20s the burst has already finished ($P(\text{Cessation}) = 77.97\%$).
+- **Test Set (Feb 28, Mar 01, Mar 02 - Infiltration & Botnet):** Attacks last for 1 to 2 continuous hours. Persistence $F_1$ remains at **0.9966** even at $K=10$ (+20s), because a 20-second lead time is negligible compared to a 5,000-second attack run.
+
+## 5. Confusion Matrix Breakdown on Test Partition ($N = 64,785$)
+
+| Horizon | Lead Time | True Positives (TP) | False Positives (FP) | False Negatives (FN) | True Negatives (TN) | Precision | Recall | $F_1$ Score |
+|---|---|---|---|---|---|---|---|---|
+| $K=1$ | +2.0s | 18,866 | 7 | 7 | 45,902 | 0.999629 | 0.999629 | 0.999629 |
+| $K=3$ | +6.0s | 18,850 | 21 | 21 | 45,884 | 0.998887 | 0.998887 | 0.998887 |
+| $K=5$ | +10.0s | 18,834 | 35 | 35 | 45,866 | 0.998145 | 0.998145 | 0.998145 |
+| $K=10$ | +20.0s | 18,799 | 65 | 65 | 45,826 | 0.996554 | 0.996554 | 0.996554 |
+
+## 6. Scientific Implication for Research Problem
+
+The binary target $y_{t+K} = \text{is\_attack}[t+K]$ conflates two vastly different prediction regimes:
+1. **Attack Continuation Prediction ($y_t=1 \to y_{t+K}=1$):** Mathematically trivial; dominated by persistence.
+2. **Attack Onset Forecasting ($y_t=0 \to y_{t+K}=1$):** Mathematically difficult; true early-warning forecasting where persistence gets **0.0% recall**.
+
+Therefore, the research pipeline must separate continuous multi-state forecasting and pre-onset forecasting from simple continuation scoring.

@@ -1,0 +1,21 @@
+{
+  "phase": "Phase 7: Operational Early-Warning & Behavioral Attribution",
+  "model_architecture": "SparseRSSM",
+  "hidden_dim": 64,
+  "deterministic_state_dim": 64,
+  "stochastic_state_dim": 32,
+  "sparsity_ratio": 1.0,
+  "operational_settings": {
+    "calibrated_threshold": 0.04,
+    "consecutive_windows": 2,
+    "cooldown_seconds": 60.0,
+    "primary_horizon_seconds": 20.0
+  },
+  "mitre_techniques_supported": [
+    "T1046 (Network Service Scanning)",
+    "T1110 (Brute Force Authentication)",
+    "T1498 (Network Denial of Service)",
+    "T1071 (Application Layer Protocol / C2)",
+    "T1190 (Exploit Public-Facing Application)"
+  ]
+}

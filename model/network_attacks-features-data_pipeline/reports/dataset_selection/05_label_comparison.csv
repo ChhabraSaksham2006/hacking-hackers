@@ -1,0 +1,17 @@
+Attack Class,CSE-CIC-IDS2018 (Cand A/C),NF-v2 (Cand B),CIC-IDS2017 (Cand D),MITRE Tactic,MITRE Technique ID & Name,Attack Progression Role
+Benign / Background,"13,484,708 (83%)","16,635,567 (88%)","2,273,097 (80%)",None,None,Normal Operational Baseline
+FTP-BruteForce / Patator,"193,360",Grouped in Brute Force,"7,938",Credential Access (TA0006),T1110.001 (Password Guessing),Initial Access / Foothold
+SSH-Bruteforce / Patator,"187,589",Grouped in Brute Force,"5,897",Credential Access (TA0006),T1110.001 (Password Guessing),Initial Access / Foothold
+Brute Force - Web,617,Grouped in Brute Force,"1,507",Credential Access (TA0006),T1110.001 (Password Guessing),Web Application Foothold
+Brute Force - XSS,230,Grouped in Web Attack,652,Initial Access (TA0001) / Execution (TA0002),T1190 (Exploit Public-Facing App),Client-Side Execution
+SQL Injection,87,Grouped in Web Attack,21,Initial Access (TA0001),T1190 (Exploit Public-Facing App),Database Access / Exfiltration
+DoS-Slowloris,"10,990",Grouped in DoS/DDoS,"5,796",Impact (TA0040),T1499.003 (App Exhaustion Flood),Resource Starvation / Diversion
+DoS-SlowHTTPTest,"139,890",Grouped in DoS/DDoS,"5,499",Impact (TA0040),T1499.003 (App Exhaustion Flood),Resource Starvation / Diversion
+DoS-Hulk,"461,912",Grouped in DoS/DDoS,"231,073",Impact (TA0040),T1498.001 (Direct Network Flood),Service Disruption
+DoS-GoldenEye,"41,508",Grouped in DoS/DDoS,"10,293",Impact (TA0040),T1499.003 (App Exhaustion Flood),Service Disruption
+DDoS-LOIC-HTTP,"576,191",Grouped in DoS/DDoS,"128,027",Impact (TA0040),T1498.001 (Direct Network Flood),Coordinated Heavy Impact
+DDoS-LOIC-UDP,"1,730",Grouped in DoS/DDoS,Absent,Impact (TA0040),T1498.001 (Direct Network Flood),Bandwidth Saturation
+DDoS-HOIC,"686,012",Grouped in DoS/DDoS,Absent,Impact (TA0040),T1498.001 (Direct Network Flood),High-Orbit Multi-Thread Flood
+Infiltration,"161,934","116,361",36,Lateral Movement (TA0008) / Exfiltration (TA0010),T1210 / T1567 (Remote Services / Exfiltration),Internal Pivot & Multi-Stage Exploit
+Botnet (ARES),"286,191","143,097","1,966",Command & Control (TA0011),T1071.001 (Web Protocols C2),Automated Staging & Scanning
+PortScan / Recon,Embedded in Infiltration/Bot,Embedded in NetFlow Scans,"158,930",Discovery (TA0007) / Recon (TA0043),T1046 (Network Service Discovery),Pre-Attack Subnet Mapping

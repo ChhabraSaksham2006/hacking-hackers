@@ -1,0 +1,7 @@
+Setting,Model,Tau_High,Tau_Low,Precision,Recall,F1_Score,Onset_Recall,Lead_Time_sec,FA_per_Hour
+Setting A,SparseRSSM (Dual-Threshold),0.9,0.35,0.715,0.9478,0.8151,0.7931,20.0,119.23
+Setting A,TFCNet (Dual-Threshold),0.9,0.35,0.7739,0.4962,0.6047,0.6207,20.0,46.74
+Setting B,SparseRSSM (Dual-Threshold),0.8,0.25,0.5797,0.1503,0.2386,0.0,0.0,80.68
+Setting B,TFCNet (Dual-Threshold),0.8,0.25,0.5934,0.3167,0.413,0.5714,20.0,159.91
+Setting C,SparseRSSM (Dual-Threshold),0.7,0.25,0.8446,0.1234,0.2153,0.0,0.0,16.78
+Setting C,TFCNet (Dual-Threshold),0.7,0.25,0.5289,0.4338,0.4767,0.7143,20.0,285.07

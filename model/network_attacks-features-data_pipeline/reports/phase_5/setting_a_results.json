@@ -1,0 +1,184 @@
+{
+  "model_family": "SparseRSSM",
+  "setting": "A",
+  "parameters": 214334,
+  "training_time_seconds": 282.01,
+  "best_epoch": 3,
+  "best_val_loss": 0.91175,
+  "calibrated_threshold_tau": 0.74,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 3.6564,
+      "val_loss": 1.19064,
+      "epoch_seconds": 84.45
+    },
+    {
+      "epoch": 2,
+      "train_loss": 1.72189,
+      "val_loss": 1.06374,
+      "epoch_seconds": 32.62
+    },
+    {
+      "epoch": 3,
+      "train_loss": 1.46781,
+      "val_loss": 0.91175,
+      "epoch_seconds": 109.26
+    }
+  ],
+  "metrics": {
+    "state_forecasting": {
+      "overall_state_mae": 0.223383,
+      "overall_state_mse": 0.37786,
+      "mae_k1": 0.223479,
+      "mse_k1": 0.347149,
+      "mae_k3": 0.225071,
+      "mse_k3": 0.372207,
+      "mae_k5": 0.225024,
+      "mse_k5": 0.384494,
+      "mae_k10": 0.223339,
+      "mse_k10": 0.387705
+    },
+    "binary_classification": {
+      "threshold_tau": 0.74,
+      "precision": 0.510563,
+      "recall": 0.986746,
+      "f1_score": 0.672935,
+      "accuracy": 0.847681,
+      "pr_auc": 0.967814,
+      "roc_auc": 0.990982,
+      "false_positive_rate_fpr": 0.178571,
+      "false_negative_rate_fnr": 0.013254,
+      "true_positives": 4616,
+      "false_positives": 4425,
+      "true_negatives": 20355,
+      "false_negatives": 62
+    },
+    "family_classification": {
+      "family_macro_f1": 0.537203,
+      "family_weighted_f1": 0.910068,
+      "family_overall_accuracy": 0.927083,
+      "per_family_metrics": {
+        "Benign": {
+          "f1": 0.9849,
+          "precision": 0.9869,
+          "recall": 0.983,
+          "support": 24780
+        },
+        "DoS": {
+          "f1": 0.7989,
+          "precision": 0.6724,
+          "recall": 0.9839,
+          "support": 2917
+        },
+        "DDoS": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 1382
+        },
+        "BruteForce": {
+          "f1": 0.8286,
+          "precision": 0.7073,
+          "recall": 1.0,
+          "support": 58
+        },
+        "WebAttack": {
+          "f1": 0.0736,
+          "precision": 0.0725,
+          "recall": 0.0748,
+          "support": 321
+        },
+        "Infiltration": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0
+        },
+        "Botnet": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0
+        }
+      },
+      "confusion_matrix": [
+        [
+          24358,
+          29,
+          62,
+          24,
+          307,
+          0,
+          0
+        ],
+        [
+          13,
+          2870,
+          34,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          13,
+          1369,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          58,
+          0,
+          0,
+          0
+        ],
+        [
+          297,
+          0,
+          0,
+          0,
+          24,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    "onset_early_warning": {
+      "onset_threshold_tau": 0.74,
+      "total_test_isolated_onsets": 29,
+      "detected_test_onsets": 27,
+      "onset_event_recall": 0.931,
+      "median_lead_time_seconds": 20.0,
+      "mean_lead_time_seconds": 20.0,
+      "total_pure_benign_hours": 13.59,
+      "total_false_alarms": 4126,
+      "false_alarms_per_hour": 303.6801,
+      "mean_time_between_fa_hours": 0.0033
+    }
+  }
+}

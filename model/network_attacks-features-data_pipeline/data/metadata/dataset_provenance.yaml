@@ -1,0 +1,27 @@
+dataset_provenance:
+  chronology_policy: Sort flows strictly by timestamp within each daily capture session
+    without shuffling
+  cleaning_policy: Drop header duplicates, drop negative durations, impute rate infs
+    via train median
+  dataset_name: CSE-CIC-IDS2018
+  dataset_version: Official AWS Processed Traffic Data for ML Algorithms (CICFlowMeter-V3)
+  download_date: '2026-09-04'
+  features: 80
+  known_quality_issues:
+  - Repeated header lines in 3 daily files (59 total rows)
+  - Negative flow durations on Day 1 (5 rows) and Day 6 (9 rows)
+  - Division by zero infinite values in Flow Bytes/s and Flow Packets/s for zero-duration
+    flows
+  label_column: Label
+  mitre_policy: Decoupled behavioral interpretation layer mapping predicted states
+    to verified ATT&CK techniques
+  official_s3_bucket: s3://cse-cic-ids2018
+  official_source: https://www.unb.ca/cic/datasets/ids-2018.html
+  processing_status: DOWNLOADED_AND_AUDITED
+  raw_size_bytes: 2831724157
+  s3_prefix: Processed Traffic Data for ML Algorithms/
+  timestamp_format: dd/MM/yyyy HH:mm:ss
+  total_files: 9
+  total_flows: 8284195
+  train_val_test_policy: 'Chronological Day Split: Days 1-5 Train, Day 6 Val, Days
+    7-9 Test (Infiltration & Botnet)'

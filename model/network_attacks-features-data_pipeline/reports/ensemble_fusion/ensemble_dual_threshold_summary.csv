@@ -1,0 +1,4 @@
+Setting,Model,Tau_High,Tau_Low,Precision,Recall,F1_Score,Onset_Recall,Lead_Time_sec,FA_per_Hour
+Setting A,Hybrid Ensemble Fusion (Dual-Threshold),0.85,0.25,0.9167,0.8046,0.857,0.3103,20.0,22.3
+Setting B,Hybrid Ensemble Fusion (Dual-Threshold),0.7,0.15,0.8131,0.1172,0.2049,0.0,0.0,19.77
+Setting C,Hybrid Ensemble Fusion (Dual-Threshold),0.55,0.15,0.8404,0.1137,0.2002,0.0,0.0,15.96

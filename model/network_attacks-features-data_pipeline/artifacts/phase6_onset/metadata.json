@@ -1,0 +1,15 @@
+{
+  "phase": "6.0",
+  "model_type": "SparseRSSM_EarlyWarning",
+  "champion_experiment_id": "E603_PrecursorWindow_120s",
+  "validation_best_f1": 0.1552,
+  "calibrated_threshold": 0.06,
+  "test_event_recall": 0.5714,
+  "test_pr_auc": 0.0014,
+  "test_precision": 0.0011,
+  "test_fpr": 0.3204,
+  "test_false_alarms_per_hour": 576.02,
+  "median_lead_time_sec": 5.0,
+  "multi_seed_event_recall_mean": 0.8571,
+  "multi_seed_event_recall_std": 0.202
+}

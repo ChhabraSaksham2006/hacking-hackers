@@ -1,0 +1,12 @@
+﻿Model_Family,Architecture,Historical_Split,Trained_Setting_A,Trained_Setting_B,Trained_Setting_C,Embargo_Compliant,Threshold_Policy
+Trivial,Majority_Class,None,Yes,Yes,Yes,Yes,Fixed_0.50
+Heuristic,Persistence,Legacy_5-1-3,Yes,Yes,Yes,Yes,Fixed_0.50
+Linear,Logistic_Regression,Legacy_5-1-3,Yes,Yes,Yes,Yes,Val_Optimal_F1
+Tree_Ensemble,Random_Forest,Legacy_5-1-3,Yes,Yes,Yes,Yes,Val_Optimal_F1
+Recurrent,Simple_GRU,Legacy_5-1-3,Yes,Yes,Yes,Yes,Val_Optimal_F1
+Attention,Temporal_Transformer,Legacy_5-1-3,Yes,Yes,Yes,Yes,Val_Optimal_F1
+World_Model,Dense_RSSM,Legacy_5-1-3,Eval_Only,Eval_Only,Eval_Only,Yes,Val_Optimal_F1
+World_Model,SparseRSSM,Hardened_A_B_C,Yes,Yes,Yes,Yes,Val_Optimal_F1
+Spectral_Net,TFCNet,Hardened_A_B_C,Yes,Yes,Yes,Yes,Val_Optimal_F1
+Ensemble,Hybrid_Latent_Fusion,Hardened_A_B_C,Eval_Only,Eval_Only,Eval_Only,Yes,Val_Dual_Threshold
+Two_Stage,Early_Warning_Confirmation,Hardened_A_B_C,Eval_Only,Eval_Only,Eval_Only,Yes,Val_Calibrated_Stages

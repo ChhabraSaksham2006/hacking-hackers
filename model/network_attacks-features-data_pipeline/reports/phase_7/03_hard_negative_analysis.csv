@@ -1,0 +1,51 @@
+window_index,session,timestamp,forecast_probability,trigger_cause,dominant_feature,feature_delta_magnitude,dominant_cluster,false_mitre_candidate,false_mitre_name
+6,Wednesday-28-02-2018,2018-02-28 01:00:30,0.0441,TCP Connection Reset / Teardown Spike,rst_ratio,-1.2275,port_targeting,T1071,Application Layer Protocol / C2
+7,Wednesday-28-02-2018,2018-02-28 01:00:32,0.0469,Benign Multi-Port Service Query,delta_dst_port_entropy,1.3904,port_targeting,T1071,Application Layer Protocol / C2
+9,Wednesday-28-02-2018,2018-02-28 01:00:36,0.0434,TCP Connection Reset / Teardown Spike,rst_ratio,-1.6527,tcp_flags,T1071,Application Layer Protocol / C2
+18,Wednesday-28-02-2018,2018-02-28 01:00:54,0.0453,TCP Connection Reset / Teardown Spike,delta_rst_ratio,-2.9972,port_targeting,T1071,Application Layer Protocol / C2
+19,Wednesday-28-02-2018,2018-02-28 01:00:56,0.0478,TCP Connection Reset / Teardown Spike,delta_rst_ratio,-1.7263,port_targeting,T1071,Application Layer Protocol / C2
+20,Wednesday-28-02-2018,2018-02-28 01:00:58,0.0465,TCP Connection Reset / Teardown Spike,delta_rst_ratio,1.4759,port_targeting,T1071,Application Layer Protocol / C2
+21,Wednesday-28-02-2018,2018-02-28 01:01:00,0.0508,Asymmetric Payload Length Deviation,pkt_len_std,-1.5283,payload_asymmetry,T1071,Application Layer Protocol / C2
+22,Wednesday-28-02-2018,2018-02-28 01:01:02,0.0503,Benign Multi-Port Service Query,delta_auth_port_ratio,1.6383,port_targeting,T1071,Application Layer Protocol / C2
+23,Wednesday-28-02-2018,2018-02-28 01:01:04,0.049,Benign Multi-Port Service Query,delta_dst_port_entropy,-3.3351,port_targeting,T1071,Application Layer Protocol / C2
+24,Wednesday-28-02-2018,2018-02-28 01:01:06,0.0468,Benign Multi-Port Service Query,delta_dst_port_entropy,-2.4385,port_targeting,T1071,Application Layer Protocol / C2
+25,Wednesday-28-02-2018,2018-02-28 01:01:08,0.052,Benign High-Volume Burst,delta_fwd_packet_ratio,-1.1616,timing_jitter,T1071,Application Layer Protocol / C2
+26,Wednesday-28-02-2018,2018-02-28 01:01:10,0.0509,TCP Connection Reset / Teardown Spike,syn_ratio,-1.3143,timing_jitter,T1071,Application Layer Protocol / C2
+27,Wednesday-28-02-2018,2018-02-28 01:01:12,0.0553,TCP Connection Reset / Teardown Spike,delta_rst_ratio,2.5143,tcp_flags,T1046,Network Service Scanning
+28,Wednesday-28-02-2018,2018-02-28 01:01:14,0.0533,Benign Multi-Port Service Query,delta_dst_port_entropy,2.6056,port_targeting,T1046,Network Service Scanning
+29,Wednesday-28-02-2018,2018-02-28 01:01:16,0.0468,TCP Connection Reset / Teardown Spike,syn_ratio,-1.2816,timing_jitter,T1071,Application Layer Protocol / C2
+30,Wednesday-28-02-2018,2018-02-28 01:01:18,0.0637,TCP Connection Reset / Teardown Spike,delta_syn_ratio,-3.7333,tcp_flags,T1046,Network Service Scanning
+31,Wednesday-28-02-2018,2018-02-28 01:01:20,0.0593,TCP Connection Reset / Teardown Spike,syn_ratio,-4.2084,tcp_flags,T1046,Network Service Scanning
+32,Wednesday-28-02-2018,2018-02-28 01:01:22,0.0498,TCP Connection Reset / Teardown Spike,syn_ratio,-3.9098,tcp_flags,T1046,Network Service Scanning
+33,Wednesday-28-02-2018,2018-02-28 01:01:24,0.0511,TCP Connection Reset / Teardown Spike,syn_ratio,-4.8844,tcp_flags,T1046,Network Service Scanning
+34,Wednesday-28-02-2018,2018-02-28 01:01:26,0.0462,TCP Connection Reset / Teardown Spike,syn_ratio,-4.2105,tcp_flags,T1046,Network Service Scanning
+38,Wednesday-28-02-2018,2018-02-28 01:01:34,0.0421,Benign High-Volume Burst,flow_iat_std,-1.7858,timing_jitter,T1498,Network Denial of Service
+39,Wednesday-28-02-2018,2018-02-28 01:01:36,0.0452,Benign Multi-Port Service Query,delta_dst_port_entropy,-2.1552,port_targeting,T1071,Application Layer Protocol / C2
+42,Wednesday-28-02-2018,2018-02-28 01:01:42,0.041,TCP Connection Reset / Teardown Spike,delta_rst_ratio,2.1291,timing_jitter,T1071,Application Layer Protocol / C2
+44,Wednesday-28-02-2018,2018-02-28 01:01:46,0.0577,TCP Connection Reset / Teardown Spike,delta_rst_ratio,-1.4881,port_targeting,T1071,Application Layer Protocol / C2
+45,Wednesday-28-02-2018,2018-02-28 01:01:48,0.0565,TCP Connection Reset / Teardown Spike,delta_rst_ratio,-2.4421,tcp_flags,T1046,Network Service Scanning
+46,Wednesday-28-02-2018,2018-02-28 01:01:50,0.0574,TCP Connection Reset / Teardown Spike,delta_rst_ratio,3.4777,tcp_flags,T1071,Application Layer Protocol / C2
+47,Wednesday-28-02-2018,2018-02-28 01:01:52,0.0518,Benign Multi-Port Service Query,delta_dst_port_entropy,3.483,port_targeting,T1071,Application Layer Protocol / C2
+48,Wednesday-28-02-2018,2018-02-28 01:01:54,0.0502,Asymmetric Payload Length Deviation,ack_ratio,1.4072,timing_jitter,T1071,Application Layer Protocol / C2
+49,Wednesday-28-02-2018,2018-02-28 01:01:56,0.0426,Asymmetric Payload Length Deviation,udp_ratio,-1.3308,timing_jitter,T1071,Application Layer Protocol / C2
+50,Wednesday-28-02-2018,2018-02-28 01:01:58,0.048,Asymmetric Payload Length Deviation,ack_ratio,1.3499,port_targeting,T1071,Application Layer Protocol / C2
+51,Wednesday-28-02-2018,2018-02-28 01:02:00,0.0502,TCP Connection Reset / Teardown Spike,delta_rst_ratio,-2.6651,timing_jitter,T1071,Application Layer Protocol / C2
+52,Wednesday-28-02-2018,2018-02-28 01:02:02,0.0488,Benign Multi-Port Service Query,delta_dst_port_entropy,-3.7295,port_targeting,T1046,Network Service Scanning
+53,Wednesday-28-02-2018,2018-02-28 01:02:04,0.0959,TCP Connection Reset / Teardown Spike,delta_rst_ratio,-4.3785,tcp_flags,T1046,Network Service Scanning
+54,Wednesday-28-02-2018,2018-02-28 01:02:06,0.0827,TCP Connection Reset / Teardown Spike,syn_ratio,-1.774,port_targeting,T1046,Network Service Scanning
+55,Wednesday-28-02-2018,2018-02-28 01:02:08,0.0503,Asymmetric Payload Length Deviation,delta_ack_ratio,5.2702,port_targeting,T1498,Network Denial of Service
+56,Wednesday-28-02-2018,2018-02-28 01:02:10,0.0484,Benign High-Volume Burst,delta_flow_rate,-2.2847,volume_rate,T1498,Network Denial of Service
+57,Wednesday-28-02-2018,2018-02-28 01:02:12,0.0499,TCP Connection Reset / Teardown Spike,rst_ratio,-1.6256,tcp_flags,T1498,Network Denial of Service
+58,Wednesday-28-02-2018,2018-02-28 01:02:14,0.0546,TCP Connection Reset / Teardown Spike,syn_count,-2.166,tcp_flags,T1498,Network Denial of Service
+59,Wednesday-28-02-2018,2018-02-28 01:02:16,0.0567,TCP Connection Reset / Teardown Spike,syn_count,-2.1478,tcp_flags,T1498,Network Denial of Service
+60,Wednesday-28-02-2018,2018-02-28 01:02:18,0.0507,Benign High-Volume Burst,delta_flow_count,2.4233,volume_rate,T1046,Network Service Scanning
+61,Wednesday-28-02-2018,2018-02-28 01:02:20,0.0528,Benign High-Volume Burst,delta_flow_count,2.0409,port_targeting,T1046,Network Service Scanning
+62,Wednesday-28-02-2018,2018-02-28 01:02:22,0.0488,TCP Connection Reset / Teardown Spike,rst_ratio,-1.7015,port_targeting,T1046,Network Service Scanning
+63,Wednesday-28-02-2018,2018-02-28 01:02:24,0.0419,Asymmetric Payload Length Deviation,delta_ack_ratio,-3.2174,port_targeting,T1498,Network Denial of Service
+64,Wednesday-28-02-2018,2018-02-28 01:02:26,0.0403,Asymmetric Payload Length Deviation,ack_ratio,-2.0869,tcp_flags,T1498,Network Denial of Service
+65,Wednesday-28-02-2018,2018-02-28 01:02:28,0.0494,TCP Connection Reset / Teardown Spike,delta_rst_ratio,2.0947,port_targeting,T1498,Network Denial of Service
+66,Wednesday-28-02-2018,2018-02-28 01:02:30,0.053,Asymmetric Payload Length Deviation,delta_ack_ratio,3.9816,port_targeting,T1071,Application Layer Protocol / C2
+67,Wednesday-28-02-2018,2018-02-28 01:02:32,0.0523,Asymmetric Payload Length Deviation,down_up_ratio_mean,1.0072,payload_asymmetry,T1071,Application Layer Protocol / C2
+68,Wednesday-28-02-2018,2018-02-28 01:02:34,0.0467,Benign Multi-Port Service Query,delta_dst_port_entropy,1.3998,port_targeting,T1498,Network Denial of Service
+69,Wednesday-28-02-2018,2018-02-28 01:02:36,0.0439,Benign Multi-Port Service Query,delta_dst_port_entropy,-1.2235,port_targeting,T1498,Network Denial of Service
+70,Wednesday-28-02-2018,2018-02-28 01:02:38,0.0494,TCP Connection Reset / Teardown Spike,delta_rst_ratio,-1.5987,port_targeting,T1498,Network Denial of Service

@@ -1,0 +1,2 @@
+model_name,variant,horizon_k,lead_time_seconds,val_f1,val_pr_auc,val_roc_auc,test_f1,test_pr_auc,test_roc_auc,test_recall,test_precision,test_accuracy,test_state_mae,test_state_rmse,optimal_threshold
+Temporal_Transformer,Full_History_10step_54D,100,200.0,0.1421,0.0776,0.6264,0.3274,0.3724,0.6316,0.2965,0.3654,0.6455,0.288,0.791,0.01

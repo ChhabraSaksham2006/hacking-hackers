@@ -1,0 +1,26 @@
+{
+  "project": "SIH26153 \u2014 AI-Based Network Attack Forecasting",
+  "dataset": "CSE-CIC-IDS2018",
+  "train_days": [
+    "Wednesday-14-02-2018.parquet",
+    "Thursday-15-02-2018.parquet",
+    "Friday-16-02-2018.parquet",
+    "Wednesday-21-02-2018.parquet",
+    "Thursday-22-02-2018.parquet"
+  ],
+  "val_days": [
+    "Friday-23-02-2018.parquet"
+  ],
+  "test_days": [
+    "Wednesday-28-02-2018.parquet",
+    "Thursday-01-03-2018.parquet",
+    "Friday-02-03-2018.parquet"
+  ],
+  "test_event_count": 7,
+  "test_event_recall": 0.2857,
+  "test_median_lead_time_sec": 5.0,
+  "test_false_alarms_per_hour": 39.57,
+  "test_state_mae": 0.2766,
+  "test_state_mse": 0.6155,
+  "timestamp": "2026-09-11 12:20:37"
+}

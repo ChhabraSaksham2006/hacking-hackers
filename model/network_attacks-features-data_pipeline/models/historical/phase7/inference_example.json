@@ -1,0 +1,84 @@
+{
+  "timestamp": "2018-02-28 01:00:18",
+  "session": "Wednesday-28-02-2018",
+  "window_index": 9,
+  "forecast_horizon_seconds": 20.0,
+  "onset_probability": 0.0355,
+  "operational_alert": false,
+  "aggregation_status": "SUPPRESSED_SINGLE_WINDOW_SPIKE",
+  "attribution": {
+    "dominant_behavioral_cluster": "port_targeting",
+    "cluster_intensity_scores": {
+      "volume_rate": 0.1203,
+      "port_targeting": 0.6454,
+      "tcp_flags": 0.5523,
+      "payload_asymmetry": 0.3838,
+      "timing_jitter": 0.5237
+    },
+    "top_physical_feature_deltas": [
+      {
+        "feature": "rst_ratio",
+        "forecast_delta": -2.2022
+      },
+      {
+        "feature": "delta_auth_port_ratio",
+        "forecast_delta": 2.0897
+      },
+      {
+        "feature": "delta_rst_ratio",
+        "forecast_delta": 1.9874
+      },
+      {
+        "feature": "flow_iat_max",
+        "forecast_delta": 1.5207
+      },
+      {
+        "feature": "syn_count",
+        "forecast_delta": 1.1183
+      }
+    ],
+    "mitre_candidates": [
+      {
+        "technique_id": "T1071",
+        "technique_name": "Application Layer Protocol / C2",
+        "tactic": "Command and Control",
+        "score": 3.3135,
+        "evidence": "Periodic inter-arrival pacing, persistent session lifetimes, and structured bidirectional beaconing.",
+        "confidence": 0.3723
+      },
+      {
+        "technique_id": "T1046",
+        "technique_name": "Network Service Scanning",
+        "tactic": "Discovery",
+        "score": 2.351,
+        "evidence": "Elevated destination port entropy, increased unique target ports, and surge in SYN connection initiations.",
+        "confidence": 0.2642
+      },
+      {
+        "technique_id": "T1498",
+        "technique_name": "Network Denial of Service",
+        "tactic": "Impact",
+        "score": 2.1538,
+        "evidence": "Massive volumetric surge in packet/byte rate with extreme SYN/zero-payload packet proportion.",
+        "confidence": 0.242
+      },
+      {
+        "technique_id": "T1190",
+        "technique_name": "Exploit Public-Facing Application",
+        "tactic": "Initial Access",
+        "score": 0.8043,
+        "evidence": "Abnormal payload size distributions, unusual PUSH flag assertions, and asymmetrical client-to-server request sizes.",
+        "confidence": 0.0904
+      },
+      {
+        "technique_id": "T1110",
+        "technique_name": "Brute Force Authentication",
+        "tactic": "Credential Access",
+        "score": 0.2776,
+        "evidence": "Concentrated flow activity on authentication ports (SSH 22 / FTP 21) with high connection teardown/reset rates.",
+        "confidence": 0.0312
+      }
+    ]
+  },
+  "recommended_soc_action": "Maintain baseline surveillance. Low operational alert severity."
+}

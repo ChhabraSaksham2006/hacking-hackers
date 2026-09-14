@@ -1,0 +1,5 @@
+sampling_scheme,step_stride_sec,test_windows_count,persistence_f1_step1,P(y_{t+1}=1 | y_t=1),P(y_{t+1}=1 | y_t=0),byte_rate_lag1_autocorr,total_onset_boundaries,total_cessation_boundaries
+10s_win_2s_stride_80%overlap,2.0,64785,0.999629,0.999629,0.000152,0.8992,7,7
+10s_win_4s_stride_60%overlap,4.0,32394,0.999258,0.999258,0.000305,0.7593,7,7
+10s_win_6s_stride_40%overlap,6.0,21597,0.998887,0.998887,0.000457,0.5792,7,7
+10s_win_10s_stride_0%overlap,10.0,12957,0.998144,0.998144,0.000762,0.3561,7,7

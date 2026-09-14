@@ -1,0 +1,10 @@
+processed_file,windows,attack_windows,benign_windows,attack_percentage,nan_count,inf_count,monotonic_time,dominant_family,dominant_mitre,sha256_verified
+Friday-02-03-2018_states.parquet,21595,10218,11377,47.32%,0,0,True,Benign,None,True
+Friday-16-02-2018_states.parquet,21532,1486,20046,6.90%,0,0,True,Benign,None,True
+Friday-23-02-2018_states.parquet,21595,1289,20306,5.97%,0,0,True,Benign,None,True
+Thursday-01-03-2018_states.parquet,21595,4658,16937,21.57%,0,0,True,Benign,None,True
+Thursday-15-02-2018_states.parquet,21595,1702,19893,7.88%,0,0,True,Benign,None,True
+Thursday-22-02-2018_states.parquet,21595,809,20786,3.75%,0,0,True,Benign,None,True
+Wednesday-14-02-2018_states.parquet,21595,5647,15948,26.15%,0,0,True,Benign,None,True
+Wednesday-21-02-2018_states.parquet,15823,1390,14433,8.78%,0,0,True,Benign,None,True
+Wednesday-28-02-2018_states.parquet,21595,3998,17597,18.51%,0,0,True,Benign,None,True

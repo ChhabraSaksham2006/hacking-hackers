@@ -1,0 +1,166 @@
+{
+  "model_name": "SparseRSSM",
+  "setting": "A",
+  "calibrated_config": {
+    "filter_type": "raw",
+    "ema_beta": 0.0,
+    "persistence_m": 1,
+    "alpha_phys": 0.0,
+    "threshold_tau": 0.94,
+    "val_f1": 0.5269,
+    "val_prec": 0.7419,
+    "val_rec": 0.4085,
+    "val_fa_hr": 5.13,
+    "val_onset_rec": 0.2593
+  },
+  "state_forecasting": {
+    "overall_state_mae": 0.223383,
+    "overall_state_mse": 0.37786,
+    "mae_k1": 0.223479,
+    "mse_k1": 0.347149,
+    "mae_k3": 0.225071,
+    "mse_k3": 0.372207,
+    "mae_k5": 0.225024,
+    "mse_k5": 0.384494,
+    "mae_k10": 0.223339,
+    "mse_k10": 0.387705
+  },
+  "binary_classification": {
+    "threshold_tau": 0.94,
+    "precision": 0.939001,
+    "recall": 0.927961,
+    "f1_score": 0.933448,
+    "accuracy": 0.978987,
+    "pr_auc": 0.967814,
+    "roc_auc": 0.990982,
+    "false_positive_rate_fpr": 0.01138,
+    "false_negative_rate_fnr": 0.072039,
+    "true_positives": 4341,
+    "false_positives": 282,
+    "true_negatives": 24498,
+    "false_negatives": 337
+  },
+  "family_classification": {
+    "family_macro_f1": 0.537203,
+    "family_weighted_f1": 0.910068,
+    "family_overall_accuracy": 0.927083,
+    "per_family_metrics": {
+      "Benign": {
+        "f1": 0.9849,
+        "precision": 0.9869,
+        "recall": 0.983,
+        "support": 24780
+      },
+      "DoS": {
+        "f1": 0.7989,
+        "precision": 0.6724,
+        "recall": 0.9839,
+        "support": 2917
+      },
+      "DDoS": {
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "support": 1382
+      },
+      "BruteForce": {
+        "f1": 0.8286,
+        "precision": 0.7073,
+        "recall": 1.0,
+        "support": 58
+      },
+      "WebAttack": {
+        "f1": 0.0736,
+        "precision": 0.0725,
+        "recall": 0.0748,
+        "support": 321
+      },
+      "Infiltration": {
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "support": 0
+      },
+      "Botnet": {
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "support": 0
+      }
+    },
+    "confusion_matrix": [
+      [
+        24358,
+        29,
+        62,
+        24,
+        307,
+        0,
+        0
+      ],
+      [
+        13,
+        2870,
+        34,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        13,
+        1369,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        58,
+        0,
+        0,
+        0
+      ],
+      [
+        297,
+        0,
+        0,
+        0,
+        24,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  },
+  "onset_early_warning": {
+    "onset_event_recall": 0.1034,
+    "detected_onsets": 3,
+    "total_onsets": 29,
+    "median_lead_time_seconds": 20.0,
+    "false_alarm_count": 244,
+    "false_alarms_per_hour": 17.96,
+    "total_benign_hours": 13.59
+  }
+}

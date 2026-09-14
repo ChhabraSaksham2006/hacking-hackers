@@ -1,0 +1,5 @@
+horizon_k,lead_sec,state_persistence_mae_overall,state_persistence_rmse_overall,Volume_Density,Velocity_Rates,Protocol_Mix,Port_Targeting,TCP_Flags_Health,Directionality,Packet_Moments,IAT_Lifetime,Velocity_Deltas
+1,2.0,0.1924,0.7909,0.0192,0.0192,0.0993,0.0903,0.0982,0.1048,0.0861,0.0724,0.4367
+3,6.0,0.2743,0.9374,0.0504,0.0504,0.2202,0.1857,0.2155,0.2374,0.1781,0.1409,0.4946
+5,10.0,0.3342,1.1157,0.0748,0.0748,0.3035,0.2453,0.2922,0.3359,0.2374,0.1857,0.5486
+10,20.0,0.3243,1.0368,0.0834,0.0834,0.3246,0.2623,0.3146,0.3634,0.2477,0.1933,0.4815

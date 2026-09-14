@@ -1,0 +1,35 @@
+Model,Variant,Task,K,Horizon_sec,Split,F1,Precision,Recall,FPR,ROC_AUC,PR_AUC,State_MAE,State_RMSE,Onset_F1,Onset_Recall,Lead_Time,Notes
+Persistence,y_t,Binary_Attack_Forecasting,1,2.0,Test (OOD),0.9996,0.9996,0.9996,0.0002,0.9997,0.9996,0.1924,0.7909,0.0,0.0,2.0s,Identity baseline; continuation dominated
+Persistence,y_t,Binary_Attack_Forecasting,3,6.0,Test (OOD),0.9881,0.9881,0.9881,0.0024,0.993,0.9881,0.2743,0.9374,0.0,0.0,6.0s,Identity baseline
+Persistence,y_t,Binary_Attack_Forecasting,5,10.0,Test (OOD),0.965,0.965,0.965,0.0069,0.9888,0.965,0.3342,1.1157,0.0,0.0,10.0s,Identity baseline
+Persistence,y_t,Binary_Attack_Forecasting,10,20.0,Test (OOD),0.9307,0.9307,0.9307,0.0138,0.977,0.9307,0.3243,1.0368,0.0,0.0,20.0s,Identity baseline
+Persistence,y_t,Binary_Attack_Forecasting,50,100.0,Test (OOD),0.986,0.986,0.986,0.0058,0.9901,0.986,N/A,N/A,N/A,N/A,100.0s,Identity baseline
+Persistence,y_t,Binary_Attack_Forecasting,100,200.0,Test (OOD),0.9726,0.9726,0.9726,0.0112,0.9807,0.9766,N/A,N/A,N/A,N/A,200.0s,Identity baseline
+Persistence,y_t,Binary_Attack_Forecasting,200,400.0,Test (OOD),0.9455,0.9455,0.9455,0.0228,0.9614,0.9455,N/A,N/A,N/A,N/A,400.0s,Identity baseline
+Persistence,y_t,Binary_Attack_Forecasting,300,600.0,Test (OOD),0.9186,0.9186,0.9186,0.0337,0.9424,0.9186,N/A,N/A,N/A,N/A,600.0s,Identity baseline
+Majority,Constant 0,Binary_Attack_Forecasting,1,2.0,Test (OOD),0.0,0.0,0.0,0.0,0.5,0.2913,N/A,N/A,0.0,0.0,2.0s,Zero positive baseline
+Majority,Constant 0,Binary_Attack_Forecasting,100,200.0,Test (OOD),0.0,0.0,0.0,0.0,0.5,0.2911,N/A,N/A,0.0,0.0,200.0s,Zero positive baseline
+Logistic_Regression,Static 54D,Binary_Attack_Forecasting,1,2.0,Test (OOD),0.2766,0.6201,0.178,0.0315,0.7274,0.5038,N/A,N/A,N/A,N/A,2.0s,Val optimal thresh: 0.62
+Logistic_Regression,Static 54D,Binary_Attack_Forecasting,50,100.0,Test (OOD),0.177,0.4528,0.11,N/A,N/A,N/A,N/A,N/A,N/A,N/A,100.0s,Direct per-K model
+Logistic_Regression,Static 54D,Binary_Attack_Forecasting,100,200.0,Test (OOD),0.2969,0.3155,0.2804,N/A,N/A,N/A,N/A,N/A,N/A,N/A,200.0s,Direct per-K model
+Random_Forest,Static 54D,Binary_Attack_Forecasting,1,2.0,Test (OOD),0.2892,0.7703,0.178,0.0153,0.8032,0.614,N/A,N/A,N/A,N/A,2.0s,Val optimal thresh: 0.71
+Random_Forest,Static 54D,Binary_Attack_Forecasting,50,100.0,Test (OOD),0.6139,0.5682,0.6676,N/A,N/A,N/A,N/A,N/A,N/A,N/A,100.0s,Direct per-K model
+Random_Forest,Static 54D,Binary_Attack_Forecasting,100,200.0,Test (OOD),0.5581,0.4022,0.9114,N/A,N/A,N/A,N/A,N/A,N/A,N/A,200.0s,Val optimal thresh: 0.26
+Random_Forest,Static 54D,Binary_Attack_Forecasting,200,400.0,Test (OOD),0.3031,0.5812,0.205,N/A,N/A,N/A,N/A,N/A,N/A,N/A,400.0s,Direct per-K model
+Random_Forest,Static 54D,Binary_Attack_Forecasting,250,500.0,Test (OOD),0.487,0.5369,0.4456,N/A,N/A,N/A,N/A,N/A,N/A,N/A,500.0s,Direct per-K model
+Random_Forest,Static 54D,Binary_Attack_Forecasting,300,600.0,Test (OOD),0.4425,0.551,0.3697,N/A,N/A,N/A,N/A,N/A,N/A,N/A,600.0s,Direct per-K model
+GRU,Full 10step 54D,Binary_Attack_Forecasting,1,2.0,Test (OOD),0.109,0.7261,0.0589,N/A,0.7773,0.5289,N/A,N/A,N/A,N/A,2.0s,Sequence baseline
+Transformer,Full 10step 54D,Binary_Attack_Forecasting,1,2.0,Test (OOD),0.0684,0.738,0.0359,N/A,0.7426,0.4711,N/A,N/A,N/A,N/A,2.0s,Sequence baseline
+Transformer,Full 10step 54D,Binary_Attack_Forecasting,100,200.0,Test (OOD),0.3274,0.3654,0.2965,N/A,0.6316,0.3724,0.288,0.791,N/A,N/A,200.0s,Val optimal thresh: 0.01
+Dense_RSSM,Dense 128D,Binary_Attack_Forecasting,1,2.0,Test (OOD),0.554,0.3896,0.9584,0.6171,N/A,N/A,N/A,N/A,N/A,N/A,2.0s,Untrained attack head; val state MSE 0.3607
+Dense_RSSM,Dense 128D,Binary_Attack_Forecasting,50,100.0,Test (OOD),0.5569,0.3871,0.9924,0.6456,N/A,N/A,N/A,N/A,N/A,N/A,100.0s,Untrained attack head; val state MSE 0.5930
+Dense_RSSM,Dense 128D,Binary_Attack_Forecasting,100,200.0,Test (OOD),0.5542,0.3833,1.0,0.6608,N/A,N/A,N/A,N/A,N/A,N/A,200.0s,Untrained attack head; val state MSE 0.6087
+Dense_RSSM,Dense 128D,Binary_Attack_Forecasting,200,400.0,Test (OOD),0.5563,0.3853,1.0,0.6545,N/A,N/A,N/A,N/A,N/A,N/A,400.0s,Untrained attack head; val state MSE 0.6171
+Dense_RSSM,Dense 128D,Binary_Attack_Forecasting,250,500.0,Test (OOD),0.5528,0.3822,0.9989,0.6622,N/A,N/A,N/A,N/A,N/A,N/A,500.0s,Untrained attack head; val state MSE 0.6215
+Dense_RSSM,Dense 128D,Binary_Attack_Forecasting,300,600.0,Test (OOD),0.5576,0.3887,0.9858,0.6355,N/A,N/A,N/A,N/A,N/A,N/A,600.0s,Untrained attack head; val state MSE 0.6279
+Sparse_RSSM,Top-50 (64D),Binary_Attack_Forecasting,1,2.0,Test (OOD),0.5509,0.3817,0.9899,0.6593,N/A,N/A,N/A,N/A,N/A,N/A,2.0s,Untrained attack head; val state MSE 0.4006
+Sparse_RSSM,Top-50 (64D),Binary_Attack_Forecasting,50,100.0,Test (OOD),0.558,0.3945,0.953,0.6009,N/A,N/A,N/A,N/A,N/A,N/A,100.0s,Untrained attack head; val state MSE 0.5951
+Sparse_RSSM,Top-50 (64D),Binary_Attack_Forecasting,100,200.0,Test (OOD),0.5548,0.3841,0.9986,0.6575,N/A,N/A,N/A,N/A,N/A,N/A,200.0s,Untrained attack head; val state MSE 0.6117
+Sparse_RSSM,Top-10 (13D),Binary_Attack_Forecasting,1,2.0,Test (OOD),0.5295,0.4169,0.7252,0.4169,N/A,N/A,N/A,N/A,N/A,N/A,2.0s,Untrained attack head; val state MSE 0.4115
+Sparse_RSSM,Top-10 (13D),Binary_Attack_Forecasting,50,100.0,Test (OOD),0.0064,0.2947,0.0032,0.0032,N/A,N/A,N/A,N/A,N/A,N/A,100.0s,Severely degraded; val state MSE 0.6127
+Sparse_RSSM,Top-10 (13D),Binary_Attack_Forecasting,100,200.0,Test (OOD),0.0,0.0,0.0,0.0,N/A,N/A,N/A,N/A,N/A,N/A,200.0s,Training diverged; val state MSE 1e+99

@@ -1,0 +1,10 @@
+day_name,parquet_filename,parquet_size_mb,flow_count,timestamp_start,timestamp_end,coverage_hours,label_distribution,exact_duplicates,duplicate_pct,infinities_handled
+Friday-02-03-2018,Friday-02-03-2018.parquet,91.14,1048575,2018-03-02 01:00:00,2018-03-02 12:59:59,12.00,"{'Benign': 762384, 'Bot': 286191}",5459,0.52%,5542
+Friday-16-02-2018,Friday-16-02-2018.parquet,61.67,1048574,2018-02-16 01:00:32,2018-02-16 12:58:24,11.96,"{'DoS attacks-Hulk': 461912, 'Benign': 446772, 'DoS attacks-SlowHTTPTest': 139890}",147586,14.07%,0
+Friday-23-02-2018,Friday-23-02-2018.parquet,103.47,1048575,2018-02-23 01:00:00,2018-02-23 12:59:59,12.00,"{'Benign': 1048009, 'Brute Force -Web': 362, 'Brute Force -XSS': 151, 'SQL Injection': 53}",2614,0.25%,7662
+Thursday-01-03-2018,Thursday-01-03-2018.parquet,29.52,331100,2018-03-01 01:00:00,2018-03-01 12:59:59,12.00,"{'Benign': 238037, 'Infilteration': 93063}",73,0.02%,4004
+Thursday-15-02-2018,Thursday-15-02-2018.parquet,101.60,1048575,2018-02-15 01:00:00,2018-02-15 12:59:59,12.00,"{'Benign': 996077, 'DoS attacks-GoldenEye': 41508, 'DoS attacks-Slowloris': 10990}",2421,0.23%,11133
+Thursday-22-02-2018,Thursday-22-02-2018.parquet,103.75,1048566,2018-02-22 01:00:00,2018-02-22 12:59:59,12.00,"{'Benign': 1048204, 'Brute Force -Web': 249, 'Brute Force -XSS': 79, 'SQL Injection': 34}",3278,0.31%,7651
+Wednesday-14-02-2018,Wednesday-14-02-2018.parquet,79.86,1048570,2018-02-14 01:00:00,2018-02-14 12:59:59,12.00,"{'Benign': 667621, 'FTP-BruteForce': 193360, 'SSH-Bruteforce': 187589}",225628,21.52%,5371
+Wednesday-21-02-2018,Wednesday-21-02-2018.parquet,52.59,1048575,2018-02-21 01:55:46,2018-02-21 10:43:21,8.79,"{'DDOS attack-HOIC': 686012, 'Benign': 360833, 'DDOS attack-LOIC-UDP': 1730}",17557,1.67%,0
+Wednesday-28-02-2018,Wednesday-28-02-2018.parquet,47.14,613071,2018-02-28 01:00:00,2018-02-28 12:59:59,12.00,"{'Benign': 544200, 'Infilteration': 68871}",6089,0.99%,8297

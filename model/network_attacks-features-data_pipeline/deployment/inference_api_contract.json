@@ -1,0 +1,107 @@
+{
+  "input_schema": {
+    "type": "object",
+    "required": ["state_sequence"],
+    "properties": {
+      "state_sequence": {
+        "type": "array",
+        "description": "10 consecutive 2-second network behavioral state windows (pure-benign history required)",
+        "minItems": 10,
+        "maxItems": 10,
+        "items": {
+          "type": "array",
+          "description": "54-dimensional network state vector (StandardScaler normalized)",
+          "minItems": 54,
+          "maxItems": 54,
+          "items": {"type": "number"}
+        }
+      }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "onset_probability": {
+        "type": "number",
+        "description": "Attack onset probability in next 20 seconds [0.0 — 1.0]"
+      },
+      "risk_level": {
+        "type": "string",
+        "enum": ["NORMAL", "MARGINAL_PRECURSOR", "LOW_PRECURSOR", "ELEVATED_WATCH", "HIGH_ATTACK_LIKELY", "CRITICAL_ATTACK_IMMINENT"]
+      },
+      "lead_time_seconds": {
+        "type": "number",
+        "description": "Forecast horizon (20.0s when alert is raised, 0.0s otherwise)"
+      },
+      "detection_threshold": {
+        "type": "number",
+        "description": "Calibrated decision threshold (0.04 from validation max-F1)"
+      },
+      "is_alert": {
+        "type": "boolean",
+        "description": "True if onset_probability >= detection_threshold"
+      },
+      "mitre_candidates": {
+        "type": "array",
+        "description": "Evidence-based MITRE ATT&CK technique candidates (heuristic, NOT a trained classifier)",
+        "items": {
+          "type": "object",
+          "properties": {
+            "technique_id": {"type": "string"},
+            "confidence": {"type": "number"},
+            "description": {"type": "string"}
+          }
+        }
+      },
+      "forecasted_state_delta": {
+        "type": "array",
+        "description": "54-D vector: forecasted state minus current state (Δ S_{t+K} = Ŝ_{t+K} - S_t)",
+        "items": {"type": "number"},
+        "minItems": 54,
+        "maxItems": 54
+      },
+      "current_state": {
+        "type": "array",
+        "description": "Last observed normalized state window (S_t)",
+        "items": {"type": "number"},
+        "minItems": 54,
+        "maxItems": 54
+      },
+      "forecasted_state": {
+        "type": "array",
+        "description": "Forecasted state at K=10 (20s ahead) — Ŝ_{t+K}",
+        "items": {"type": "number"},
+        "minItems": 54,
+        "maxItems": 54
+      }
+    }
+  },
+  "operational_contract": {
+    "primary_horizon_seconds": 20.0,
+    "lookback_windows": 10,
+    "window_duration_seconds": 2.0,
+    "state_dimension": 54,
+    "threshold_calibrated_on": "validation_max_f1",
+    "threshold_value": 0.04,
+    "test_performance": {
+      "state_mae": 0.2766,
+      "state_mse": 0.6155,
+      "event_recall_tier1_10s_cooldown": 1.0,
+      "false_alarms_per_hour_tier1": 229.02,
+      "event_recall_tier2_60s_cooldown": 0.5714,
+      "false_alarms_per_hour_tier2": 39.89,
+      "test_events": 7,
+      "attack_families_in_test": ["Infiltration", "Botnet"],
+      "ood_status": "All 7 test episodes are fully OOD"
+    }
+  },
+  "important_caveats": [
+    "Input must be pure-benign history (no attack traffic in any of the 10 lookback windows)",
+    "Input must be normalized with the provided scaler.pkl before passing to the model",
+    "MITRE attribution is deterministic heuristic scoring — NOT a trained classifier",
+    "Do NOT interpret MITRE confidence values as classification probabilities",
+    "Do NOT call this causal inference — feature deltas are correlational, not causal",
+    "Multi-seed variance: event recall 71.43%–100.0% depending on training seed",
+    "The FPR-constrained operating points (threshold=0.99) collapse to zero recall — operational use requires the 0.04 threshold with temporal aggregation"
+  ]
+}

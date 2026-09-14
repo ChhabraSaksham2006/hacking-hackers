@@ -1,0 +1,11 @@
+configuration,window_duration_seconds,stride_seconds,overlap_percentage,pilot_total_windows,avg_flows_per_window,median_flows_per_window,empty_windows_percentage,attack_windows_percentage,attack_onset_fidelity,state_dimension_design_c,full_dataset_storage_mb
+1s_step1s,1.0,1.0,0% (None),22013,108.60,22.0,4.87%,50.76%,"High (1s), but 76% empty windows / high sparsity noise",54,89.0 MB
+5s_step5s,5.0,5.0,0% (None),4402,542.24,116.0,3.23%,53.77%,"Very Good (5s), 35% empty windows in background traffic",54,17.8 MB
+5s_step2.5s,5.0,2.5,50%,8797,541.85,116.0,3.24%,53.77%,"Very Good (5s), 35% empty windows in background traffic",54,35.6 MB
+10s_step10s,10.0,10.0,0% (None),2201,1084.48,243.0,2.59%,54.70%,"Optimal (10s), smooth flow moments, 12% empty, sharp onset",54,8.9 MB
+10s_step5s,10.0,5.0,50%,4395,1081.29,242.0,2.57%,54.81%,"Optimal (10s), smooth flow moments, 12% empty, sharp onset",54,17.8 MB
+10s_step2s,10.0,2.0,80% (2s stride),10978,1079.66,241.0,2.55%,54.81%,"Optimal (10s), smooth flow moments, 12% empty, sharp onset",54,44.5 MB
+30s_step30s,30.0,30.0,0% (None),733,3193.27,793.0,0.82%,58.53%,"Moderate (30s), blurs short 3-min flood attacks",54,3.0 MB
+30s_step15s,30.0,15.0,50%,1459,3149.62,786.0,1.03%,58.74%,"Moderate (30s), blurs short 3-min flood attacks",54,5.9 MB
+60s_step60s,60.0,60.0,0% (None),366,6333.85,1632.0,0.00%,63.66%,"Poor (60s), severe temporal latency, completely obscures micro-bursts",54,1.5 MB
+60s_step30s,60.0,30.0,50%,726,6215.07,1628.5,0.00%,64.05%,"Poor (60s), severe temporal latency, completely obscures micro-bursts",54,3.0 MB

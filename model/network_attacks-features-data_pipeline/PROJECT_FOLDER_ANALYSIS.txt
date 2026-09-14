@@ -1,0 +1,2302 @@
+====================================================================================================
+SIH26153: AI-BASED NETWORK ATTACK FORECASTING FROM NETWORK TRAFFIC DATA
+MASTER CODEBASE, ARCHITECTURE, DATA PIPELINE & EXHAUSTIVE FILE-BY-FILE AUDIT
+====================================================================================================
+Generated: 2026-09-05
+Workspace Root: D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline
+Total Files Tracked: 200
+Project Initiative: Smart India Hackathon (SIH26153) - Predictive Network Defense
+
+----------------------------------------------------------------------------------------------------
+TABLE OF CONTENTS
+----------------------------------------------------------------------------------------------------
+1. EXECUTIVE SUMMARY & PARADIGM SHIFT
+2. MATHEMATICAL FORMULATION & TEMPORAL STATE SPECIFICATION
+3. END-TO-END PIPELINE ARCHITECTURE (INGESTION -> FORECASTING -> STREAMING ALERTS)
+4. MITRE ATT&CK 5-STAGE TAXONOMY MAPPING
+5. THE 'PERSISTENCE PARADOX' & FORENSIC RESEARCH FINDINGS
+6. DIRECTORY TREE & COMPREHENSIVE REPOSITORY INVENTORY
+7. COMPLETE FILE-BY-FILE DEEP-DIVE ANALYSIS (ALL 200 FILES)
+   7.1  Root Files (3 files)
+   7.2  Configuration Files: configs/ (4 files)
+   7.3  Master Parquet: data/ (1 file)
+   7.4  DARPA Backup: data/backup_darpa_week1/ (8 files)
+   7.5  Metadata & Schemas: data/metadata/ (7 files)
+   7.6  Processed Splits & Windows: data/processed/ (8 files)
+   7.7  Temporal State Parquets: data/processed/temporal_states/ (9 files)
+   7.8  CIC-IDS2017 Processed: data/processed_cic/ (8 files)
+   7.9  Deep Learning Models: models/ & backup (3 files)
+   7.10 Inference & Alert Results: results/ (2 files)
+   7.11 Core Source Engine: src/ & subpackages (32 files)
+   7.12 Automation & Pipelines: scripts/ & subdirectories (31 files)
+   7.13 Scientific Research Reports: reports/ & subdirectories (83 files)
+8. REPRODUCTION, TRAINING & INFERENCE EXECUTION GUIDE
+
+----------------------------------------------------------------------------------------------------
+1. EXECUTIVE SUMMARY & PARADIGM SHIFT
+----------------------------------------------------------------------------------------------------
+Cyber defense has historically been reactive: intrusion detection systems (Snort, Suricata, Zeek)
+and machine learning classifiers examine flows in isolation to declare whether an active flow is malicious
+after or during its execution. In real-world enterprise infrastructure, by the time an attack signature is
+detected, lateral movement has begun, credentials have leaked, or buffer exhaustion has taken down services.
+
+This project establishes a fundamental paradigm shift from Reactive Detection to Proactive World Model Forecasting.
+Rather than classifying individual packets or completed flows, the system:
+  1. Observes continuous physical network telemetry aggregated over rolling 10-second temporal windows.
+  2. Models the temporal dynamics and state transitions of the network over a 20-second historical lookback.
+  3. Forecasts future continuous network telemetry states S_{t+K} and multi-stage attack onset y_{t+K} with
+     quantifiable lead times (K in {1, 3, 5, 10} steps = 2.0s, 6.0s, 10.0s, 20.0s ahead).
+  4. Emits early-warning alerts with predicted MITRE ATT&CK stages and anticipated telemetry drift deltas.
+
+----------------------------------------------------------------------------------------------------
+2. MATHEMATICAL FORMULATION & TEMPORAL STATE SPECIFICATION
+----------------------------------------------------------------------------------------------------
+A. Temporal Windowing Parameters:
+   - Window Duration (W): 10.0 seconds
+   - Stride (Delta t): 2.0 seconds
+   - Window Overlap: 80.0% ((W - Delta t) / W)
+   - Lookback Sequence Length (P): 10 steps (covering 20 seconds of continuous traffic history)
+   - Forecast Horizons (K): K in {1, 3, 5, 10} steps
+     * K = 1  -> Lead Time = 2.0 seconds
+     * K = 3  -> Lead Time = 6.0 seconds
+     * K = 5  -> Lead Time = 10.0 seconds
+     * K = 10 -> Lead Time = 20.0 seconds
+
+B. Temporal State Vector S_t in R^D (Canonical D = 54 Dimensions):
+   The continuous network telemetry vector S_t comprises 8 distinct functional feature groups:
+   1. Volume & Density (3 dims): flow_count, total_ip_bytes, total_packets
+   2. Velocity & Rates (3 dims): flow_rate, byte_rate, packet_rate
+   3. Protocol Distribution (3 dims): tcp_ratio, udp_ratio, icmp_ratio
+   4. TCP Handshake & Flag Dynamics (9 dims): syn_count, ack_count, rst_count, fin_count, psh_count,
+      urg_count, syn_ratio, ack_ratio, rst_ratio
+   5. Flow Duration & Connection Lifespans (4 dims): duration_mean, duration_std, duration_min, duration_max
+   6. Packet Size & Payload Dynamics (6 dims): pkt_len_mean, pkt_len_std, pkt_len_min, pkt_len_max,
+      zero_payload_ratio, payload_mean
+   7. Inter-Arrival Time (IAT) Statistics (4 dims): iat_mean, iat_std, iat_min, iat_max
+   8. Transport Dynamics, Window & Entropy (5 dims): win_mean, win_std, ttl_mean, ttl_std, port_entropy
+   Plus First-Order Velocity Delta Features: Delta S_t = S_t - S_{t-1} across 37 base features,
+   capturing rate-of-change telemetry accelerations.
+
+C. World Model Loss Function:
+   The sequence models (LSTM and Transformer World Models) optimize a joint multi-task objective:
+     L_total = L_state_MSE(S_pred_{t+K}, S_{t+K}) + lambda * L_stage_CrossEntropy(Y_pred_{t+K}, Y_{t+K})
+   where lambda balances physical state reconstruction against discrete kill-chain stage classification.
+
+----------------------------------------------------------------------------------------------------
+3. END-TO-END PIPELINE ARCHITECTURE (INGESTION -> FORECASTING -> STREAMING ALERTS)
+----------------------------------------------------------------------------------------------------
+1. INGESTION (scripts/download/download_official_s3.py):
+   Downloads raw multi-gigabyte CSV captures of CSE-CIC-IDS2018 from AWS Open Data Registry.
+   Computes SHA-256 hashes and records them in data/metadata/download_manifest.csv.
+
+2. CLEANING & CANONICALIZATION (scripts/preprocessing/convert_raw_to_canonical_parquet.py):
+   - Strips 59 repeated header rows found inside CSV dumps.
+   - Eliminates 14 invalid flows with negative durations.
+   - Imputes infinite rates (Flow Bytes/s, Flow Packets/s) via median training values.
+   - Sorts strictly chronologically by Timestamp without shuffling.
+   - Converts to fast, compressed Parquet adhering to data/metadata/canonical_schema.yaml.
+
+3. TEMPORAL STATE AGGREGATION (scripts/preprocessing/build_temporal_states.py, src/temporal/state_aggregator.py):
+   - Aggregates flows into rolling 10-second windows with 2-second stride.
+   - Maps attack labels to 5-stage MITRE ATT&CK taxonomy (data/metadata/mitre_mapping.csv).
+   - Produces 9 daily state parquets in data/processed/temporal_states/.
+
+4. DATASET SEQUENCE GENERATION (src/temporal/dataset_builder.py, src/dataset_sequence.py):
+   - Generates historical lookback tensors (batch, P=10, D=54) and targets for horizons K in {1, 3, 5, 10}.
+   - Splits into Chronological Partitions:
+     * Train: Wed-14 (FTP/SSH Brute Force), Thu-15 (DoS GoldenEye/Slowloris), Fri-16 (DoS SlowHTTPTest/Hulk),
+              Wed-21 (DDoS HOIC/LOIC-UDP), Thu-22 (Web Brute Force/XSS/SQLi)
+     * Val:   Fri-23 (Web Attacks)
+     * Test:  Wed-28 (Infiltration Day 1), Thu-01 (Infiltration Day 2), Fri-02 (Botnet ARES C2)
+
+5. BASELINES & EXPERIMENTATION (scripts/experiments/run_baseline_suite.py):
+   - Evaluates Persistence, Majority, Logistic Regression, Random Forest, GRU, and Transformer.
+   - Outputs detailed CSV metrics and reports to reports/baselines/ and reports/phase_4_5/.
+
+6. WORLD MODEL TRAINING (src/train_world_model.py, src/train_unified_world_model.py):
+   - Trains LSTM/Transformer World Models with joint continuous state regression and attack classification.
+   - Saves optimal checkpoints to models/unified_world_model_best.pt and models/world_model_lstm_best.pt.
+
+7. DEPLOYMENT & INFERENCE (src/inference_batch.py, src/inference_stream.py):
+   - Batch Mode: Forensic evaluation of offline test session parquets -> results/batch_thursday_test.json.
+   - Live Streaming Mode: Real-time FIFO sliding window alert generation -> results/live_stream_alerts.jsonl.
+
+----------------------------------------------------------------------------------------------------
+4. MITRE ATT&CK 5-STAGE TAXONOMY MAPPING
+----------------------------------------------------------------------------------------------------
+To provide actionable operational intelligence, attack behaviors are mapped into 5 kill-chain stages:
+  +-------+-----------------------------+-----------------------------------+-----------------------------------+
+  | Stage | Stage Name                  | MITRE Tactic / Technique ID       | Attack Manifestations in Data     |
+  +-------+-----------------------------+-----------------------------------+-----------------------------------+
+  |   0   | Benign Baseline             | Normal Operational Traffic        | Background HTTP, DNS, SMB, TLS    |
+  |   1   | Reconnaissance              | TA0043 (Reconnaissance) / T1046   | PortScan, IP Sweep, Satan, Netcat |
+  |   2   | Initial Access              | TA0001 (Initial Access) / T1110   | SSH/FTP Brute Force, Web Hydra    |
+  |   3   | Lateral Movement & Execution| TA0008 / TA0002 / T1190, T1203    | SQLi, XSS, Infiltration, Exploit  |
+  |   4   | Denial of Service (DoS/DDoS)| TA0040 (Impact) / T1498, T1499    | GoldenEye, Slowloris, Hulk, HOIC  |
+  +-------+-----------------------------+-----------------------------------+-----------------------------------+
+
+----------------------------------------------------------------------------------------------------
+5. THE 'PERSISTENCE PARADOX' & FORENSIC RESEARCH FINDINGS (PHASE 4.5)
+----------------------------------------------------------------------------------------------------
+One of the major scientific contributions in this repository is the forensic unmasking of the 'Persistence Paradox':
+  - Phenomenon: Naive persistence (predicting future state equals current state: y_{t+K} = y_t) achieves an
+    apparent Macro F1 of 0.94 - 0.98 on standard test sets at K = 1.
+  - Forensic Root Cause: Attack sessions in CSE-CIC-IDS2018 occur in long contiguous blocks (e.g. Botnet runs for
+    720 minutes; Infiltration runs for 535 minutes). Inside an active attack block, P(y_{t+1}=1 | y_t=1) = 99.98%!
+    Consequently, a naive persistence model that simply repeats the current state achieves near-perfect F1 without
+    learning any predictive physics or temporal precursors.
+  - Pre-Onset Evaluation: When evaluated exclusively on pure pre-onset transition windows (predicting the very first
+    attack window while currently observing benign baseline y_t = 0), Persistence F1 collapses to EXACTLY 0.0000!
+  - Multi-Horizon Decay: As the forecast horizon K increases from 1 step (2s) to 10 steps (20s), persistence performance
+    rapidly decays, whereas sequence-aware World Models leverage early telemetry drift (packet rate spikes,
+    SYN/ACK imbalances, port entropy fluctuations) to forecast attack onsets ahead of time.
+  - Architectural Recommendation: Phase 4.5 reports (Reports 13-27) demonstrate the necessity of a Recurrent
+    State Space Model (RSSM) with sparse latent routing to isolate subtle pre-attack precursors from dominating background.
+
+----------------------------------------------------------------------------------------------------
+6. DIRECTORY TREE & COMPREHENSIVE REPOSITORY INVENTORY
+----------------------------------------------------------------------------------------------------
+Total files in repository: 200
+
+Directory: . (Root) [3 files]
+   |-- .gitignore                                                562 B
+   |-- data_visualizer.ipynb                                  11.28 KB
+   |-- info.txt                                               35.99 KB
+
+Directory: configs [4 files]
+   |-- baselines.yaml                                          2.50 KB
+   |-- dataset.yaml                                              493 B
+   |-- features.yaml                                             490 B
+   |-- temporal.yaml                                           1.59 KB
+
+Directory: data [1 files]
+   |-- combined_multidomain_dataset.parquet                   88.16 MB
+
+Directory: data/backup_darpa_week1 [8 files]
+   |-- split_test_dt10s.parquet                                5.75 MB
+   |-- split_train_dt10s.parquet                              17.14 MB
+   |-- split_val_dt10s.parquet                                 6.07 MB
+   |-- windows_friday_dt10s.parquet                            5.75 MB
+   |-- windows_monday_dt10s.parquet                            5.54 MB
+   |-- windows_thursday_dt10s.parquet                          6.07 MB
+   |-- windows_tuesday_dt10s.parquet                           5.21 MB
+   |-- windows_wednesday_dt10s.parquet                         7.25 MB
+
+Directory: data/metadata [7 files]
+   |-- attack_timelines.csv                                    2.14 KB
+   |-- canonical_schema.yaml                                  21.81 KB
+   |-- cleaning_manifest.csv                                   2.15 KB
+   |-- dataset_provenance.yaml                                 1.20 KB
+   |-- download_manifest.csv                                   4.02 KB
+   |-- mitre_mapping.csv                                       3.30 KB
+   |-- temporal_states_manifest.csv                            2.17 KB
+
+Directory: data/processed [8 files]
+   |-- split_test_dt10s.parquet                                5.75 MB
+   |-- split_train_dt10s.parquet                              17.14 MB
+   |-- split_val_dt10s.parquet                                 6.07 MB
+   |-- windows_friday_dt10s.parquet                            5.75 MB
+   |-- windows_monday_dt10s.parquet                            5.54 MB
+   |-- windows_thursday_dt10s.parquet                          6.07 MB
+   |-- windows_tuesday_dt10s.parquet                           5.21 MB
+   |-- windows_wednesday_dt10s.parquet                         7.25 MB
+
+Directory: data/processed/temporal_states [9 files]
+   |-- Friday-02-03-2018_states.parquet                        3.87 MB
+   |-- Friday-16-02-2018_states.parquet                      862.91 KB
+   |-- Friday-23-02-2018_states.parquet                        4.10 MB
+   |-- Thursday-01-03-2018_states.parquet                      3.70 MB
+   |-- Thursday-15-02-2018_states.parquet                      4.19 MB
+   |-- Thursday-22-02-2018_states.parquet                      4.04 MB
+   |-- Wednesday-14-02-2018_states.parquet                     3.94 MB
+   |-- Wednesday-21-02-2018_states.parquet                   817.63 KB
+   |-- Wednesday-28-02-2018_states.parquet                     3.96 MB
+
+Directory: data/processed_cic [8 files]
+   |-- windows_cic_Friday-WorkingHours-Afternoon-DDos.parquet     11.80 MB
+   |-- windows_cic_Friday-WorkingHours-Afternoon-PortScan.parquet      7.33 MB
+   |-- windows_cic_Friday-WorkingHours-Morning.parquet         4.80 MB
+   |-- windows_cic_Monday-WorkingHours.parquet                 4.83 MB
+   |-- windows_cic_Thursday-WorkingHours-Afternoon-Infilteration.parquet      4.12 MB
+   |-- windows_cic_Thursday-WorkingHours-Morning-WebAttacks.parquet      4.82 MB
+   |-- windows_cic_Tuesday-WorkingHours.parquet                5.38 MB
+   |-- windows_cic_Wednesday-workingHours.parquet             15.46 MB
+
+Directory: models [2 files]
+   |-- unified_world_model_best.pt                             1.16 MB
+   |-- world_model_lstm_best.pt                                3.46 MB
+
+Directory: models/backup_darpa_week1 [1 files]
+   |-- world_model_lstm_best.pt                                3.46 MB
+
+Directory: reports [11 files]
+   |-- 01_repository_audit.md                                  4.17 KB
+   |-- 02_dataset_provenance.md                                2.63 KB
+   |-- 03_feature_audit.csv                                   11.95 KB
+   |-- 04_label_audit.csv                                      4.96 KB
+   |-- 05_temporal_readiness.md                                3.60 KB
+   |-- 06_darpa_integration_audit.md                           2.02 KB
+   |-- 07_mitre_mapping_audit.md                               3.47 KB
+   |-- 08_leakage_audit.md                                     2.05 KB
+   |-- 09_dataset_comparison.csv                               2.72 KB
+   |-- 10_data_quality_report.md                               1.54 KB
+   |-- 11_final_dataset_decision.md                            2.03 KB
+
+Directory: reports/baselines [12 files]
+   |-- 01_baseline_dataset_summary.md                            742 B
+   |-- 02_logistic_regression_results.csv                      1.84 KB
+   |-- 03_random_forest_results.csv                            1.35 KB
+   |-- 04_gru_results.csv                                      1.56 KB
+   |-- 05_transformer_results.csv                              1.73 KB
+   |-- 06_multihorizon_comparison.csv                          6.81 KB
+   |-- 07_temporal_ablation.csv                                2.10 KB
+   |-- 08_delta_ablation.csv                                   1.13 KB
+   |-- 09_ood_analysis.md                                      3.15 KB
+   |-- 10_error_analysis.md                                    3.04 KB
+   |-- 11_baseline_summary.md                                 21.83 KB
+   |-- 12_rssm_requirements.md                                 2.19 KB
+
+Directory: reports/data_pipeline [15 files]
+   |-- 00_pre_migration_inventory.md                           4.13 KB
+   |-- 01_clean_branch_policy.md                               3.17 KB
+   |-- 02_download_verification.md                             4.19 KB
+   |-- 03_raw_data_audit.csv                                   2.21 KB
+   |-- 04_raw_data_audit.md                                    3.05 KB
+   |-- 05_temporal_integrity.md                                1.36 KB
+   |-- 06_attack_progression_audit.md                          3.56 KB
+   |-- 07_feature_audit.csv                                   10.05 KB
+   |-- 08_feature_selection_recommendation.md                  1.03 KB
+   |-- 09_legacy_47_feature_audit.md                           1.47 KB
+   |-- 10_mitre_mapping_audit.md                                 605 B
+   |-- 11_dataset_mixing_policy.md                               766 B
+   |-- 12_final_data_pipeline_readiness.md                     3.36 KB
+   |-- 13_canonical_parquet_verification.md                    5.12 KB
+   |-- 14_canonical_dataset_statistics.csv                     1.87 KB
+
+Directory: reports/dataset_selection [8 files]
+   |-- 01_candidate_inventory.md                               6.42 KB
+   |-- 02_dataset_comparison.csv                               7.11 KB
+   |-- 03_temporal_audit.md                                    4.94 KB
+   |-- 04_feature_comparison.csv                               4.05 KB
+   |-- 05_label_comparison.csv                                 2.27 KB
+   |-- 06_mitre_readiness.md                                   3.68 KB
+   |-- 07_dataset_mixing_risk.md                               3.11 KB
+   |-- 08_final_dataset_recommendation.md                      6.15 KB
+
+Directory: reports/phase_4_5 [20 files]
+   |-- 01_attack_run_distributions.csv                         1.06 KB
+   |-- 02_persistence_transition_probabilities.csv             2.32 KB
+   |-- 03_pre_onset_evaluation.csv                             1.05 KB
+   |-- 04_stride_subsampling_simulation.csv                      497 B
+   |-- 05_feature_group_state_errors.csv                         549 B
+   |-- 13_persistence_forensic_audit.md                       13.94 KB
+   |-- 14_attack_onset_forecasting.md                          2.02 KB
+   |-- 15_pre_onset_evaluation.md                              6.34 KB
+   |-- 16_overlap_effect_analysis.md                           2.77 KB
+   |-- 17_horizon_difficulty.md                                1.51 KB
+   |-- 18_state_forecasting_analysis.md                        3.36 KB
+   |-- 19_ood_forensic_analysis.md                             2.39 KB
+   |-- 20_delta_feature_interpretation.md                      5.41 KB
+   |-- 21_temporal_dataset_forensics.md                        1.20 KB
+   |-- 22_target_definition.md                                 1.74 KB
+   |-- 23_feature_lineage.md                                   1.69 KB
+   |-- 24_baseline_reproducibility_audit.md                    1.11 KB
+   |-- 25_rssm_design_requirements.md                          2.61 KB
+   |-- 26_sparse_latent_hypothesis.md                          1.13 KB
+   |-- 27_phase_4_5_master_summary.md                          2.40 KB
+
+Directory: reports/temporal_audit [11 files]
+   |-- 01_feature_lineage.md                                   9.41 KB
+   |-- 02_leakage_audit.md                                     1.04 KB
+   |-- 03_delta_audit.md                                         756 B
+   |-- 04_target_definition.md                                 1.26 KB
+   |-- 05_window_density.csv                                   1.66 KB
+   |-- 06_attack_onset_resolution.md                           7.17 KB
+   |-- 07_split_audit.md                                       1.17 KB
+   |-- 08_duplicate_impact.md                                  1.23 KB
+   |-- 09_feature_quality.csv                                  7.80 KB
+   |-- 10_rssm_readiness.md                                    1.72 KB
+   |-- 11_final_audit_verdict.md                               1.93 KB
+
+Directory: reports/temporal_design [4 files]
+   |-- 01_window_comparison.csv                                1.53 KB
+   |-- 02_state_feature_design.md                              5.18 KB
+   |-- 03_attack_onset_analysis.md                             2.89 KB
+   |-- 04_temporal_design_recommendation.md                    2.53 KB
+
+Directory: reports/temporal_states [2 files]
+   |-- 01_temporal_state_verification.md                       4.13 KB
+   |-- 02_temporal_state_statistics.csv                          910 B
+
+Directory: results [2 files]
+   |-- batch_thursday_test.json                                1.74 MB
+   |-- live_stream_alerts.jsonl                               11.69 KB
+
+Directory: scripts [16 files]
+   |-- audit_datasets.py                                       2.45 KB
+   |-- gen_00.py                                               4.36 KB
+   |-- gen_01.py                                               6.62 KB
+   |-- gen_01_policy.py                                        3.40 KB
+   |-- gen_02.py                                               9.17 KB
+   |-- gen_02_dl.py                                            2.32 KB
+   |-- gen_03.py                                               5.15 KB
+   |-- gen_04.py                                               5.37 KB
+   |-- gen_05.py                                               3.01 KB
+   |-- gen_06.py                                               3.86 KB
+   |-- gen_07.py                                               3.30 KB
+   |-- gen_08.py                                               6.35 KB
+   |-- generate_audit_reports.py                              18.66 KB
+   |-- generate_markdown_reports.py                           22.17 KB
+   |-- inspect_combined.py                                       699 B
+   |-- write_reports.py                                           66 B
+
+Directory: scripts/audit [8 files]
+   |-- audit_raw_datasets.py                                   6.15 KB
+   |-- gen_12.py                                               3.71 KB
+   |-- generate_all_pipeline_reports.py                       19.91 KB
+   |-- generate_phase4_5_reports.py                           41.44 KB
+   |-- generate_temporal_design_reports.py                    14.41 KB
+   |-- run_comprehensive_temporal_audit.py                    32.31 KB
+   |-- run_phase4_5_forensics.py                              16.40 KB
+   |-- run_pilot_temporal_study.py                             7.54 KB
+
+Directory: scripts/download [1 files]
+   |-- download_official_s3.py                                 3.57 KB
+
+Directory: scripts/experiments [2 files]
+   |-- generate_baseline_reports.py                           12.75 KB
+   |-- run_baseline_suite.py                                  43.96 KB
+
+Directory: scripts/preprocessing [2 files]
+   |-- build_temporal_states.py                                5.29 KB
+   |-- convert_raw_to_canonical_parquet.py                    13.33 KB
+
+Directory: scripts/verification [2 files]
+   |-- verify_canonical_parquets.py                            8.10 KB
+   |-- verify_temporal_states.py                              10.05 KB
+
+Directory: src [19 files]
+   |-- __init__.py                                                32 B
+   |-- build_dataset.py                                        7.46 KB
+   |-- cic_feature_adapter.py                                 10.54 KB
+   |-- cic_mapping.py                                          2.67 KB
+   |-- dataset_sequence.py                                     5.87 KB
+   |-- dataset_unified_sequence.py                             4.10 KB
+   |-- evaluate_world_model.py                                 5.24 KB
+   |-- feature_extractor.py                                   15.85 KB
+   |-- inference_batch.py                                      8.75 KB
+   |-- inference_engine.py                                    10.82 KB
+   |-- inference_stream.py                                     8.89 KB
+   |-- mitre_mapping.py                                        2.69 KB
+   |-- temporal_aggregator.py                                  8.03 KB
+   |-- train_baseline.py                                       6.83 KB
+   |-- train_cross_val_world_model.py                          9.74 KB
+   |-- train_unified_world_model.py                            9.17 KB
+   |-- train_world_model.py                                   10.27 KB
+   |-- visualizer.py                                           8.55 KB
+   |-- world_model.py                                          5.39 KB
+
+Directory: src/data [1 files]
+   |-- __init__.py                                                24 B
+
+Directory: src/evaluation [1 files]
+   |-- metrics.py                                              6.52 KB
+
+Directory: src/features [1 files]
+   |-- __init__.py                                                24 B
+
+Directory: src/mitre [1 files]
+   |-- __init__.py                                                24 B
+
+Directory: src/models/baselines [5 files]
+   |-- gru.py                                                  3.58 KB
+   |-- linear.py                                               1.44 KB
+   |-- persistence.py                                          1.37 KB
+   |-- random_forest.py                                        1.47 KB
+   |-- transformer.py                                          4.88 KB
+
+Directory: src/temporal [3 files]
+   |-- __init__.py                                                24 B
+   |-- dataset_builder.py                                      9.32 KB
+   |-- state_aggregator.py                                    19.39 KB
+
+Directory: src/training [1 files]
+   |-- trainer.py                                              8.44 KB
+
+Directory: src/utils [1 files]
+   |-- __init__.py                                                24 B
+
+----------------------------------------------------------------------------------------------------
+7. COMPLETE FILE-BY-FILE DEEP-DIVE ANALYSIS (ALL 200 FILES)
+----------------------------------------------------------------------------------------------------
+Every file in this repository is analyzed below with technical rigor, schema breakdown, and architectural role.
+
+[001/200] FILE: .gitignore
+  Title:       Git Ignore Rules
+  Role:        Repository Version Control Hygiene
+  Size:        562 bytes
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\.gitignore
+  Description: Specifies files, caches, and temporary artifacts to be excluded from git commits. Excludes Python __pycache__, bytecode (.pyc, .pyo), virtual environments (.env, venv), temporary IDE settings (.vscode, .idea), OS artifacts (Thumbs.db, .DS_Store), and unprocessed large binary raw dumps while retaining structured tracking.
+
+[002/200] FILE: configs/baselines.yaml
+  Title:       Baseline Model Suite & Experimental Matrix Configuration
+  Role:        Experiment Reproducibility & Benchmark Settings
+  Size:        2,555 bytes (2.50 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\configs\baselines.yaml
+  Telemetry:   Total Lines: 100
+  Telemetry:   First Line: # SIH26153 — AI-Based Network Attack Forecasting from Network Traffic Data
+  Description: Specifies experimental setup for Phase 4 baseline forecasting models: Random seed (42), state dimension (D=54), base dimension (D=37), lookback steps (P=10 windows = 20s), forecast horizons K in [1, 3, 5, 10] corresponding to lead times [2.0s, 6.0s, 10.0s, 20.0s]. Defines chronological dataset splits:
+- Train Days (5 days): Wed-14 (FTP/SSH Brute Force), Thu-15 (DoS GoldenEye/Slowloris), Fri-16 (DoS SlowHTTPTest/Hulk), Wed-21 (DDoS HOIC/LOIC-UDP), Thu-22 (Brute Force Web/XSS/SQLi).
+- Validation Day (1 day): Fri-23 (Web Attacks: Brute Web, XSS, SQLi).
+- Test Days (3 days): Wed-28 (Multi-stage Infiltration Day 1), Thu-01 (Multi-stage Infiltration Day 2), Fri-02 (Botnet ARES C2).
+Defines hyperparameters for Linear (Logistic Regression), Random Forest, GRU, and Transformer.
+
+[003/200] FILE: configs/dataset.yaml
+  Title:       Dataset Directory Structure & Ingestion Configuration
+  Role:        Dataset Lineage & Path Management
+  Size:        493 bytes
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\configs\dataset.yaml
+  Telemetry:   Total Lines: 19
+  Telemetry:   First Line: dataset:
+  Description: Configures primary dataset name (CSE-CIC-IDS2018), official AWS S3 bucket source URI (s3://cse-cic-ids2018/Processed Traffic Data for ML Algorithms/), raw storage paths, interim paths, metadata paths, processed storage paths, and train/val/test session day lists.
+
+[004/200] FILE: configs/features.yaml
+  Title:       Feature Engineering, Curation & Selection Rules
+  Role:        Feature Space Specification & Dimensionality Reduction
+  Size:        490 bytes
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\configs\features.yaml
+  Telemetry:   Total Lines: 24
+  Telemetry:   First Line: features:
+  Description: Configures the scientific feature reduction from 80 raw CICFlowMeter columns down to 54 curated behavioral features. Specifies 8 zero-variance dropped features (Bwd URG Flags, Bwd Byts/b Avg, Fwd Pkts/b Avg, Bwd Pkts/b Avg, Bwd PSH Flags, Fwd Byts/b Avg, Bwd Blk Rate Avg, Fwd Blk Rate Avg).
+Specifies 6 multicollinear redundant features dropped (Subflow Fwd Pkts, Subflow Bwd Pkts, Subflow Bwd Byts, Fwd Header Len, Subflow Fwd Byts, Bwd Header Len).
+Defines scaling strategy (Robust Standard Scaling) and missing/infinite value imputation (Median).
+
+[005/200] FILE: configs/temporal.yaml
+  Title:       Temporal Rolling Window State Aggregation Parameters
+  Role:        Temporal State & Target Formulation Specification
+  Size:        1,627 bytes (1.59 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\configs\temporal.yaml
+  Telemetry:   Total Lines: 72
+  Telemetry:   First Line: temporal_state_design:
+  Description: Defines temporal window duration (W = 10.0 seconds), stride (Delta t = 2.0 seconds), overlap (80.0%), state dimension D = 54, lookback P = 10 steps (20s historical horizon), forecast horizons K in [1, 3, 5, 10] with lead seconds [2s, 6s, 10s, 20s]. Specifies feature categories: volume density, velocity rates, protocol distribution, TCP flag statistics, connection termination ratios, packet length dynamics, inter-arrival times, window size, TTL, and port entropy.
+
+[006/200] FILE: data/backup_darpa_week1/split_test_dt10s.parquet
+  Title:       split_test_dt10s.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        6,033,912 bytes (5.75 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\backup_darpa_week1\split_test_dt10s.parquet
+  Telemetry:   Rows: 39,013 | Columns: 104
+  Telemetry:   Key Columns: day, split, window_idx, window_start_time, window_end_time, active_session_count, is_attack, mitre_stage_code...
+  Description: Archival parquet dataset from DARPA 1998 Week 1 PCAP feature pipeline.
+
+[007/200] FILE: data/backup_darpa_week1/split_train_dt10s.parquet
+  Title:       split_train_dt10s.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        17,970,522 bytes (17.14 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\backup_darpa_week1\split_train_dt10s.parquet
+  Telemetry:   Rows: 111,568 | Columns: 104
+  Telemetry:   Key Columns: day, split, window_idx, window_start_time, window_end_time, active_session_count, is_attack, mitre_stage_code...
+  Description: Archival parquet dataset from DARPA 1998 Week 1 PCAP feature pipeline.
+
+[008/200] FILE: data/backup_darpa_week1/split_val_dt10s.parquet
+  Title:       split_val_dt10s.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        6,366,619 bytes (6.07 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\backup_darpa_week1\split_val_dt10s.parquet
+  Telemetry:   Rows: 39,794 | Columns: 104
+  Telemetry:   Key Columns: day, split, window_idx, window_start_time, window_end_time, active_session_count, is_attack, mitre_stage_code...
+  Description: Archival parquet dataset from DARPA 1998 Week 1 PCAP feature pipeline.
+
+[009/200] FILE: data/backup_darpa_week1/windows_friday_dt10s.parquet
+  Title:       windows_friday_dt10s.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        6,033,912 bytes (5.75 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\backup_darpa_week1\windows_friday_dt10s.parquet
+  Telemetry:   Rows: 39,013 | Columns: 104
+  Telemetry:   Key Columns: day, split, window_idx, window_start_time, window_end_time, active_session_count, is_attack, mitre_stage_code...
+  Description: Archival parquet dataset from DARPA 1998 Week 1 PCAP feature pipeline.
+
+[010/200] FILE: data/backup_darpa_week1/windows_monday_dt10s.parquet
+  Title:       windows_monday_dt10s.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        5,808,416 bytes (5.54 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\backup_darpa_week1\windows_monday_dt10s.parquet
+  Telemetry:   Rows: 38,425 | Columns: 104
+  Telemetry:   Key Columns: day, split, window_idx, window_start_time, window_end_time, active_session_count, is_attack, mitre_stage_code...
+  Description: Archival parquet dataset from DARPA 1998 Week 1 PCAP feature pipeline.
+
+[011/200] FILE: data/backup_darpa_week1/windows_thursday_dt10s.parquet
+  Title:       windows_thursday_dt10s.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        6,366,619 bytes (6.07 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\backup_darpa_week1\windows_thursday_dt10s.parquet
+  Telemetry:   Rows: 39,794 | Columns: 104
+  Telemetry:   Key Columns: day, split, window_idx, window_start_time, window_end_time, active_session_count, is_attack, mitre_stage_code...
+  Description: Archival parquet dataset from DARPA 1998 Week 1 PCAP feature pipeline.
+
+[012/200] FILE: data/backup_darpa_week1/windows_tuesday_dt10s.parquet
+  Title:       windows_tuesday_dt10s.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        5,465,407 bytes (5.21 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\backup_darpa_week1\windows_tuesday_dt10s.parquet
+  Telemetry:   Rows: 33,389 | Columns: 104
+  Telemetry:   Key Columns: day, split, window_idx, window_start_time, window_end_time, active_session_count, is_attack, mitre_stage_code...
+  Description: Archival parquet dataset from DARPA 1998 Week 1 PCAP feature pipeline.
+
+[013/200] FILE: data/backup_darpa_week1/windows_wednesday_dt10s.parquet
+  Title:       windows_wednesday_dt10s.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        7,607,319 bytes (7.25 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\backup_darpa_week1\windows_wednesday_dt10s.parquet
+  Telemetry:   Rows: 39,754 | Columns: 104
+  Telemetry:   Key Columns: day, split, window_idx, window_start_time, window_end_time, active_session_count, is_attack, mitre_stage_code...
+  Description: Archival parquet dataset from DARPA 1998 Week 1 PCAP feature pipeline.
+
+[014/200] FILE: data/combined_multidomain_dataset.parquet
+  Title:       Unified Multi-Domain Master Parquet Dataset
+  Role:        Cross-Domain Training & Evaluation Dataset
+  Size:        92,442,472 bytes (88.16 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\combined_multidomain_dataset.parquet
+  Telemetry:   Rows: 1,545,739 | Columns: 107
+  Telemetry:   Key Columns: day, split, window_idx, window_start_time, window_end_time, active_session_count, is_attack, mitre_stage_code...
+  Description: Massive unified dataset containing 1,545,739 rows and 107 columns aggregating 13 distinct network sessions from both DARPA 1998 (Week 1) and CIC-IDS2017. Standardized to a continuous feature space with 47 telemetry features, velocity deltas, session IDs, domain indicators, and 5-stage MITRE ATT&CK labels.
+
+[015/200] FILE: data/metadata/attack_timelines.csv
+  Title:       Attack Timeline Ground Truth Registry
+  Role:        Ground Truth Temporal Boundary Documentation
+  Size:        2,194 bytes (2.14 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\metadata\attack_timelines.csv
+  Telemetry:   Rows: 17 (excluding header)
+  Telemetry:   Header Columns: file,attack_label,count,start_time,end_time,duration_minutes...
+  Description: Documents exact start timestamps, end timestamps, durations (in minutes), and attack flow counts for each attack scenario in CSE-CIC-IDS2018. Includes Botnet (719.98 min), DoS SlowHTTPTest (45.9 min), DoS Hulk (3.28 min), Brute Force Web (105.9 min), XSS (69.0 min), SQLi (467.98 min), Infiltration (534.98 min), FTP-BruteForce (97.08 min), SSH-Bruteforce (91.15 min), and DoS GoldenEye (35.28 min).
+
+[016/200] FILE: data/metadata/canonical_schema.yaml
+  Title:       Canonical Parquet Schema & Column Metadata
+  Role:        Data Integrity & Typing Contract
+  Size:        22,336 bytes (21.81 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\metadata\canonical_schema.yaml
+  Telemetry:   Total Lines: 801
+  Telemetry:   First Line: canonical_schema:
+  Description: Comprehensive 801-line schema specification defining canonical data types (int32, float32, string), semantic roles (NetworkIdentifier, Feature, Target, Metadata), missing value counts, infinity counts, and feature usage notes for all features in the CSE-CIC-IDS2018 canonical parquets.
+
+[017/200] FILE: data/metadata/cleaning_manifest.csv
+  Title:       Raw Data Cleaning & Sanitation Audit Manifest
+  Role:        Data Cleaning Provenance & Hash Tracking
+  Size:        2,205 bytes (2.15 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\metadata\cleaning_manifest.csv
+  Telemetry:   Rows: 9 (excluding header)
+  Telemetry:   Header Columns: source_file,rows_input,rows_output,repeated_headers_removed,invalid_timestamps,suspicious_timestamps,negative_durations,...
+  Description: Tracks exact cleaning transformations across all 10 raw CSV files: input rows (10,485,750 flows total), output rows, repeated headers removed (59 rows across 3 files), invalid/suspicious timestamps (0), negative durations removed (14 rows), infinite values handled, input SHA256 hashes, and output SHA256 hashes.
+
+[018/200] FILE: data/metadata/dataset_provenance.yaml
+  Title:       Dataset Provenance & Ingestion Policy
+  Role:        Scientific Provenance & Audit Trail
+  Size:        1,228 bytes (1.20 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\metadata\dataset_provenance.yaml
+  Telemetry:   Total Lines: 27
+  Telemetry:   First Line: dataset_provenance:
+  Description: Formally registers dataset origin (Official AWS Processed Traffic Data for ML Algorithms - CICFlowMeter-V3), chronology policy (strictly sort flows by timestamp within each daily session without shuffling), cleaning policy (drop repeated headers, drop negative durations, impute rate infinities via train median), and list of known raw quality issues.
+
+[019/200] FILE: data/metadata/download_manifest.csv
+  Title:       AWS S3 Official Raw CSV Download Manifest
+  Role:        Cryptographic Download Verification
+  Size:        4,113 bytes (4.02 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\metadata\download_manifest.csv
+  Telemetry:   Rows: 9 (excluding header)
+  Telemetry:   Header Columns: filename,s3_uri,local_path,size_bytes,sha256,download_status,download_timestamp,source_verified...
+  Description: Records official S3 URIs, local filepaths, byte sizes (e.g. 333MB, 382MB, 352MB), SHA256 hashes, verification status (SUCCESS / VERIFIED_EXISTING), and download timestamps for all raw CSE-CIC-IDS2018 CSVs.
+
+[020/200] FILE: data/metadata/mitre_mapping.csv
+  Title:       Canonical MITRE ATT&CK Stage Mapping Registry
+  Role:        Kill-Chain Taxonomy Definition
+  Size:        3,383 bytes (3.30 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\metadata\mitre_mapping.csv
+  Telemetry:   Rows: 13 (excluding header)
+  Telemetry:   Header Columns: observed_behavior,dataset_label,mitre_id,mitre_name,mapping_type,confidence,evidence,source,notes...
+  Description: Maps dataset attack labels to MITRE ATT&CK Enterprise techniques, tactics, and stage codes: FTP-BruteForce -> T1110.001 (Credential Access, Stage 2); SSH-Bruteforce -> T1110.001 (Stage 2); Brute Force-Web -> T1110.001 (Stage 2); Brute Force-XSS -> T1190 (Initial Access/Execution, Stage 2/3); SQL Injection -> T1190 (Initial Access, Stage 3); Slowloris -> T1499.003 (Endpoint DoS, Stage 4); SlowHTTPTest -> T1499.003 (Stage 4); Hulk -> T1498.001 (Network DoS Flood, Stage 4); GoldenEye -> T1499.003 (Stage 4).
+
+[021/200] FILE: data/metadata/temporal_states_manifest.csv
+  Title:       Daily Temporal State Aggregation Manifest
+  Role:        State Generation Verification & Hash Registry
+  Size:        2,219 bytes (2.17 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\metadata\temporal_states_manifest.csv
+  Telemetry:   Rows: 9 (excluding header)
+  Telemetry:   Header Columns: session_id,source_parquet,processed_parquet,source_flows,state_windows,attack_windows,benign_windows,attack_percentage,f...
+  Description: Full summary of the 9 generated temporal state parquet sessions: session ID, source parquet, state windows count (e.g. 21,595 per 12h session), attack windows count, benign windows count, attack percentage, feature dimension (54), start/end timestamps, file sizes (MB), and SHA256 hashes.
+
+[022/200] FILE: data/processed/split_test_dt10s.parquet
+  Title:       split_test_dt10s.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        6,033,808 bytes (5.75 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\processed\split_test_dt10s.parquet
+  Telemetry:   Rows: 39,013 | Columns: 104
+  Telemetry:   Key Columns: day, split, window_idx, window_start_time, window_end_time, active_session_count, is_attack, mitre_stage_code...
+  Description: Standardized rolling window feature dataset parquet for model training and evaluation.
+
+[023/200] FILE: data/processed/split_train_dt10s.parquet
+  Title:       split_train_dt10s.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        17,970,418 bytes (17.14 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\processed\split_train_dt10s.parquet
+  Telemetry:   Rows: 111,568 | Columns: 104
+  Telemetry:   Key Columns: day, split, window_idx, window_start_time, window_end_time, active_session_count, is_attack, mitre_stage_code...
+  Description: Standardized rolling window feature dataset parquet for model training and evaluation.
+
+[024/200] FILE: data/processed/split_val_dt10s.parquet
+  Title:       split_val_dt10s.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        6,366,515 bytes (6.07 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\processed\split_val_dt10s.parquet
+  Telemetry:   Rows: 39,794 | Columns: 104
+  Telemetry:   Key Columns: day, split, window_idx, window_start_time, window_end_time, active_session_count, is_attack, mitre_stage_code...
+  Description: Standardized rolling window feature dataset parquet for model training and evaluation.
+
+[025/200] FILE: data/processed/temporal_states/Friday-02-03-2018_states.parquet
+  Title:       Friday-02-03-2018_states.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        4,059,385 bytes (3.87 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\processed\temporal_states\Friday-02-03-2018_states.parquet
+  Telemetry:   Rows: 21,595 | Columns: 79
+  Telemetry:   Key Columns: session_id, window_idx, timestamp_start, timestamp_end, window_start_sec, window_end_sec, flow_count, is_attack...
+  Description: Canonical 54-D temporal state parquet for this capture session with rolling 10s windows, 2s stride, and multi-horizon targets.
+
+[026/200] FILE: data/processed/temporal_states/Friday-16-02-2018_states.parquet
+  Title:       Friday-16-02-2018_states.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        883,623 bytes (862.91 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\processed\temporal_states\Friday-16-02-2018_states.parquet
+  Telemetry:   Rows: 21,532 | Columns: 79
+  Telemetry:   Key Columns: session_id, window_idx, timestamp_start, timestamp_end, window_start_sec, window_end_sec, flow_count, is_attack...
+  Description: Canonical 54-D temporal state parquet for this capture session with rolling 10s windows, 2s stride, and multi-horizon targets.
+
+[027/200] FILE: data/processed/temporal_states/Friday-23-02-2018_states.parquet
+  Title:       Friday-23-02-2018_states.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        4,294,147 bytes (4.10 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\processed\temporal_states\Friday-23-02-2018_states.parquet
+  Telemetry:   Rows: 21,595 | Columns: 79
+  Telemetry:   Key Columns: session_id, window_idx, timestamp_start, timestamp_end, window_start_sec, window_end_sec, flow_count, is_attack...
+  Description: Canonical 54-D temporal state parquet for this capture session with rolling 10s windows, 2s stride, and multi-horizon targets.
+
+[028/200] FILE: data/processed/temporal_states/Thursday-01-03-2018_states.parquet
+  Title:       Thursday-01-03-2018_states.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        3,883,054 bytes (3.70 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\processed\temporal_states\Thursday-01-03-2018_states.parquet
+  Telemetry:   Rows: 21,595 | Columns: 79
+  Telemetry:   Key Columns: session_id, window_idx, timestamp_start, timestamp_end, window_start_sec, window_end_sec, flow_count, is_attack...
+  Description: Canonical 54-D temporal state parquet for this capture session with rolling 10s windows, 2s stride, and multi-horizon targets.
+
+[029/200] FILE: data/processed/temporal_states/Thursday-15-02-2018_states.parquet
+  Title:       Thursday-15-02-2018_states.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        4,397,819 bytes (4.19 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\processed\temporal_states\Thursday-15-02-2018_states.parquet
+  Telemetry:   Rows: 21,595 | Columns: 79
+  Telemetry:   Key Columns: session_id, window_idx, timestamp_start, timestamp_end, window_start_sec, window_end_sec, flow_count, is_attack...
+  Description: Canonical 54-D temporal state parquet for this capture session with rolling 10s windows, 2s stride, and multi-horizon targets.
+
+[030/200] FILE: data/processed/temporal_states/Thursday-22-02-2018_states.parquet
+  Title:       Thursday-22-02-2018_states.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        4,236,719 bytes (4.04 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\processed\temporal_states\Thursday-22-02-2018_states.parquet
+  Telemetry:   Rows: 21,595 | Columns: 79
+  Telemetry:   Key Columns: session_id, window_idx, timestamp_start, timestamp_end, window_start_sec, window_end_sec, flow_count, is_attack...
+  Description: Canonical 54-D temporal state parquet for this capture session with rolling 10s windows, 2s stride, and multi-horizon targets.
+
+[031/200] FILE: data/processed/temporal_states/Wednesday-14-02-2018_states.parquet
+  Title:       Wednesday-14-02-2018_states.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        4,132,971 bytes (3.94 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\processed\temporal_states\Wednesday-14-02-2018_states.parquet
+  Telemetry:   Rows: 21,595 | Columns: 79
+  Telemetry:   Key Columns: session_id, window_idx, timestamp_start, timestamp_end, window_start_sec, window_end_sec, flow_count, is_attack...
+  Description: Canonical 54-D temporal state parquet for this capture session with rolling 10s windows, 2s stride, and multi-horizon targets.
+
+[032/200] FILE: data/processed/temporal_states/Wednesday-21-02-2018_states.parquet
+  Title:       Wednesday-21-02-2018_states.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        837,255 bytes (817.63 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\processed\temporal_states\Wednesday-21-02-2018_states.parquet
+  Telemetry:   Rows: 15,823 | Columns: 79
+  Telemetry:   Key Columns: session_id, window_idx, timestamp_start, timestamp_end, window_start_sec, window_end_sec, flow_count, is_attack...
+  Description: Canonical 54-D temporal state parquet for this capture session with rolling 10s windows, 2s stride, and multi-horizon targets.
+
+[033/200] FILE: data/processed/temporal_states/Wednesday-28-02-2018_states.parquet
+  Title:       Wednesday-28-02-2018_states.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        4,153,378 bytes (3.96 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\processed\temporal_states\Wednesday-28-02-2018_states.parquet
+  Telemetry:   Rows: 21,595 | Columns: 79
+  Telemetry:   Key Columns: session_id, window_idx, timestamp_start, timestamp_end, window_start_sec, window_end_sec, flow_count, is_attack...
+  Description: Canonical 54-D temporal state parquet for this capture session with rolling 10s windows, 2s stride, and multi-horizon targets.
+
+[034/200] FILE: data/processed/windows_friday_dt10s.parquet
+  Title:       windows_friday_dt10s.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        6,033,808 bytes (5.75 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\processed\windows_friday_dt10s.parquet
+  Telemetry:   Rows: 39,013 | Columns: 104
+  Telemetry:   Key Columns: day, split, window_idx, window_start_time, window_end_time, active_session_count, is_attack, mitre_stage_code...
+  Description: Standardized rolling window feature dataset parquet for model training and evaluation.
+
+[035/200] FILE: data/processed/windows_monday_dt10s.parquet
+  Title:       windows_monday_dt10s.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        5,808,312 bytes (5.54 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\processed\windows_monday_dt10s.parquet
+  Telemetry:   Rows: 38,425 | Columns: 104
+  Telemetry:   Key Columns: day, split, window_idx, window_start_time, window_end_time, active_session_count, is_attack, mitre_stage_code...
+  Description: Standardized rolling window feature dataset parquet for model training and evaluation.
+
+[036/200] FILE: data/processed/windows_thursday_dt10s.parquet
+  Title:       windows_thursday_dt10s.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        6,366,515 bytes (6.07 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\processed\windows_thursday_dt10s.parquet
+  Telemetry:   Rows: 39,794 | Columns: 104
+  Telemetry:   Key Columns: day, split, window_idx, window_start_time, window_end_time, active_session_count, is_attack, mitre_stage_code...
+  Description: Standardized rolling window feature dataset parquet for model training and evaluation.
+
+[037/200] FILE: data/processed/windows_tuesday_dt10s.parquet
+  Title:       windows_tuesday_dt10s.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        5,465,303 bytes (5.21 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\processed\windows_tuesday_dt10s.parquet
+  Telemetry:   Rows: 33,389 | Columns: 104
+  Telemetry:   Key Columns: day, split, window_idx, window_start_time, window_end_time, active_session_count, is_attack, mitre_stage_code...
+  Description: Standardized rolling window feature dataset parquet for model training and evaluation.
+
+[038/200] FILE: data/processed/windows_wednesday_dt10s.parquet
+  Title:       windows_wednesday_dt10s.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        7,607,215 bytes (7.25 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\processed\windows_wednesday_dt10s.parquet
+  Telemetry:   Rows: 39,754 | Columns: 104
+  Telemetry:   Key Columns: day, split, window_idx, window_start_time, window_end_time, active_session_count, is_attack, mitre_stage_code...
+  Description: Standardized rolling window feature dataset parquet for model training and evaluation.
+
+[039/200] FILE: data/processed_cic/windows_cic_Friday-WorkingHours-Afternoon-DDos.parquet
+  Title:       windows_cic_Friday-WorkingHours-Afternoon-DDos.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        12,371,127 bytes (11.80 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\processed_cic\windows_cic_Friday-WorkingHours-Afternoon-DDos.parquet
+  Telemetry:   Rows: 225,745 | Columns: 52
+  Telemetry:   Key Columns: session, dataset, raw_attack_type, mitre_stage_code, mitre_stage_name, packet_count, ip_byte_count, flow_count...
+  Description: Processed CIC-IDS2017 daily capture converted into rolling 10-second windowed feature parquet format.
+
+[040/200] FILE: data/processed_cic/windows_cic_Friday-WorkingHours-Afternoon-PortScan.parquet
+  Title:       windows_cic_Friday-WorkingHours-Afternoon-PortScan.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        7,689,711 bytes (7.33 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\processed_cic\windows_cic_Friday-WorkingHours-Afternoon-PortScan.parquet
+  Telemetry:   Rows: 258,930 | Columns: 52
+  Telemetry:   Key Columns: session, dataset, raw_attack_type, mitre_stage_code, mitre_stage_name, packet_count, ip_byte_count, flow_count...
+  Description: Processed CIC-IDS2017 daily capture converted into rolling 10-second windowed feature parquet format.
+
+[041/200] FILE: data/processed_cic/windows_cic_Friday-WorkingHours-Morning.parquet
+  Title:       windows_cic_Friday-WorkingHours-Morning.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        5,034,895 bytes (4.80 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\processed_cic\windows_cic_Friday-WorkingHours-Morning.parquet
+  Telemetry:   Rows: 101,966 | Columns: 52
+  Telemetry:   Key Columns: session, dataset, raw_attack_type, mitre_stage_code, mitre_stage_name, packet_count, ip_byte_count, flow_count...
+  Description: Processed CIC-IDS2017 daily capture converted into rolling 10-second windowed feature parquet format.
+
+[042/200] FILE: data/processed_cic/windows_cic_Monday-WorkingHours.parquet
+  Title:       windows_cic_Monday-WorkingHours.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        5,060,528 bytes (4.83 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\processed_cic\windows_cic_Monday-WorkingHours.parquet
+  Telemetry:   Rows: 100,000 | Columns: 52
+  Telemetry:   Key Columns: session, dataset, raw_attack_type, mitre_stage_code, mitre_stage_name, packet_count, ip_byte_count, flow_count...
+  Description: Processed CIC-IDS2017 daily capture converted into rolling 10-second windowed feature parquet format.
+
+[043/200] FILE: data/processed_cic/windows_cic_Thursday-WorkingHours-Afternoon-Infilteration.parquet
+  Title:       windows_cic_Thursday-WorkingHours-Afternoon-Infilteration.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        4,322,793 bytes (4.12 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\processed_cic\windows_cic_Thursday-WorkingHours-Afternoon-Infilteration.parquet
+  Telemetry:   Rows: 100,036 | Columns: 52
+  Telemetry:   Key Columns: session, dataset, raw_attack_type, mitre_stage_code, mitre_stage_name, packet_count, ip_byte_count, flow_count...
+  Description: Processed CIC-IDS2017 daily capture converted into rolling 10-second windowed feature parquet format.
+
+[044/200] FILE: data/processed_cic/windows_cic_Thursday-WorkingHours-Morning-WebAttacks.parquet
+  Title:       windows_cic_Thursday-WorkingHours-Morning-WebAttacks.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        5,054,330 bytes (4.82 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\processed_cic\windows_cic_Thursday-WorkingHours-Morning-WebAttacks.parquet
+  Telemetry:   Rows: 102,180 | Columns: 52
+  Telemetry:   Key Columns: session, dataset, raw_attack_type, mitre_stage_code, mitre_stage_name, packet_count, ip_byte_count, flow_count...
+  Description: Processed CIC-IDS2017 daily capture converted into rolling 10-second windowed feature parquet format.
+
+[045/200] FILE: data/processed_cic/windows_cic_Tuesday-WorkingHours.parquet
+  Title:       windows_cic_Tuesday-WorkingHours.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        5,644,577 bytes (5.38 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\processed_cic\windows_cic_Tuesday-WorkingHours.parquet
+  Telemetry:   Rows: 113,835 | Columns: 52
+  Telemetry:   Key Columns: session, dataset, raw_attack_type, mitre_stage_code, mitre_stage_name, packet_count, ip_byte_count, flow_count...
+  Description: Processed CIC-IDS2017 daily capture converted into rolling 10-second windowed feature parquet format.
+
+[046/200] FILE: data/processed_cic/windows_cic_Wednesday-workingHours.parquet
+  Title:       windows_cic_Wednesday-workingHours.parquet (.PARQUET)
+  Role:        Repository Component
+  Size:        16,208,780 bytes (15.46 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data\processed_cic\windows_cic_Wednesday-workingHours.parquet
+  Telemetry:   Rows: 352,672 | Columns: 52
+  Telemetry:   Key Columns: session, dataset, raw_attack_type, mitre_stage_code, mitre_stage_name, packet_count, ip_byte_count, flow_count...
+  Description: Processed CIC-IDS2017 daily capture converted into rolling 10-second windowed feature parquet format.
+
+[047/200] FILE: data_visualizer.ipynb
+  Title:       Interactive Multi-Domain Dataset & Telemetry Visualizer
+  Role:        Exploratory Data Analysis (EDA) & Demonstration Suite
+  Size:        11,549 bytes (11.28 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\data_visualizer.ipynb
+  Description: Comprehensive Jupyter Notebook containing 5 interactive analysis modules for the Unified Multi-Domain Cyber Attack Dataset (DARPA 1998 + CIC-IDS2017) across 1.54M state records. 1. Multi-Domain Dataset Loader: Universal cross-platform loading across 13 session parquets.
+2. MITRE ATT&CK Stage Class Distribution: Dual bar/pie plots of sample representation across all 5 stages.
+3. Telemetry Signature Comparison: Mean packet rates, auth ratios (ports 21/22/23), payload means, and TCP window sizes.
+4. Feature Correlation Heatmap: Correlation between packet volume, TCP handshake flags, entropy, and attack labels.
+5. Temporal Rolling Window Simulation: Evolution of 47-D continuous state vectors during an active attack transition (Benign -> SYN Flood).
+
+[048/200] FILE: info.txt
+  Title:       Foundational Cybersecurity, TCP/IP Telemetry & Attack Reference Notes
+  Role:        Domain Knowledge Reference & Theoretical Primer
+  Size:        36,850 bytes (35.99 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\info.txt
+  Telemetry:   Total Lines: 2,031
+  Telemetry:   First Line: Topic 1 — Part 2: TCP
+  Description: Extensive 2,031-line educational primer and engineering reference covering: 1. TCP/IP Architecture: IP address routing, L4 transport ports, 4-tuple connection semantics.
+2. Reliability & Handshake Dynamics: 3-way handshake (SYN, SYN-ACK, ACK), sequence numbers, flow control.
+3. Attack Mechanics & Telemetry Signatures: SYN floods, half-open connection queues, RST tear-downs, port sweeps.
+4. Operational Telemetry to Feature Extraction: How raw packet flows map to behavioral features (entropy, flags, rates).
+
+[049/200] FILE: models/backup_darpa_week1/world_model_lstm_best.pt
+  Title:       Backup DARPA Week 1 LSTM Model Checkpoint
+  Role:        Archival Model Checkpoint
+  Size:        3,630,207 bytes (3.46 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\models\backup_darpa_week1\world_model_lstm_best.pt
+  Telemetry:   PyTorch Saved Checkpoint Weights & Optimizer State
+  Description: Identical backup copy of the DARPA Week 1 best checkpoint preserved for reproducibility.
+
+[050/200] FILE: models/unified_world_model_best.pt
+  Title:       Unified Multi-Domain World Model Checkpoint (Best Validation)
+  Role:        Production Deep Learning Model Weights
+  Size:        1,216,253 bytes (1.16 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\models\unified_world_model_best.pt
+  Telemetry:   PyTorch Saved Checkpoint Weights & Optimizer State
+  Description: Trained PyTorch World Model weights trained on multi-domain data. Employs a recurrent encoder with dual multi-layer perceptron prediction heads:
+- state_head: Predicts next-step continuous 47-dimensional telemetry state vector S_{t+1}.
+- stage_head: Predicts 5-class MITRE ATT&CK stage logits Y_{t+1}.
+Trained with AdamW optimizer, cosine annealing, and composite state MSE + cross-entropy loss.
+
+[051/200] FILE: models/world_model_lstm_best.pt
+  Title:       LSTM World Model Checkpoint (DARPA Week 1 Best)
+  Role:        Baseline Recurrent World Model Weights
+  Size:        3,630,207 bytes (3.46 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\models\world_model_lstm_best.pt
+  Telemetry:   PyTorch Saved Checkpoint Weights & Optimizer State
+  Description: Trained PyTorch LSTM World Model checkpoint. Architecture: 40-dimensional input features, hidden dimension 128, 2 LSTM layers, lookback P=10, horizon K=1, 5 attack stage classes. Saved at Epoch 8 achieving best validation macro F1.
+
+[052/200] FILE: reports/01_repository_audit.md
+  Title:       01_repository_audit.md (.MD)
+  Role:        Repository Component
+  Size:        4,267 bytes (4.17 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\01_repository_audit.md
+  Telemetry:   Total Lines: 58
+  Telemetry:   First Line: # 01 — Comprehensive Repository Forensic Audit
+  Description: Foundational Phase 1-3 audit report assessing repository readiness, MITRE mapping, and data leakage.
+
+[053/200] FILE: reports/02_dataset_provenance.md
+  Title:       02_dataset_provenance.md (.MD)
+  Role:        Repository Component
+  Size:        2,697 bytes (2.63 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\02_dataset_provenance.md
+  Telemetry:   Total Lines: 27
+  Telemetry:   First Line: # 02 — Dataset Provenance Forensics & Kaggle Audit
+  Description: Foundational Phase 1-3 audit report assessing repository readiness, MITRE mapping, and data leakage.
+
+[054/200] FILE: reports/03_feature_audit.csv
+  Title:       03_feature_audit.csv (.CSV)
+  Role:        Repository Component
+  Size:        12,233 bytes (11.95 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\03_feature_audit.csv
+  Telemetry:   Rows: 47 (excluding header)
+  Telemetry:   Header Columns: feature_name,original_name,datatype,source_dataset,missing_percentage,infinity_count,unique_count,constant_or_not,near_c...
+  Description: Foundational Phase 1-3 audit report assessing repository readiness, MITRE mapping, and data leakage.
+
+[055/200] FILE: reports/04_label_audit.csv
+  Title:       04_label_audit.csv (.CSV)
+  Role:        Repository Component
+  Size:        5,081 bytes (4.96 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\04_label_audit.csv
+  Telemetry:   Rows: 26 (excluding header)
+  Telemetry:   Header Columns: raw_label,normalized_label,count,percentage,source_dataset,attack_family,benign_attack,mitre_tactic,mitre_technique,mapp...
+  Description: Foundational Phase 1-3 audit report assessing repository readiness, MITRE mapping, and data leakage.
+
+[056/200] FILE: reports/05_temporal_readiness.md
+  Title:       05_temporal_readiness.md (.MD)
+  Role:        Repository Component
+  Size:        3,685 bytes (3.60 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\05_temporal_readiness.md
+  Telemetry:   Total Lines: 42
+  Telemetry:   First Line: # 05 — Temporal Information & Forecasting Readiness Audit
+  Description: Foundational Phase 1-3 audit report assessing repository readiness, MITRE mapping, and data leakage.
+
+[057/200] FILE: reports/06_darpa_integration_audit.md
+  Title:       06_darpa_integration_audit.md (.MD)
+  Role:        Repository Component
+  Size:        2,066 bytes (2.02 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\06_darpa_integration_audit.md
+  Telemetry:   Total Lines: 38
+  Telemetry:   First Line: # 06 — DARPA 1998 Week 1 Integration Audit
+  Description: Foundational Phase 1-3 audit report assessing repository readiness, MITRE mapping, and data leakage.
+
+[058/200] FILE: reports/07_mitre_mapping_audit.md
+  Title:       07_mitre_mapping_audit.md (.MD)
+  Role:        Repository Component
+  Size:        3,554 bytes (3.47 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\07_mitre_mapping_audit.md
+  Telemetry:   Total Lines: 43
+  Telemetry:   First Line: # 07 — MITRE ATT&CK Mapping Quality Audit
+  Description: Foundational Phase 1-3 audit report assessing repository readiness, MITRE mapping, and data leakage.
+
+[059/200] FILE: reports/08_leakage_audit.md
+  Title:       08_leakage_audit.md (.MD)
+  Role:        Repository Component
+  Size:        2,097 bytes (2.05 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\08_leakage_audit.md
+  Telemetry:   Total Lines: 32
+  Telemetry:   First Line: # 08 — Data Leakage & Evaluation Splitting Audit
+  Description: Foundational Phase 1-3 audit report assessing repository readiness, MITRE mapping, and data leakage.
+
+[060/200] FILE: reports/09_dataset_comparison.csv
+  Title:       09_dataset_comparison.csv (.CSV)
+  Role:        Repository Component
+  Size:        2,788 bytes (2.72 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\09_dataset_comparison.csv
+  Telemetry:   Rows: 5 (excluding header)
+  Telemetry:   Header Columns: dataset_name,provenance,num_rows,num_features,labels_present,timestamp_available,temporal_suitability,data_quality_issue...
+  Description: Foundational Phase 1-3 audit report assessing repository readiness, MITRE mapping, and data leakage.
+
+[061/200] FILE: reports/10_data_quality_report.md
+  Title:       10_data_quality_report.md (.MD)
+  Role:        Repository Component
+  Size:        1,577 bytes (1.54 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\10_data_quality_report.md
+  Telemetry:   Total Lines: 21
+  Telemetry:   First Line: # 10 — Data Quality, Anomaly & Distribution Report
+  Description: Foundational Phase 1-3 audit report assessing repository readiness, MITRE mapping, and data leakage.
+
+[062/200] FILE: reports/11_final_dataset_decision.md
+  Title:       11_final_dataset_decision.md (.MD)
+  Role:        Repository Component
+  Size:        2,077 bytes (2.03 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\11_final_dataset_decision.md
+  Telemetry:   Total Lines: 30
+  Telemetry:   First Line: # 11 — Final Dataset Readiness Decision & Reconstruction Roadmap
+  Description: Foundational Phase 1-3 audit report assessing repository readiness, MITRE mapping, and data leakage.
+
+[063/200] FILE: reports/baselines/01_baseline_dataset_summary.md
+  Title:       01_baseline_dataset_summary.md (.MD)
+  Role:        Repository Component
+  Size:        742 bytes
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\baselines\01_baseline_dataset_summary.md
+  Telemetry:   Total Lines: 13
+  Telemetry:   First Line: # Baseline Forecasting Dataset & Experimental Partition Summary
+  Description: Baseline benchmark report/result analyzing model performance (MSE, F1, PR-AUC, lead-time).
+
+[064/200] FILE: reports/baselines/02_logistic_regression_results.csv
+  Title:       02_logistic_regression_results.csv (.CSV)
+  Role:        Repository Component
+  Size:        1,889 bytes (1.84 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\baselines\02_logistic_regression_results.csv
+  Telemetry:   Rows: 16 (excluding header)
+  Telemetry:   Header Columns: model_name,variant,horizon_k,lead_time_seconds,val_f1,val_pr_auc,val_roc_auc,test_f1,test_pr_auc,test_roc_auc,test_recal...
+  Description: Baseline benchmark report/result analyzing model performance (MSE, F1, PR-AUC, lead-time).
+
+[065/200] FILE: reports/baselines/03_random_forest_results.csv
+  Title:       03_random_forest_results.csv (.CSV)
+  Role:        Repository Component
+  Size:        1,380 bytes (1.35 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\baselines\03_random_forest_results.csv
+  Telemetry:   Rows: 12 (excluding header)
+  Telemetry:   Header Columns: model_name,variant,horizon_k,lead_time_seconds,val_f1,val_pr_auc,val_roc_auc,test_f1,test_pr_auc,test_roc_auc,test_recal...
+  Description: Baseline benchmark report/result analyzing model performance (MSE, F1, PR-AUC, lead-time).
+
+[066/200] FILE: reports/baselines/04_gru_results.csv
+  Title:       04_gru_results.csv (.CSV)
+  Role:        Repository Component
+  Size:        1,595 bytes (1.56 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\baselines\04_gru_results.csv
+  Telemetry:   Rows: 12 (excluding header)
+  Telemetry:   Header Columns: model_name,variant,horizon_k,lead_time_seconds,val_f1,val_pr_auc,val_roc_auc,test_f1,test_pr_auc,test_roc_auc,test_recal...
+  Description: Baseline benchmark report/result analyzing model performance (MSE, F1, PR-AUC, lead-time).
+
+[067/200] FILE: reports/baselines/05_transformer_results.csv
+  Title:       05_transformer_results.csv (.CSV)
+  Role:        Repository Component
+  Size:        1,772 bytes (1.73 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\baselines\05_transformer_results.csv
+  Telemetry:   Rows: 12 (excluding header)
+  Telemetry:   Header Columns: model_name,variant,horizon_k,lead_time_seconds,val_f1,val_pr_auc,val_roc_auc,test_f1,test_pr_auc,test_roc_auc,test_recal...
+  Description: Baseline benchmark report/result analyzing model performance (MSE, F1, PR-AUC, lead-time).
+
+[068/200] FILE: reports/baselines/06_multihorizon_comparison.csv
+  Title:       06_multihorizon_comparison.csv (.CSV)
+  Role:        Repository Component
+  Size:        6,969 bytes (6.81 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\baselines\06_multihorizon_comparison.csv
+  Telemetry:   Rows: 60 (excluding header)
+  Telemetry:   Header Columns: model_name,variant,horizon_k,lead_time_seconds,val_f1,val_pr_auc,val_roc_auc,test_f1,test_pr_auc,test_roc_auc,test_recal...
+  Description: Baseline benchmark report/result analyzing model performance (MSE, F1, PR-AUC, lead-time).
+
+[069/200] FILE: reports/baselines/07_temporal_ablation.csv
+  Title:       07_temporal_ablation.csv (.CSV)
+  Role:        Repository Component
+  Size:        2,149 bytes (2.10 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\baselines\07_temporal_ablation.csv
+  Telemetry:   Rows: 24 (excluding header)
+  Telemetry:   Header Columns: model_name,architecture_type,history_span_seconds,horizon_k,lead_time_seconds,val_f1,test_f1,test_pr_auc,test_roc_auc,te...
+  Description: Baseline benchmark report/result analyzing model performance (MSE, F1, PR-AUC, lead-time).
+
+[070/200] FILE: reports/baselines/08_delta_ablation.csv
+  Title:       08_delta_ablation.csv (.CSV)
+  Role:        Repository Component
+  Size:        1,160 bytes (1.13 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\baselines\08_delta_ablation.csv
+  Telemetry:   Rows: 16 (excluding header)
+  Telemetry:   Header Columns: model_name,horizon_k,lead_time_seconds,f1_37d_base,f1_54d_with_deltas,f1_delta_gain,pr_auc_37d_base,pr_auc_54d_with_delt...
+  Description: Baseline benchmark report/result analyzing model performance (MSE, F1, PR-AUC, lead-time).
+
+[071/200] FILE: reports/baselines/09_ood_analysis.md
+  Title:       09_ood_analysis.md (.MD)
+  Role:        Repository Component
+  Size:        3,224 bytes (3.15 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\baselines\09_ood_analysis.md
+  Telemetry:   Total Lines: 25
+  Telemetry:   First Line: # Out-of-Distribution (OOD) & Zero-Shot Attack Family Evaluation Report
+  Description: Baseline benchmark report/result analyzing model performance (MSE, F1, PR-AUC, lead-time).
+
+[072/200] FILE: reports/baselines/10_error_analysis.md
+  Title:       10_error_analysis.md (.MD)
+  Role:        Repository Component
+  Size:        3,115 bytes (3.04 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\baselines\10_error_analysis.md
+  Telemetry:   Total Lines: 40
+  Telemetry:   First Line: # Forensic Error Analysis: False Positives, False Negatives & Failure Modes
+  Description: Baseline benchmark report/result analyzing model performance (MSE, F1, PR-AUC, lead-time).
+
+[073/200] FILE: reports/baselines/11_baseline_summary.md
+  Title:       11_baseline_summary.md (.MD)
+  Role:        Repository Component
+  Size:        22,353 bytes (21.83 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\baselines\11_baseline_summary.md
+  Telemetry:   Total Lines: 120
+  Telemetry:   First Line: # Comprehensive Baseline Forecasting Model Suite: Final Benchmark Summary
+  Description: Baseline benchmark report/result analyzing model performance (MSE, F1, PR-AUC, lead-time).
+
+[074/200] FILE: reports/baselines/12_rssm_requirements.md
+  Title:       12_rssm_requirements.md (.MD)
+  Role:        Repository Component
+  Size:        2,238 bytes (2.19 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\baselines\12_rssm_requirements.md
+  Telemetry:   Total Lines: 33
+  Telemetry:   First Line: # Architectural Requirements & Design Gate for Recurrent State Space Model (RSSM)
+  Description: Baseline benchmark report/result analyzing model performance (MSE, F1, PR-AUC, lead-time).
+
+[075/200] FILE: reports/data_pipeline/00_pre_migration_inventory.md
+  Title:       00_pre_migration_inventory.md (.MD)
+  Role:        Repository Component
+  Size:        4,227 bytes (4.13 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\data_pipeline\00_pre_migration_inventory.md
+  Telemetry:   Total Lines: 69
+  Telemetry:   First Line: # 00 — Pre-Migration Repository Inventory & Safety Audit
+  Description: Pipeline integrity and data quality audit report verifying canonical conversion, hashes, and schemas.
+
+[076/200] FILE: reports/data_pipeline/01_clean_branch_policy.md
+  Title:       01_clean_branch_policy.md (.MD)
+  Role:        Repository Component
+  Size:        3,251 bytes (3.17 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\data_pipeline\01_clean_branch_policy.md
+  Telemetry:   Total Lines: 62
+  Telemetry:   First Line: # 01 — Clean Data Pipeline Branch Policy & Isolation Architecture
+  Description: Pipeline integrity and data quality audit report verifying canonical conversion, hashes, and schemas.
+
+[077/200] FILE: reports/data_pipeline/02_download_verification.md
+  Title:       02_download_verification.md (.MD)
+  Role:        Repository Component
+  Size:        4,286 bytes (4.19 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\data_pipeline\02_download_verification.md
+  Telemetry:   Total Lines: 40
+  Telemetry:   First Line: # 02 — Download Verification & Cryptographic Integrity Report
+  Description: Pipeline integrity and data quality audit report verifying canonical conversion, hashes, and schemas.
+
+[078/200] FILE: reports/data_pipeline/03_raw_data_audit.csv
+  Title:       03_raw_data_audit.csv (.CSV)
+  Role:        Repository Component
+  Size:        2,263 bytes (2.21 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\data_pipeline\03_raw_data_audit.csv
+  Telemetry:   Rows: 9 (excluding header)
+  Telemetry:   Header Columns: filename,total_rows,total_columns,timestamp_min,timestamp_max,coverage_hours,unique_labels_count,labels_distribution,nan...
+  Description: Pipeline integrity and data quality audit report verifying canonical conversion, hashes, and schemas.
+
+[079/200] FILE: reports/data_pipeline/04_raw_data_audit.md
+  Title:       04_raw_data_audit.md (.MD)
+  Role:        Repository Component
+  Size:        3,126 bytes (3.05 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\data_pipeline\04_raw_data_audit.md
+  Telemetry:   Total Lines: 47
+  Telemetry:   First Line: # 04 — Comprehensive Raw Dataset Quality & Anomaly Report
+  Description: Pipeline integrity and data quality audit report verifying canonical conversion, hashes, and schemas.
+
+[080/200] FILE: reports/data_pipeline/05_temporal_integrity.md
+  Title:       05_temporal_integrity.md (.MD)
+  Role:        Repository Component
+  Size:        1,397 bytes (1.36 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\data_pipeline\05_temporal_integrity.md
+  Telemetry:   Total Lines: 24
+  Telemetry:   First Line: # 05 — Temporal Integrity & Chronological Sequencing Audit
+  Description: Pipeline integrity and data quality audit report verifying canonical conversion, hashes, and schemas.
+
+[081/200] FILE: reports/data_pipeline/06_attack_progression_audit.md
+  Title:       06_attack_progression_audit.md (.MD)
+  Role:        Repository Component
+  Size:        3,646 bytes (3.56 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\data_pipeline\06_attack_progression_audit.md
+  Telemetry:   Total Lines: 41
+  Telemetry:   First Line: # 06 — Attack Progression & Multi-Stage Scenario Audit
+  Description: Pipeline integrity and data quality audit report verifying canonical conversion, hashes, and schemas.
+
+[082/200] FILE: reports/data_pipeline/07_feature_audit.csv
+  Title:       07_feature_audit.csv (.CSV)
+  Role:        Repository Component
+  Size:        10,289 bytes (10.05 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\data_pipeline\07_feature_audit.csv
+  Telemetry:   Rows: 80 (excluding header)
+  Telemetry:   Header Columns: feature_name,category,retained_or_dropped,scientific_justification...
+  Description: Pipeline integrity and data quality audit report verifying canonical conversion, hashes, and schemas.
+
+[083/200] FILE: reports/data_pipeline/08_feature_selection_recommendation.md
+  Title:       08_feature_selection_recommendation.md (.MD)
+  Role:        Repository Component
+  Size:        1,052 bytes (1.03 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\data_pipeline\08_feature_selection_recommendation.md
+  Telemetry:   Total Lines: 14
+  Telemetry:   First Line: # 08 — Feature Selection & Behavioral Subset Recommendation
+  Description: Pipeline integrity and data quality audit report verifying canonical conversion, hashes, and schemas.
+
+[084/200] FILE: reports/data_pipeline/09_legacy_47_feature_audit.md
+  Title:       09_legacy_47_feature_audit.md (.MD)
+  Role:        Repository Component
+  Size:        1,506 bytes (1.47 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\data_pipeline\09_legacy_47_feature_audit.md
+  Telemetry:   Total Lines: 30
+  Telemetry:   First Line: # 09 — Forensic Audit of Senior 47-Feature Legacy Schema
+  Description: Pipeline integrity and data quality audit report verifying canonical conversion, hashes, and schemas.
+
+[085/200] FILE: reports/data_pipeline/10_mitre_mapping_audit.md
+  Title:       10_mitre_mapping_audit.md (.MD)
+  Role:        Repository Component
+  Size:        605 bytes
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\data_pipeline\10_mitre_mapping_audit.md
+  Telemetry:   Total Lines: 9
+  Telemetry:   First Line: # 10 — Independent MITRE ATT&CK Mapping & Decoupled Interpretation Architecture
+  Description: Pipeline integrity and data quality audit report verifying canonical conversion, hashes, and schemas.
+
+[086/200] FILE: reports/data_pipeline/11_dataset_mixing_policy.md
+  Title:       11_dataset_mixing_policy.md (.MD)
+  Role:        Repository Component
+  Size:        766 bytes
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\data_pipeline\11_dataset_mixing_policy.md
+  Telemetry:   Total Lines: 15
+  Telemetry:   First Line: # 11 — Dataset Mixing Policy & Cross-Domain Validation Strategy
+  Description: Pipeline integrity and data quality audit report verifying canonical conversion, hashes, and schemas.
+
+[087/200] FILE: reports/data_pipeline/12_final_data_pipeline_readiness.md
+  Title:       12_final_data_pipeline_readiness.md (.MD)
+  Role:        Repository Component
+  Size:        3,437 bytes (3.36 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\data_pipeline\12_final_data_pipeline_readiness.md
+  Telemetry:   Total Lines: 52
+  Telemetry:   First Line: # 12 — Final Data Pipeline Readiness & Verification Report
+  Description: Pipeline integrity and data quality audit report verifying canonical conversion, hashes, and schemas.
+
+[088/200] FILE: reports/data_pipeline/13_canonical_parquet_verification.md
+  Title:       13_canonical_parquet_verification.md (.MD)
+  Role:        Repository Component
+  Size:        5,245 bytes (5.12 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\data_pipeline\13_canonical_parquet_verification.md
+  Telemetry:   Total Lines: 78
+  Telemetry:   First Line: # 13 — Canonical Parquet Conversion & Integrity Verification Report
+  Description: Pipeline integrity and data quality audit report verifying canonical conversion, hashes, and schemas.
+
+[089/200] FILE: reports/data_pipeline/14_canonical_dataset_statistics.csv
+  Title:       14_canonical_dataset_statistics.csv (.CSV)
+  Role:        Repository Component
+  Size:        1,910 bytes (1.87 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\data_pipeline\14_canonical_dataset_statistics.csv
+  Telemetry:   Rows: 9 (excluding header)
+  Telemetry:   Header Columns: day_name,parquet_filename,parquet_size_mb,flow_count,timestamp_start,timestamp_end,coverage_hours,label_distribution,exa...
+  Description: Pipeline integrity and data quality audit report verifying canonical conversion, hashes, and schemas.
+
+[090/200] FILE: reports/dataset_selection/01_candidate_inventory.md
+  Title:       01_candidate_inventory.md (.MD)
+  Role:        Repository Component
+  Size:        6,574 bytes (6.42 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\dataset_selection\01_candidate_inventory.md
+  Telemetry:   Total Lines: 89
+  Telemetry:   First Line: # 01 — Candidate Dataset Inventory & In-Depth Forensic Analysis
+  Description: Dataset comparative study evaluating candidate corpora (CSE-CIC-IDS2018, NF-v2, CIC-IDS2017, DARPA).
+
+[091/200] FILE: reports/dataset_selection/02_dataset_comparison.csv
+  Title:       02_dataset_comparison.csv (.CSV)
+  Role:        Repository Component
+  Size:        7,279 bytes (7.11 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\dataset_selection\02_dataset_comparison.csv
+  Telemetry:   Rows: 33 (excluding header)
+  Telemetry:   Header Columns: Criterion,Candidate A: Official CSE-CIC-IDS2018,Candidate B: NF-CSE-CIC-IDS2018-v2 (UQ),Candidate C: CSE-CIC-IDS2018 Imp...
+  Description: Dataset comparative study evaluating candidate corpora (CSE-CIC-IDS2018, NF-v2, CIC-IDS2017, DARPA).
+
+[092/200] FILE: reports/dataset_selection/03_temporal_audit.md
+  Title:       03_temporal_audit.md (.MD)
+  Role:        Repository Component
+  Size:        5,061 bytes (4.94 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\dataset_selection\03_temporal_audit.md
+  Telemetry:   Total Lines: 56
+  Telemetry:   First Line: # 03 — Critical Temporal & Attack-Progression Forensic Audit
+  Description: Dataset comparative study evaluating candidate corpora (CSE-CIC-IDS2018, NF-v2, CIC-IDS2017, DARPA).
+
+[093/200] FILE: reports/dataset_selection/04_feature_comparison.csv
+  Title:       04_feature_comparison.csv (.CSV)
+  Role:        Repository Component
+  Size:        4,145 bytes (4.05 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\dataset_selection\04_feature_comparison.csv
+  Telemetry:   Rows: 35 (excluding header)
+  Telemetry:   Header Columns: Feature Category,Feature Name,Present in 80-CICFlowMeter,Present in 43-NetFlow,Present in Senior 47-D Schema,Role in Tem...
+  Description: Dataset comparative study evaluating candidate corpora (CSE-CIC-IDS2018, NF-v2, CIC-IDS2017, DARPA).
+
+[094/200] FILE: reports/dataset_selection/05_label_comparison.csv
+  Title:       05_label_comparison.csv (.CSV)
+  Role:        Repository Component
+  Size:        2,320 bytes (2.27 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\dataset_selection\05_label_comparison.csv
+  Telemetry:   Rows: 16 (excluding header)
+  Telemetry:   Header Columns: Attack Class,CSE-CIC-IDS2018 (Cand A/C),NF-v2 (Cand B),CIC-IDS2017 (Cand D),MITRE Tactic,MITRE Technique ID & Name,Attac...
+  Description: Dataset comparative study evaluating candidate corpora (CSE-CIC-IDS2018, NF-v2, CIC-IDS2017, DARPA).
+
+[095/200] FILE: reports/dataset_selection/06_mitre_readiness.md
+  Title:       06_mitre_readiness.md (.MD)
+  Role:        Repository Component
+  Size:        3,769 bytes (3.68 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\dataset_selection\06_mitre_readiness.md
+  Telemetry:   Total Lines: 44
+  Telemetry:   First Line: # 06 — MITRE ATT&CK Mapping Readiness & Hierarchy
+  Description: Dataset comparative study evaluating candidate corpora (CSE-CIC-IDS2018, NF-v2, CIC-IDS2017, DARPA).
+
+[096/200] FILE: reports/dataset_selection/07_dataset_mixing_risk.md
+  Title:       07_dataset_mixing_risk.md (.MD)
+  Role:        Repository Component
+  Size:        3,189 bytes (3.11 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\dataset_selection\07_dataset_mixing_risk.md
+  Telemetry:   Total Lines: 52
+  Telemetry:   First Line: # 07 — Dataset Mixing Risk Analysis & Domain Adaptation
+  Description: Dataset comparative study evaluating candidate corpora (CSE-CIC-IDS2018, NF-v2, CIC-IDS2017, DARPA).
+
+[097/200] FILE: reports/dataset_selection/08_final_dataset_recommendation.md
+  Title:       08_final_dataset_recommendation.md (.MD)
+  Role:        Repository Component
+  Size:        6,302 bytes (6.15 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\dataset_selection\08_final_dataset_recommendation.md
+  Telemetry:   Total Lines: 96
+  Telemetry:   First Line: # 08 — Final Dataset Selection Decision & Implementation Plan
+  Description: Dataset comparative study evaluating candidate corpora (CSE-CIC-IDS2018, NF-v2, CIC-IDS2017, DARPA).
+
+[098/200] FILE: reports/phase_4_5/01_attack_run_distributions.csv
+  Title:       01_attack_run_distributions.csv (.CSV)
+  Role:        Repository Component
+  Size:        1,087 bytes (1.06 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\phase_4_5\01_attack_run_distributions.csv
+  Telemetry:   Rows: 9 (excluding header)
+  Telemetry:   Header Columns: day,session,dominant_family,total_windows,attack_windows,attack_pct,num_attack_episodes,atk_run_min_w,atk_run_mean_w,atk...
+  Description: Phase 4.5 forensic research report detailing the persistence paradox, pre-onset evaluation, or RSSM design.
+
+[099/200] FILE: reports/phase_4_5/02_persistence_transition_probabilities.csv
+  Title:       02_persistence_transition_probabilities.csv (.CSV)
+  Role:        Repository Component
+  Size:        2,372 bytes (2.32 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\phase_4_5\02_persistence_transition_probabilities.csv
+  Telemetry:   Rows: 16 (excluding header)
+  Telemetry:   Header Columns: split,horizon_k,lead_sec,total_windows,future_attack_windows,P(y_future=1 | y_curr=1) [Continuation],P(y_future=1 | y_cu...
+  Description: Phase 4.5 forensic research report detailing the persistence paradox, pre-onset evaluation, or RSSM design.
+
+[100/200] FILE: reports/phase_4_5/03_pre_onset_evaluation.csv
+  Title:       03_pre_onset_evaluation.csv (.CSV)
+  Role:        Repository Component
+  Size:        1,079 bytes (1.05 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\phase_4_5\03_pre_onset_evaluation.csv
+  Telemetry:   Rows: 16 (excluding header)
+  Telemetry:   Header Columns: partition,horizon_k,lead_sec,pure_benign_history_samples,positive_onset_events,negative_benign_events,onset_prevalence_p...
+  Description: Phase 4.5 forensic research report detailing the persistence paradox, pre-onset evaluation, or RSSM design.
+
+[101/200] FILE: reports/phase_4_5/04_stride_subsampling_simulation.csv
+  Title:       04_stride_subsampling_simulation.csv (.CSV)
+  Role:        Repository Component
+  Size:        497 bytes
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\phase_4_5\04_stride_subsampling_simulation.csv
+  Telemetry:   Rows: 4 (excluding header)
+  Telemetry:   Header Columns: sampling_scheme,step_stride_sec,test_windows_count,persistence_f1_step1,P(y_{t+1}=1 | y_t=1),P(y_{t+1}=1 | y_t=0),byte_r...
+  Description: Phase 4.5 forensic research report detailing the persistence paradox, pre-onset evaluation, or RSSM design.
+
+[102/200] FILE: reports/phase_4_5/05_feature_group_state_errors.csv
+  Title:       05_feature_group_state_errors.csv (.CSV)
+  Role:        Repository Component
+  Size:        549 bytes
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\phase_4_5\05_feature_group_state_errors.csv
+  Telemetry:   Rows: 4 (excluding header)
+  Telemetry:   Header Columns: horizon_k,lead_sec,state_persistence_mae_overall,state_persistence_rmse_overall,Volume_Density,Velocity_Rates,Protocol_M...
+  Description: Phase 4.5 forensic research report detailing the persistence paradox, pre-onset evaluation, or RSSM design.
+
+[103/200] FILE: reports/phase_4_5/13_persistence_forensic_audit.md
+  Title:       13_persistence_forensic_audit.md (.MD)
+  Role:        Repository Component
+  Size:        14,275 bytes (13.94 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\phase_4_5\13_persistence_forensic_audit.md
+  Telemetry:   Total Lines: 71
+  Telemetry:   First Line: # Phase 4.5 Forensic Audit: Report 13 — Persistence Forecaster Deep-Dive
+  Description: Phase 4.5 forensic research report detailing the persistence paradox, pre-onset evaluation, or RSSM design.
+
+[104/200] FILE: reports/phase_4_5/14_attack_onset_forecasting.md
+  Title:       14_attack_onset_forecasting.md (.MD)
+  Role:        Repository Component
+  Size:        2,070 bytes (2.02 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\phase_4_5\14_attack_onset_forecasting.md
+  Telemetry:   Total Lines: 32
+  Telemetry:   First Line: # Phase 4.5 Forensic Audit: Report 14 — Attack Onset Operational Formulations & Dynamics
+  Description: Phase 4.5 forensic research report detailing the persistence paradox, pre-onset evaluation, or RSSM design.
+
+[105/200] FILE: reports/phase_4_5/15_pre_onset_evaluation.md
+  Title:       15_pre_onset_evaluation.md (.MD)
+  Role:        Repository Component
+  Size:        6,490 bytes (6.34 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\phase_4_5\15_pre_onset_evaluation.md
+  Telemetry:   Total Lines: 35
+  Telemetry:   First Line: # Phase 4.5 Forensic Audit: Report 15 — Pure Pre-Onset Forecasting Evaluation
+  Description: Phase 4.5 forensic research report detailing the persistence paradox, pre-onset evaluation, or RSSM design.
+
+[106/200] FILE: reports/phase_4_5/16_overlap_effect_analysis.md
+  Title:       16_overlap_effect_analysis.md (.MD)
+  Role:        Repository Component
+  Size:        2,841 bytes (2.77 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\phase_4_5\16_overlap_effect_analysis.md
+  Telemetry:   Total Lines: 26
+  Telemetry:   First Line: # Phase 4.5 Forensic Audit: Report 16 — Temporal Window Overlap & Stride Sampling Audit
+  Description: Phase 4.5 forensic research report detailing the persistence paradox, pre-onset evaluation, or RSSM design.
+
+[107/200] FILE: reports/phase_4_5/17_horizon_difficulty.md
+  Title:       17_horizon_difficulty.md (.MD)
+  Role:        Repository Component
+  Size:        1,550 bytes (1.51 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\phase_4_5\17_horizon_difficulty.md
+  Telemetry:   Total Lines: 21
+  Telemetry:   First Line: # Phase 4.5 Forensic Audit: Report 17 — Multi-Horizon Forecasting Degradation Analysis
+  Description: Phase 4.5 forensic research report detailing the persistence paradox, pre-onset evaluation, or RSSM design.
+
+[108/200] FILE: reports/phase_4_5/18_state_forecasting_analysis.md
+  Title:       18_state_forecasting_analysis.md (.MD)
+  Role:        Repository Component
+  Size:        3,436 bytes (3.36 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\phase_4_5\18_state_forecasting_analysis.md
+  Telemetry:   Total Lines: 36
+  Telemetry:   First Line: # Phase 4.5 Forensic Audit: Report 18 — Continuous State Forecasting ($S_{t+K} \in \mathbb{R}^{54}$)
+  Description: Phase 4.5 forensic research report detailing the persistence paradox, pre-onset evaluation, or RSSM design.
+
+[109/200] FILE: reports/phase_4_5/19_ood_forensic_analysis.md
+  Title:       19_ood_forensic_analysis.md (.MD)
+  Role:        Repository Component
+  Size:        2,451 bytes (2.39 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\phase_4_5\19_ood_forensic_analysis.md
+  Telemetry:   Total Lines: 27
+  Telemetry:   First Line: # Phase 4.5 Forensic Audit: Report 19 — Out-of-Distribution (OOD) Generalization Forensic Analysis
+  Description: Phase 4.5 forensic research report detailing the persistence paradox, pre-onset evaluation, or RSSM design.
+
+[110/200] FILE: reports/phase_4_5/20_delta_feature_interpretation.md
+  Title:       20_delta_feature_interpretation.md (.MD)
+  Role:        Repository Component
+  Size:        5,543 bytes (5.41 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\phase_4_5\20_delta_feature_interpretation.md
+  Telemetry:   Total Lines: 54
+  Telemetry:   First Line: # Phase 4.5 Forensic Audit: Report 20 — Velocity Delta Feature Formulation & Ablation
+  Description: Phase 4.5 forensic research report detailing the persistence paradox, pre-onset evaluation, or RSSM design.
+
+[111/200] FILE: reports/phase_4_5/21_temporal_dataset_forensics.md
+  Title:       21_temporal_dataset_forensics.md (.MD)
+  Role:        Repository Component
+  Size:        1,224 bytes (1.20 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\phase_4_5\21_temporal_dataset_forensics.md
+  Telemetry:   Total Lines: 16
+  Telemetry:   First Line: # Phase 4.5 Forensic Audit: Report 21 — Dataset Integrity & Temporal Consistency Audit
+  Description: Phase 4.5 forensic research report detailing the persistence paradox, pre-onset evaluation, or RSSM design.
+
+[112/200] FILE: reports/phase_4_5/22_target_definition.md
+  Title:       22_target_definition.md (.MD)
+  Role:        Repository Component
+  Size:        1,777 bytes (1.74 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\phase_4_5\22_target_definition.md
+  Telemetry:   Total Lines: 28
+  Telemetry:   First Line: # Phase 4.5 Forensic Audit: Report 22 — Exact Mathematical Target Formulations
+  Description: Phase 4.5 forensic research report detailing the persistence paradox, pre-onset evaluation, or RSSM design.
+
+[113/200] FILE: reports/phase_4_5/23_feature_lineage.md
+  Title:       23_feature_lineage.md (.MD)
+  Role:        Repository Component
+  Size:        1,730 bytes (1.69 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\phase_4_5\23_feature_lineage.md
+  Telemetry:   Total Lines: 23
+  Telemetry:   First Line: # Phase 4.5 Forensic Audit: Report 23 — 54-Dimensional Feature Lineage & Rationale
+  Description: Phase 4.5 forensic research report detailing the persistence paradox, pre-onset evaluation, or RSSM design.
+
+[114/200] FILE: reports/phase_4_5/24_baseline_reproducibility_audit.md
+  Title:       24_baseline_reproducibility_audit.md (.MD)
+  Role:        Repository Component
+  Size:        1,133 bytes (1.11 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\phase_4_5\24_baseline_reproducibility_audit.md
+  Telemetry:   Total Lines: 15
+  Telemetry:   First Line: # Phase 4.5 Forensic Audit: Report 24 — Baseline Reproducibility Audit & Configurations
+  Description: Phase 4.5 forensic research report detailing the persistence paradox, pre-onset evaluation, or RSSM design.
+
+[115/200] FILE: reports/phase_4_5/25_rssm_design_requirements.md
+  Title:       25_rssm_design_requirements.md (.MD)
+  Role:        Repository Component
+  Size:        2,669 bytes (2.61 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\phase_4_5\25_rssm_design_requirements.md
+  Telemetry:   Total Lines: 24
+  Telemetry:   First Line: # Phase 4.5 Forensic Audit: Report 25 — Adapted Recurrent State-Space Model (RSSM) Design Requiremen
+  Description: Phase 4.5 forensic research report detailing the persistence paradox, pre-onset evaluation, or RSSM design.
+
+[116/200] FILE: reports/phase_4_5/26_sparse_latent_hypothesis.md
+  Title:       26_sparse_latent_hypothesis.md (.MD)
+  Role:        Repository Component
+  Size:        1,157 bytes (1.13 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\phase_4_5\26_sparse_latent_hypothesis.md
+  Telemetry:   Total Lines: 15
+  Telemetry:   First Line: # Phase 4.5 Forensic Audit: Report 26 — Sparse Latent Routing Hypothesis Formulation
+  Description: Phase 4.5 forensic research report detailing the persistence paradox, pre-onset evaluation, or RSSM design.
+
+[117/200] FILE: reports/phase_4_5/27_phase_4_5_master_summary.md
+  Title:       27_phase_4_5_master_summary.md (.MD)
+  Role:        Repository Component
+  Size:        2,453 bytes (2.40 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\phase_4_5\27_phase_4_5_master_summary.md
+  Telemetry:   Total Lines: 29
+  Telemetry:   First Line: # Phase 4.5 Master Forensic Summary & Final Scientific Verdict
+  Description: Phase 4.5 forensic research report detailing the persistence paradox, pre-onset evaluation, or RSSM design.
+
+[118/200] FILE: reports/temporal_audit/01_feature_lineage.md
+  Title:       01_feature_lineage.md (.MD)
+  Role:        Repository Component
+  Size:        9,639 bytes (9.41 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\temporal_audit\01_feature_lineage.md
+  Telemetry:   Total Lines: 69
+  Telemetry:   First Line: # Forensic Audit: 54-Dimensional Feature Lineage & Mathematical Formulations
+  Description: Forensic audit of temporal 54-D state parquets, verifying leakage prevention, delta formulation, and window densities.
+
+[119/200] FILE: reports/temporal_audit/02_leakage_audit.md
+  Title:       02_leakage_audit.md (.MD)
+  Role:        Repository Component
+  Size:        1,062 bytes (1.04 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\temporal_audit\02_leakage_audit.md
+  Telemetry:   Total Lines: 21
+  Telemetry:   First Line: # Forensic Audit: Temporal Information Leakage Verification
+  Description: Forensic audit of temporal 54-D state parquets, verifying leakage prevention, delta formulation, and window densities.
+
+[120/200] FILE: reports/temporal_audit/03_delta_audit.md
+  Title:       03_delta_audit.md (.MD)
+  Role:        Repository Component
+  Size:        756 bytes
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\temporal_audit\03_delta_audit.md
+  Telemetry:   Total Lines: 18
+  Telemetry:   First Line: # Forensic Audit: First-Order Velocity Delta Features (Delta S_t)
+  Description: Forensic audit of temporal 54-D state parquets, verifying leakage prevention, delta formulation, and window densities.
+
+[121/200] FILE: reports/temporal_audit/04_target_definition.md
+  Title:       04_target_definition.md (.MD)
+  Role:        Repository Component
+  Size:        1,288 bytes (1.26 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\temporal_audit\04_target_definition.md
+  Telemetry:   Total Lines: 18
+  Telemetry:   First Line: # Forensic Audit: Multi-Horizon Target Formulation & Ground Truth Semantics
+  Description: Forensic audit of temporal 54-D state parquets, verifying leakage prevention, delta formulation, and window densities.
+
+[122/200] FILE: reports/temporal_audit/05_window_density.csv
+  Title:       05_window_density.csv (.CSV)
+  Role:        Repository Component
+  Size:        1,699 bytes (1.66 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\temporal_audit\05_window_density.csv
+  Telemetry:   Rows: 9 (excluding header)
+  Telemetry:   Header Columns: session_id,source_flows,total_states,attack_states,benign_states,pct_empty_states_overall,pct_empty_states_benign,pct_em...
+  Description: Forensic audit of temporal 54-D state parquets, verifying leakage prevention, delta formulation, and window densities.
+
+[123/200] FILE: reports/temporal_audit/06_attack_onset_resolution.md
+  Title:       06_attack_onset_resolution.md (.MD)
+  Role:        Repository Component
+  Size:        7,341 bytes (7.17 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\temporal_audit\06_attack_onset_resolution.md
+  Telemetry:   Total Lines: 42
+  Telemetry:   First Line: # Forensic Audit: Attack Onset Temporal Resolution & Lead Times
+  Description: Forensic audit of temporal 54-D state parquets, verifying leakage prevention, delta formulation, and window densities.
+
+[124/200] FILE: reports/temporal_audit/07_split_audit.md
+  Title:       07_split_audit.md (.MD)
+  Role:        Repository Component
+  Size:        1,203 bytes (1.17 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\temporal_audit\07_split_audit.md
+  Telemetry:   Total Lines: 16
+  Telemetry:   First Line: # Forensic Audit: Chronological Splitting & Out-of-Distribution Shift
+  Description: Forensic audit of temporal 54-D state parquets, verifying leakage prevention, delta formulation, and window densities.
+
+[125/200] FILE: reports/temporal_audit/08_duplicate_impact.md
+  Title:       08_duplicate_impact.md (.MD)
+  Role:        Repository Component
+  Size:        1,257 bytes (1.23 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\temporal_audit\08_duplicate_impact.md
+  Telemetry:   Total Lines: 13
+  Telemetry:   First Line: # Forensic Audit: Duplicate Flow Retention Impact Analysis
+  Description: Forensic audit of temporal 54-D state parquets, verifying leakage prevention, delta formulation, and window densities.
+
+[126/200] FILE: reports/temporal_audit/09_feature_quality.csv
+  Title:       09_feature_quality.csv (.CSV)
+  Role:        Repository Component
+  Size:        7,986 bytes (7.80 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\temporal_audit\09_feature_quality.csv
+  Telemetry:   Rows: 54 (excluding header)
+  Telemetry:   Header Columns: feature_idx,feature_name,feature_category,missing_pct,infinite_pct,zero_pct,variance,unique_count,min_value,median_value...
+  Description: Forensic audit of temporal 54-D state parquets, verifying leakage prevention, delta formulation, and window densities.
+
+[127/200] FILE: reports/temporal_audit/10_rssm_readiness.md
+  Title:       10_rssm_readiness.md (.MD)
+  Role:        Repository Component
+  Size:        1,763 bytes (1.72 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\temporal_audit\10_rssm_readiness.md
+  Telemetry:   Total Lines: 24
+  Telemetry:   First Line: # Architectural Assessment: Recurrent State Space Model (RSSM) Readiness
+  Description: Forensic audit of temporal 54-D state parquets, verifying leakage prevention, delta formulation, and window densities.
+
+[128/200] FILE: reports/temporal_audit/11_final_audit_verdict.md
+  Title:       11_final_audit_verdict.md (.MD)
+  Role:        Repository Component
+  Size:        1,981 bytes (1.93 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\temporal_audit\11_final_audit_verdict.md
+  Telemetry:   Total Lines: 28
+  Telemetry:   First Line: # Forensic Audit: Final Dataset & Temporal Representation Verdict
+  Description: Forensic audit of temporal 54-D state parquets, verifying leakage prevention, delta formulation, and window densities.
+
+[129/200] FILE: reports/temporal_design/01_window_comparison.csv
+  Title:       01_window_comparison.csv (.CSV)
+  Role:        Repository Component
+  Size:        1,569 bytes (1.53 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\temporal_design\01_window_comparison.csv
+  Telemetry:   Rows: 10 (excluding header)
+  Telemetry:   Header Columns: configuration,window_duration_seconds,stride_seconds,overlap_percentage,pilot_total_windows,avg_flows_per_window,median_...
+  Description: Architectural study of rolling window durations, strides, and 54-D state feature formulations.
+
+[130/200] FILE: reports/temporal_design/02_state_feature_design.md
+  Title:       02_state_feature_design.md (.MD)
+  Role:        Repository Component
+  Size:        5,303 bytes (5.18 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\temporal_design\02_state_feature_design.md
+  Telemetry:   Total Lines: 90
+  Telemetry:   First Line: # 02 — Temporal Network State Feature Design & Mathematical Formulation
+  Description: Architectural study of rolling window durations, strides, and 54-D state feature formulations.
+
+[131/200] FILE: reports/temporal_design/03_attack_onset_analysis.md
+  Title:       03_attack_onset_analysis.md (.MD)
+  Role:        Repository Component
+  Size:        2,957 bytes (2.89 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\temporal_design\03_attack_onset_analysis.md
+  Telemetry:   Total Lines: 51
+  Telemetry:   First Line: # 03 — Attack Onset Dynamics & Multi-Horizon Target Formulation
+  Description: Architectural study of rolling window durations, strides, and 54-D state feature formulations.
+
+[132/200] FILE: reports/temporal_design/04_temporal_design_recommendation.md
+  Title:       04_temporal_design_recommendation.md (.MD)
+  Role:        Repository Component
+  Size:        2,589 bytes (2.53 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\temporal_design\04_temporal_design_recommendation.md
+  Telemetry:   Total Lines: 38
+  Telemetry:   First Line: # 04 — Temporal State Representation Final Design Recommendation
+  Description: Architectural study of rolling window durations, strides, and 54-D state feature formulations.
+
+[133/200] FILE: reports/temporal_states/01_temporal_state_verification.md
+  Title:       01_temporal_state_verification.md (.MD)
+  Role:        Repository Component
+  Size:        4,233 bytes (4.13 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\temporal_states\01_temporal_state_verification.md
+  Telemetry:   Total Lines: 43
+  Telemetry:   First Line: # Temporal State Aggregation & Dataset Verification Report
+  Description: Verification report and summary statistics for daily temporal state aggregation parquets.
+
+[134/200] FILE: reports/temporal_states/02_temporal_state_statistics.csv
+  Title:       02_temporal_state_statistics.csv (.CSV)
+  Role:        Repository Component
+  Size:        910 bytes
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\reports\temporal_states\02_temporal_state_statistics.csv
+  Telemetry:   Rows: 9 (excluding header)
+  Telemetry:   Header Columns: processed_file,windows,attack_windows,benign_windows,attack_percentage,nan_count,inf_count,monotonic_time,dominant_famil...
+  Description: Verification report and summary statistics for daily temporal state aggregation parquets.
+
+[135/200] FILE: results/batch_thursday_test.json
+  Title:       Thursday Test Session Offline Batch Inference Evaluation
+  Role:        Offline Inference Forensic Output
+  Size:        1,822,663 bytes (1.74 MB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\results\batch_thursday_test.json
+  Telemetry:   JSON Object with 7 keys: file, total_windows_evaluated, total_attack_windows_detected, high_risk_windows_count, predicted_stage_distribution, detected_incidents_sample, all_predictions
+  Description: Complete JSON evaluation report generated by src/inference_batch.py on Thursday test data. Evaluated 39,794 rolling windows, recording total attack windows detected, high-risk window counts, predicted MITRE stage distributions, sample incident detections with timestamps and anomaly confidence, and full per-window inference logs.
+
+[136/200] FILE: results/live_stream_alerts.jsonl
+  Title:       Real-Time Streaming Alert Stream Log
+  Role:        Real-Time Detection & Forecasting Alert Feed
+  Size:        11,971 bytes (11.69 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\results\live_stream_alerts.jsonl
+  Telemetry:   JSON Lines Count: 15 records
+  Description: JSON Lines log generated by src/inference_stream.py during continuous streaming simulation. Each line contains an active security alert: timestamp, rolling window index, predicted MITRE stage code, predicted stage name (e.g. Lateral Movement / Execution), model confidence, risk score (0.0 to 1.0), alert level (HIGH / CRITICAL), current state telemetry (packet rate, byte rate, syn ratio), predicted future state telemetry, and telemetry drift deltas (+3471.8 pkts/s, etc.).
+
+[137/200] FILE: scripts/audit/audit_raw_datasets.py
+  Title:       Raw CSE-CIC-IDS2018 CSV Forensic Audit
+  Role:        Raw Data Quality Audit
+  Size:        6,297 bytes (6.15 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\audit\audit_raw_datasets.py
+  Telemetry:   Lines of Code: 159
+  Description: Performs deep forensic inspection of raw CSVs: header anomalies, negative durations, timestamp formats, and infinity counts.
+
+[138/200] FILE: scripts/audit/gen_12.py
+  Title:       Pipeline Readiness Generator
+  Role:        Audit Script
+  Size:        3,804 bytes (3.71 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\audit\gen_12.py
+  Telemetry:   Lines of Code: 62
+  Description: Generates reports/data_pipeline/12_final_data_pipeline_readiness.md.
+
+[139/200] FILE: scripts/audit/generate_all_pipeline_reports.py
+  Title:       Master Data Pipeline Audit Report Generator
+  Role:        Documentation Compiler
+  Size:        20,386 bytes (19.91 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\audit\generate_all_pipeline_reports.py
+  Telemetry:   Lines of Code: 310
+  Description: Generates reports 00 through 14 in reports/data_pipeline/ summarizing all cleaning, verification, and canonical statistics.
+
+[140/200] FILE: scripts/audit/generate_phase4_5_reports.py
+  Title:       Phase 4.5 Forensic Audit Reports Generator
+  Role:        Forensic Research Report Compiler
+  Size:        42,438 bytes (41.44 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\audit\generate_phase4_5_reports.py
+  Telemetry:   Lines of Code: 493
+  Telemetry:   Docstring: SIH26153 — AI-Based Network Attack Forecasting from Network Traffic Data
+  Telemetry:   Top-level Functions: gen_report_13, gen_report_14, gen_report_15, gen_report_16, gen_report_17, gen_report_18, gen_report_19, gen_report_20
+  Description: Generates 15 in-depth scientific research reports (Reports 13-27) in reports/phase_4_5/ analyzing the persistence paradox, pre-onset evaluation, stride effects, and RSSM requirements.
+
+[141/200] FILE: scripts/audit/generate_temporal_design_reports.py
+  Title:       Temporal Design Reports Generator
+  Role:        Documentation Compiler
+  Size:        14,758 bytes (14.41 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\audit\generate_temporal_design_reports.py
+  Telemetry:   Lines of Code: 257
+  Description: Generates window comparison CSVs and feature design documentation in reports/temporal_design/.
+
+[142/200] FILE: scripts/audit/run_comprehensive_temporal_audit.py
+  Title:       Comprehensive Temporal State Parquet Audit
+  Role:        Data Integrity Audit
+  Size:        33,090 bytes (32.31 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\audit\run_comprehensive_temporal_audit.py
+  Telemetry:   Lines of Code: 541
+  Telemetry:   Docstring: SIH26153 — AI-Based Network Attack Forecasting from Network Traffic Data
+  Telemetry:   Top-level Functions: compute_sha256, main
+  Description: Audits all 9 temporal state parquet files for missing values, infinite values, window density, zero variance, and feature distributions.
+
+[143/200] FILE: scripts/audit/run_phase4_5_forensics.py
+  Title:       Phase 4.5 Experimental Forensics Engine
+  Role:        Empirical Forensics Experiment
+  Size:        16,797 bytes (16.40 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\audit\run_phase4_5_forensics.py
+  Telemetry:   Lines of Code: 415
+  Telemetry:   Docstring: SIH26153 — AI-Based Network Attack Forecasting from Network Traffic Data
+  Telemetry:   Top-level Functions: load_all_days, analyze_attack_runs, analyze_persistence_and_transitions, analyze_pre_onset_evaluation, analyze_stride_subsampling, analyze_feature_group_errors, main
+  Description: Executes experimental studies analyzing attack run lengths, persistence transition probabilities, pure pre-onset forecasting accuracy, and stride subsampling.
+
+[144/200] FILE: scripts/audit/run_pilot_temporal_study.py
+  Title:       Pilot Temporal Windowing Study
+  Role:        Window Parameter Exploration
+  Size:        7,725 bytes (7.54 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\audit\run_pilot_temporal_study.py
+  Telemetry:   Lines of Code: 167
+  Description: Evaluates trade-offs between window durations (5s, 10s, 30s) and strides (1s, 2s, 5s) for attack onset detection.
+
+[145/200] FILE: scripts/audit_datasets.py
+  Title:       Candidate Dataset Ingestion & Availability Audit
+  Role:        Dataset Discovery & Initial Assessment
+  Size:        2,512 bytes (2.45 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\audit_datasets.py
+  Telemetry:   Lines of Code: 53
+  Telemetry:   Top-level Functions: run_audit
+  Description: Scans workspace for available raw and processed datasets, printing row counts, shapes, and schemas.
+
+[146/200] FILE: scripts/download/download_official_s3.py
+  Title:       Official AWS S3 CSE-CIC-IDS2018 Downloader
+  Role:        Automated Data Ingestion
+  Size:        3,652 bytes (3.57 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\download\download_official_s3.py
+  Telemetry:   Lines of Code: 91
+  Telemetry:   Top-level Functions: compute_sha256, main
+  Description: Automated script that streams raw CSV files from the official AWS Open Data Registry S3 bucket, verifying SHA-256 hashes.
+
+[147/200] FILE: scripts/experiments/generate_baseline_reports.py
+  Title:       Baseline Performance Reports Generator
+  Role:        Experiment Results Compiler
+  Size:        13,055 bytes (12.75 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\experiments\generate_baseline_reports.py
+  Telemetry:   Lines of Code: 134
+  Telemetry:   Docstring: SIH26153 — AI-Based Network Attack Forecasting from Network Traffic Data
+  Telemetry:   Top-level Functions: main
+  Description: Compiles benchmark metrics from baseline model runs into CSV tables and markdown reports in reports/baselines/.
+
+[148/200] FILE: scripts/experiments/run_baseline_suite.py
+  Title:       Baseline Forecasting Model Suite Experiment Runner
+  Role:        Experiment Execution Engine
+  Size:        45,018 bytes (43.96 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\experiments\run_baseline_suite.py
+  Telemetry:   Lines of Code: 757
+  Telemetry:   Docstring: SIH26153 — AI-Based Network Attack Forecasting from Network Traffic Data
+  Telemetry:   Top-level Functions: set_seed, main
+  Description: Comprehensive benchmark runner that trains and evaluates all 5 baseline architectures across all 4 forecast horizons K in [1, 3, 5, 10].
+
+[149/200] FILE: scripts/gen_00.py
+  Title:       Pre-Migration Inventory Report Generator
+  Role:        Audit Script
+  Size:        4,468 bytes (4.36 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\gen_00.py
+  Telemetry:   Lines of Code: 78
+  Description: Generates reports/data_pipeline/00_pre_migration_inventory.md.
+
+[150/200] FILE: scripts/gen_01.py
+  Title:       Candidate Inventory Report Generator
+  Role:        Audit Script
+  Size:        6,778 bytes (6.62 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\gen_01.py
+  Telemetry:   Lines of Code: 96
+  Description: Generates reports/dataset_selection/01_candidate_inventory.md.
+
+[151/200] FILE: scripts/gen_01_policy.py
+  Title:       Clean Branch Policy Generator
+  Role:        Audit Script
+  Size:        3,480 bytes (3.40 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\gen_01_policy.py
+  Telemetry:   Lines of Code: 67
+  Description: Generates reports/data_pipeline/01_clean_branch_policy.md.
+
+[152/200] FILE: scripts/gen_02.py
+  Title:       Dataset Comparison CSV Generator
+  Role:        Audit Script
+  Size:        9,395 bytes (9.17 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\gen_02.py
+  Telemetry:   Lines of Code: 140
+  Description: Generates reports/dataset_selection/02_dataset_comparison.csv.
+
+[153/200] FILE: scripts/gen_02_dl.py
+  Title:       Download Verification Report Generator
+  Role:        Audit Script
+  Size:        2,380 bytes (2.32 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\gen_02_dl.py
+  Telemetry:   Lines of Code: 47
+  Description: Generates reports/data_pipeline/02_download_verification.md.
+
+[154/200] FILE: scripts/gen_03.py
+  Title:       Temporal Audit Report Generator
+  Role:        Audit Script
+  Size:        5,270 bytes (5.15 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\gen_03.py
+  Telemetry:   Lines of Code: 61
+  Description: Generates reports/dataset_selection/03_temporal_audit.md.
+
+[155/200] FILE: scripts/gen_04.py
+  Title:       Feature Comparison CSV Generator
+  Role:        Audit Script
+  Size:        5,501 bytes (5.37 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\gen_04.py
+  Telemetry:   Lines of Code: 49
+  Description: Generates reports/dataset_selection/04_feature_comparison.csv.
+
+[156/200] FILE: scripts/gen_05.py
+  Title:       Label Comparison CSV Generator
+  Role:        Audit Script
+  Size:        3,084 bytes (3.01 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\gen_05.py
+  Telemetry:   Lines of Code: 30
+  Description: Generates reports/dataset_selection/05_label_comparison.csv.
+
+[157/200] FILE: scripts/gen_06.py
+  Title:       MITRE Readiness Report Generator
+  Role:        Audit Script
+  Size:        3,948 bytes (3.86 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\gen_06.py
+  Telemetry:   Lines of Code: 49
+  Description: Generates reports/dataset_selection/06_mitre_readiness.md.
+
+[158/200] FILE: scripts/gen_07.py
+  Title:       Dataset Mixing Risk Report Generator
+  Role:        Audit Script
+  Size:        3,375 bytes (3.30 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\gen_07.py
+  Telemetry:   Lines of Code: 57
+  Description: Generates reports/dataset_selection/07_dataset_mixing_risk.md.
+
+[159/200] FILE: scripts/gen_08.py
+  Title:       Final Dataset Recommendation Generator
+  Role:        Audit Script
+  Size:        6,504 bytes (6.35 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\gen_08.py
+  Telemetry:   Lines of Code: 101
+  Description: Generates reports/dataset_selection/08_final_dataset_recommendation.md.
+
+[160/200] FILE: scripts/generate_audit_reports.py
+  Title:       Pipeline Audit Reports Generator
+  Role:        Audit Documentation Generation
+  Size:        19,106 bytes (18.66 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\generate_audit_reports.py
+  Telemetry:   Lines of Code: 185
+  Description: Generates structured forensic markdown and CSV audit reports comparing dataset candidates.
+
+[161/200] FILE: scripts/generate_markdown_reports.py
+  Title:       Phase 1-3 Markdown Reports Generator
+  Role:        Documentation Compiler
+  Size:        22,707 bytes (22.17 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\generate_markdown_reports.py
+  Telemetry:   Lines of Code: 318
+  Description: Compiles repository audits, provenance documents, and data quality summaries into markdown files.
+
+[162/200] FILE: scripts/inspect_combined.py
+  Title:       Combined Multi-Domain Dataset Inspector
+  Role:        Verification Utility
+  Size:        699 bytes
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\inspect_combined.py
+  Telemetry:   Lines of Code: 15
+  Description: Inspects row counts, column types, and label distributions in combined_multidomain_dataset.parquet.
+
+[163/200] FILE: scripts/preprocessing/build_temporal_states.py
+  Title:       Canonical Parquet to Temporal State Parquet Builder
+  Role:        State Generation Pipeline
+  Size:        5,415 bytes (5.29 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\preprocessing\build_temporal_states.py
+  Telemetry:   Lines of Code: 141
+  Telemetry:   Docstring: SIH26153 — AI-Based Network Attack Forecasting from Network Traffic Data
+  Telemetry:   Top-level Functions: compute_sha256, main
+  Description: Orchestrates batch generation of 10s rolling window temporal states (54-D) for all 9 daily capture sessions.
+
+[164/200] FILE: scripts/preprocessing/convert_raw_to_canonical_parquet.py
+  Title:       Raw CSV to Clean Canonical Parquet Converter
+  Role:        Raw Data Sanitation Pipeline
+  Size:        13,647 bytes (13.33 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\preprocessing\convert_raw_to_canonical_parquet.py
+  Telemetry:   Lines of Code: 330
+  Telemetry:   Top-level Functions: compute_sha256
+  Description: Ingests raw CSV files, strips repeated headers, drops negative durations, imputes infinities, standardizes data types, and exports clean Parquet files.
+
+[165/200] FILE: scripts/verification/verify_canonical_parquets.py
+  Title:       Canonical Parquet Verification Suite
+  Role:        Quality Assurance
+  Size:        8,297 bytes (8.10 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\verification\verify_canonical_parquets.py
+  Telemetry:   Lines of Code: 182
+  Description: Verifies that canonical Parquet files conform to canonical_schema.yaml, checking row counts, column names, and SHA-256 hashes.
+
+[166/200] FILE: scripts/verification/verify_temporal_states.py
+  Title:       Temporal State Parquet Verification Suite
+  Role:        Quality Assurance
+  Size:        10,293 bytes (10.05 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\verification\verify_temporal_states.py
+  Telemetry:   Lines of Code: 195
+  Telemetry:   Docstring: SIH26153 — AI-Based Network Attack Forecasting from Network Traffic Data
+  Telemetry:   Top-level Functions: compute_sha256, main
+  Description: Validates generated temporal state parquets for missingness, window continuity, label integrity, and output hashes.
+
+[167/200] FILE: scripts/write_reports.py
+  Title:       Batch Report Writer Trigger
+  Role:        Batch Generation Script
+  Size:        66 bytes
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\scripts\write_reports.py
+  Telemetry:   Lines of Code: 3
+  Description: Helper trigger script for writing dataset selection documentation.
+
+[168/200] FILE: src/__init__.py
+  Title:       __init__.py (.PY)
+  Role:        Repository Component
+  Size:        32 bytes
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\__init__.py
+  Telemetry:   Lines of Code: 1
+  Description: Repository component supporting pipeline operations.
+
+[169/200] FILE: src/build_dataset.py
+  Title:       DARPA Week 1 PCAP Ingestion & Processing Pipeline
+  Role:        Raw PCAP to Parquet Pipeline
+  Size:        7,640 bytes (7.46 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\build_dataset.py
+  Telemetry:   Lines of Code: 189
+  Telemetry:   Docstring: Day-by-day PCAP processing pipeline for DARPA Week1 dataset.
+  Telemetry:   Top-level Functions: decompress_gz, process_day, build_and_merge
+  Description: Day-by-day PCAP decompressor and parser for DARPA 1998 Week 1 tcpdump files. Extracts packet-level attributes using Scapy/dpkt, aggregates them into 10-second rolling windows, assigns ground truth attack labels, and exports per-day windowed Parquet files.
+
+[170/200] FILE: src/cic_feature_adapter.py
+  Title:       CIC-IDS2017 Feature Adapter & Projection Engine
+  Role:        Feature Standardization & Cross-Domain Mapping
+  Size:        10,792 bytes (10.54 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\cic_feature_adapter.py
+  Telemetry:   Lines of Code: 217
+  Telemetry:   Docstring: CIC-IDS2017 Feature Adapter & Projection Engine
+  Telemetry:   Top-level Functions: adapt_cic_dataframe, process_all_cic_files
+  Description: Projects raw CIC-IDS2017 80-feature CSV flow records into the canonical 47-dimensional temporal state space. Handles column renaming, directionality harmonization, rate calculation, infinity handling, and label alignment.
+
+[171/200] FILE: src/cic_mapping.py
+  Title:       CIC-IDS2017 to MITRE ATT&CK Taxonomy Mapping
+  Role:        Threat Classification Alignment
+  Size:        2,732 bytes (2.67 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\cic_mapping.py
+  Telemetry:   Lines of Code: 67
+  Telemetry:   Docstring: CIC-IDS2017 to MITRE ATT&CK Stage Mapping Taxonomy
+  Telemetry:   Top-level Functions: map_cic_label_to_stage
+  Description: Maps CIC-IDS2017 specific attack labels (PortScan, DDoS, DoS GoldenEye, DoS Slowloris, Heartbleed, Web Attack - Brute Force, Web Attack - XSS, Web Attack - Sql Injection, Infiltration, Bot) into standardized MITRE ATT&CK stages (0: Benign, 1: Reconnaissance, 2: Initial Access, 3: Lateral Movement, 4: Denial of Service).
+
+[172/200] FILE: src/data/__init__.py
+  Title:       __init__.py (.PY)
+  Role:        Repository Component
+  Size:        24 bytes
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\data\__init__.py
+  Telemetry:   Lines of Code: 1
+  Description: Repository component supporting pipeline operations.
+
+[173/200] FILE: src/dataset_sequence.py
+  Title:       PyTorch Sliding Window Sequence Dataset Builder
+  Role:        Deep Learning Sequence Data Loading
+  Size:        6,012 bytes (5.87 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\dataset_sequence.py
+  Telemetry:   Lines of Code: 165
+  Telemetry:   Docstring: Network Sequence Dataset Module for World Model
+  Telemetry:   Classes: NetworkSequenceDataset
+  Telemetry:   Top-level Functions: get_feature_columns, create_dataloaders
+  Description: Implements NetworkSequenceDataset (torch.utils.data.Dataset). Converts tabular temporal state records into rolling sequence tensors of shape (batch_size, lookback_P, feature_dim) paired with future targets (future_state of shape (batch_size, feature_dim) and future_stage of shape (batch_size)). Includes create_dataloaders utility with train/val splitting and memory pinning.
+
+[174/200] FILE: src/dataset_unified_sequence.py
+  Title:       Unified Multi-Domain Sequence Dataset Loader
+  Role:        Multi-Domain Data Loader
+  Size:        4,202 bytes (4.10 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\dataset_unified_sequence.py
+  Telemetry:   Lines of Code: 107
+  Telemetry:   Docstring: Unified Multi-Domain Sequence Dataset (DARPA + CIC-IDS2017)
+  Telemetry:   Classes: UnifiedMultiDomainDataset
+  Description: Implements UnifiedMultiDomainDataset for combined DARPA 1998 + CIC-IDS2017 training. Maintains session boundaries, prevents temporal leakage across capture days, and provides domain identifiers for domain adaptation and cross-domain generalization evaluation.
+
+[175/200] FILE: src/evaluate_world_model.py
+  Title:       World Model Evaluation & Multi-Horizon Forensic Analyzer
+  Role:        Model Evaluation & Benchmark Reporting
+  Size:        5,366 bytes (5.24 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\evaluate_world_model.py
+  Telemetry:   Lines of Code: 146
+  Telemetry:   Docstring: World Model Evaluation & Forecasting Analysis Module
+  Telemetry:   Top-level Functions: evaluate_horizon, main
+  Description: Evaluates trained World Models across multiple forecast horizons K in [1, 3, 5, 10]. Computes: Continuous state reconstruction metrics (MSE, MAE, Cosine Similarity), attack classification metrics (Macro F1, Weighted F1, Precision, Recall, Confusion Matrix), ROC-AUC, and PR-AUC. Generates comparative performance tables across horizons.
+
+[176/200] FILE: src/evaluation/metrics.py
+  Title:       Comprehensive Forecasting & Classification Metrics Library
+  Role:        Scientific Evaluation & Validation Metrics
+  Size:        6,678 bytes (6.52 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\evaluation\metrics.py
+  Telemetry:   Lines of Code: 211
+  Telemetry:   Docstring: SIH26153 — AI-Based Network Attack Forecasting from Network Traffic Data
+  Telemetry:   Top-level Functions: find_optimal_threshold, compute_binary_metrics, compute_state_forecasting_metrics, compute_family_classification_metrics, compute_tau_metrics
+  Description: Core evaluation library implementing: 1. find_optimal_threshold: Precision-Recall threshold tuning maximizing F-beta or Youden J statistic.
+2. compute_binary_metrics: Accuracy, Precision, Recall, F1, Balanced Accuracy, Specificity, ROC-AUC, PR-AUC, Brier Score.
+3. compute_state_forecasting_metrics: Mean Absolute Error (MAE), Root Mean Squared Error (RMSE), Mean Absolute Percentage Error (MAPE), Cosine Similarity.
+4. compute_family_classification_metrics: Macro/Weighted F1, Top-1/Top-2 accuracy for multi-class attack categorization.
+5. compute_tau_metrics: Operational lead-time metrics (detection lead time tau before peak damage, false alarms before onset).
+
+[177/200] FILE: src/feature_extractor.py
+  Title:       Network Traffic Feature Extraction Engine v3
+  Role:        Low-Level Telemetry Feature Engineering
+  Size:        16,227 bytes (15.85 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\feature_extractor.py
+  Telemetry:   Lines of Code: 339
+  Telemetry:   Docstring: Feature Extraction Engine — v3 (Anomaly & Stealth Attack Aware)
+  Telemetry:   Classes: FeatureExtractor
+  Telemetry:   Top-level Functions: compute_entropy
+  Description: Feature extraction engine aware of stealth and anomaly behaviors. Computes: Volume metrics (packet_count, ip_byte_count, flow_count), protocol ratios (tcp, udp, icmp), IP diversity (unique src/dst IPs), port entropy (Shannon entropy over L4 destination ports), TCP flag counts and ratios (SYN, ACK, RST, FIN, PSH, URG, RST-to-SYN, handshake completion ratio), retransmissions, window size statistics, TTL statistics, payload size statistics, and inter-arrival times (IAT).
+
+[178/200] FILE: src/features/__init__.py
+  Title:       __init__.py (.PY)
+  Role:        Repository Component
+  Size:        24 bytes
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\features\__init__.py
+  Telemetry:   Lines of Code: 1
+  Description: Repository component supporting pipeline operations.
+
+[179/200] FILE: src/inference_batch.py
+  Title:       Level 1: Offline Batch File-Based Inference Engine
+  Role:        Batch Threat Analysis & Audit
+  Size:        8,957 bytes (8.75 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\inference_batch.py
+  Telemetry:   Lines of Code: 200
+  Telemetry:   Docstring: Level 1: Batch File-Based Inference Pipeline
+  Telemetry:   Top-level Functions: run_batch_inference
+  Description: Processes offline session parquet files using trained World Models. Iterates over sequences with sliding lookback windows, predicts future attack stages and continuous state telemetry, identifies anomalous telemetry drift, generates incident summaries, and writes detailed JSON audit reports.
+
+[180/200] FILE: src/inference_engine.py
+  Title:       Core World Model Inference Engine
+  Role:        Inference Abstraction & Risk Scoring
+  Size:        11,080 bytes (10.82 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\inference_engine.py
+  Telemetry:   Lines of Code: 252
+  Telemetry:   Docstring: Core World Model Inference Engine
+  Telemetry:   Classes: WorldModelInferenceEngine
+  Description: Encapsulates model weight loading, device management (CPU/CUDA), sequence buffer management, telemetry normalization, forward inference, risk score calculation (fusing stage classification probability and state prediction error), and alert generation.
+
+[181/200] FILE: src/inference_stream.py
+  Title:       Level 2: Continuous Real-Time Streaming Inference Engine
+  Role:        Online Real-Time Threat Early Warning
+  Size:        9,104 bytes (8.89 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\inference_stream.py
+  Telemetry:   Lines of Code: 212
+  Telemetry:   Docstring: Level 2: Continuous Real-Time Streaming Inference Pipeline
+  Telemetry:   Classes: RealTimeStreamingInference
+  Description: Simulates real-time network traffic stream ingestion. Maintains an active FIFO rolling window buffer, queries WorldModelInferenceEngine on every step, detects pre-attack state deviations, calculates state drift rates, and streams real-time JSONL alerts with early warning lead times.
+
+[182/200] FILE: src/mitre/__init__.py
+  Title:       __init__.py (.PY)
+  Role:        Repository Component
+  Size:        24 bytes
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\mitre\__init__.py
+  Telemetry:   Lines of Code: 1
+  Description: Repository component supporting pipeline operations.
+
+[183/200] FILE: src/mitre_mapping.py
+  Title:       MITRE ATT&CK Stage Mapping Taxonomy for DARPA 1998
+  Role:        Kill-Chain Standardization
+  Size:        2,758 bytes (2.69 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\mitre_mapping.py
+  Telemetry:   Lines of Code: 108
+  Telemetry:   Docstring: MITRE ATT&CK Stage Mapping Module — Updated with DoS Stage
+  Telemetry:   Top-level Functions: get_mitre_stage_code, get_mitre_stage_name, get_mitre_tactic
+  Description: Provides mapping functions (get_mitre_stage_code, get_mitre_stage_name, get_mitre_tactic) for DARPA 1998 attack labels (smurf, teardrop, neptune, pod, ipsweep, portsweep, satan, buffer_overflow, rootkit, etc.).
+
+[184/200] FILE: src/models/baselines/gru.py
+  Title:       Temporal GRU Forecaster Architecture
+  Role:        Recurrent Sequence Baseline
+  Size:        3,665 bytes (3.58 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\models\baselines\gru.py
+  Telemetry:   Lines of Code: 118
+  Telemetry:   Docstring: SIH26153 — AI-Based Network Attack Forecasting from Network Traffic Data
+  Telemetry:   Classes: TemporalGRUForecaster
+  Description: Implements TemporalGRUForecaster: 2-layer Gated Recurrent Unit (GRU) network with dropout, processing lookback sequences (batch_size, P, D) to simultaneously forecast continuous state S_{t+K} and attack logits.
+
+[185/200] FILE: src/models/baselines/linear.py
+  Title:       Logistic Regression Forecaster Wrapper
+  Role:        Linear Baseline Forecaster
+  Size:        1,472 bytes (1.44 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\models\baselines\linear.py
+  Telemetry:   Lines of Code: 50
+  Telemetry:   Docstring: SIH26153 — AI-Based Network Attack Forecasting from Network Traffic Data
+  Telemetry:   Classes: LogisticRegressionForecaster
+  Description: Implements LogisticRegressionForecaster: Wraps scikit-learn LogisticRegression with L2 penalty, class weighting, and multi-horizon target fitting.
+
+[186/200] FILE: src/models/baselines/persistence.py
+  Title:       Persistence Forecaster & Majority Forecaster
+  Role:        Hard Mathematical Baselines
+  Size:        1,405 bytes (1.37 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\models\baselines\persistence.py
+  Telemetry:   Lines of Code: 47
+  Telemetry:   Docstring: SIH26153 — AI-Based Network Attack Forecasting from Network Traffic Data
+  Telemetry:   Classes: MajorityForecaster, PersistenceForecaster
+  Description: Implements PersistenceForecaster (predicts y_{t+K} = y_t and S_{t+K} = S_t) and MajorityForecaster (predicts majority training class). Crucial scientific benchmark demonstrating the persistence paradox in autocorrelation-heavy time-series data.
+
+[187/200] FILE: src/models/baselines/random_forest.py
+  Title:       Random Forest Ensemble Forecaster Wrapper
+  Role:        Non-Linear Decision Tree Baseline
+  Size:        1,507 bytes (1.47 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\models\baselines\random_forest.py
+  Telemetry:   Lines of Code: 51
+  Telemetry:   Docstring: SIH26153 — AI-Based Network Attack Forecasting from Network Traffic Data
+  Telemetry:   Classes: RandomForestForecaster
+  Description: Implements RandomForestForecaster: Wraps scikit-learn RandomForestClassifier (100 trees, balanced sub-sampling) for multi-horizon attack classification from flattened lookback state vectors.
+
+[188/200] FILE: src/models/baselines/transformer.py
+  Title:       Temporal Transformer Forecaster Architecture
+  Role:        Attention-Based Sequence Forecaster
+  Size:        5,000 bytes (4.88 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\models\baselines\transformer.py
+  Telemetry:   Lines of Code: 152
+  Telemetry:   Docstring: SIH26153 — AI-Based Network Attack Forecasting from Network Traffic Data
+  Telemetry:   Classes: PositionalEncoding, TemporalTransformerForecaster
+  Description: Implements TemporalTransformerForecaster with PositionalEncoding, multi-head self-attention layers, feed-forward network, layer normalization, and dual heads for continuous state forecasting and attack stage prediction.
+
+[189/200] FILE: src/temporal/__init__.py
+  Title:       __init__.py (.PY)
+  Role:        Repository Component
+  Size:        24 bytes
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\temporal\__init__.py
+  Telemetry:   Lines of Code: 1
+  Description: Repository component supporting pipeline operations.
+
+[190/200] FILE: src/temporal/dataset_builder.py
+  Title:       Temporal Forecasting Dataset & Sequence Builder
+  Role:        Sequence Tensor Generation
+  Size:        9,541 bytes (9.32 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\temporal\dataset_builder.py
+  Telemetry:   Lines of Code: 233
+  Telemetry:   Docstring: SIH26153 — AI-Based Network Attack Forecasting from Network Traffic Data
+  Telemetry:   Classes: TemporalForecastingDataset, TemporalSequenceBuilder
+  Description: Implements TemporalForecastingDataset and TemporalSequenceBuilder. Formulates historical lookback tensors X of shape (N, P, D), multi-horizon targets y_future of shape (N, len(horizons)), state targets S_future, and velocity delta features.
+
+[191/200] FILE: src/temporal/state_aggregator.py
+  Title:       54-Dimensional Canonical Temporal State Aggregator
+  Role:        Flow-to-State Aggregation Engine
+  Size:        19,860 bytes (19.39 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\temporal\state_aggregator.py
+  Telemetry:   Lines of Code: 486
+  Telemetry:   Docstring: SIH26153 — AI-Based Network Attack Forecasting from Network Traffic Data
+  Telemetry:   Classes: TemporalStateAggregator
+  Description: Production aggregator converting raw cleaned flow parquets into canonical 54-dimensional state vectors S_t. Computes flow counts, byte rates, protocol ratios, flag distributions, window sizes, TTLs, and velocity deltas.
+
+[192/200] FILE: src/temporal_aggregator.py
+  Title:       Rolling Temporal Window State Aggregator
+  Role:        Time-Series Windowing Engine
+  Size:        8,223 bytes (8.03 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\temporal_aggregator.py
+  Telemetry:   Lines of Code: 198
+  Telemetry:   Classes: TemporalStateAggregator
+  Telemetry:   Top-level Functions: parse_session_list
+  Description: TemporalStateAggregator aggregates flow/packet streams into fixed-duration sliding windows (e.g. 10s) with configurable stride (e.g. 2s), computing statistical features across all flows in each window and assigning window labels based on active attack presence.
+
+[193/200] FILE: src/train_baseline.py
+  Title:       Baseline Logistic Regression Training Script
+  Role:        Linear Baseline Benchmark
+  Size:        6,992 bytes (6.83 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\train_baseline.py
+  Telemetry:   Lines of Code: 181
+  Telemetry:   Docstring: Baseline Logistic Regression — v2
+  Telemetry:   Top-level Functions: get_feature_cols, build_pipeline, evaluate, train_on_parquet_splits, train_on_single_pcap, print_results
+  Description: Trains L2-regularized Logistic Regression models with balanced class weights on parquet data splits. Evaluates multi-step forecasting performance and establishes linear baseline classification boundaries.
+
+[194/200] FILE: src/train_cross_val_world_model.py
+  Title:       5-Fold Cross-Validation Training & Forensic Audit Module
+  Role:        K-Fold Generalization Verification
+  Size:        9,971 bytes (9.74 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\train_cross_val_world_model.py
+  Telemetry:   Lines of Code: 241
+  Telemetry:   Docstring: 5-Fold Cross-Validation Training & Forensic Audit Module
+  Telemetry:   Top-level Functions: train_and_eval_fold, run_5fold_cross_val
+  Description: Implements 5-fold cross-validation on session sequence data to evaluate out-of-fold generalization, model variance, parameter sensitivity, and forensic stability across different network traffic days.
+
+[195/200] FILE: src/train_unified_world_model.py
+  Title:       Unified Multi-Domain World Model Training Engine
+  Role:        Multi-Domain World Model Training
+  Size:        9,390 bytes (9.17 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\train_unified_world_model.py
+  Telemetry:   Lines of Code: 223
+  Telemetry:   Docstring: Unified Multi-Domain World Model Training & Forensic Evaluation Engine
+  Telemetry:   Top-level Functions: train_unified_world_model
+  Description: Trains the unified World Model on combined DARPA + CIC datasets. Employs AdamW optimizer, cosine learning rate decay, dual-head composite loss, gradient clipping, early stopping, and automatic checkpointing.
+
+[196/200] FILE: src/train_world_model.py
+  Title:       Primary World Model Training Script (LSTM / Transformer)
+  Role:        Sequence Model Training Pipeline
+  Size:        10,516 bytes (10.27 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\train_world_model.py
+  Telemetry:   Lines of Code: 264
+  Telemetry:   Docstring: Training Script for World Model Network Attack Forecasting
+  Telemetry:   Top-level Functions: train_one_epoch, evaluate_model, main
+  Description: Main training pipeline for single-domain and canonical World Models. Implements train_one_epoch, evaluate_model, validation loss tracking, macro F1 evaluation, learning rate scheduling, and checkpoint saving.
+
+[197/200] FILE: src/training/trainer.py
+  Title:       Sequence Model Trainer & Optimization Loop
+  Role:        PyTorch Training Orchestration
+  Size:        8,641 bytes (8.44 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\training\trainer.py
+  Telemetry:   Lines of Code: 230
+  Telemetry:   Docstring: SIH26153 — AI-Based Network Attack Forecasting from Network Traffic Data
+  Telemetry:   Classes: SequenceModelTrainer
+  Description: Implements SequenceModelTrainer. Manages training loops, AdamW optimizer, CosineAnnealingLR scheduling, gradient clipping, validation loss evaluation, early stopping patience, and best checkpoint serialization.
+
+[198/200] FILE: src/utils/__init__.py
+  Title:       __init__.py (.PY)
+  Role:        Repository Component
+  Size:        24 bytes
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\utils\__init__.py
+  Telemetry:   Lines of Code: 1
+  Description: Repository component supporting pipeline operations.
+
+[199/200] FILE: src/visualizer.py
+  Title:       Forecasting & Feature Visualization Suite
+  Role:        Visualization & Interpretability
+  Size:        8,757 bytes (8.55 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\visualizer.py
+  Telemetry:   Lines of Code: 163
+  Telemetry:   Docstring: Visualization and Feature Reasoning Module
+  Telemetry:   Top-level Functions: plot_feature_distributions, plot_feature_correlation, plot_temporal_timeline
+  Description: Generates publication-quality figures: plot_feature_distributions, plot_feature_correlation heatmaps, and plot_temporal_timeline (comparing predicted continuous state trajectories vs actual ground truth during attack onset).
+
+[200/200] FILE: src/world_model.py
+  Title:       World Model Neural Architectures (LSTM & Transformer)
+  Role:        Deep Neural Network Architecture Definitions
+  Size:        5,515 bytes (5.39 KB)
+  Path:        D:\network_attacks-feature-data-pipeline\network_attacks-feature-data-pipeline\src\world_model.py
+  Telemetry:   Lines of Code: 172
+  Telemetry:   Docstring: World Model Architecture Module
+  Telemetry:   Classes: LSTMWorldModel, TransformerWorldModel
+  Telemetry:   Top-level Functions: compute_world_model_loss
+  Description: Defines the core PyTorch neural network architectures:
+- LSTMWorldModel: Multi-layer LSTM encoder with hidden dropout, followed by two separate MLP projection heads:
+  1. state_head: Fully connected layers outputting predicted future state S_{t+K} in R^D.
+  2. stage_head: Fully connected layers outputting logits for 5 MITRE ATT&CK stages.
+- TransformerWorldModel: Multi-head self-attention encoder with positional encodings and dual MLP prediction heads.
+- compute_world_model_loss: Computes composite loss L = MSE(S_pred, S_true) + lambda * CrossEntropy(Y_pred, Y_true).
+
+----------------------------------------------------------------------------------------------------
+8. REPRODUCTION, TRAINING & INFERENCE EXECUTION GUIDE
+----------------------------------------------------------------------------------------------------
+To execute, reproduce, and deploy components of this pipeline, follow the step-by-step commands below:
+
+A. Environment Setup:
+   pip install torch torchvision torchaudio pyarrow fastparquet pandas numpy scikit-learn pyyaml seaborn matplotlib tqdm
+
+B. Raw Data Cleaning & Canonical Parquet Conversion:
+   python scripts/preprocessing/convert_raw_to_canonical_parquet.py
+   python scripts/verification/verify_canonical_parquets.py
+
+C. 54-D Rolling Temporal State Aggregation:
+   python scripts/preprocessing/build_temporal_states.py
+   python scripts/verification/verify_temporal_states.py
+
+D. Run Full Baseline Suite (Linear, RF, GRU, Transformer, Persistence across K=1,3,5,10):
+   python scripts/experiments/run_baseline_suite.py
+   python scripts/experiments/generate_baseline_reports.py
+
+E. Run Phase 4.5 Forensics (Persistence Paradox & Pre-Onset Study):
+   python scripts/audit/run_phase4_5_forensics.py
+   python scripts/audit/generate_phase4_5_reports.py
+
+F. Train Deep World Model:
+   python src/train_world_model.py
+   # Or for multi-domain training:
+   python src/train_unified_world_model.py
+
+G. Offline Batch Forensic Inference (Evaluating session files):
+   python src/inference_batch.py
+   # Generates results/batch_thursday_test.json
+
+H. Real-Time Streaming Alert Generation (Simulating live packet stream):
+   python src/inference_stream.py
+   # Generates real-time threat feed in results/live_stream_alerts.jsonl
+
+I. Interactive EDA & Visualization:
+   jupyter notebook data_visualizer.ipynb
+
+====================================================================================================
+END OF MASTER PROJECT FOLDER ANALYSIS (SIH26153)
+====================================================================================================

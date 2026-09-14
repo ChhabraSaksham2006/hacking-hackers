@@ -1,0 +1,27 @@
+raw_label,normalized_label,count,percentage,source_dataset,attack_family,benign_attack,mitre_tactic,mitre_technique,mapping_confidence,mapping_evidence
+BENIGN,Benign,797718,51.61%,CIC-IDS2017,Benign,Benign,None,None,VERIFIED,Ground truth benign background traffic
+DoS Hulk,DoS-Hulk,231073,14.95%,CIC-IDS2017,DoS,Attack,Impact (TA0040),T1498 (Network Denial of Service),STRONGLY_SUPPORTED,HTTP multi-request volumetric flood
+PortScan,PortScan,158930,10.28%,CIC-IDS2017,Reconnaissance,Attack,Reconnaissance (TA0043) / Discovery (TA0007),T1046 (Network Service Discovery),VERIFIED,Nmap port scanning traffic
+DDoS,DDoS-LOIC,128027,8.28%,CIC-IDS2017,DDoS,Attack,Impact (TA0040),T1498.001 (Direct Network Flood),STRONGLY_SUPPORTED,LOIC UDP/HTTP volumetric DDoS
+DoS GoldenEye,DoS-GoldenEye,10293,0.67%,CIC-IDS2017,DoS,Attack,Impact (TA0040),T1499.003 (Application Exhaustion Flood),STRONGLY_SUPPORTED,GoldenEye HTTP Keep-Alive exhaustion attack
+FTP-Patator,BruteForce-FTP,7938,0.51%,CIC-IDS2017,Credential Access,Attack,Credential Access (TA0006),T1110.001 (Password Guessing),VERIFIED,Patator dictionary attack against port 21
+SSH-Patator,BruteForce-SSH,5897,0.38%,CIC-IDS2017,Credential Access,Attack,Credential Access (TA0006),T1110.001 (Password Guessing),VERIFIED,Patator dictionary attack against port 22
+DoS slowloris,DoS-Slowloris,5796,0.37%,CIC-IDS2017,DoS,Attack,Impact (TA0040),T1499.003 (Application Exhaustion Flood),STRONGLY_SUPPORTED,Slowloris incomplete HTTP headers attack
+DoS Slowhttptest,DoS-Slowhttptest,5499,0.36%,CIC-IDS2017,DoS,Attack,Impact (TA0040),T1499.003 (Application Exhaustion Flood),STRONGLY_SUPPORTED,Slow HTTP POST payload rate exhaustion
+Bot,Botnet-ARES,1966,0.13%,CIC-IDS2017,Command and Control,Attack,Command and Control (TA0011),T1071.001 (Web Protocols),STRONGLY_SUPPORTED,ARES botnet C2 communication
+Web Attack � Brute Force,Web-BruteForce,1507,0.10%,CIC-IDS2017,Credential Access,Attack,Credential Access (TA0006),T1110.001 (Password Guessing),VERIFIED (BUG: mislabeled as Stage 0 in Parquet),Hydra web form brute force (mislabeled in parquet due to unicode mismatch)
+Web Attack � XSS,Web-XSS,652,0.04%,CIC-IDS2017,Initial Access / Execution,Attack,Initial Access (TA0001) / Execution (TA0002),T1190 (Exploit Public-Facing Application),STRONGLY_SUPPORTED (BUG: mislabeled as Stage 0 in Parquet),Cross-site scripting payload injection (mislabeled in parquet due to unicode mismatch)
+Infiltration,Infiltration-Dropbox,36,0.002%,CIC-IDS2017,Lateral Movement / Exfiltration,Attack,Lateral Movement (TA0008) / Exfiltration (TA0010),T1210 / T1567,HEURISTIC,Dropbox download followed by internal portscan/exploitation
+Web Attack � Sql Injection,Web-SQLi,21,0.001%,CIC-IDS2017,Initial Access / Execution,Attack,Initial Access (TA0001),T1190 (Exploit Public-Facing Application),STRONGLY_SUPPORTED (BUG: mislabeled as Stage 0 in Parquet),SQL injection attempts (mislabeled in parquet due to unicode mismatch)
+Heartbleed,Heartbleed-OpenSSL,11,0.001%,CIC-IDS2017,Credential Access / Discovery,Attack,Credential Access (TA0006),T1212 (Exploitation for Credential Access),VERIFIED,OpenSSL CVE-2014-0160 TLS heartbeat memory leak exploit
+DARPA: None (Normal),Benign,189032,12.23%,DARPA-1998 Week 1,Benign,Benign,None,None,VERIFIED,1998 Lincoln Lab simulated background traffic
+DARPA: ffb_clear,U2R-ffbconfig,124,0.008%,DARPA-1998 Week 1,Privilege Escalation,Attack,Privilege Escalation (TA0004),T1068 (Exploitation for Privilege Escalation),STRONGLY_SUPPORTED,Solaris Creator Fast Frame Buffer buffer overflow
+DARPA: format_clear,U2R-fdformat,63,0.004%,DARPA-1998 Week 1,Privilege Escalation,Attack,Privilege Escalation (TA0004),T1068 (Exploitation for Privilege Escalation),STRONGLY_SUPPORTED,Solaris fdformat buffer overflow exploit
+DARPA: load_clear,U2R-loadmodule,45,0.003%,DARPA-1998 Week 1,Privilege Escalation,Attack,Privilege Escalation (TA0004),T1068 (Exploitation for Privilege Escalation),STRONGLY_SUPPORTED,SunOS 4.1.3 loadmodule local privilege escalation
+"DARPA: ffb_clear,format_clear",U2R-Composite,35,0.002%,DARPA-1998 Week 1,Privilege Escalation,Attack,Privilege Escalation (TA0004),T1068,HEURISTIC,Overlapping window multi-exploit session
+DARPA: smurf,DoS-Smurf,23,0.001%,DARPA-1998 Week 1,DoS,Attack,Impact (TA0040),T1498.001,VERIFIED,ICMP broadcast amplification flood
+DARPA: perl_clear,U2R-Perl,19,0.001%,DARPA-1998 Week 1,Privilege Escalation,Attack,Privilege Escalation (TA0004),T1068,STRONGLY_SUPPORTED,Perl suid script vulnerability exploitation
+DARPA: dict_simple,BruteForce-Telnet,13,0.001%,DARPA-1998 Week 1,Credential Access,Attack,Credential Access (TA0006),T1110.001,VERIFIED,Telnet password dictionary guessing
+DARPA: teardrop,DoS-Teardrop,6,0.0004%,DARPA-1998 Week 1,DoS,Attack,Impact (TA0040),T1499.001,VERIFIED,Malformed overlapping IP fragment crash
+DARPA: pod,DoS-PingOfDeath,6,0.0004%,DARPA-1998 Week 1,DoS,Attack,Impact (TA0040),T1499.001,VERIFIED,Oversized ICMP packet buffer crash
+DARPA: neptune,DoS-Neptune,5,0.0003%,DARPA-1998 Week 1,DoS,Attack,Impact (TA0040),T1498.001,VERIFIED,SYN flood resource exhaustion

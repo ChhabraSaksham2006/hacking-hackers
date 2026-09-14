@@ -1,0 +1,4 @@
+seed,calibrated_threshold,raw_event_recall,raw_events_detected,raw_f1,raw_false_alarms_per_hour,raw_fpr,raw_median_lead_time_sec,agg_event_recall,agg_events_detected,agg_f1,agg_false_alarms_per_hour,agg_fpr,agg_median_lead_time_sec
+42,0.04,1.0,7,0.0037,1095.93,0.6096,20.0,0.2857,2,0.0038,39.57,0.022,5.0
+123,0.04,0.7143,5,0.0028,636.38,0.354,20.0,0.2857,2,0.0047,31.75,0.0177,5.0
+2025,0.04,1.0,7,0.0024,1797.83,1.0,20.0,0.2857,2,0.0025,60.09,0.0334,5.0

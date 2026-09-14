@@ -1,0 +1,822 @@
+[
+  {
+    "incident_id": "INC-2026-SIH-0001",
+    "timestamp": "2026-09-12T14:10:00Z",
+    "alert_status": "EARLY_WARNING_CONFIRMED",
+    "urgency": "HIGH",
+    "lead_time_seconds": 20.0,
+    "forecasting_confidence_pct": 94.2,
+    "trajectory_slope": 0.085,
+    "threat_classification": {
+      "forecasted_attack_family": "PortScan",
+      "precursor_pattern_id": "PP_PORT_SCAN_SWEEP",
+      "precursor_name": "Rapid Multi-Port Connection Probing",
+      "dominant_feature_group": "port_entropy_scanners"
+    },
+    "mitre_attack_context": {
+      "tactic_id": "TA0043",
+      "tactic_name": "Reconnaissance",
+      "technique_id": "T1046",
+      "technique_name": "Network Service Discovery",
+      "technique_description": "Adversaries attempt to discover available services by sweeping IP addresses and port ranges."
+    },
+    "xai_telemetry_evidence": {
+      "group_attributions": {
+        "volumetric_rates": 0.0709,
+        "tcp_handshake_flags": 0.0769,
+        "port_entropy_scanners": 0.7065,
+        "packet_size_dynamics": 0.0719,
+        "flow_timing_iat": 0.0398,
+        "protocol_composition": 0.034
+      },
+      "top_salient_precursor_features": [
+        {
+          "feature": "dst_port_entropy",
+          "group": "port_entropy_scanners",
+          "attribution_weight": 0.1116,
+          "latest_value": 2.9741,
+          "window_mean": 2.0755
+        },
+        {
+          "feature": "port_concentration",
+          "group": "port_entropy_scanners",
+          "attribution_weight": 0.1025,
+          "latest_value": 3.0478,
+          "window_mean": 2.1363
+        },
+        {
+          "feature": "delta_port_concentration",
+          "group": "port_entropy_scanners",
+          "attribution_weight": 0.1017,
+          "latest_value": 2.9225,
+          "window_mean": 2.0381
+        },
+        {
+          "feature": "auth_port_ratio",
+          "group": "port_entropy_scanners",
+          "attribution_weight": 0.1009,
+          "latest_value": 3.034,
+          "window_mean": 2.1007
+        },
+        {
+          "feature": "delta_dst_port_entropy",
+          "group": "port_entropy_scanners",
+          "attribution_weight": 0.0997,
+          "latest_value": 2.9993,
+          "window_mean": 2.0643
+        }
+      ]
+    },
+    "soc_defensive_playbook": {
+      "recommended_mitigations": [
+        {
+          "mitigation_id": "M1037",
+          "name": "Filter Network Traffic",
+          "action": "Apply dynamic firewall ACL to rate-limit unauthenticated SYN requests and drop source IP subnets exceeding 50 connection attempts/sec."
+        },
+        {
+          "mitigation_id": "M1031",
+          "name": "Network Intrusion Prevention",
+          "action": "Engage IPS port-scan threshold filter and isolate probing host into quarantine VLAN."
+        }
+      ],
+      "automated_containment_ready": true
+    }
+  },
+  {
+    "incident_id": "INC-2026-SIH-0002",
+    "timestamp": "2026-09-12T14:15:00Z",
+    "alert_status": "EARLY_WARNING_CONFIRMED",
+    "urgency": "HIGH",
+    "lead_time_seconds": 20.0,
+    "forecasting_confidence_pct": 98.1,
+    "trajectory_slope": 0.142,
+    "threat_classification": {
+      "forecasted_attack_family": "DoS Hulk",
+      "precursor_pattern_id": "PP_HTTP_FLOOD_VOLUMETRIC",
+      "precursor_name": "Asymmetric HTTP Packet Rate Spike",
+      "dominant_feature_group": "volumetric_rates"
+    },
+    "mitre_attack_context": {
+      "tactic_id": "TA0040",
+      "tactic_name": "Impact",
+      "technique_id": "T1498.001",
+      "technique_name": "Network Denial of Service: Direct Network Flood",
+      "technique_description": "Adversaries flood the targeted network service with high-rate requests to exhaust network bandwidth and connection slots."
+    },
+    "xai_telemetry_evidence": {
+      "group_attributions": {
+        "volumetric_rates": 0.8233,
+        "tcp_handshake_flags": 0.0539,
+        "port_entropy_scanners": 0.0298,
+        "packet_size_dynamics": 0.0437,
+        "flow_timing_iat": 0.0297,
+        "protocol_composition": 0.0195
+      },
+      "top_salient_precursor_features": [
+        {
+          "feature": "delta_byte_rate",
+          "group": "volumetric_rates",
+          "attribution_weight": 0.0717,
+          "latest_value": 3.1149,
+          "window_mean": 2.1446
+        },
+        {
+          "feature": "total_ip_bytes",
+          "group": "volumetric_rates",
+          "attribution_weight": 0.0709,
+          "latest_value": 3.0551,
+          "window_mean": 2.1546
+        },
+        {
+          "feature": "delta_total_ip_bytes",
+          "group": "volumetric_rates",
+          "attribution_weight": 0.0702,
+          "latest_value": 3.0139,
+          "window_mean": 2.0445
+        },
+        {
+          "feature": "delta_total_packets",
+          "group": "volumetric_rates",
+          "attribution_weight": 0.0701,
+          "latest_value": 2.9716,
+          "window_mean": 2.0677
+        },
+        {
+          "feature": "flow_rate",
+          "group": "volumetric_rates",
+          "attribution_weight": 0.0699,
+          "latest_value": 2.9063,
+          "window_mean": 2.1516
+        }
+      ]
+    },
+    "soc_defensive_playbook": {
+      "recommended_mitigations": [
+        {
+          "mitigation_id": "M1037",
+          "name": "Filter Network Traffic",
+          "action": "Enable upstream BGP Flowspec rate-limiting on target HTTP endpoints and activate CDN DDoS mitigation scrubbing center."
+        },
+        {
+          "mitigation_id": "M1031",
+          "name": "Network Intrusion Prevention",
+          "action": "Trigger SYN proxy challenge and enforce strict TCP connection timeout window reduction."
+        }
+      ],
+      "automated_containment_ready": true
+    }
+  },
+  {
+    "incident_id": "INC-2026-SIH-0003",
+    "timestamp": "2026-09-12T14:20:00Z",
+    "alert_status": "EARLY_WARNING_CONFIRMED",
+    "urgency": "HIGH",
+    "lead_time_seconds": 20.0,
+    "forecasting_confidence_pct": 91.5,
+    "trajectory_slope": 0.063,
+    "threat_classification": {
+      "forecasted_attack_family": "DoS GoldenEye",
+      "precursor_pattern_id": "PP_SLOW_HTTP_EXHAUSTION",
+      "precursor_name": "High Lifetime Connection Starvation",
+      "dominant_feature_group": "flow_timing_iat"
+    },
+    "mitre_attack_context": {
+      "tactic_id": "TA0040",
+      "tactic_name": "Impact",
+      "technique_id": "T1499.003",
+      "technique_name": "Endpoint Denial of Service: Application Exhaustion Flood",
+      "technique_description": "Adversaries maintain slow concurrent HTTP connections to hold server socket pools open until the web service becomes unresponsive."
+    },
+    "xai_telemetry_evidence": {
+      "group_attributions": {
+        "volumetric_rates": 0.074,
+        "tcp_handshake_flags": 0.0819,
+        "port_entropy_scanners": 0.0489,
+        "packet_size_dynamics": 0.0593,
+        "flow_timing_iat": 0.6995,
+        "protocol_composition": 0.0364
+      },
+      "top_salient_precursor_features": [
+        {
+          "feature": "active_connection_lifetime_mean",
+          "group": "flow_timing_iat",
+          "attribution_weight": 0.1149,
+          "latest_value": 2.7361,
+          "window_mean": 2.0679
+        },
+        {
+          "feature": "flow_iat_max",
+          "group": "flow_timing_iat",
+          "attribution_weight": 0.1108,
+          "latest_value": 2.8866,
+          "window_mean": 2.092
+        },
+        {
+          "feature": "flow_iat_mean",
+          "group": "flow_timing_iat",
+          "attribution_weight": 0.1016,
+          "latest_value": 3.0119,
+          "window_mean": 2.0704
+        },
+        {
+          "feature": "delta_active_connection_lifetime_mean",
+          "group": "flow_timing_iat",
+          "attribution_weight": 0.0959,
+          "latest_value": 3.0015,
+          "window_mean": 2.1086
+        },
+        {
+          "feature": "delta_flow_iat_mean",
+          "group": "flow_timing_iat",
+          "attribution_weight": 0.0946,
+          "latest_value": 2.9923,
+          "window_mean": 2.1148
+        }
+      ]
+    },
+    "soc_defensive_playbook": {
+      "recommended_mitigations": [
+        {
+          "mitigation_id": "M1037",
+          "name": "Filter Network Traffic",
+          "action": "Configure reverse-proxy request header timeout (< 5 seconds) and enforce minimum data transfer rate per connection."
+        },
+        {
+          "mitigation_id": "M1030",
+          "name": "Network Segmentation",
+          "action": "Isolate compromised ingress load balancer nodes and spawn auto-scaling container replicas."
+        }
+      ],
+      "automated_containment_ready": true
+    }
+  },
+  {
+    "incident_id": "INC-2026-SIH-0004",
+    "timestamp": "2026-09-12T14:25:00Z",
+    "alert_status": "EARLY_WARNING_CONFIRMED",
+    "urgency": "HIGH",
+    "lead_time_seconds": 20.0,
+    "forecasting_confidence_pct": 97.8,
+    "trajectory_slope": 0.128,
+    "threat_classification": {
+      "forecasted_attack_family": "DDoS LOIC",
+      "precursor_pattern_id": "PP_DISTRIBUTED_SYN_UDP_FLOOD",
+      "precursor_name": "Coordinated Volumetric Traffic Surge",
+      "dominant_feature_group": "volumetric_rates"
+    },
+    "mitre_attack_context": {
+      "tactic_id": "TA0040",
+      "tactic_name": "Impact",
+      "technique_id": "T1498",
+      "technique_name": "Network Denial of Service",
+      "technique_description": "Distributed denial-of-service attack generating coordinated multi-source flooding against network infrastructure."
+    },
+    "xai_telemetry_evidence": {
+      "group_attributions": {
+        "volumetric_rates": 0.8231,
+        "tcp_handshake_flags": 0.0573,
+        "port_entropy_scanners": 0.0309,
+        "packet_size_dynamics": 0.0426,
+        "flow_timing_iat": 0.0255,
+        "protocol_composition": 0.0207
+      },
+      "top_salient_precursor_features": [
+        {
+          "feature": "delta_total_packets",
+          "group": "volumetric_rates",
+          "attribution_weight": 0.072,
+          "latest_value": 3.1568,
+          "window_mean": 2.0872
+        },
+        {
+          "feature": "delta_flow_count",
+          "group": "volumetric_rates",
+          "attribution_weight": 0.0715,
+          "latest_value": 3.1698,
+          "window_mean": 2.0883
+        },
+        {
+          "feature": "byte_rate",
+          "group": "volumetric_rates",
+          "attribution_weight": 0.0714,
+          "latest_value": 2.9828,
+          "window_mean": 2.1165
+        },
+        {
+          "feature": "packet_rate",
+          "group": "volumetric_rates",
+          "attribution_weight": 0.0713,
+          "latest_value": 2.983,
+          "window_mean": 2.1003
+        },
+        {
+          "feature": "flow_rate",
+          "group": "volumetric_rates",
+          "attribution_weight": 0.0707,
+          "latest_value": 2.8814,
+          "window_mean": 2.0907
+        }
+      ]
+    },
+    "soc_defensive_playbook": {
+      "recommended_mitigations": [
+        {
+          "mitigation_id": "M1037",
+          "name": "Filter Network Traffic",
+          "action": "Activate upstream Tier-1 ISP Anycast scrubbing and route suspect CIDRs into Blackhole null-routes."
+        },
+        {
+          "mitigation_id": "M1036",
+          "name": "Account Use Policies",
+          "action": "Alert SOC on-call engineer and execute automated DDoS incident runbook playbook."
+        }
+      ],
+      "automated_containment_ready": true
+    }
+  },
+  {
+    "incident_id": "INC-2026-SIH-0005",
+    "timestamp": "2026-09-12T14:30:00Z",
+    "alert_status": "EARLY_WARNING_CONFIRMED",
+    "urgency": "HIGH",
+    "lead_time_seconds": 20.0,
+    "forecasting_confidence_pct": 89.5,
+    "trajectory_slope": 0.071,
+    "threat_classification": {
+      "forecasted_attack_family": "SSH-Patator",
+      "precursor_pattern_id": "PP_SSH_BRUTE_FORCE_BURST",
+      "precursor_name": "Repetitive Auth Port Connection Cycling",
+      "dominant_feature_group": "port_entropy_scanners"
+    },
+    "mitre_attack_context": {
+      "tactic_id": "TA0006",
+      "tactic_name": "Credential Access",
+      "technique_id": "T1110.001",
+      "technique_name": "Brute Force: Password Guessing",
+      "technique_description": "Adversaries systematically submit passwords against SSH service port 22 until an authentication succeeds."
+    },
+    "xai_telemetry_evidence": {
+      "group_attributions": {
+        "volumetric_rates": 0.0674,
+        "tcp_handshake_flags": 0.0797,
+        "port_entropy_scanners": 0.7078,
+        "packet_size_dynamics": 0.0667,
+        "flow_timing_iat": 0.0447,
+        "protocol_composition": 0.0337
+      },
+      "top_salient_precursor_features": [
+        {
+          "feature": "delta_dst_port_entropy",
+          "group": "port_entropy_scanners",
+          "attribution_weight": 0.1081,
+          "latest_value": 3.0809,
+          "window_mean": 2.1063
+        },
+        {
+          "feature": "port_concentration",
+          "group": "port_entropy_scanners",
+          "attribution_weight": 0.1071,
+          "latest_value": 2.9499,
+          "window_mean": 2.0346
+        },
+        {
+          "feature": "dst_port_entropy",
+          "group": "port_entropy_scanners",
+          "attribution_weight": 0.1056,
+          "latest_value": 3.1427,
+          "window_mean": 2.1276
+        },
+        {
+          "feature": "delta_auth_port_ratio",
+          "group": "port_entropy_scanners",
+          "attribution_weight": 0.1021,
+          "latest_value": 3.1127,
+          "window_mean": 2.1008
+        },
+        {
+          "feature": "auth_port_ratio",
+          "group": "port_entropy_scanners",
+          "attribution_weight": 0.0986,
+          "latest_value": 3.025,
+          "window_mean": 2.1223
+        }
+      ]
+    },
+    "soc_defensive_playbook": {
+      "recommended_mitigations": [
+        {
+          "mitigation_id": "M1036",
+          "name": "Account Use Policies",
+          "action": "Trigger fail2ban automated IP ban (1 hour) on offending source address exceeding 5 failed attempts in 30s."
+        },
+        {
+          "mitigation_id": "M1032",
+          "name": "Multi-factor Authentication",
+          "action": "Enforce mandatory SSH key-pair authentication and disable password-based login."
+        }
+      ],
+      "automated_containment_ready": true
+    }
+  },
+  {
+    "incident_id": "INC-2026-SIH-0006",
+    "timestamp": "2026-09-12T14:35:00Z",
+    "alert_status": "EARLY_WARNING_CONFIRMED",
+    "urgency": "HIGH",
+    "lead_time_seconds": 20.0,
+    "forecasting_confidence_pct": 88.7,
+    "trajectory_slope": 0.069,
+    "threat_classification": {
+      "forecasted_attack_family": "FTP-Patator",
+      "precursor_pattern_id": "PP_FTP_BRUTE_FORCE_BURST",
+      "precursor_name": "Repetitive FTP Auth Connection Cycling",
+      "dominant_feature_group": "port_entropy_scanners"
+    },
+    "mitre_attack_context": {
+      "tactic_id": "TA0006",
+      "tactic_name": "Credential Access",
+      "technique_id": "T1110.001",
+      "technique_name": "Brute Force: Password Guessing",
+      "technique_description": "Adversaries attempt credential guessing against FTP service port 21."
+    },
+    "xai_telemetry_evidence": {
+      "group_attributions": {
+        "volumetric_rates": 0.0787,
+        "tcp_handshake_flags": 0.0742,
+        "port_entropy_scanners": 0.7108,
+        "packet_size_dynamics": 0.0616,
+        "flow_timing_iat": 0.0452,
+        "protocol_composition": 0.0295
+      },
+      "top_salient_precursor_features": [
+        {
+          "feature": "auth_port_ratio",
+          "group": "port_entropy_scanners",
+          "attribution_weight": 0.1094,
+          "latest_value": 2.9126,
+          "window_mean": 2.0629
+        },
+        {
+          "feature": "dst_port_entropy",
+          "group": "port_entropy_scanners",
+          "attribution_weight": 0.1042,
+          "latest_value": 2.8387,
+          "window_mean": 2.0864
+        },
+        {
+          "feature": "delta_auth_port_ratio",
+          "group": "port_entropy_scanners",
+          "attribution_weight": 0.1042,
+          "latest_value": 2.948,
+          "window_mean": 2.1065
+        },
+        {
+          "feature": "delta_dst_port_entropy",
+          "group": "port_entropy_scanners",
+          "attribution_weight": 0.1033,
+          "latest_value": 3.0963,
+          "window_mean": 2.1122
+        },
+        {
+          "feature": "delta_port_concentration",
+          "group": "port_entropy_scanners",
+          "attribution_weight": 0.102,
+          "latest_value": 3.1508,
+          "window_mean": 2.1357
+        }
+      ]
+    },
+    "soc_defensive_playbook": {
+      "recommended_mitigations": [
+        {
+          "mitigation_id": "M1036",
+          "name": "Account Use Policies",
+          "action": "Enforce temporary IP lockouts on port 21 and mandate TLS/SFTP migration."
+        }
+      ],
+      "automated_containment_ready": true
+    }
+  },
+  {
+    "incident_id": "INC-2026-SIH-0007",
+    "timestamp": "2026-09-12T14:40:00Z",
+    "alert_status": "EARLY_WARNING_CONFIRMED",
+    "urgency": "HIGH",
+    "lead_time_seconds": 20.0,
+    "forecasting_confidence_pct": 86.4,
+    "trajectory_slope": 0.058,
+    "threat_classification": {
+      "forecasted_attack_family": "Web Attack",
+      "precursor_pattern_id": "PP_WEB_APPLICATION_PROBE",
+      "precursor_name": "Malformed Payload Injection Sequence",
+      "dominant_feature_group": "packet_size_dynamics"
+    },
+    "mitre_attack_context": {
+      "tactic_id": "TA0001",
+      "tactic_name": "Initial Access",
+      "technique_id": "T1190",
+      "technique_name": "Exploit Public-Facing Application",
+      "technique_description": "Adversaries attempt SQL Injection, Cross-Site Scripting, or Command Injection via public HTTP interfaces."
+    },
+    "xai_telemetry_evidence": {
+      "group_attributions": {
+        "volumetric_rates": 0.0531,
+        "tcp_handshake_flags": 0.0574,
+        "port_entropy_scanners": 0.0315,
+        "packet_size_dynamics": 0.806,
+        "flow_timing_iat": 0.03,
+        "protocol_composition": 0.022
+      },
+      "top_salient_precursor_features": [
+        {
+          "feature": "pkt_len_mean",
+          "group": "packet_size_dynamics",
+          "attribution_weight": 0.0837,
+          "latest_value": 2.9524,
+          "window_mean": 2.0821
+        },
+        {
+          "feature": "down_up_ratio_mean",
+          "group": "packet_size_dynamics",
+          "attribution_weight": 0.078,
+          "latest_value": 3.0703,
+          "window_mean": 2.151
+        },
+        {
+          "feature": "delta_pkt_len_mean",
+          "group": "packet_size_dynamics",
+          "attribution_weight": 0.0759,
+          "latest_value": 3.0706,
+          "window_mean": 2.1402
+        },
+        {
+          "feature": "pkt_len_std",
+          "group": "packet_size_dynamics",
+          "attribution_weight": 0.0753,
+          "latest_value": 2.8703,
+          "window_mean": 2.0849
+        },
+        {
+          "feature": "zero_payload_ratio",
+          "group": "packet_size_dynamics",
+          "attribution_weight": 0.0749,
+          "latest_value": 3.0772,
+          "window_mean": 2.0944
+        }
+      ]
+    },
+    "soc_defensive_playbook": {
+      "recommended_mitigations": [
+        {
+          "mitigation_id": "M1050",
+          "name": "Exploit Protection",
+          "action": "Engage Web Application Firewall (WAF) OWASP Core Rule Set in blocking mode."
+        },
+        {
+          "mitigation_id": "M1037",
+          "name": "Filter Network Traffic",
+          "action": "Block offending source IP at reverse proxy layer and inspect URI payload tokens."
+        }
+      ],
+      "automated_containment_ready": true
+    }
+  },
+  {
+    "incident_id": "INC-2026-SIH-0008",
+    "timestamp": "2026-09-12T14:45:00Z",
+    "alert_status": "EARLY_WARNING_CONFIRMED",
+    "urgency": "HIGH",
+    "lead_time_seconds": 20.0,
+    "forecasting_confidence_pct": 83.2,
+    "trajectory_slope": 0.045,
+    "threat_classification": {
+      "forecasted_attack_family": "Infiltration",
+      "precursor_pattern_id": "PP_COMMAND_AND_CONTROL_BEACON",
+      "precursor_name": "Periodic Low-Volume Beaconing",
+      "dominant_feature_group": "flow_timing_iat"
+    },
+    "mitre_attack_context": {
+      "tactic_id": "TA0011",
+      "tactic_name": "Command and Control",
+      "technique_id": "T1071.001",
+      "technique_name": "Application Layer Protocol: Web Protocols",
+      "technique_description": "Adversaries communicate with compromised hosts using periodic beaconing over standard web channels."
+    },
+    "xai_telemetry_evidence": {
+      "group_attributions": {
+        "volumetric_rates": 0.0715,
+        "tcp_handshake_flags": 0.0727,
+        "port_entropy_scanners": 0.0406,
+        "packet_size_dynamics": 0.0696,
+        "flow_timing_iat": 0.7189,
+        "protocol_composition": 0.0268
+      },
+      "top_salient_precursor_features": [
+        {
+          "feature": "flow_iat_mean",
+          "group": "flow_timing_iat",
+          "attribution_weight": 0.1089,
+          "latest_value": 3.0939,
+          "window_mean": 2.1123
+        },
+        {
+          "feature": "delta_active_connection_lifetime_mean",
+          "group": "flow_timing_iat",
+          "attribution_weight": 0.1089,
+          "latest_value": 3.0139,
+          "window_mean": 2.1201
+        },
+        {
+          "feature": "delta_flow_iat_mean",
+          "group": "flow_timing_iat",
+          "attribution_weight": 0.1088,
+          "latest_value": 2.9249,
+          "window_mean": 2.0565
+        },
+        {
+          "feature": "flow_iat_min",
+          "group": "flow_timing_iat",
+          "attribution_weight": 0.1065,
+          "latest_value": 2.9721,
+          "window_mean": 2.0615
+        },
+        {
+          "feature": "active_connection_lifetime_mean",
+          "group": "flow_timing_iat",
+          "attribution_weight": 0.0991,
+          "latest_value": 2.9996,
+          "window_mean": 2.1054
+        }
+      ]
+    },
+    "soc_defensive_playbook": {
+      "recommended_mitigations": [
+        {
+          "mitigation_id": "M1031",
+          "name": "Network Intrusion Prevention",
+          "action": "Perform Deep Packet Inspection (DPI) on suspicious C2 beaconing intervals and sever active TCP sockets."
+        }
+      ],
+      "automated_containment_ready": true
+    }
+  },
+  {
+    "incident_id": "INC-2026-SIH-0009",
+    "timestamp": "2026-09-12T14:50:00Z",
+    "alert_status": "EARLY_WARNING_CONFIRMED",
+    "urgency": "HIGH",
+    "lead_time_seconds": 20.0,
+    "forecasting_confidence_pct": 96.1,
+    "trajectory_slope": 0.115,
+    "threat_classification": {
+      "forecasted_attack_family": "Heartbleed",
+      "precursor_pattern_id": "PP_TLS_OVERSIZED_PROBE",
+      "precursor_name": "Oversized TLS Heartbeat Request",
+      "dominant_feature_group": "packet_size_dynamics"
+    },
+    "mitre_attack_context": {
+      "tactic_id": "TA0001",
+      "tactic_name": "Initial Access",
+      "technique_id": "T1190",
+      "technique_name": "Exploit Public-Facing Application",
+      "technique_description": "Adversaries exploit OpenSSL TLS heartbeat buffer over-read (CVE-2014-0160) to exfiltrate memory data."
+    },
+    "xai_telemetry_evidence": {
+      "group_attributions": {
+        "volumetric_rates": 0.0539,
+        "tcp_handshake_flags": 0.0586,
+        "port_entropy_scanners": 0.0318,
+        "packet_size_dynamics": 0.7987,
+        "flow_timing_iat": 0.0298,
+        "protocol_composition": 0.0272
+      },
+      "top_salient_precursor_features": [
+        {
+          "feature": "pkt_len_max",
+          "group": "packet_size_dynamics",
+          "attribution_weight": 0.0805,
+          "latest_value": 3.0399,
+          "window_mean": 2.0687
+        },
+        {
+          "feature": "delta_zero_payload_ratio",
+          "group": "packet_size_dynamics",
+          "attribution_weight": 0.0769,
+          "latest_value": 2.8515,
+          "window_mean": 2.0808
+        },
+        {
+          "feature": "delta_pkt_len_mean",
+          "group": "packet_size_dynamics",
+          "attribution_weight": 0.0764,
+          "latest_value": 2.9873,
+          "window_mean": 2.1166
+        },
+        {
+          "feature": "fwd_byte_ratio",
+          "group": "packet_size_dynamics",
+          "attribution_weight": 0.0753,
+          "latest_value": 2.9876,
+          "window_mean": 2.112
+        },
+        {
+          "feature": "fwd_packet_ratio",
+          "group": "packet_size_dynamics",
+          "attribution_weight": 0.0746,
+          "latest_value": 3.1421,
+          "window_mean": 2.1474
+        }
+      ]
+    },
+    "soc_defensive_playbook": {
+      "recommended_mitigations": [
+        {
+          "mitigation_id": "M1051",
+          "name": "Update Software",
+          "action": "Verify OpenSSL version is patched and disable TLS heartbeat extensions at load balancer."
+        }
+      ],
+      "automated_containment_ready": true
+    }
+  },
+  {
+    "incident_id": "INC-2026-SIH-0010",
+    "timestamp": "2026-09-12T14:55:00Z",
+    "alert_status": "EARLY_WARNING_CONFIRMED",
+    "urgency": "HIGH",
+    "lead_time_seconds": 20.0,
+    "forecasting_confidence_pct": 90.3,
+    "trajectory_slope": 0.077,
+    "threat_classification": {
+      "forecasted_attack_family": "Botnet",
+      "precursor_pattern_id": "PP_BOTNET_COMM_COORDINATION",
+      "precursor_name": "Synchronized Distributed Socket Activity",
+      "dominant_feature_group": "protocol_composition"
+    },
+    "mitre_attack_context": {
+      "tactic_id": "TA0011",
+      "tactic_name": "Command and Control",
+      "technique_id": "T1071",
+      "technique_name": "Application Layer Protocol",
+      "technique_description": "Adversaries coordinate compromised bots for botnet propagation and centralized command execution."
+    },
+    "xai_telemetry_evidence": {
+      "group_attributions": {
+        "volumetric_rates": 0.0833,
+        "tcp_handshake_flags": 0.1031,
+        "port_entropy_scanners": 0.0539,
+        "packet_size_dynamics": 0.0837,
+        "flow_timing_iat": 0.0564,
+        "protocol_composition": 0.6197
+      },
+      "top_salient_precursor_features": [
+        {
+          "feature": "delta_tcp_ratio",
+          "group": "protocol_composition",
+          "attribution_weight": 0.1305,
+          "latest_value": 2.9667,
+          "window_mean": 2.0934
+        },
+        {
+          "feature": "udp_ratio",
+          "group": "protocol_composition",
+          "attribution_weight": 0.1295,
+          "latest_value": 3.1635,
+          "window_mean": 2.0758
+        },
+        {
+          "feature": "tcp_ratio",
+          "group": "protocol_composition",
+          "attribution_weight": 0.1254,
+          "latest_value": 2.9363,
+          "window_mean": 2.077
+        },
+        {
+          "feature": "delta_udp_ratio",
+          "group": "protocol_composition",
+          "attribution_weight": 0.1204,
+          "latest_value": 2.8657,
+          "window_mean": 2.0941
+        },
+        {
+          "feature": "icmp_ratio",
+          "group": "protocol_composition",
+          "attribution_weight": 0.1139,
+          "latest_value": 2.9666,
+          "window_mean": 2.0624
+        }
+      ]
+    },
+    "soc_defensive_playbook": {
+      "recommended_mitigations": [
+        {
+          "mitigation_id": "M1037",
+          "name": "Filter Network Traffic",
+          "action": "Sinkhole rogue DNS domain queries and isolate internal endpoint infected nodes."
+        }
+      ],
+      "automated_containment_ready": true
+    }
+  }
+]

@@ -1,0 +1,76 @@
+temporal_state_design:
+  design_version: v1.0-canonical-54D
+  window_duration_seconds: 10.0
+  stride_seconds: 2.0
+  overlap_percentage: 80.0
+  state_dimension_D: 54
+  lookback_steps_P: 10
+  forecast_horizons_K:
+  - 1
+  - 3
+  - 5
+  - 10
+  - 25
+  - 50
+  - 100
+  - 200
+  horizon_seconds:
+    K_1: 2.0
+    K_3: 6.0
+    K_5: 10.0
+    K_10: 20.0
+  feature_categories:
+    volume_density:
+    - flow_count
+    - total_ip_bytes
+    - total_packets
+    velocity_rates:
+    - flow_rate
+    - byte_rate
+    - packet_rate
+    protocol_distribution:
+    - tcp_ratio
+    - udp_ratio
+    - icmp_ratio
+    port_targeting:
+    - unique_dst_ports
+    - port_concentration
+    - dst_port_entropy
+    - auth_port_ratio
+    tcp_flags_health:
+    - syn_count
+    - ack_count
+    - rst_count
+    - fin_count
+    - psh_count
+    - syn_ratio
+    - ack_ratio
+    - rst_ratio
+    - rst_to_syn_ratio
+    - handshake_completion_ratio
+    directional_symmetry:
+    - fwd_packet_ratio
+    - fwd_byte_ratio
+    - down_up_ratio_mean
+    - down_up_ratio_std
+    packet_length_moments:
+    - pkt_len_mean
+    - pkt_len_std
+    - pkt_len_max
+    - pkt_len_min
+    - zero_payload_ratio
+    iat_pacing_jitter:
+    - flow_iat_mean
+    - flow_iat_std
+    - flow_iat_max
+    - flow_iat_min
+    - active_connection_lifetime_mean
+    velocity_deltas: 17
+  target_definitions:
+    state_forecasting: continuous_S_t_plus_K_54D
+    attack_occurrence: binary_indicator_t_plus_K
+    attack_family: multiclass_dominant_family_t_plus_K
+    time_to_attack: regression_seconds_to_onset
+  boundary_policy:
+    prevent_cross_day_sequences: true
+    empty_window_handling: zero_imputed_continuous_representation
