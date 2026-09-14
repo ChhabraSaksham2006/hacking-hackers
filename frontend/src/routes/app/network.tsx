@@ -21,8 +21,8 @@ function NetworkState() {
   const [scrub, setScrub] = useState(100);
   const [selected, setSelected] = useState<string | null>("192.168.10.44");
 
-  const { data: graphData, isLoading, refetch } = useNetworkGraph();
-  const { data: hostDetail } = useHostDetails(selected || "192.168.10.44");
+  const { data: graphData, isLoading, refetch } = useNetworkGraph(scrub);
+  const { data: hostDetail } = useHostDetails(selected || "192.168.10.44", scrub);
 
   const nodes: GraphNode[] = useMemo(() => {
     if (!graphData?.nodes || graphData.nodes.length === 0) return [];
@@ -51,19 +51,28 @@ function NetworkState() {
     return "normal";
   }, [nodes]);
 
+  const currentWindow = graphData?.windowIndex ?? Math.round(1750 + (scrub / 100) * 60);
+  const currentPhase = graphData?.phase ?? (scrub >= 77 ? "Lateral Movement" : scrub >= 52 ? "Recon" : "Benign Baseline");
+  const currentProb = graphData?.probability !== undefined ? `${(graphData.probability * 100).toFixed(0)}%` : "—";
+
   return (
     <>
       <PageTitle
         title="Network state"
         note="Node size tracks real telemetry flow volume, colour tracks predicted risk. Grounded in CIC-IDS-2018 benchmark telemetry."
         actions={
-          <button
-            onClick={() => refetch()}
-            className="flex items-center gap-1.5 rounded-md border border-fog-deep/60 px-3 py-1.5 text-[12px] font-medium text-fog transition-colors hover:border-paper hover:text-paper"
-          >
-            <RefreshCw className={cn("size-3.5", isLoading && "animate-spin")} />
-            Sync topology
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => {
+                setScrub(100);
+                refetch();
+              }}
+              className="flex items-center gap-1.5 rounded-md border border-fog-deep/60 px-3 py-1.5 text-[12px] font-medium text-fog transition-colors hover:border-paper hover:text-paper"
+            >
+              <RefreshCw className={cn("size-3.5", isLoading && "animate-spin")} />
+              Sync topology
+            </button>
+          </div>
         }
       />
 
@@ -97,6 +106,29 @@ function NetworkState() {
             <option>dmz-edge</option>
           </select>
 
+          <p className="mt-5 text-[13px] font-medium">Timeline Presets</p>
+          <div className="mt-2 flex flex-col gap-1">
+            {[
+              { label: "Baseline (Normal)", value: 0 },
+              { label: "Recon Sweep", value: 58 },
+              { label: "Initial Access", value: 72 },
+              { label: "Lateral Movement", value: 85 },
+              { label: "C2 Beaconing", value: 98 },
+              { label: "Live Telemetry", value: 100 },
+            ].map((p) => (
+              <button
+                key={p.label}
+                onClick={() => setScrub(p.value)}
+                className={cn(
+                  "rounded-md px-2.5 py-1 text-left text-[11px] font-mono transition-colors",
+                  scrub === p.value ? "bg-teal/15 text-teal font-semibold" : "text-fog hover:text-paper hover:bg-paper/5",
+                )}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
+
           <div className="mt-6 border-t border-fog-deep/40 pt-4 text-[12px] text-fog">
             <p className="font-medium text-paper">Active Subnet</p>
             <p className="mono mt-1 text-[11px]">192.168.10.0/24</p>
@@ -109,9 +141,14 @@ function NetworkState() {
           title="Host and flow graph"
           state={overallState}
           control={
-            <span className="mono text-fog">
-              {scrub === 100 ? "live telemetry" : `t−${((100 - scrub) * 1.2).toFixed(0)}m window`}
-            </span>
+            <div className="flex items-center gap-3">
+              <span className="mono text-[12px] text-paper font-medium">
+                {currentPhase}
+              </span>
+              <span className="mono text-fog text-[12px]">
+                {scrub === 100 ? "live telemetry" : `window #${currentWindow}`}
+              </span>
+            </div>
           }
           bodyClassName="p-0"
         >
@@ -124,8 +161,18 @@ function NetworkState() {
               scrub={scrub}
             />
           </div>
-          <div className="flex items-center gap-4 border-t border-[var(--glass-border)] bg-void-800/70 px-5 py-3">
-            <span className="mono text-fog text-[12px]">Window #1750</span>
+          <div className="flex flex-col gap-2 border-t border-[var(--glass-border)] bg-void-800/70 px-5 py-3">
+            <div className="flex items-center justify-between text-[12px]">
+              <span className="mono text-fog">Window #1750 (Baseline)</span>
+              <div className="flex items-center gap-2">
+                <span className="mono text-paper font-semibold">Window #{currentWindow}</span>
+                <span className="text-fog">·</span>
+                <span className={cn("mono font-semibold", overallState === "critical" ? "text-crimson" : overallState === "watch" ? "text-amber" : "text-teal")}>
+                  {currentProb} Risk
+                </span>
+              </div>
+              <span className="mono text-fog">Window #1810 (C2 Egress)</span>
+            </div>
             <input
               type="range"
               min={0}
@@ -133,9 +180,8 @@ function NetworkState() {
               value={scrub}
               onChange={(e) => setScrub(Number(e.target.value))}
               aria-label="Time scrubber"
-              className="w-full accent-teal"
+              className="w-full accent-teal cursor-pointer"
             />
-            <span className="mono text-fog text-[12px]">+20s forecast</span>
           </div>
         </HeroPanel>
       </div>
