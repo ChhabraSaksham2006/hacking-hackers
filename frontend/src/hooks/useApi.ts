@@ -83,6 +83,8 @@ export interface AuthUser {
   initials: string;
   role: string;
   twoFactorEnabled?: boolean;
+  emailVerified?: boolean;
+  alertNotificationsEnabled?: boolean;
   org?: { id: string; name: string };
   permissions: string[];
 }
@@ -142,6 +144,67 @@ export function useLogout() {
     onSuccess: () => {
       queryClient.clear();
       window.location.href = "/login";
+    },
+  });
+}
+
+export function useVerifyEmail() {
+  return useMutation({
+    mutationFn: (token: string) =>
+      apiFetch<{ message: string; email: string }>(`/api/auth/verify-email?token=${encodeURIComponent(token)}`),
+  });
+}
+
+export function useResendVerification() {
+  return useMutation({
+    mutationFn: (data: { email: string }) =>
+      apiFetch<{ message: string }>("/api/auth/resend-verification", {
+        method: "POST",
+        body: JSON.stringify(data),
+      }),
+  });
+}
+
+export function useForgotPassword() {
+  return useMutation({
+    mutationFn: (data: { email: string }) =>
+      apiFetch<{ message: string }>("/api/auth/forgot-password", {
+        method: "POST",
+        body: JSON.stringify(data),
+      }),
+  });
+}
+
+export function useResetPassword() {
+  return useMutation({
+    mutationFn: (data: { token: string; password: string }) =>
+      apiFetch<{ message: string }>("/api/auth/reset-password", {
+        method: "POST",
+        body: JSON.stringify(data),
+      }),
+  });
+}
+
+export function useSend2FAEmail() {
+  return useMutation({
+    mutationFn: (data: { challengeId: string }) =>
+      apiFetch<{ message: string }>("/api/auth/send-2fa-email", {
+        method: "POST",
+        body: JSON.stringify(data),
+      }),
+  });
+}
+
+export function useUpdateAlertNotifications() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: { enabled: boolean }) =>
+      apiFetch<{ alertNotificationsEnabled: boolean }>("/api/auth/alert-notifications", {
+        method: "PATCH",
+        body: JSON.stringify(data),
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
     },
   });
 }

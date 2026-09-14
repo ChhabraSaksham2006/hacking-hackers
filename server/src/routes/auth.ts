@@ -12,6 +12,13 @@ import {
   refreshTokens,
   logoutUser,
   getUserProfile,
+  verifyEmail,
+  resendVerificationEmail,
+  requestPasswordReset,
+  resetPassword,
+  sendTwoFactorEmailCode,
+  verifyEmail2FACode,
+  updateAlertNotifications,
 } from '../services/authService.js';
 
 const router = Router();
@@ -189,5 +196,131 @@ router.get('/me', authenticate, async (req, res, next) => {
     next(err);
   }
 });
+
+// ── GET /api/auth/verify-email ──────────────────────────
+
+const verifyEmailSchema = z.object({
+  token: z.string().min(1, 'Token is required'),
+});
+
+router.get('/verify-email', async (req, res, next) => {
+  try {
+    const { token } = verifyEmailSchema.parse(req.query);
+    const result = await verifyEmail(token);
+    res.json({ message: 'Email verified successfully', email: result.email });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ── POST /api/auth/resend-verification ──────────────────
+
+const resendVerificationSchema = z.object({
+  email: z.string().email(),
+});
+
+router.post(
+  '/resend-verification',
+  validate({ body: resendVerificationSchema }),
+  async (req, res, next) => {
+    try {
+      await resendVerificationEmail(req.body.email);
+      // Always return success to prevent email enumeration
+      res.json({ message: 'If that email is registered and unverified, a verification link has been sent.' });
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
+// ── POST /api/auth/forgot-password ──────────────────────
+
+const forgotPasswordSchema = z.object({
+  email: z.string().email(),
+});
+
+router.post(
+  '/forgot-password',
+  loginLimiter,
+  validate({ body: forgotPasswordSchema }),
+  async (req, res, next) => {
+    try {
+      await requestPasswordReset(req.body.email);
+      // Always return success to prevent email enumeration
+      res.json({ message: 'If that email is registered, a password reset link has been sent.' });
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
+// ── POST /api/auth/reset-password ───────────────────────
+
+const resetPasswordSchema = z.object({
+  token: z.string().min(1, 'Token is required'),
+  password: z.string().min(12, 'Password must be at least 12 characters'),
+});
+
+router.post(
+  '/reset-password',
+  validate({ body: resetPasswordSchema }),
+  async (req, res, next) => {
+    try {
+      await resetPassword(req.body.token, req.body.password);
+      res.json({ message: 'Password reset successfully. You can now log in.' });
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
+// ── POST /api/auth/send-2fa-email ───────────────────────
+
+const send2faEmailSchema = z.object({
+  challengeId: z.string().min(1, 'Challenge ID is required'),
+});
+
+router.post(
+  '/send-2fa-email',
+  twoFactorLimiter,
+  validate({ body: send2faEmailSchema }),
+  async (req, res, next) => {
+    try {
+      // Decode the challenge to get userId
+      const { verifyTwoFactorChallenge: verifyChallenge } = await import('../utils/jwt.js');
+      let payload;
+      try {
+        payload = verifyChallenge(req.body.challengeId);
+      } catch {
+        res.status(401).json({ error: 'Invalid or expired challenge' });
+        return;
+      }
+      await sendTwoFactorEmailCode(payload.userId);
+      res.json({ message: 'Verification code sent to your email.' });
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
+// ── PATCH /api/auth/alert-notifications ─────────────────
+
+const alertNotifSchema = z.object({
+  enabled: z.boolean(),
+});
+
+router.patch(
+  '/alert-notifications',
+  authenticate,
+  validate({ body: alertNotifSchema }),
+  async (req, res, next) => {
+    try {
+      const result = await updateAlertNotifications(req.user!.userId, req.body.enabled);
+      res.json(result);
+    } catch (err) {
+      next(err);
+    }
+  },
+);
 
 export default router;

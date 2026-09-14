@@ -32,6 +32,11 @@ const envSchema = z.object({
 
   // Redis (optional)
   REDIS_URL: z.string().optional().or(z.literal('')),
+
+  // Brevo Email Service
+  BREVO_API_KEY: z.string().min(1, 'BREVO_API_KEY is required for email').optional().or(z.literal('')),
+  BREVO_SENDER_EMAIL: z.string().email().default('noreply@aegisvantage.com'),
+  BREVO_SENDER_NAME: z.string().default('Aegis Vantage'),
 });
 
 function validateEnv() {

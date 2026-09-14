@@ -13,6 +13,11 @@ import {
 } from '../utils/jwt.js';
 import { AppError } from '../middleware/errorHandler.js';
 import { ROLE_PERMISSIONS, type Role } from '../permissions/index.js';
+import {
+  sendVerificationEmail,
+  sendPasswordResetEmail,
+  sendTwoFactorCodeEmail,
+} from './emailService.js';
 
 // ── Single-use 2FA challenge tracking ───────────────────
 // In-memory set of consumed jti values. Acceptable for single-instance MVP.
@@ -63,6 +68,10 @@ export async function registerUser(input: RegisterInput) {
     .toUpperCase()
     .slice(0, 2);
 
+  // Generate email verification token
+  const rawToken = crypto.randomBytes(32).toString('hex');
+  const verificationHash = await hashToken(rawToken);
+
   const user = await User.create({
     email: input.email,
     passwordHash,
@@ -70,6 +79,14 @@ export async function registerUser(input: RegisterInput) {
     initials,
     role: 'Analyst', // Public registration must always default to least privilege
     orgId: org._id,
+    emailVerified: false,
+    emailVerificationToken: verificationHash,
+    emailVerificationExpires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24h
+  });
+
+  // Send verification email (fire-and-forget)
+  sendVerificationEmail(user.email, user.name, rawToken).catch((err) => {
+    console.error('Failed to send verification email:', err);
   });
 
   return { user, org };
@@ -91,6 +108,11 @@ export async function loginUser(input: LoginInput): Promise<LoginResult> {
   const valid = await comparePassword(input.password, user.passwordHash);
   if (!valid) {
     throw new AppError(401, 'Invalid email or password');
+  }
+
+  // Require email verification before allowing login
+  if (!user.emailVerified) {
+    throw new AppError(403, 'Please verify your email before logging in. Check your inbox for a verification link.');
   }
 
   if (user.twoFactorEnabled) {
@@ -242,6 +264,8 @@ export async function getUserProfile(userId: string) {
     email: user.email,
     name: user.name,
     initials: user.initials,
+    emailVerified: user.emailVerified,
+    alertNotificationsEnabled: user.alertNotificationsEnabled,
     role: user.role,
     twoFactorEnabled: user.twoFactorEnabled,
     org: org ? { id: org._id, name: org.name } : null,
@@ -307,4 +331,127 @@ async function findAndValidateRefreshToken(
     if (match) return entry;
   }
   return null;
+}
+
+// ── Email Verification ──────────────────────────────────
+
+export async function verifyEmail(token: string) {
+  // We must scan all users with a pending verification since the token is hashed
+  const users = await User.find({
+    emailVerified: false,
+    emailVerificationToken: { $exists: true, $ne: null },
+    emailVerificationExpires: { $gt: new Date() },
+  });
+
+  for (const user of users) {
+    const match = await compareToken(token, user.emailVerificationToken!);
+    if (match) {
+      user.emailVerified = true;
+      user.emailVerificationToken = undefined;
+      user.emailVerificationExpires = undefined;
+      await user.save();
+      return { email: user.email, name: user.name };
+    }
+  }
+
+  throw new AppError(400, 'Invalid or expired verification link');
+}
+
+export async function resendVerificationEmail(email: string) {
+  const user = await User.findOne({ email });
+  if (!user) {
+    // Don't reveal whether email exists
+    return;
+  }
+  if (user.emailVerified) {
+    throw new AppError(400, 'Email is already verified');
+  }
+
+  const rawToken = crypto.randomBytes(32).toString('hex');
+  user.emailVerificationToken = await hashToken(rawToken);
+  user.emailVerificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+  await user.save();
+
+  await sendVerificationEmail(user.email, user.name, rawToken);
+}
+
+// ── Password Reset ──────────────────────────────────────
+
+export async function requestPasswordReset(email: string) {
+  const user = await User.findOne({ email });
+  if (!user) {
+    // Don't reveal whether email exists — return silently
+    return;
+  }
+
+  const rawToken = crypto.randomBytes(32).toString('hex');
+  user.passwordResetToken = await hashToken(rawToken);
+  user.passwordResetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+  await user.save();
+
+  await sendPasswordResetEmail(user.email, user.name, rawToken);
+}
+
+export async function resetPassword(token: string, newPassword: string) {
+  const users = await User.find({
+    passwordResetToken: { $exists: true, $ne: null },
+    passwordResetExpires: { $gt: new Date() },
+  });
+
+  for (const user of users) {
+    const match = await compareToken(token, user.passwordResetToken!);
+    if (match) {
+      user.passwordHash = await hashPassword(newPassword);
+      user.passwordResetToken = undefined;
+      user.passwordResetExpires = undefined;
+      // Also verify email if not already (they proved email ownership)
+      user.emailVerified = true;
+      user.emailVerificationToken = undefined;
+      user.emailVerificationExpires = undefined;
+      await user.save();
+      return { email: user.email };
+    }
+  }
+
+  throw new AppError(400, 'Invalid or expired reset link');
+}
+
+// ── Email-Based 2FA ─────────────────────────────────────
+
+// In-memory store for email-based 2FA codes (single instance; use Redis for HA)
+const email2faCodes = new Map<string, { code: string; expiresAt: number }>();
+
+export async function sendTwoFactorEmailCode(userId: string) {
+  const user = await User.findById(userId);
+  if (!user) throw new AppError(404, 'User not found');
+
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  email2faCodes.set(userId, { code, expiresAt: Date.now() + 5 * 60 * 1000 });
+
+  // Cleanup after 5 min
+  setTimeout(() => email2faCodes.delete(userId), 5 * 60 * 1000);
+
+  await sendTwoFactorCodeEmail(user.email, user.name, code);
+}
+
+export function verifyEmail2FACode(userId: string, code: string): boolean {
+  const entry = email2faCodes.get(userId);
+  if (!entry) return false;
+  if (Date.now() > entry.expiresAt) {
+    email2faCodes.delete(userId);
+    return false;
+  }
+  if (entry.code !== code) return false;
+  email2faCodes.delete(userId); // single-use
+  return true;
+}
+
+// ── Update Alert Notifications Preference ───────────────
+
+export async function updateAlertNotifications(userId: string, enabled: boolean) {
+  const user = await User.findById(userId);
+  if (!user) throw new AppError(404, 'User not found');
+  user.alertNotificationsEnabled = enabled;
+  await user.save();
+  return { alertNotificationsEnabled: user.alertNotificationsEnabled };
 }

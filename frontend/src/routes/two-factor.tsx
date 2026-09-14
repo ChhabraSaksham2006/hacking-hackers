@@ -2,7 +2,7 @@ import { useState } from "react";
 import { createFileRoute, Link, useRouter, useLocation } from "@tanstack/react-router";
 import { AuthShell, Field } from "@/components/app/AuthShell";
 import { pageHead } from "@/lib/head";
-import { useVerify2FA } from "@/hooks/useApi";
+import { useVerify2FA, useSend2FAEmail } from "@/hooks/useApi";
 
 export const Route = createFileRoute("/two-factor")({
   head: pageHead(
@@ -18,8 +18,10 @@ export const Route = createFileRoute("/two-factor")({
 function TwoFactorPage() {
   const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [emailSuccess, setEmailSuccess] = useState(false);
 
   const verify = useVerify2FA();
+  const sendEmail = useSend2FAEmail();
   const router = useRouter();
 
   const { challengeId } = Route.useSearch();
@@ -49,6 +51,23 @@ function TwoFactorPage() {
     );
   };
 
+  const handleSendEmail = () => {
+    if (!challengeId) return;
+    setError(null);
+    setEmailSuccess(false);
+    sendEmail.mutate(
+      { challengeId },
+      {
+        onSuccess: () => {
+          setEmailSuccess(true);
+        },
+        onError: (err) => {
+          setError(err.message || "Failed to send email code");
+        },
+      }
+    );
+  };
+
   return (
     <AuthShell
       title="Verification code"
@@ -73,7 +92,22 @@ function TwoFactorPage() {
           autoFocus
           required
         />
-        <p className="mt-3 text-[12px] text-fog">Resend available in 0:42</p>
+        {emailSuccess && (
+          <div className="mt-3 rounded-md bg-teal/10 p-2 text-[12px] text-teal text-center">
+            Verification code sent to your email.
+          </div>
+        )}
+        <div className="mt-3 text-[12px] text-fog flex items-center justify-between">
+          <span>Didn't receive a code?</span>
+          <button
+            type="button"
+            onClick={handleSendEmail}
+            disabled={sendEmail.isPending}
+            className="text-teal hover:underline disabled:opacity-50"
+          >
+            {sendEmail.isPending ? "Sending..." : "Send code via email"}
+          </button>
+        </div>
         <button
           type="submit"
           disabled={verify.isPending}

@@ -43,7 +43,7 @@ function SignupPage() {
     return (
       <AuthShell title="Check your email" note="Your workspace has been requested.">
         <div className="rounded-md bg-teal/10 p-4 text-[14px] text-teal">
-          Registration successful. Your default role is Analyst. You can now log in.
+          Registration successful. Check your email to verify your account before logging in.
         </div>
         <Link
           to="/login"

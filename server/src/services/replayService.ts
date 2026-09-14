@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import { Prediction, type IFeatureContribution } from '../models/Prediction.js';
 import { Alert } from '../models/Alert.js';
 import { Flow } from '../models/Flow.js';
+import { notifyOrgUsersOfAlert } from './emailService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -103,7 +104,11 @@ export async function applyWindowToDatabase(orgId: string, windowIndex?: number)
   // 2. Generate Alert if in watch or critical phase
   if (win.riskState === 'critical' || win.riskState === 'watch') {
     const alertId = `AV-${clampedIdx}`;
-    await Alert.findOneAndUpdate(
+    
+    // Check if it already exists to avoid duplicate emails on replay
+    const existingAlert = await Alert.findOne({ alertId, orgId: orgObjectId });
+    
+    const alertDoc = await Alert.findOneAndUpdate(
       { alertId, orgId: orgObjectId },
       {
         alertId,
@@ -120,6 +125,19 @@ export async function applyWindowToDatabase(orgId: string, windowIndex?: number)
       },
       { upsert: true, new: true },
     );
+
+    if (!existingAlert && win.riskState === 'critical') {
+      notifyOrgUsersOfAlert(orgId, {
+        alertId: alertDoc.alertId,
+        host: alertDoc.host,
+        ip: alertDoc.ip,
+        stage: alertDoc.stage,
+        probability: alertDoc.probability,
+        state: alertDoc.state,
+        reason: alertDoc.reason,
+        detectedAt: alertDoc.detectedAt
+      });
+    }
   }
 
   // 3. Insert real active flows for this window

@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ActionButton, FlatPanel, PageTitle, RiskBadge } from "@/components/app/panels";
 import { pageHead } from "@/lib/head";
 import { cn } from "@/lib/utils";
+import { useAuthMe, useUpdateAlertNotifications } from "@/hooks/useApi";
 
 export const Route = createFileRoute("/app/settings")({
   head: pageHead(
@@ -24,6 +25,9 @@ function Settings() {
   const [section, setSection] = useState<(typeof sections)[number]>("Model config");
   const [windowK, setWindowK] = useState(8);
   const [threshold, setThreshold] = useState(0.65);
+
+  const { data: user } = useAuthMe();
+  const updateNotifications = useUpdateAlertNotifications();
 
   return (
     <>
@@ -114,18 +118,32 @@ function Settings() {
           ) : null}
 
           {section === "Notifications" ? (
-            <ul className="max-w-[520px] space-y-3">
-              {[
-                "Email me when probability crosses the threshold",
-                "Notify the on-call channel for critical states only",
-                "Daily digest of watch-state segments",
-              ].map((n) => (
-                <li key={n} className="flex items-center justify-between border-b border-fog-deep/40 pb-2">
-                  <span className="text-[15px]">{n}</span>
-                  <input type="checkbox" defaultChecked className="accent-teal" />
-                </li>
-              ))}
-            </ul>
+            <div className="max-w-[520px] space-y-4">
+              <label className="flex items-center justify-between border-b border-fog-deep/40 pb-3">
+                <span className="text-[15px]">
+                  Email me when a critical alert is triggered
+                </span>
+                <input
+                  type="checkbox"
+                  className="accent-teal"
+                  checked={user?.alertNotificationsEnabled ?? true}
+                  disabled={updateNotifications.isPending}
+                  onChange={(e) => updateNotifications.mutate({ enabled: e.target.checked })}
+                />
+              </label>
+              <label className="flex items-center justify-between border-b border-fog-deep/40 pb-3 opacity-50">
+                <span className="text-[15px]">
+                  Notify the on-call channel for critical states only (coming soon)
+                </span>
+                <input type="checkbox" disabled className="accent-teal" />
+              </label>
+              <label className="flex items-center justify-between border-b border-fog-deep/40 pb-3 opacity-50">
+                <span className="text-[15px]">
+                  Daily digest of watch-state segments (coming soon)
+                </span>
+                <input type="checkbox" disabled className="accent-teal" />
+              </label>
+            </div>
           ) : null}
 
           {section === "Integrations" ? (

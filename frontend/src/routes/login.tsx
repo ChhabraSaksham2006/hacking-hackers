@@ -2,7 +2,7 @@ import { useState } from "react";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { AuthShell, Field } from "@/components/app/AuthShell";
 import { pageHead } from "@/lib/head";
-import { useLogin } from "@/hooks/useApi";
+import { useLogin, useResendVerification } from "@/hooks/useApi";
 
 export const Route = createFileRoute("/login")({
   head: pageHead(
@@ -16,9 +16,24 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [unverifiedEmail, setUnverifiedEmail] = useState<string | null>(null);
+  const [resendSuccess, setResendSuccess] = useState(false);
   
   const login = useLogin();
+  const resend = useResendVerification();
   const router = useRouter();
+
+  const handleResend = () => {
+    if (!unverifiedEmail) return;
+    setResendSuccess(false);
+    resend.mutate(
+      { email: unverifiedEmail },
+      {
+        onSuccess: () => setResendSuccess(true),
+        onError: (err) => setError(err.message || "Failed to resend verification email"),
+      }
+    );
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,6 +52,9 @@ function LoginPage() {
           }
         },
         onError: (err) => {
+          if (err.message && err.message.includes("verify your email")) {
+            setUnverifiedEmail(email);
+          }
           setError(err.message || "Failed to log in");
         },
       }
@@ -60,6 +78,23 @@ function LoginPage() {
         {error ? (
           <div className="rounded-md bg-crimson/10 p-3 text-[13px] text-crimson">
             {error}
+            {unverifiedEmail && (
+              <div className="mt-2">
+                <button
+                  type="button"
+                  onClick={handleResend}
+                  disabled={resend.isPending}
+                  className="text-teal hover:underline disabled:opacity-50"
+                >
+                  {resend.isPending ? "Sending..." : "Resend verification email"}
+                </button>
+              </div>
+            )}
+          </div>
+        ) : null}
+        {resendSuccess ? (
+          <div className="rounded-md bg-teal/10 p-3 text-[13px] text-teal">
+            Verification email sent. Please check your inbox.
           </div>
         ) : null}
         <Field
@@ -79,8 +114,8 @@ function LoginPage() {
           required
         />
         <div className="flex items-center justify-between pt-1">
-          <Link to="/two-factor" className="text-[13px] text-fog hover:text-paper">
-            Forgot password
+          <Link to="/forgot-password" className="text-[13px] text-fog hover:text-paper">
+            Forgot password?
           </Link>
         </div>
         <button

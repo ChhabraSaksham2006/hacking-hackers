@@ -17,6 +17,12 @@ export interface IUser extends Document {
   orgId: mongoose.Types.ObjectId;
   twoFactorSecret?: string;
   twoFactorEnabled: boolean;
+  emailVerified: boolean;
+  emailVerificationToken?: string;
+  emailVerificationExpires?: Date;
+  passwordResetToken?: string;
+  passwordResetExpires?: Date;
+  alertNotificationsEnabled: boolean;
   refreshTokens: IRefreshToken[];
   createdAt: Date;
   updatedAt: Date;
@@ -57,6 +63,12 @@ const userSchema = new Schema<IUser>(
     },
     twoFactorSecret: { type: String },
     twoFactorEnabled: { type: Boolean, default: false },
+    emailVerified: { type: Boolean, default: false },
+    emailVerificationToken: { type: String },
+    emailVerificationExpires: { type: Date },
+    passwordResetToken: { type: String },
+    passwordResetExpires: { type: Date },
+    alertNotificationsEnabled: { type: Boolean, default: true },
     refreshTokens: { type: [refreshTokenSchema], default: [] },
   },
   {
