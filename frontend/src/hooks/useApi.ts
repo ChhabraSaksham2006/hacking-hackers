@@ -227,22 +227,52 @@ export function useFlows(filters: { page: number; limit: number; minScore?: numb
   });
 }
 
-export function useNetworkGraph() {
+export interface NetworkGraphResponse {
+  windowIndex: number;
+  timestamp: string;
+  phase: string;
+  probability: number;
+  scrub: number;
+  nodes: Array<{
+    id: string;
+    hostname?: string;
+    segment?: string;
+    role?: string;
+    x: number;
+    y: number;
+    size: number;
+    state: RiskState;
+    flows: number;
+    bytes: number;
+    firstSeen?: string;
+  }>;
+  edges: Array<{
+    source: string;
+    target: string;
+    proto?: string;
+    port?: number;
+    bytes: number;
+    score: number;
+  }>;
+}
+
+export function useNetworkGraph(scrub?: number) {
   return useQuery({
-    queryKey: ["network", "graph"],
-    queryFn: () =>
-      apiFetch<{
-        nodes: Array<{ id: string; size: number; state: RiskState; flows: number }>;
-        edges: Array<{ source: string; target: string; bytes: number; score: number }>;
-      }>("/api/network/graph"),
+    queryKey: ["network", "graph", scrub],
+    queryFn: () => {
+      const url = scrub !== undefined ? `/api/network/graph?scrub=${scrub}` : "/api/network/graph";
+      return apiFetch<NetworkGraphResponse>(url);
+    },
+    refetchInterval: scrub === undefined || scrub === 100 ? 2500 : false,
   });
 }
 
-export function useHostDetails(id: string) {
+export function useHostDetails(id: string, scrub?: number) {
   return useQuery({
-    queryKey: ["network", "hosts", id],
-    queryFn: () =>
-      apiFetch<{
+    queryKey: ["network", "hosts", id, scrub],
+    queryFn: () => {
+      const qs = scrub !== undefined ? `?scrub=${scrub}` : "";
+      return apiFetch<{
         id: string;
         state: RiskState;
         riskScore: number;
@@ -252,8 +282,9 @@ export function useHostDetails(id: string) {
         role?: string;
         segment?: string;
         firstSeen?: string;
-        recentFlows: Array<{ dst: string; bytes: number | string; score: number }>;
-      }>(`/api/network/hosts/${encodeURIComponent(id)}`),
+        recentFlows: Array<{ src?: string; dst: string; proto?: string; bytes: number | string; score: number }>;
+      }>(`/api/network/hosts/${encodeURIComponent(id)}${qs}`);
+    },
     enabled: !!id,
   });
 }
@@ -289,6 +320,87 @@ export function useRunInference() {
       queryClient.invalidateQueries({ queryKey: ["alerts"] });
       queryClient.invalidateQueries({ queryKey: ["flows"] });
       queryClient.invalidateQueries({ queryKey: ["predictions"] });
+      queryClient.invalidateQueries({ queryKey: ["explainability"] });
     },
   });
 }
+
+export interface ExplainabilityResponse {
+  windowIndex: number;
+  timestampStart: string;
+  timestampEnd: string;
+  phase: string;
+  stage: string;
+  probability: number;
+  confidence: number;
+  riskState: RiskState;
+  isAttack: number;
+  leadTimeSeconds: number;
+  mitre: {
+    techniqueId: string | null;
+    techniqueName: string | null;
+    tactic: string;
+  };
+  summary: string;
+  reason: string;
+  featureContributions: Array<{
+    feature: string;
+    label: string;
+    category: string;
+    description: string;
+    value: string;
+    weight: number;
+    direction: "elevates_threat" | "mitigates_threat";
+  }>;
+  featureCategories: Array<{
+    id: string;
+    name: string;
+    description: string;
+    features: Array<{
+      key: string;
+      label: string;
+      value: number;
+      formattedValue: string;
+      unit: string;
+      isAnomaly: boolean;
+      anomalyDirection?: "elevated" | "depressed";
+      attributionWeight?: number;
+    }>;
+  }>;
+  rawFeaturesCount: number;
+  modelEnsemble: {
+    architecture: string;
+    sparseRssmWeight: number;
+    tfcnetWeight: number;
+    latentDimensions: number;
+    timeFrequencyHeads: number;
+    f1Threshold: number;
+    dataset: string;
+    targetEpisode: string;
+  };
+  timelineBounds: {
+    min: number;
+    max: number;
+    current: number;
+    attackOnset: number;
+  };
+  presets: Array<{
+    label: string;
+    windowIndex: number;
+    scrub: number;
+    stage: string;
+  }>;
+}
+
+export function useExplainability(params?: { windowIndex?: number; scrub?: number }) {
+  const qs = new URLSearchParams();
+  if (params?.windowIndex !== undefined) qs.set("windowIndex", params.windowIndex.toString());
+  else if (params?.scrub !== undefined) qs.set("scrub", params.scrub.toString());
+  const queryStr = qs.toString();
+
+  return useQuery({
+    queryKey: ["explainability", params?.windowIndex, params?.scrub],
+    queryFn: () => apiFetch<ExplainabilityResponse>(`/api/explainability${queryStr ? `?${queryStr}` : ""}`),
+  });
+}
+

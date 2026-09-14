@@ -332,9 +332,46 @@ export class DashboardStore extends EventEmitter {
   public getNetworkGraph(scrub?: number) {
     // Ground truth enterprise topology from Thursday-01-03-2018 Infiltration episode
     // Subnet: 192.168.10.0/24 (Enterprise Core) + External Perimeter (203.0.113.15, 192.168.10.1 DNS/GW)
-    const currentProb = this.summary.infiltrationProbability;
-    const isUnderAttack = this.actual_window_index >= 1796;
-    const isPrecursor = this.actual_window_index >= 1781 && !isUnderAttack;
+    let effectiveWindow = this.actual_window_index;
+    let isLive = true;
+
+    if (typeof scrub === 'number' && !isNaN(scrub)) {
+      const clampedScrub = Math.max(0, Math.min(100, scrub));
+      // Window range: 1750 to 1810
+      effectiveWindow = Math.round(1750 + (clampedScrub / 100) * (1810 - 1750));
+      isLive = clampedScrub === 100;
+    }
+
+    const isC2 = effectiveWindow >= 1804;
+    const isLateral = effectiveWindow >= 1796 && !isC2;
+    const isInitial = effectiveWindow >= 1789 && !isLateral && !isC2;
+    const isRecon = effectiveWindow >= 1781 && !isInitial && !isLateral && !isC2;
+    const isBaseline = effectiveWindow < 1781;
+
+    const phase = isC2
+      ? 'C2 Beaconing & Exfiltration'
+      : isLateral
+      ? 'Lateral Movement'
+      : isInitial
+      ? 'Initial Exploitation'
+      : isRecon
+      ? 'Network Reconnaissance'
+      : 'Benign Baseline';
+
+    const probability = isLive
+      ? this.summary.infiltrationProbability
+      : isC2
+      ? 0.94
+      : isLateral
+      ? 0.88
+      : isInitial
+      ? 0.58
+      : isRecon
+      ? 0.36
+      : 0.08;
+
+    const isUnderAttack = isLateral || isC2;
+    const isPrecursor = isRecon || isInitial;
 
     // Node definitions mapped to physical hosts observed in the attack timeline
     const nodes = [
@@ -372,7 +409,7 @@ export class DashboardStore extends EventEmitter {
         x: 350,
         y: 220,
         size: isUnderAttack ? 14 : isPrecursor ? 11 : 8,
-        state: isUnderAttack ? 'watch' : isPrecursor ? 'watch' : 'normal',
+        state: isUnderAttack ? 'watch' : isInitial ? 'watch' : 'normal',
         flows: isUnderAttack ? 22 : isPrecursor ? 12 : 5,
         bytes: isUnderAttack ? 31800 : isPrecursor ? 14500 : 6400,
         firstSeen: '2018-03-01 01:25:00',
@@ -410,10 +447,10 @@ export class DashboardStore extends EventEmitter {
         role: 'External Endpoint',
         x: 680,
         y: 80,
-        size: this.actual_window_index >= 1804 ? 16 : isUnderAttack ? 12 : 6,
-        state: this.actual_window_index >= 1804 ? 'critical' : isUnderAttack ? 'watch' : 'normal',
-        flows: this.actual_window_index >= 1804 ? 32 : isUnderAttack ? 8 : 2,
-        bytes: this.actual_window_index >= 1804 ? 96400 : 12000,
+        size: isC2 ? 16 : isUnderAttack ? 12 : 6,
+        state: isC2 ? 'critical' : isUnderAttack ? 'watch' : 'normal',
+        flows: isC2 ? 32 : isUnderAttack ? 8 : 2,
+        bytes: isC2 ? 96400 : 12000,
         firstSeen: '2018-03-01 01:59:52',
       },
       {
@@ -452,7 +489,7 @@ export class DashboardStore extends EventEmitter {
         proto: 'TCP',
         port: 445,
         bytes: isUnderAttack ? 12400 : isPrecursor ? 3100 : 800,
-        score: isUnderAttack ? currentProb : isPrecursor ? 0.52 : 0.08,
+        score: isUnderAttack ? probability : isPrecursor ? 0.52 : 0.08,
       },
       {
         source: '192.168.10.44',
@@ -460,7 +497,7 @@ export class DashboardStore extends EventEmitter {
         proto: 'TCP',
         port: 445,
         bytes: isUnderAttack ? 8600 : isPrecursor ? 2800 : 650,
-        score: isUnderAttack ? Math.max(0, currentProb - 0.04) : isPrecursor ? 0.48 : 0.09,
+        score: isUnderAttack ? Math.max(0, probability - 0.04) : isPrecursor ? 0.48 : 0.09,
       },
       {
         source: '192.168.10.44',
@@ -483,8 +520,8 @@ export class DashboardStore extends EventEmitter {
         target: '203.0.113.15',
         proto: 'TCP',
         port: 8080,
-        bytes: this.actual_window_index >= 1804 ? 48200 : isUnderAttack ? 8200 : 400,
-        score: this.actual_window_index >= 1804 ? currentProb : isUnderAttack ? 0.72 : 0.05,
+        bytes: isC2 ? 48200 : isUnderAttack ? 8200 : 400,
+        score: isC2 ? probability : isUnderAttack ? 0.72 : 0.05,
       },
       {
         source: '192.168.10.25',
@@ -504,18 +541,23 @@ export class DashboardStore extends EventEmitter {
       },
     ];
 
+    const timestamp = isLive
+      ? this.timestamp
+      : `2018-03-01 01:${Math.floor(50 + ((effectiveWindow - 1750) / 60) * 10)}:${String((effectiveWindow * 7) % 60).padStart(2, '0')}`;
+
     return {
-      windowIndex: this.actual_window_index,
-      timestamp: this.timestamp,
-      phase: this.summary.currentStage,
-      probability: currentProb,
+      windowIndex: effectiveWindow,
+      timestamp,
+      phase,
+      probability,
+      scrub: typeof scrub === 'number' ? scrub : 100,
       nodes,
       edges,
     };
   }
 
-  public getHostDetail(hostId: string) {
-    const graph = this.getNetworkGraph();
+  public getHostDetail(hostId: string, scrub?: number) {
+    const graph = this.getNetworkGraph(scrub);
     const node = graph.nodes.find((n) => n.id === hostId || n.hostname === hostId) || graph.nodes[0]!;
     
     // Connected flows for this specific host
@@ -539,7 +581,7 @@ export class DashboardStore extends EventEmitter {
       role: node.role,
       segment: node.segment,
       state: node.state,
-      riskScore: node.state === 'critical' ? this.summary.infiltrationProbability : node.state === 'watch' ? 0.54 : 0.09,
+      riskScore: node.state === 'critical' ? graph.probability : node.state === 'watch' ? 0.54 : 0.09,
       activeFlows: node.flows,
       totalBytes: node.bytes,
       firstSeen: node.firstSeen,
