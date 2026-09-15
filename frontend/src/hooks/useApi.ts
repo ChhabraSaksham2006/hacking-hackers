@@ -586,6 +586,7 @@ export function useMarkAllNotificationsRead() {
 export interface ChatQueryRequest {
   query: string;
   windowIndex?: number | undefined;
+  live?: boolean | undefined;
   contextHint?: string | undefined;
 }
 
@@ -632,7 +633,8 @@ export function useSuggestedQueries(windowIndex?: number | undefined) {
   return useQuery({
     queryKey: ["chat-suggested", windowIndex],
     queryFn: () => apiFetch<SuggestedQueriesResponse>(`/api/chat/suggested${qs}`),
-    staleTime: 10000,
+    refetchInterval: 2500,
+    staleTime: 2000,
   });
 }
 

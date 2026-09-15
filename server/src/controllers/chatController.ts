@@ -10,16 +10,19 @@ import { dashboardStore } from '../models/dashboardModel.js';
 
 export async function queryTelemetry(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const { query, windowIndex, contextHint } = req.body;
+    const { query, windowIndex, live, contextHint } = req.body;
 
     if (!query || typeof query !== 'string' || query.trim().length === 0) {
       res.status(400).json({ error: 'Query is required and must be a non-empty string.' });
       return;
     }
 
-    const parsedWindow = typeof windowIndex === 'number' ? windowIndex : undefined;
+    const isLive = live === true || windowIndex === undefined || windowIndex === null;
+    const parsedWindow = isLive ? undefined : (typeof windowIndex === 'number' ? windowIndex : undefined);
+
     const result = await answerTelemetryQuery(query.trim(), {
       windowIndex: parsedWindow,
+      live: isLive,
       contextHint: typeof contextHint === 'string' ? contextHint : undefined,
     });
 

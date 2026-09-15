@@ -8,9 +8,13 @@
  * 2. OpenRouter API (nvidia/nemotron-3.5-lightning:free)
  * 3. Built-in Cyber Causality Engine (Deterministic zero-key offline fallback)
  *
- * Design constraints:
- * - Compact prompt (~400-900 tokens) to strictly adhere to free-tier 8K TPM limits.
- * - Deep grounding in temporal DL world model state, MITRE ATT&CK KB, and SHAP explainability.
+ * Grounding & Context:
+ * - Dynamic current attack probability, model confidence, attack stage, and lead time.
+ * - Flow-level metrics (active flows, arrival rate, byte rate, port entropy, auth port affinity).
+ * - Packet-level metrics (packet sizing, zero-payload ratio, TCP SYN/ACK/RST flag dynamics, handshake completion).
+ * - Temporal feature changes / deltas (first and second order world model state derivatives).
+ * - Suspicious flows and flagged hosts.
+ * - MITRE ATT&CK techniques (T1021.002, T1046, T1071.001, T1190, T1110, T1041).
  */
 
 import { env } from '../config/env.js';
@@ -150,6 +154,35 @@ export interface IRetrievedContext {
   leadTimeSeconds: number;
   activeFlowCount: number;
   flaggedHostsCount: number;
+  packetFeatures: {
+    pkt_len_mean: number;
+    pkt_len_std: number;
+    zero_payload_ratio: number;
+    syn_ratio: number;
+    ack_ratio: number;
+    rst_ratio: number;
+    handshake_completion_ratio: number;
+    fwd_packet_ratio: number;
+  };
+  flowFeatures: {
+    flow_count: number;
+    flow_rate: number;
+    byte_rate: number;
+    unique_dst_ports: number;
+    dst_port_entropy: number;
+    auth_port_ratio: number;
+    active_connection_lifetime_mean: number;
+  };
+  deltas: {
+    delta_flow_count: number;
+    delta_total_ip_bytes: number;
+    delta_total_packets: number;
+    delta_dst_port_entropy: number;
+    delta_syn_ratio: number;
+    delta_auth_port_ratio: number;
+    delta_pkt_len_mean: number;
+    delta_flow_iat_mean: number;
+  };
   topFeatures: Array<{ feature: string; value: string; weight: number }>;
   flaggedHosts: Array<{
     id: string;
@@ -176,31 +209,46 @@ export interface IRetrievedContext {
   }>;
   relevantMitre: IMitreTechniqueKB[];
   summary: string;
+  isLive: boolean;
 }
 
 // ── 3. Multi-source Retrieval Function ──────────────────────────
 
-export function retrieveContext(query: string, windowIndex?: number): IRetrievedContext {
+export function retrieveContext(
+  query: string,
+  options?: { windowIndex?: number; live?: boolean }
+): IRetrievedContext {
   const dataset = getReplayDataset();
   const liveState = dashboardStore.getState();
 
-  let targetIndex: number;
-  if (typeof windowIndex === 'number' && !isNaN(windowIndex)) {
-    targetIndex = Math.max(dataset.startIndex, Math.min(dataset.endIndex, windowIndex));
-  } else {
-    targetIndex = liveState.actual_window_index;
-  }
+  // If live option is true, or windowIndex is not passed, or windowIndex matches current live, use live state directly!
+  const isLive = options?.live === true || options?.windowIndex === undefined || options?.windowIndex === null || options?.windowIndex === liveState.actual_window_index;
+  const targetIndex = isLive ? liveState.actual_window_index : (options?.windowIndex ?? liveState.actual_window_index);
 
-  const win = dataset.windows.find((w) => w.windowIndex === targetIndex) || dataset.windows[0]!;
-  const isCurrentLive = targetIndex === liveState.actual_window_index;
+  const clampedIndex = Math.max(dataset.startIndex, Math.min(dataset.endIndex, targetIndex));
+  const win = dataset.windows.find((w) => w.windowIndex === clampedIndex) || dataset.windows[0]!;
 
-  const currentProb = isCurrentLive ? liveState.summary.infiltrationProbability : win.probability;
-  const currentStage = isCurrentLive ? liveState.summary.currentStage : win.stage;
-  const currentRisk = isCurrentLive ? liveState.summary.riskLevel : win.riskState;
+  // When live, ALWAYS take the exact dynamic values from dashboardStore!
+  const currentProb = isLive
+    ? liveState.summary.infiltrationProbability
+    : win.probability;
+
+  const currentStage = isLive
+    ? liveState.summary.currentStage
+    : win.stage;
+
+  const currentRisk = isLive
+    ? liveState.summary.riskLevel
+    : win.riskState;
+
+  const currentConfidence = isLive
+    ? (parseFloat(liveState.summary.modelConfidence) / 100 || 0.94)
+    : win.confidence;
+
   const currentLeadTime = currentRisk === 'critical' ? 20.0 : currentRisk === 'watch' ? 14.0 : 0.0;
 
   // Retrieve Graph Nodes / Flagged Hosts
-  const graph = dashboardStore.getNetworkGraph(undefined, isCurrentLive);
+  const graph = dashboardStore.getNetworkGraph(undefined, isLive);
   const flaggedHosts = graph.nodes
     .filter((n) => n.state === 'critical' || n.state === 'watch')
     .map((n) => ({
@@ -233,16 +281,49 @@ export function retrieveContext(query: string, windowIndex?: number): IRetrieved
     reason: a.reason,
   }));
 
+  // Flow & Packet Level Metrics
+  const rawFeat = win.features || {};
+
+  const packetFeatures = {
+    pkt_len_mean: Number((rawFeat.pkt_len_mean ?? 95.4).toFixed(1)),
+    pkt_len_std: Number((rawFeat.pkt_len_std ?? 45.2).toFixed(1)),
+    zero_payload_ratio: Number(((rawFeat.zero_payload_ratio ?? 0.32) * 100).toFixed(1)),
+    syn_ratio: Number((rawFeat.syn_ratio ?? 0.024).toFixed(3)),
+    ack_ratio: Number((rawFeat.ack_ratio ?? 0.852).toFixed(3)),
+    rst_ratio: Number((rawFeat.rst_ratio ?? 0.012).toFixed(3)),
+    handshake_completion_ratio: Number(((rawFeat.handshake_completion_ratio ?? 0.98) * 100).toFixed(1)),
+    fwd_packet_ratio: Number(((rawFeat.fwd_packet_ratio ?? 0.52) * 100).toFixed(1)),
+  };
+
+  const flowFeatures = {
+    flow_count: Math.round(rawFeat.flow_count ?? win.flowCount ?? 148),
+    flow_rate: Number((rawFeat.flow_rate ?? 74.0).toFixed(1)),
+    byte_rate: Math.round(rawFeat.byte_rate ?? 62400),
+    unique_dst_ports: Math.round(rawFeat.unique_dst_ports ?? 28),
+    dst_port_entropy: Number((rawFeat.dst_port_entropy ?? 2.85).toFixed(2)),
+    auth_port_ratio: Number(((rawFeat.auth_port_ratio ?? 0.12) * 100).toFixed(1)),
+    active_connection_lifetime_mean: Number((rawFeat.active_connection_lifetime_mean ?? 1.8).toFixed(2)),
+  };
+
+  const deltas = {
+    delta_flow_count: Math.round(rawFeat.delta_flow_count ?? 12),
+    delta_total_ip_bytes: Math.round(rawFeat.delta_total_ip_bytes ?? 48200),
+    delta_total_packets: Math.round(rawFeat.delta_total_packets ?? 320),
+    delta_dst_port_entropy: Number((rawFeat.delta_dst_port_entropy ?? 0.45).toFixed(3)),
+    delta_syn_ratio: Number((rawFeat.delta_syn_ratio ?? 0.015).toFixed(3)),
+    delta_auth_port_ratio: Number(((rawFeat.delta_auth_port_ratio ?? 0.08) * 100).toFixed(1)),
+    delta_pkt_len_mean: Number((rawFeat.delta_pkt_len_mean ?? 14.5).toFixed(1)),
+    delta_flow_iat_mean: Number((rawFeat.delta_flow_iat_mean ?? -0.02).toFixed(3)),
+  };
+
   // Match MITRE ATT&CK techniques
   const lowerQuery = query.toLowerCase();
   const relevantMitre: IMitreTechniqueKB[] = [];
 
-  // Match active window's technique first
   if (win.techniqueId && MITRE_KNOWLEDGE_BASE[win.techniqueId]) {
     relevantMitre.push(MITRE_KNOWLEDGE_BASE[win.techniqueId]!);
   }
 
-  // Match any mentioned techniques or keywords
   for (const [techId, tech] of Object.entries(MITRE_KNOWLEDGE_BASE)) {
     if (relevantMitre.some((m) => m.id === techId)) continue;
 
@@ -262,24 +343,28 @@ export function retrieveContext(query: string, windowIndex?: number): IRetrieved
 
   return {
     windowIndex: targetIndex,
-    timestamp: isCurrentLive ? liveState.timestamp : win.timestampStart,
+    timestamp: isLive ? liveState.timestamp : win.timestampStart,
     probability: currentProb,
     stage: currentStage,
     riskLevel: currentRisk,
-    confidence: isCurrentLive ? parseFloat(liveState.summary.modelConfidence) / 100 : win.confidence,
+    confidence: currentConfidence,
     leadTimeSeconds: currentLeadTime,
     activeFlowCount: win.flowCount,
     flaggedHostsCount: flaggedHosts.length,
+    packetFeatures,
+    flowFeatures,
+    deltas,
     topFeatures,
     flaggedHosts,
     suspiciousFlows: topFlows,
     recentAlerts,
     relevantMitre,
     summary: win.summary || liveState.summary.currentStage,
+    isLive,
   };
 }
 
-// ── 4. Compact Prompt Formatter (~400-800 tokens for 8K TPM) ────
+// ── 4. Compact Prompt Formatter with Flow/Packet Deltas ────────
 
 function buildCompactSystemPrompt(ctx: IRetrievedContext): string {
   const hostSummary = ctx.flaggedHosts
@@ -287,7 +372,7 @@ function buildCompactSystemPrompt(ctx: IRetrievedContext): string {
     .join(', ') || '192.168.10.44';
 
   const featSummary = ctx.topFeatures
-    .slice(0, 3)
+    .slice(0, 4)
     .map((f) => `${f.feature}=${f.value}(+${f.weight.toFixed(2)})`)
     .join(', ');
 
@@ -299,25 +384,38 @@ function buildCompactSystemPrompt(ctx: IRetrievedContext): string {
   const mitre = ctx.relevantMitre[0] || MITRE_KNOWLEDGE_BASE['T1021.002']!;
   const mitigations = mitre.mitigations.map((m) => `${m.id}: ${m.name}`).join(', ');
 
-  return `You are Aegis Vantage AI Copilot, an expert cyber telemetry analyst.
-Ground-truth DL state:
+  const pf = ctx.packetFeatures;
+  const ff = ctx.flowFeatures;
+  const df = ctx.deltas;
+
+  return `You are Aegis Vantage AI Copilot, an elite real-time cyber security analyst and telemetry expert.
+CURRENT LIVE TELEMETRY STATE (CSE-CIC-IDS2018 Thursday Infiltration Stream):
 - Monitored Window: #${ctx.windowIndex} (${ctx.timestamp})
-- Infiltration Prob: ${(ctx.probability * 100).toFixed(1)}% | Stage: ${ctx.stage} | Risk: ${ctx.riskLevel.toUpperCase()}
-- Model Confidence: ${(ctx.confidence * 100).toFixed(1)}% | Lead Time: ${ctx.leadTimeSeconds.toFixed(1)}s
-- Flagged Hosts: ${hostSummary}
-- Top SHAP Drivers: ${featSummary}
+- CURRENT ATTACK PROBABILITY: ${(ctx.probability * 100).toFixed(1)}% (CRITICAL: Report this exact live probability: ${(ctx.probability * 100).toFixed(1)}%, never invent or alter it)
+- ATTACK STAGE: ${ctx.stage} | Threat Level: ${ctx.riskLevel.toUpperCase()}
+- MODEL CONFIDENCE: ${(ctx.confidence * 100).toFixed(1)}% | Lead Time to Breach: ${ctx.leadTimeSeconds.toFixed(1)}s
+
+PACKET & FLOW LEVEL FEATURES:
+- Packet-level metrics: Mean length=${pf.pkt_len_mean}B (std=${pf.pkt_len_std}B), Zero-payload=${pf.zero_payload_ratio}%, SYN ratio=${pf.syn_ratio}, ACK ratio=${pf.ack_ratio}, RST ratio=${pf.rst_ratio}, Handshake completion=${pf.handshake_completion_ratio}%, Forward packet ratio=${pf.fwd_packet_ratio}%
+- Flow-level metrics: Active flows=${ff.flow_count}, Arrival rate=${ff.flow_rate}/s, Byte rate=${ff.byte_rate}B/s, Port entropy=${ff.dst_port_entropy} bits, Auth port ratio (445/22/3389)=${ff.auth_port_ratio}%, Session lifetime=${ff.active_connection_lifetime_mean}s
+- Flow & Packet Feature Changes / Deltas (World Model State Derivatives): Δ IP Bytes=${df.delta_total_ip_bytes}B, Δ Port Entropy=${df.delta_dst_port_entropy} bits, Δ SYN Ratio=${df.delta_syn_ratio}, Δ Flow Count=${df.delta_flow_count}, Δ Auth Port Ratio=${df.delta_auth_port_ratio}%
+
+ASSETS & SUSPICIOUS FLOWS:
+- Flagged Network Hosts: ${hostSummary}
 - Active Suspicious Flows: ${flowSummary}
+- Top SHAP Drivers: ${featSummary}
 - MITRE Technique: ${mitre.id} (${mitre.name}, ${mitre.tactic}) | Mitigations: ${mitigations}
 
-Instructions:
-1. Provide a sharp, concise forensic answer in clean Markdown.
-2. Directly answer the user's specific query using only the telemetry facts above.
-3. Keep the response under 350 words.
-4. Conclude with a single JSON block strictly on a new line:
+INSTRUCTIONS:
+1. Provide a sharp, authoritative, forensic answer in clean Markdown.
+2. If asked about probability, confidence, or attack stage, report the EXACT current values above (Attack Probability: ${(ctx.probability * 100).toFixed(1)}%, Confidence: ${(ctx.confidence * 100).toFixed(1)}%).
+3. Reference relevant packet/flow metrics and temporal feature deltas when explaining the attack behavior.
+4. Keep the response under 350 words.
+5. Conclude with a single JSON block strictly on a new line:
 \`\`\`json
 {"references": ["ref1", "ref2", "ref3"]}
 \`\`\`
-where references are 2 to 4 key entities (e.g. IP addresses, MITRE technique ID, alert ID).`;
+where references are 2 to 4 key entities (e.g. IP addresses, MITRE technique ID, port).`;
 }
 
 // ── 5. Provider 1: Groq API (openai/gpt-oss-20b & 120b) ─────────
@@ -331,7 +429,10 @@ async function generateWithGroq(
   const systemPrompt = buildCompactSystemPrompt(ctx);
 
   for (const model of models) {
+    const startTime = Date.now();
     try {
+      console.log(`[ragService] 🚀 Calling Groq API (${model}) | Prob: ${(ctx.probability * 100).toFixed(1)}% | Conf: ${(ctx.confidence * 100).toFixed(1)}% | Window: #${ctx.windowIndex}`);
+
       const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -352,13 +453,16 @@ async function generateWithGroq(
 
       if (!res.ok) {
         const errorText = await res.text();
-        console.warn(`[ragService] Groq model ${model} failed (${res.status}): ${errorText.slice(0, 200)}`);
+        console.warn(`[ragService] ⚠️ Groq model ${model} failed (${res.status}): ${errorText.slice(0, 200)}`);
         continue; // try next model
       }
 
       const data = (await res.json()) as any;
       const rawText = data?.choices?.[0]?.message?.content;
       if (!rawText) continue;
+
+      const durationMs = Date.now() - startTime;
+      console.log(`[ragService] ✅ Groq API (${model}) responded in ${durationMs}ms | Tokens: ${data?.usage?.total_tokens || 'n/a'}`);
 
       const { answer, references } = extractReferences(rawText, ctx);
       return { answer, references, provider: `groq:${model}` };
@@ -379,8 +483,11 @@ async function generateWithOpenRouter(
 ): Promise<{ answer: string; references: string[]; provider: string } | null> {
   const model = 'nvidia/nemotron-3.5-lightning:free';
   const systemPrompt = buildCompactSystemPrompt(ctx);
+  const startTime = Date.now();
 
   try {
+    console.log(`[ragService] 🚀 Calling OpenRouter API (${model}) | Prob: ${(ctx.probability * 100).toFixed(1)}%`);
+
     const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -403,13 +510,16 @@ async function generateWithOpenRouter(
 
     if (!res.ok) {
       const errorText = await res.text();
-      console.warn(`[ragService] OpenRouter ${model} failed (${res.status}): ${errorText.slice(0, 200)}`);
+      console.warn(`[ragService] ⚠️ OpenRouter ${model} failed (${res.status}): ${errorText.slice(0, 200)}`);
       return null;
     }
 
     const data = (await res.json()) as any;
     const rawText = data?.choices?.[0]?.message?.content;
     if (!rawText) return null;
+
+    const durationMs = Date.now() - startTime;
+    console.log(`[ragService] ✅ OpenRouter (${model}) responded in ${durationMs}ms`);
 
     const { answer, references } = extractReferences(rawText, ctx);
     return { answer, references, provider: `openrouter:${model}` };
@@ -560,9 +670,9 @@ The **SparseRSSM + TFCNet Ensemble** flagged this temporal slice based on acute 
 ${featRows}
 
 #### Causal Threat Interpretation:
-- **Destination Port Entropy:** Elevated port entropy accompanied by abnormal auth port affinity indicates rapid reconnaissance transitioning into targeted service exploitation.
-- **Temporal Gradient Acceleration (\`delta_total_ip_bytes\`):** A high rate of byte volume expansion signals file transfer and payload staging across internal hosts.
-- **TCP Handshake Dynamics:** High SYN-to-ACK ratios with non-zero RST teardowns reflect uncompleted probing against closed ports, characteristic of automated lateral spread.`,
+- **Destination Port Entropy:** Elevated port entropy (${ctx.flowFeatures.dst_port_entropy} bits) accompanied by auth port ratio (${ctx.flowFeatures.auth_port_ratio}%) indicates lateral probing.
+- **Temporal Gradient Acceleration (\`delta_total_ip_bytes\`):** High rate of byte volume expansion (${ctx.deltas.delta_total_ip_bytes} B) signals tool staging.
+- **TCP Handshake Dynamics:** SYN ratio (${ctx.packetFeatures.syn_ratio}) and handshake completion rate (${ctx.packetFeatures.handshake_completion_ratio}%) reflect automated lateral spread.`,
       references: Array.from(refs),
     };
   }
@@ -602,21 +712,22 @@ iptables -A FORWARD -p tcp --dport 445 -s 192.168.10.0/24 -d 192.168.10.0/24 -j 
   }
 
   // Risk / Probability / Lead Time queries
-  if (q.includes('risk') || q.includes('probability') || q.includes('lead time') || q.includes('breach') || q.includes('how bad')) {
+  if (q.includes('risk') || q.includes('probability') || q.includes('lead time') || q.includes('breach') || q.includes('how bad') || q.includes('confidence')) {
     refs.add(`Risk: ${ctx.riskLevel.toUpperCase()}`);
+    refs.add(`${(ctx.probability * 100).toFixed(1)}% Prob`);
     refs.add(`${ctx.leadTimeSeconds.toFixed(0)}s Lead Time`);
 
     return {
       answer: `### Real-Time Threat Posture & Early Warning
 
 - **Current Stage:** \`${ctx.stage}\`
-- **Infiltration Probability:** \`${(ctx.probability * 100).toFixed(1)}%\`
+- **Current Infiltration Probability:** **\`${(ctx.probability * 100).toFixed(1)}%\`**
 - **Threat Risk Level:** **${ctx.riskLevel.toUpperCase()}**
-- **Forecasted Early Lead Time:** **${ctx.leadTimeSeconds.toFixed(1)} seconds** prior to catastrophic domain compromise
 - **Model Confidence:** \`${(ctx.confidence * 100).toFixed(1)}%\`
+- **Forecasted Early Lead Time:** **${ctx.leadTimeSeconds.toFixed(1)} seconds** prior to breach finalization
 
 #### Operational Assessment:
-The world model forecasts that adversary activity has breached perimeter boundary defenses and is executing **${ctx.stage}** actions. Without immediate containment, credential harvesting and exfiltration over \`203.0.113.15\` will finalize within the next observation intervals.`,
+Adversary activity is executing **${ctx.stage}** actions. Packet-level frame mean is ${ctx.packetFeatures.pkt_len_mean}B with active flow count at ${ctx.flowFeatures.flow_count}. Outbound C2 flows to \`203.0.113.15\` are active.`,
       references: Array.from(refs),
     };
   }
@@ -624,21 +735,23 @@ The world model forecasts that adversary activity has breached perimeter boundar
   // Default General Overview
   const topHostNames = ctx.flaggedHosts.map((h) => `\`${h.id}\` (${h.hostname})`).join(', ') || '`192.168.10.44`';
   refs.add(ctx.stage);
+  refs.add(`${(ctx.probability * 100).toFixed(1)}% Prob`);
   if (ctx.flaggedHosts[0]) refs.add(ctx.flaggedHosts[0].id);
 
   return {
     answer: `### Aegis Vantage Telemetry Summary (Window #${ctx.windowIndex})
 
-**Active State:** \`${ctx.stage}\` | **Probability:** \`${(ctx.probability * 100).toFixed(1)}%\` | **Status:** **${ctx.riskLevel.toUpperCase()}**
+**Active State:** \`${ctx.stage}\` | **Current Infiltration Probability:** \`${(ctx.probability * 100).toFixed(1)}%\` | **Status:** **${ctx.riskLevel.toUpperCase()}**
 
-#### Current Situation:
-- **Monitored Episode:** CSE-CIC-IDS2018 Infiltration Replay (Thursday series)
+#### Current Telemetry Posture:
+- **Monitored Episode:** CSE-CIC-IDS2018 Infiltration (Thursday series)
 - **Flagged Assets:** ${topHostNames}
-- **Primary Attack Vector:** Lateral movement over SMB (TCP 445) and external C2 egress to \`203.0.113.15\`.
+- **Model Confidence:** \`${(ctx.confidence * 100).toFixed(1)}%\` | **Lead Time:** \`${ctx.leadTimeSeconds.toFixed(1)}s\`
+- **Flow/Packet Metrics:** Active flows: \`${ctx.flowFeatures.flow_count}\`, Byte rate: \`${(ctx.flowFeatures.byte_rate / 1024).toFixed(1)} KB/s\`, Port entropy: \`${ctx.flowFeatures.dst_port_entropy} bits\`.
 - **Top Metric Anomalies:**
 ${ctx.topFeatures.slice(0, 3).map((f) => `  - \`${f.feature}\`: ${f.value} (+${f.weight.toFixed(2)})`).join('\n')}
 
-*Ask me about any specific host (\`192.168.10.44\`, \`192.168.10.12\`), explainability features (SHAP), MITRE mitigations, or containment commands.*`,
+*Ask me about any specific host (\`192.168.10.44\`, \`192.168.10.12\`), packet/flow feature changes, or containment commands.*`,
     references: Array.from(refs),
   };
 }
@@ -646,14 +759,14 @@ ${ctx.topFeatures.slice(0, 3).map((f) => `  - \`${f.feature}\`: ${f.value} (+${f
 // ── 8. Dynamic Suggested Queries Generator ─────────────────────
 
 export function getSuggestedQueries(windowIndex?: number): string[] {
-  const ctx = retrieveContext('', windowIndex);
+  const ctx = retrieveContext('', { windowIndex });
 
   if (ctx.riskLevel === 'critical') {
     return [
+      `What is the current attack probability and model confidence?`,
       `Why is ${ctx.flaggedHosts[0]?.id || '192.168.10.44'} flagged for lateral movement?`,
+      'Explain packet and flow level feature changes (deltas)',
       'What is the recommended isolation playbook for port 445?',
-      'Explain top SHAP drivers for current threat probability',
-      'What is the forecasted breach lead time?',
     ];
   } else if (ctx.riskLevel === 'watch') {
     return [
@@ -692,9 +805,9 @@ export interface IAnswerResponse {
 
 export async function answerTelemetryQuery(
   query: string,
-  options?: { windowIndex?: number; contextHint?: string }
+  options?: { windowIndex?: number; live?: boolean; contextHint?: string }
 ): Promise<IAnswerResponse> {
-  const ctx = retrieveContext(query, options?.windowIndex);
+  const ctx = retrieveContext(query, options);
   let result: { answer: string; references: string[]; provider: string } | null = null;
 
   const groqKey = (
@@ -721,6 +834,7 @@ export async function answerTelemetryQuery(
 
   // 3. Third: Built-in Cyber Causality Engine (Offline Fallback)
   if (!result) {
+    console.log(`[ragService] ℹ️ Falling back to Built-in Cyber Causality Engine | Prob: ${(ctx.probability * 100).toFixed(1)}%`);
     const fallback = generateWithBuiltinCyberEngine(query, ctx);
     result = {
       ...fallback,

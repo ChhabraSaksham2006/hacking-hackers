@@ -277,7 +277,7 @@ export function ConsolePanel() {
   const isCritical = liveState?.riskLevel === "critical";
   const isWatch = liveState?.riskLevel === "watch";
 
-  const [messages, setMessages] = useState<ChatMessage[]>([
+  const [messages, setMessages] = useState<ChatMessage[]>(() => [
     {
       id: "initial-welcome",
       role: "assistant",
@@ -285,14 +285,13 @@ export function ConsolePanel() {
 
 Ground-truth stream connected to **SparseRSSM World Model** and **MITRE ATT&CK Engine**.
 
-- **Active Window:** \`#1797\` | **Observed State:** \`Lateral Movement\`
-- **Threat Probability:** \`88.0%\` | **Status:** **CRITICAL**
-- **Primary Attack Vector:** Lateral SMB propagation over **TCP Port 445** from \`192.168.10.44\` with outbound C2 beaconing to \`203.0.113.15\`.
+- **Teleprompter:** Synchronized with real-time CSE-CIC-IDS2018 Infiltration episode.
+- **Provider Cascade:** **Groq API** (\`openai/gpt-oss-20b\` & \`120b\`) $\\rightarrow$ **OpenRouter** (\`nemotron-3.5-lightning:free\`) $\\rightarrow$ **Offline Cyber Engine**.
 
-Select a recommended prompt below or inquire directly about any host, flow, or containment playbook.`,
-      references: ["Window #1797", "192.168.10.44", "T1021.002", "Port 445"],
+Inquire below about current attack probability, model confidence, flow/packet feature changes, host diagnostics, or containment playbooks.`,
+      references: ["Live Stream", "192.168.10.44", "T1021.002", "Port 445"],
       timestamp: "Just now",
-      provider: "cyber_causality_engine",
+      provider: "groq: gpt-oss-20b",
     },
   ]);
 
@@ -324,7 +323,7 @@ Select a recommended prompt below or inquire directly about any host, flow, or c
     chatMutation.mutate(
       {
         query: text,
-        windowIndex: liveState?.windowIndex,
+        live: true, // Always fetch the current real-time telemetry state!
       },
       {
         onSuccess: (data: ChatQueryResponse) => {
