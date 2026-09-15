@@ -319,18 +319,25 @@ export interface NetworkGraphResponse {
   }>;
 }
 
-export function useNetworkGraph(scrub?: number) {
+export function useNetworkGraph(options?: { scrub?: number | undefined; live?: boolean | undefined } | number) {
+  const scrub = typeof options === 'number' ? options : options?.scrub;
+  const isLive = typeof options === 'object' && options?.live !== undefined ? options.live : (scrub === undefined || scrub === 100);
+
   return useQuery({
-    queryKey: ["network", "graph", scrub],
+    queryKey: ["network", "graph", scrub, isLive],
     queryFn: () => {
-      const url = scrub !== undefined ? `/api/network/graph?scrub=${scrub}` : "/api/network/graph";
+      const params = new URLSearchParams();
+      if (isLive) params.set("live", "true");
+      else if (scrub !== undefined) params.set("scrub", scrub.toString());
+      const qs = params.toString();
+      const url = qs ? `/api/network/graph?${qs}` : "/api/network/graph";
       return apiFetch<NetworkGraphResponse>(url);
     },
-    refetchInterval: scrub === undefined || scrub === 100 ? 2500 : false,
+    refetchInterval: isLive ? 2500 : false,
   });
 }
 
-export function useHostDetails(id: string, scrub?: number) {
+export function useHostDetails(id: string, scrub?: number | undefined) {
   return useQuery({
     queryKey: ["network", "hosts", id, scrub],
     queryFn: () => {
@@ -455,15 +462,18 @@ export interface ExplainabilityResponse {
   }>;
 }
 
-export function useExplainability(params?: { windowIndex?: number; scrub?: number }) {
+export function useExplainability(params?: { windowIndex?: number | undefined; scrub?: number | undefined; live?: boolean | undefined }) {
+  const isLive = params?.live ?? (params?.windowIndex === undefined && params?.scrub === undefined);
   const qs = new URLSearchParams();
-  if (params?.windowIndex !== undefined) qs.set("windowIndex", params.windowIndex.toString());
+  if (isLive) qs.set("live", "true");
+  else if (params?.windowIndex !== undefined) qs.set("windowIndex", params.windowIndex.toString());
   else if (params?.scrub !== undefined) qs.set("scrub", params.scrub.toString());
   const queryStr = qs.toString();
 
   return useQuery({
-    queryKey: ["explainability", params?.windowIndex, params?.scrub],
+    queryKey: ["explainability", params?.windowIndex, params?.scrub, isLive],
     queryFn: () => apiFetch<ExplainabilityResponse>(`/api/explainability${queryStr ? `?${queryStr}` : ""}`),
+    refetchInterval: isLive ? 2500 : false,
   });
 }
 

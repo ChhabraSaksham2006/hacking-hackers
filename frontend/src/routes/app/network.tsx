@@ -1,11 +1,12 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { X, RefreshCw } from "lucide-react";
+import { X, RefreshCw, Radio } from "lucide-react";
 import { HeroPanel, PageTitle, RiskBadge } from "@/components/app/panels";
 import { NetworkGraph, type GraphNode, type GraphEdge } from "@/components/app/charts";
 import { pageHead } from "@/lib/head";
 import { cn } from "@/lib/utils";
 import { useNetworkGraph, useHostDetails } from "@/hooks/useApi";
+import { subscribeDashboardStream } from "@/api/dashboardApi";
 
 export const Route = createFileRoute("/app/network")({
   head: pageHead(
@@ -18,11 +19,34 @@ export const Route = createFileRoute("/app/network")({
 function NetworkState() {
   const [view, setView] = useState<"flow" | "packet">("flow");
   const [segmentFilter, setSegmentFilter] = useState<string>("all segments");
+  const [isLiveMode, setIsLiveMode] = useState<boolean>(true);
   const [scrub, setScrub] = useState(100);
   const [selected, setSelected] = useState<string | null>("192.168.10.44");
 
-  const { data: graphData, isLoading, refetch } = useNetworkGraph(scrub);
-  const { data: hostDetail } = useHostDetails(selected || "192.168.10.44", scrub);
+  // Subscribe to real-time simulation/dashboard stream
+  useEffect(() => {
+    const unsubscribe = subscribeDashboardStream((state) => {
+      if (isLiveMode) {
+        const liveWin = state.actual_window_index;
+        const mappedScrub = Math.max(0, Math.min(100, Math.round(((liveWin - 1750) / 60) * 100)));
+        setScrub(mappedScrub);
+      }
+    });
+    return () => unsubscribe();
+  }, [isLiveMode]);
+
+  const { data: graphData, isLoading, refetch } = useNetworkGraph({
+    scrub: isLiveMode ? undefined : scrub,
+    live: isLiveMode,
+  });
+  const { data: hostDetail } = useHostDetails(selected || "192.168.10.44", isLiveMode ? undefined : scrub);
+
+  // Keep slider position synced when live graph data returns
+  useEffect(() => {
+    if (isLiveMode && graphData?.scrub !== undefined) {
+      setScrub(graphData.scrub);
+    }
+  }, [isLiveMode, graphData?.scrub]);
 
   const nodes: GraphNode[] = useMemo(() => {
     if (!graphData?.nodes || graphData.nodes.length === 0) return [];
@@ -62,9 +86,26 @@ function NetworkState() {
         note="Node size tracks real telemetry flow volume, colour tracks predicted risk. Grounded in CIC-IDS-2018 benchmark telemetry."
         actions={
           <div className="flex items-center gap-2">
+            {isLiveMode ? (
+              <div className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono text-teal border border-teal/40 rounded bg-teal/10">
+                <span className="size-2 rounded-full bg-teal animate-pulse" />
+                Live Telemetry Stream
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  setIsLiveMode(true);
+                  refetch();
+                }}
+                className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono text-amber border border-amber/40 rounded bg-amber/10 hover:bg-amber/20 transition-colors"
+              >
+                <Radio className="size-3 text-amber animate-pulse" />
+                Resume Live Stream →
+              </button>
+            )}
             <button
               onClick={() => {
-                setScrub(100);
+                setIsLiveMode(true);
                 refetch();
               }}
               className="flex items-center gap-1.5 rounded-md border border-fog-deep/60 px-3 py-1.5 text-[12px] font-medium text-fog transition-colors hover:border-paper hover:text-paper"
@@ -109,19 +150,28 @@ function NetworkState() {
           <p className="mt-5 text-[13px] font-medium">Timeline Presets</p>
           <div className="mt-2 flex flex-col gap-1">
             {[
+              { label: "Live Telemetry", value: -1 },
               { label: "Baseline (Normal)", value: 0 },
               { label: "Recon Sweep", value: 58 },
               { label: "Initial Access", value: 72 },
               { label: "Lateral Movement", value: 85 },
               { label: "C2 Beaconing", value: 98 },
-              { label: "Live Telemetry", value: 100 },
             ].map((p) => (
               <button
                 key={p.label}
-                onClick={() => setScrub(p.value)}
+                onClick={() => {
+                  if (p.value === -1) {
+                    setIsLiveMode(true);
+                  } else {
+                    setIsLiveMode(false);
+                    setScrub(p.value);
+                  }
+                }}
                 className={cn(
                   "rounded-md px-2.5 py-1 text-left text-[11px] font-mono transition-colors",
-                  scrub === p.value ? "bg-teal/15 text-teal font-semibold" : "text-fog hover:text-paper hover:bg-paper/5",
+                  (p.value === -1 ? isLiveMode : (!isLiveMode && scrub === p.value))
+                    ? "bg-teal/15 text-teal font-semibold"
+                    : "text-fog hover:text-paper hover:bg-paper/5",
                 )}
               >
                 {p.label}
@@ -146,7 +196,7 @@ function NetworkState() {
                 {currentPhase}
               </span>
               <span className="mono text-fog text-[12px]">
-                {scrub === 100 ? "live telemetry" : `window #${currentWindow}`}
+                {isLiveMode ? "live telemetry" : `historical window #${currentWindow}`}
               </span>
             </div>
           }
@@ -170,6 +220,14 @@ function NetworkState() {
                 <span className={cn("mono font-semibold", overallState === "critical" ? "text-crimson" : overallState === "watch" ? "text-amber" : "text-teal")}>
                   {currentProb} Risk
                 </span>
+                {!isLiveMode && (
+                  <button
+                    onClick={() => setIsLiveMode(true)}
+                    className="ml-2 rounded border border-teal/40 bg-teal/10 px-2 py-0.5 text-[10px] font-mono text-teal hover:bg-teal/20"
+                  >
+                    Track Live Stream
+                  </button>
+                )}
               </div>
               <span className="mono text-fog">Window #1810 (C2 Egress)</span>
             </div>
@@ -178,7 +236,10 @@ function NetworkState() {
               min={0}
               max={100}
               value={scrub}
-              onChange={(e) => setScrub(Number(e.target.value))}
+              onChange={(e) => {
+                setIsLiveMode(false);
+                setScrub(Number(e.target.value));
+              }}
               aria-label="Time scrubber"
               className="w-full accent-teal cursor-pointer"
             />

@@ -329,17 +329,26 @@ export class DashboardStore extends EventEmitter {
     };
   }
 
-  public getNetworkGraph(scrub?: number) {
+  public getNetworkGraph(scrub?: number, live?: boolean) {
     // Ground truth enterprise topology from Thursday-01-03-2018 Infiltration episode
     // Subnet: 192.168.10.0/24 (Enterprise Core) + External Perimeter (203.0.113.15, 192.168.10.1 DNS/GW)
     let effectiveWindow = this.actual_window_index;
-    let isLive = true;
+    let isLive = live === true || scrub === undefined || scrub === null;
 
-    if (typeof scrub === 'number' && !isNaN(scrub)) {
-      const clampedScrub = Math.max(0, Math.min(100, scrub));
-      // Window range: 1750 to 1810
-      effectiveWindow = Math.round(1750 + (clampedScrub / 100) * (1810 - 1750));
-      isLive = clampedScrub === 100;
+    if (!isLive && typeof scrub === 'number' && !isNaN(scrub)) {
+      if (scrub === 100) {
+        // Scrub 100 explicitly represents the live telemetry stream
+        effectiveWindow = this.actual_window_index;
+        isLive = true;
+      } else {
+        const clampedScrub = Math.max(0, Math.min(100, scrub));
+        // Window range: 1750 to 1810
+        effectiveWindow = Math.round(1750 + (clampedScrub / 100) * (1810 - 1750));
+        isLive = false;
+      }
+    } else {
+      effectiveWindow = this.actual_window_index;
+      isLive = true;
     }
 
     const isC2 = effectiveWindow >= 1804;
@@ -545,19 +554,23 @@ export class DashboardStore extends EventEmitter {
       ? this.timestamp
       : `2018-03-01 01:${Math.floor(50 + ((effectiveWindow - 1750) / 60) * 10)}:${String((effectiveWindow * 7) % 60).padStart(2, '0')}`;
 
+    const calculatedScrub = Math.max(0, Math.min(100, Math.round(((effectiveWindow - 1750) / 60) * 100)));
+
     return {
+      isLive,
+      activeLiveWindowIndex: this.actual_window_index,
       windowIndex: effectiveWindow,
       timestamp,
       phase,
       probability,
-      scrub: typeof scrub === 'number' ? scrub : 100,
+      scrub: isLive ? calculatedScrub : (typeof scrub === 'number' ? scrub : calculatedScrub),
       nodes,
       edges,
     };
   }
 
-  public getHostDetail(hostId: string, scrub?: number) {
-    const graph = this.getNetworkGraph(scrub);
+  public getHostDetail(hostId: string, scrub?: number, live?: boolean) {
+    const graph = this.getNetworkGraph(scrub, live);
     const node = graph.nodes.find((n) => n.id === hostId || n.hostname === hostId) || graph.nodes[0]!;
     
     // Connected flows for this specific host

@@ -101,9 +101,12 @@ const CATEGORY_NAMES: Record<string, { name: string; description: string }> = {
 export async function getExplainability(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const dataset = getReplayDataset();
+    const isLive = req.query.live === 'true' || (req.query.windowIndex === undefined && req.query.scrub === undefined);
     let targetIndex: number;
 
-    if (req.query.windowIndex !== undefined && req.query.windowIndex !== '') {
+    if (isLive) {
+      targetIndex = dashboardStore.actual_window_index;
+    } else if (req.query.windowIndex !== undefined && req.query.windowIndex !== '') {
       targetIndex = Number(req.query.windowIndex);
     } else if (req.query.scrub !== undefined && req.query.scrub !== '') {
       const scrub = Math.max(0, Math.min(100, Number(req.query.scrub)));
@@ -173,20 +176,22 @@ export async function getExplainability(req: Request, res: Response, next: NextF
     const categories = Array.from(categoriesMap.values()).filter((c) => c.features.length > 0);
 
     res.json({
+      isLive,
+      activeLiveWindowIndex: dashboardStore.actual_window_index,
       windowIndex: win.windowIndex,
       timestampStart: win.timestampStart,
       timestampEnd: win.timestampEnd,
       phase: win.phase,
-      stage: win.stage,
-      probability: win.probability,
+      stage: isLive ? dashboardStore.summary.currentStage : win.stage,
+      probability: isLive ? dashboardStore.summary.infiltrationProbability : win.probability,
       confidence: win.confidence,
-      riskState: win.riskState,
+      riskState: isLive ? dashboardStore.summary.riskLevel : win.riskState,
       isAttack: win.isAttack,
       leadTimeSeconds: win.riskState === 'critical' ? 20.0 : win.riskState === 'watch' ? 14.0 : 0.0,
       mitre: {
         techniqueId: win.techniqueId,
         techniqueName: win.techniqueName,
-        tactic: win.stage,
+        tactic: isLive ? dashboardStore.summary.currentStage : win.stage,
       },
       summary: win.summary,
       reason: win.reason,

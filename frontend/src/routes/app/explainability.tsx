@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Activity,
@@ -13,6 +13,7 @@ import {
   Filter,
   Info,
   Layers,
+  Radio,
   RefreshCw,
   Search,
   ShieldAlert,
@@ -23,6 +24,7 @@ import { FlatPanel, HeroPanel, PageTitle, RiskBadge } from "@/components/app/pan
 import { pageHead } from "@/lib/head";
 import { cn } from "@/lib/utils";
 import { useExplainability } from "@/hooks/useApi";
+import { subscribeDashboardStream } from "@/api/dashboardApi";
 
 export const Route = createFileRoute("/app/explainability")({
   head: pageHead(
@@ -36,10 +38,29 @@ function ExplainabilityPage() {
   const [targetWindow, setTargetWindow] = useState<number>(1796);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [isLiveMode, setIsLiveMode] = useState<boolean>(true);
+
+  // Subscribe to real-time simulation/dashboard stream
+  useEffect(() => {
+    const unsubscribe = subscribeDashboardStream((state) => {
+      if (isLiveMode) {
+        setTargetWindow(state.actual_window_index);
+      }
+    });
+    return () => unsubscribe();
+  }, [isLiveMode]);
 
   const { data: explainData, isLoading, refetch } = useExplainability({
-    windowIndex: targetWindow,
+    windowIndex: isLiveMode ? undefined : targetWindow,
+    live: isLiveMode,
   });
+
+  // Keep targetWindow synced when live explainData returns
+  useEffect(() => {
+    if (isLiveMode && explainData?.windowIndex !== undefined) {
+      setTargetWindow(explainData.windowIndex);
+    }
+  }, [isLiveMode, explainData?.windowIndex]);
 
   const contributions = explainData?.featureContributions || [];
   const maxWeight = useMemo(() => {
@@ -99,6 +120,23 @@ function ExplainabilityPage() {
         note="SparseRSSM + TFCNet ensemble feature attributions, SHAP divergence, and cyber causality reasoning."
         actions={
           <div className="flex items-center gap-2">
+            {isLiveMode ? (
+              <div className="flex items-center gap-1.5 rounded-full border border-teal/40 bg-teal/10 px-2.5 py-1 text-[11px] font-mono text-teal">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal opacity-75"></span>
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-teal"></span>
+                </span>
+                Live Telemetry Stream
+              </div>
+            ) : (
+              <button
+                onClick={() => setIsLiveMode(true)}
+                className="flex items-center gap-1.5 rounded-full border border-amber/50 bg-amber/10 px-2.5 py-1 text-[11px] font-mono text-amber hover:bg-amber/20 transition-colors"
+              >
+                <Radio className="size-3 text-amber animate-pulse" />
+                Forensic review (paused) — Track Live Stream &rarr;
+              </button>
+            )}
             <button
               onClick={() => refetch()}
               className="flex items-center gap-1.5 rounded-md border border-fog-deep/60 px-3 py-1.5 text-[12px] font-medium text-fog transition-colors hover:border-paper hover:text-paper"
@@ -198,7 +236,9 @@ function ExplainabilityPage() {
             </span>
           </div>
           <span className="mono text-[12px] text-fog">
-            Scrubbing across CSE-CIC-IDS2018 Thursday Infiltration (1750–1810)
+            {isLiveMode
+              ? `Live Tracking: Window #${explainData?.windowIndex ?? targetWindow}`
+              : `Historical Forensic Review: Window #${targetWindow}`}
           </span>
         </div>
 
@@ -209,7 +249,10 @@ function ExplainabilityPage() {
             min={1750}
             max={1810}
             value={targetWindow}
-            onChange={(e) => setTargetWindow(Number(e.target.value))}
+            onChange={(e) => {
+              setIsLiveMode(false);
+              setTargetWindow(Number(e.target.value));
+            }}
             aria-label="Timeline window scrubber"
             className="w-full accent-teal cursor-pointer"
           />
@@ -217,6 +260,18 @@ function ExplainabilityPage() {
         </div>
 
         <div className="mt-3 flex flex-wrap gap-2 pt-2 border-t border-fog-deep/40">
+          <button
+            onClick={() => setIsLiveMode(true)}
+            className={cn(
+              "rounded-md px-2.5 py-1 text-[11px] font-mono transition-colors border flex items-center gap-1.5",
+              isLiveMode
+                ? "border-teal/60 bg-teal/15 text-teal font-semibold shadow-sm"
+                : "border-fog-deep/50 bg-void-700/40 text-fog hover:border-paper hover:text-paper",
+            )}
+          >
+            <Radio className="size-3 text-teal" />
+            Live Telemetry (#{explainData?.windowIndex ?? targetWindow})
+          </button>
           {(
             explainData?.presets || [
               { label: "Benign Baseline", windowIndex: 1750, stage: "Normal" },
@@ -228,10 +283,13 @@ function ExplainabilityPage() {
           ).map((preset) => (
             <button
               key={preset.label}
-              onClick={() => setTargetWindow(preset.windowIndex)}
+              onClick={() => {
+                setIsLiveMode(false);
+                setTargetWindow(preset.windowIndex);
+              }}
               className={cn(
                 "rounded-md px-2.5 py-1 text-[11px] font-mono transition-colors border",
-                targetWindow === preset.windowIndex
+                !isLiveMode && targetWindow === preset.windowIndex
                   ? "border-teal/60 bg-teal/15 text-teal font-semibold shadow-sm"
                   : "border-fog-deep/50 bg-void-700/40 text-fog hover:border-paper hover:text-paper",
               )}
