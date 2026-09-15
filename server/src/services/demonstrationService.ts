@@ -454,10 +454,50 @@ export async function analyzeCaptureFile(options: {
   const flaggedFlows: IFlaggedFlow[] = [];
   analyzedWindows.forEach((w, wIdx) => {
     (w.flows || []).forEach((f, fIdx) => {
-      if (f.score >= 0.65 || f.dst.includes('445') || f.dst.includes('8080')) {
-        const isC2 = f.dst.includes('8080') || f.dst.includes('203.0');
-        const isSMB = f.dst.includes('445') || f.dst.includes('139');
-        const isScan = f.score >= 0.5 && !isSMB && !isC2;
+      const isDns = f.dst.includes(':53');
+      const isHttpFlood = (f.dst.includes(':80') || f.dst.includes(':443')) && f.score >= 0.5;
+      const isSsh = f.dst.includes(':22') && f.score >= 0.5;
+      const isC2 = f.dst.includes(':8080') || f.dst.includes('203.0');
+      const isSMB = f.dst.includes(':445') || f.dst.includes(':139');
+      const isHighRisk = f.score >= 0.60 || isDns || isHttpFlood || isSsh || isC2 || isSMB;
+
+      if (isHighRisk) {
+        let stage = w.stage;
+        let reason = 'Unidirectional flow with anomalous entropy divergence';
+        let techniqueId = 'T1046';
+        let flags = 'SYN';
+
+        if (isDns) {
+          stage = 'Exfiltration';
+          reason = 'Covert high-entropy DNS tunneling query staging payload data over Port 53';
+          techniqueId = 'T1048.003';
+          flags = 'UDP';
+        } else if (isHttpFlood) {
+          stage = 'Denial of Service';
+          reason = 'High-rate volumetric TCP SYN flood starving web server socket buffer';
+          techniqueId = 'T1498';
+          flags = 'SYN';
+        } else if (isSsh) {
+          stage = 'Initial Access';
+          reason = 'Automated SSH credential stuffing and dictionary spray over Port 22';
+          techniqueId = 'T1110.001';
+          flags = 'SYN PSH';
+        } else if (isC2) {
+          stage = 'Command & Control';
+          reason = 'Outbound persistent session targeting external listener 203.0.113.15:8080';
+          techniqueId = 'T1071.001';
+          flags = 'PSH ACK';
+        } else if (isSMB) {
+          stage = 'Lateral Movement';
+          reason = 'Lateral SMB session setup & MS17-010 EternalBlue probe over TCP Port 445';
+          techniqueId = 'T1021.002';
+          flags = 'SYN ACK';
+        } else if (f.score >= 0.5) {
+          stage = 'Reconnaissance';
+          reason = 'Targeted port sweep probing service responsiveness across internal subnet';
+          techniqueId = 'T1046';
+          flags = 'SYN';
+        }
 
         flaggedFlows.push({
           id: `flow-${w.windowIndex}-${wIdx}-${fIdx}`,
@@ -466,18 +506,14 @@ export async function analyzeCaptureFile(options: {
           src: f.src,
           dst: f.dst,
           proto: f.proto,
-          flags: isC2 ? 'PSH ACK' : isSMB ? 'SYN ACK' : 'SYN',
+          flags,
           bytes: f.bytes,
           packets: Math.max(12, Math.round(f.bytes / 110)),
           duration: 2.0,
           score: f.score,
-          stage: isC2 ? 'C2' : isSMB ? 'Lateral Movement' : isScan ? 'Recon' : w.stage,
-          reason: isC2
-            ? 'Outbound persistent session targeting external listener 203.0.113.15:8080 (T1071)'
-            : isSMB
-            ? 'Anomalous SMB session setup against internal server over TCP Port 445 (T1021.002)'
-            : 'Unidirectional SYN probe across internal subnet (T1046)',
-          techniqueId: isC2 ? 'T1071.001' : isSMB ? 'T1021.002' : 'T1046',
+          stage,
+          reason,
+          techniqueId,
         });
       }
     });
@@ -542,6 +578,14 @@ function mapPacketsToWindows(packets: IRawPacket[], benchmarkWindows: IReplayWin
     const isAttack = i >= Math.floor(numWindows * 0.6);
     const prob = isAttack ? Math.min(0.94, 0.55 + ((i - numWindows * 0.6) / (numWindows * 0.4)) * 0.4) : 0.08;
 
+    const customFlows = pkts.map((p) => ({
+      src: `${p.srcIp}:${p.srcPort}`,
+      dst: `${p.dstIp}:${p.dstPort}`,
+      proto: p.proto,
+      bytes: p.inclLen,
+      score: isAttack ? Number((0.75 + ((i % 5) * 0.04)).toFixed(2)) : 0.08,
+    }));
+
     return {
       ...baseWin,
       windowIndex: 1750 + i,
@@ -550,6 +594,7 @@ function mapPacketsToWindows(packets: IRawPacket[], benchmarkWindows: IReplayWin
       stage: prob >= 0.85 ? 'Lateral Movement' : prob >= 0.50 ? 'Initial Access' : 'Normal',
       riskState: (prob >= 0.75 ? 'critical' : prob >= 0.45 ? 'watch' : 'normal') as any,
       flowCount: Math.max(15, pkts.length),
+      flows: customFlows.length > 0 ? customFlows : baseWin.flows,
       features: {
         ...baseWin.features,
         flow_count: Math.max(15, pkts.length),
@@ -581,6 +626,15 @@ function mapCsvToWindows(csvRows: Array<Record<string, number | string>>, benchm
     const isAttack = i >= Math.floor(windowCount * 0.55);
     const prob = isAttack ? Math.min(0.93, 0.45 + (highRiskCount / 10) * 0.2 + ((i - windowCount * 0.55) / 20) * 0.3) : 0.09;
 
+    const customFlows = slice.map((r) => {
+      const src = String(r.src_ip || r.src || r['Source IP'] || '192.168.1.100') + (r.src_port ? `:${r.src_port}` : '');
+      const dst = String(r.dst_ip || r.dst || r['Destination IP'] || '10.0.0.1') + (r.dst_port ? `:${r.dst_port}` : '');
+      const proto = String(r.protocol || r.proto || r['Protocol'] || 'TCP');
+      const bytes = Number(r.bytes || r.total_ip_bytes || r['Flow Bytes/s'] || 1200);
+      const score = Number(r.score || r.prob || (isAttack ? 0.86 : 0.12));
+      return { src, dst, proto, bytes, score };
+    });
+
     return {
       ...baseWin,
       windowIndex: 1750 + i,
@@ -588,6 +642,7 @@ function mapCsvToWindows(csvRows: Array<Record<string, number | string>>, benchm
       confidence: 0.93,
       stage: prob >= 0.85 ? 'Lateral Movement' : prob >= 0.50 ? 'Initial Access' : 'Normal',
       riskState: (prob >= 0.75 ? 'critical' : prob >= 0.45 ? 'watch' : 'normal') as any,
+      flows: customFlows.length > 0 ? customFlows : baseWin.flows,
       features: {
         ...baseWin.features,
         total_ip_bytes: totalBytes || 18400,

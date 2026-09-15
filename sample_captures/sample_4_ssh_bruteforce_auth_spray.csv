@@ -1,0 +1,91 @@
+timestamp,src_ip,src_port,dst_ip,dst_port,protocol,flags,total_ip_bytes,packet_count,duration_seconds,prob,stage,anomaly_reason,technique_id
+2024-06-10 06:13:20,91.240.118.172,41000,10.20.1.10,22,TCP,SYN PSH,2100,18,2.0,0.05,Normal,"Standard authorized SSH key exchange session",None
+2024-06-10 06:13:22,91.240.118.172,41001,10.20.1.10,22,TCP,SYN PSH,2100,18,2.0,0.05,Normal,"Standard authorized SSH key exchange session",None
+2024-06-10 06:13:24,91.240.118.172,41002,10.20.1.10,22,TCP,SYN PSH,2100,18,2.0,0.05,Normal,"Standard authorized SSH key exchange session",None
+2024-06-10 06:13:26,91.240.118.172,41003,10.20.1.10,22,TCP,SYN PSH,2100,18,2.0,0.05,Normal,"Standard authorized SSH key exchange session",None
+2024-06-10 06:13:28,91.240.118.172,41004,10.20.1.10,22,TCP,SYN PSH,2100,18,2.0,0.05,Normal,"Standard authorized SSH key exchange session",None
+2024-06-10 06:13:30,91.240.118.172,41005,10.20.1.10,22,TCP,SYN PSH,2100,18,2.0,0.05,Normal,"Standard authorized SSH key exchange session",None
+2024-06-10 06:13:32,91.240.118.172,41006,10.20.1.10,22,TCP,SYN PSH,2100,18,2.0,0.05,Normal,"Standard authorized SSH key exchange session",None
+2024-06-10 06:13:34,91.240.118.172,41007,10.20.1.10,22,TCP,SYN PSH,2100,18,2.0,0.05,Normal,"Standard authorized SSH key exchange session",None
+2024-06-10 06:13:36,91.240.118.172,41008,10.20.1.10,22,TCP,SYN PSH,2100,18,2.0,0.05,Normal,"Standard authorized SSH key exchange session",None
+2024-06-10 06:13:38,91.240.118.172,41009,10.20.1.10,22,TCP,SYN PSH,2100,18,2.0,0.05,Normal,"Standard authorized SSH key exchange session",None
+2024-06-10 06:13:40,91.240.118.172,41010,10.20.1.10,22,TCP,SYN PSH,2100,18,2.0,0.05,Normal,"Standard authorized SSH key exchange session",None
+2024-06-10 06:13:42,91.240.118.172,41011,10.20.1.10,22,TCP,SYN PSH,2100,18,2.0,0.05,Normal,"Standard authorized SSH key exchange session",None
+2024-06-10 06:13:44,91.240.118.172,41012,10.20.1.10,22,TCP,SYN PSH,2100,18,2.0,0.05,Normal,"Standard authorized SSH key exchange session",None
+2024-06-10 06:13:46,91.240.118.172,41013,10.20.1.10,22,TCP,SYN PSH,2100,18,2.0,0.05,Normal,"Standard authorized SSH key exchange session",None
+2024-06-10 06:13:48,91.240.118.172,41014,10.20.1.10,22,TCP,SYN PSH,2100,18,2.0,0.05,Normal,"Standard authorized SSH key exchange session",None
+2024-06-10 06:13:50,91.240.118.172,41015,10.20.1.10,22,TCP,SYN PSH,2100,18,2.0,0.05,Normal,"Standard authorized SSH key exchange session",None
+2024-06-10 06:13:52,91.240.118.172,41016,10.20.1.10,22,TCP,SYN PSH,2100,18,2.0,0.05,Normal,"Standard authorized SSH key exchange session",None
+2024-06-10 06:13:54,91.240.118.172,41017,10.20.1.10,22,TCP,SYN PSH,2100,18,2.0,0.05,Normal,"Standard authorized SSH key exchange session",None
+2024-06-10 06:13:56,91.240.118.172,41018,10.20.1.10,22,TCP,SYN PSH,2100,18,2.0,0.05,Normal,"Standard authorized SSH key exchange session",None
+2024-06-10 06:13:58,91.240.118.172,41019,10.20.1.10,22,TCP,SYN PSH,2100,18,2.0,0.05,Normal,"Standard authorized SSH key exchange session",None
+2024-06-10 06:14:00,91.240.118.172,41020,10.20.1.10,22,TCP,SYN PSH,2100,18,2.0,0.05,Normal,"Standard authorized SSH key exchange session",None
+2024-06-10 06:14:02,91.240.118.172,41021,10.20.1.10,22,TCP,SYN PSH,2100,18,2.0,0.05,Normal,"Standard authorized SSH key exchange session",None
+2024-06-10 06:14:04,91.240.118.172,41022,10.20.1.10,22,TCP,SYN PSH,2100,18,2.0,0.05,Normal,"Standard authorized SSH key exchange session",None
+2024-06-10 06:14:06,91.240.118.172,41023,10.20.1.10,22,TCP,SYN PSH,2100,18,2.0,0.05,Normal,"Standard authorized SSH key exchange session",None
+2024-06-10 06:14:08,91.240.118.172,41024,10.20.1.10,22,TCP,SYN PSH,2100,18,2.0,0.05,Normal,"Standard authorized SSH key exchange session",None
+2024-06-10 06:14:10,91.240.118.172,41025,10.20.1.10,22,TCP,SYN PSH,53250,305,2.0,0.52,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:14:12,91.240.118.172,41026,10.20.1.10,22,TCP,SYN PSH,54100,310,2.0,0.536,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:14:14,91.240.118.172,41027,10.20.1.10,22,TCP,SYN PSH,54950,315,2.0,0.552,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:14:16,91.240.118.172,41028,10.20.1.10,22,TCP,SYN PSH,55800,320,2.0,0.568,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:14:18,91.240.118.172,41029,10.20.1.10,22,TCP,SYN PSH,56650,325,2.0,0.584,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:14:20,91.240.118.172,41030,10.20.1.10,22,TCP,SYN PSH,57500,330,2.0,0.6,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:14:22,91.240.118.172,41031,10.20.1.10,22,TCP,SYN PSH,58350,335,2.0,0.616,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:14:24,91.240.118.172,41032,10.20.1.10,22,TCP,SYN PSH,59200,340,2.0,0.632,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:14:26,91.240.118.172,41033,10.20.1.10,22,TCP,SYN PSH,60050,345,2.0,0.648,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:14:28,91.240.118.172,41034,10.20.1.10,22,TCP,SYN PSH,60900,350,2.0,0.664,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:14:30,91.240.118.172,41035,10.20.1.10,22,TCP,SYN PSH,61750,355,2.0,0.68,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:14:32,91.240.118.172,41036,10.20.1.10,22,TCP,SYN PSH,62600,360,2.0,0.696,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:14:34,91.240.118.172,41037,10.20.1.10,22,TCP,SYN PSH,63450,365,2.0,0.712,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:14:36,91.240.118.172,41038,10.20.1.10,22,TCP,SYN PSH,64300,370,2.0,0.728,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:14:38,91.240.118.172,41039,10.20.1.10,22,TCP,SYN PSH,65150,375,2.0,0.744,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:14:40,91.240.118.172,41040,10.20.1.10,22,TCP,SYN PSH,66000,380,2.0,0.76,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:14:42,91.240.118.172,41041,10.20.1.10,22,TCP,SYN PSH,66850,385,2.0,0.776,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:14:44,91.240.118.172,41042,10.20.1.10,22,TCP,SYN PSH,67700,390,2.0,0.792,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:14:46,91.240.118.172,41043,10.20.1.10,22,TCP,SYN PSH,68550,395,2.0,0.808,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:14:48,91.240.118.172,41044,10.20.1.10,22,TCP,SYN PSH,69400,400,2.0,0.824,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:14:50,91.240.118.172,41045,10.20.1.10,22,TCP,SYN PSH,70250,405,2.0,0.84,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:14:52,91.240.118.172,41046,10.20.1.10,22,TCP,SYN PSH,71100,410,2.0,0.856,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:14:54,91.240.118.172,41047,10.20.1.10,22,TCP,SYN PSH,71950,415,2.0,0.872,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:14:56,91.240.118.172,41048,10.20.1.10,22,TCP,SYN PSH,72800,420,2.0,0.888,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:14:58,91.240.118.172,41049,10.20.1.10,22,TCP,SYN PSH,73650,425,2.0,0.904,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:00,91.240.118.172,41050,10.20.1.10,22,TCP,SYN PSH,74500,430,2.0,0.92,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:02,91.240.118.172,41051,10.20.1.10,22,TCP,SYN PSH,75350,435,2.0,0.92,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:04,91.240.118.172,41052,10.20.1.10,22,TCP,SYN PSH,76200,440,2.0,0.92,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:06,91.240.118.172,41053,10.20.1.10,22,TCP,SYN PSH,77050,445,2.0,0.92,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:08,91.240.118.172,41054,10.20.1.10,22,TCP,SYN PSH,77900,450,2.0,0.92,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:10,91.240.118.172,41055,10.20.1.10,22,TCP,SYN PSH,78750,455,2.0,0.92,Reconnaissance,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:12,91.240.118.172,41056,10.20.1.10,22,TCP,SYN PSH,79600,460,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:14,91.240.118.172,41057,10.20.1.10,22,TCP,SYN PSH,80450,465,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:16,91.240.118.172,41058,10.20.1.10,22,TCP,SYN PSH,81300,470,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:18,91.240.118.172,41059,10.20.1.10,22,TCP,SYN PSH,82150,475,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:20,91.240.118.172,41060,10.20.1.10,22,TCP,SYN PSH,83000,480,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:22,91.240.118.172,41061,10.20.1.10,22,TCP,SYN PSH,83850,485,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:24,91.240.118.172,41062,10.20.1.10,22,TCP,SYN PSH,84700,490,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:26,91.240.118.172,41063,10.20.1.10,22,TCP,SYN PSH,85550,495,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:28,91.240.118.172,41064,10.20.1.10,22,TCP,SYN PSH,86400,500,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:30,91.240.118.172,41065,10.20.1.10,22,TCP,SYN PSH,87250,505,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:32,91.240.118.172,41066,10.20.1.10,22,TCP,SYN PSH,88100,510,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:34,91.240.118.172,41067,10.20.1.10,22,TCP,SYN PSH,88950,515,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:36,91.240.118.172,41068,10.20.1.10,22,TCP,SYN PSH,89800,520,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:38,91.240.118.172,41069,10.20.1.10,22,TCP,SYN PSH,90650,525,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:40,91.240.118.172,41070,10.20.1.10,22,TCP,SYN PSH,91500,530,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:42,91.240.118.172,41071,10.20.1.10,22,TCP,SYN PSH,92350,535,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:44,91.240.118.172,41072,10.20.1.10,22,TCP,SYN PSH,93200,540,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:46,91.240.118.172,41073,10.20.1.10,22,TCP,SYN PSH,94050,545,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:48,91.240.118.172,41074,10.20.1.10,22,TCP,SYN PSH,94900,550,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:50,91.240.118.172,41075,10.20.1.10,22,TCP,SYN PSH,95750,555,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:52,91.240.118.172,41076,10.20.1.10,22,TCP,SYN PSH,96600,560,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:54,91.240.118.172,41077,10.20.1.10,22,TCP,SYN PSH,97450,565,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:56,91.240.118.172,41078,10.20.1.10,22,TCP,SYN PSH,98300,570,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:15:58,91.240.118.172,41079,10.20.1.10,22,TCP,SYN PSH,99150,575,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:16:00,91.240.118.172,41080,10.20.1.10,22,TCP,SYN PSH,100000,580,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:16:02,91.240.118.172,41081,10.20.1.10,22,TCP,SYN PSH,100850,585,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:16:04,91.240.118.172,41082,10.20.1.10,22,TCP,SYN PSH,101700,590,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:16:06,91.240.118.172,41083,10.20.1.10,22,TCP,SYN PSH,102550,595,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:16:08,91.240.118.172,41084,10.20.1.10,22,TCP,SYN PSH,103400,600,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:16:10,91.240.118.172,41085,10.20.1.10,22,TCP,SYN PSH,104250,605,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:16:12,91.240.118.172,41086,10.20.1.10,22,TCP,SYN PSH,105100,610,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:16:14,91.240.118.172,41087,10.20.1.10,22,TCP,SYN PSH,105950,615,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:16:16,91.240.118.172,41088,10.20.1.10,22,TCP,SYN PSH,106800,620,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
+2024-06-10 06:16:18,91.240.118.172,41089,10.20.1.10,22,TCP,SYN PSH,107650,625,2.0,0.92,Initial Access,"High-velocity SSH authentication failure storm probing root and admin accounts",T1110.001
