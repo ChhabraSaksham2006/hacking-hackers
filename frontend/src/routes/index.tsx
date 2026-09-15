@@ -28,6 +28,7 @@ import { probabilitySeries } from "@/lib/telemetry";
 import { ThreeManifold } from "@/components/landing/ThreeManifold";
 import { BackgroundDotEffect } from "@/components/landing/BackgroundDotEffect";
 import { MathFormula } from "@/components/common/MathFormula";
+import { GoogleTranslate } from "@/components/common/GoogleTranslate";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
@@ -185,15 +186,15 @@ function Landing() {
           </span>
         </div>
 
-        {/* Master Design Strategy Badge: Cyber Glass */}
-        <div className="flex items-center gap-2 rounded-full border border-teal/40 bg-teal/10 px-3.5 py-1 backdrop-blur-xl shadow-xs shadow-teal/30">
-          <span className="size-2 rounded-full bg-teal animate-pulse" />
-          <span className="font-mono text-[11px] font-semibold text-teal tracking-wide hidden sm:inline">
-            Cyber Glass Architecture
-          </span>
-          <span className="font-mono text-[11px] font-semibold text-teal tracking-wide sm:hidden">
-            Cyber Glass
-          </span>
+        {/* Center: Google Translate & Strategy Badge */}
+        <div className="flex items-center gap-3">
+          <GoogleTranslate id="google_translate_landing" />
+          <div className="hidden lg:flex items-center gap-2 rounded-full border border-teal/40 bg-teal/10 px-3 py-1 backdrop-blur-xl shadow-xs shadow-teal/30">
+            <span className="size-2 rounded-full bg-teal animate-pulse" />
+            <span className="font-mono text-[11px] font-semibold text-teal tracking-wide">
+              Cyber Glass
+            </span>
+          </div>
         </div>
 
         <nav className="flex items-center gap-3">

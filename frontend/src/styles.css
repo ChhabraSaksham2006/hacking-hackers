@@ -394,8 +394,109 @@
 .scroll-spotlight-dimmed:hover {
   opacity: 0.85 !important;
   transform: scale(0.995) !important;
-  filter: blur(0px) saturate(0.9) !important;
+  filter: blur(0px) !important;
 }
 
+/* ==========================================================================
+   Google Translate Styling & Logo/Banner Suppression
+   ========================================================================== */
 
+/* 1. Prevent top push-down banner iframe and reset body position */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame,
+iframe.goog-te-banner-frame,
+body > .skiptranslate {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  width: 0 !important;
+}
 
+body {
+  top: 0px !important;
+  position: static !important;
+}
+
+/* 2. Hide Google branding, 'Powered by' text, and logo images/links */
+.goog-logo-link,
+.goog-te-gadget > span,
+.goog-te-gadget > span > a,
+.goog-te-gadget img,
+.goog-te-gadget-icon {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Setting font-size: 0 on parent gadget completely hides 'Powered by' text */
+.goog-te-gadget {
+  font-size: 0px !important;
+  color: transparent !important;
+  line-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+/* 3. Style the Google Translate <select> dropdown cleanly like the user reference */
+.goog-te-gadget .goog-te-combo {
+  display: inline-block !important;
+  font-family: inherit !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  line-height: normal !important;
+  color: #e2e8f0 !important;
+  background-color: rgba(15, 23, 42, 0.85) !important;
+  border: 1px solid rgba(148, 163, 184, 0.35) !important;
+  border-radius: 6px !important;
+  padding: 5px 26px 5px 10px !important;
+  margin: 0 !important;
+  cursor: pointer !important;
+  outline: none !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%232dd4bf'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 8px center !important;
+  background-size: 12px !important;
+  transition: all 0.2s ease-in-out !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+}
+
+.goog-te-gadget .goog-te-combo:hover {
+  border-color: rgba(45, 212, 191, 0.6) !important;
+  background-color: rgba(15, 23, 42, 0.95) !important;
+  box-shadow: 0 0 8px rgba(45, 212, 191, 0.25) !important;
+}
+
+.goog-te-gadget .goog-te-combo:focus {
+  border-color: #2dd4bf !important;
+  box-shadow: 0 0 0 2px rgba(45, 212, 191, 0.3) !important;
+}
+
+.goog-te-gadget .goog-te-combo option {
+  background-color: #0b1120 !important;
+  color: #f1f5f9 !important;
+  padding: 6px 10px !important;
+}
+
+/* 4. Suppress Google hover balloons, tooltips, and highlighted text */
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+.goog-text-highlight {
+  background: none !important;
+  box-shadow: none !important;
+}
+
+.skiptranslate > iframe {
+  display: none !important;
+}

@@ -23,6 +23,7 @@ import { useSocket } from "@/hooks/useSocket";
 import { cn } from "@/lib/utils";
 import { ConsolePanel } from "./ConsolePanel";
 import { NotificationBell } from "./notifications/NotificationBell";
+import { GoogleTranslate } from "@/components/common/GoogleTranslate";
 
 const nav = [
   { to: "/app/dashboard", label: "Dashboard", icon: Gauge },
@@ -114,7 +115,8 @@ export function AppShell({ children }: { children: ReactNode }) {
                 alerts
               </span>
             </div>
-            <div className="flex items-center gap-4 text-[13px]">
+            <div className="flex items-center gap-3 text-[13px]">
+              <GoogleTranslate id="google_translate_app" />
               <div 
                 className="flex items-center gap-1.5 rounded-full border border-fog-deep/50 bg-void-800 px-2 py-1 text-[11px] font-medium text-fog"
                 title={isConnected ? "Real-time updates active" : "Reconnecting..."}

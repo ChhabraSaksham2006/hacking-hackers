@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { BookOpen, Terminal, Cpu, ArrowLeft, Layers, ShieldCheck, CheckCircle2, Zap, BarChart3, Database } from "lucide-react";
 import { pageHead } from "@/lib/head";
 import { MathFormula } from "@/components/common/MathFormula";
+import { GoogleTranslate } from "@/components/common/GoogleTranslate";
 
 export const Route = createFileRoute("/docs")({
   head: pageHead(
@@ -20,9 +21,12 @@ export function DocsPage() {
           <ArrowLeft className="size-4 text-teal" />
           <span className="font-mono text-xs uppercase tracking-wider">Back to Aegis Vantage</span>
         </Link>
-        <div className="flex items-center gap-3">
-          <span className="size-[16px] rotate-45 rounded-[3px] border-2 border-teal shadow-xs shadow-teal/50" />
-          <span className="font-display text-sm font-semibold text-paper">Research Whitepaper & Specification</span>
+        <div className="flex items-center gap-4">
+          <GoogleTranslate id="google_translate_docs" />
+          <div className="hidden sm:flex items-center gap-2.5">
+            <span className="size-[16px] rotate-45 rounded-[3px] border-2 border-teal shadow-xs shadow-teal/50" />
+            <span className="font-display text-sm font-semibold text-paper">Research Whitepaper</span>
+          </div>
         </div>
       </header>
 
