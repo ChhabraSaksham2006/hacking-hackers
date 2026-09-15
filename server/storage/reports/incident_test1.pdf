@@ -1,0 +1,535 @@
+%PDF-1.4
+%âãÏÓ
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R /F3 7 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 7031 >>
+stream
+0.050 0.070 0.100 rg
+0.00 0.00 595.28 841.89 re f
+0.090 0.120 0.180 rg
+35.00 740.00 525.00 70.00 re f
+0.180 0.800 0.700 RG
+2.0 w
+35.00 740.00 m 560.00 740.00 l S
+BT
+/F1 13.0 Tf
+0.220 0.850 0.740 rg
+50.00 785.00 Td
+(AEGIS VANTAGE) Tj
+ET
+BT
+/F1 16.0 Tf
+1.000 1.000 1.000 rg
+50.00 765.00 Td
+(INCIDENT & THREAT DETECTION REPORT) Tj
+ET
+BT
+/F3 8.0 Tf
+0.600 0.650 0.700 rg
+50.00 748.00 Td
+(ORG: NORTHWIND ENERGY | CLASSIFICATION: SOC STRICT RESTRICTED) Tj
+ET
+0.080 0.100 0.140 rg
+35.00 650.00 525.00 75.00 re f
+0.200 0.250 0.320 RG
+1.0 w
+35.00 650.00 m 560.00 650.00 l S
+BT
+/F1 9.0 Tf
+0.500 0.550 0.620 rg
+50.00 708.00 Td
+(SCOPE) Tj
+ET
+BT
+/F1 12.0 Tf
+0.950 0.950 0.950 rg
+50.00 693.00 Td
+(corp-core · 24h) Tj
+ET
+BT
+/F1 9.0 Tf
+0.500 0.550 0.620 rg
+220.00 708.00 Td
+(TIME WINDOW) Tj
+ET
+BT
+/F3 9.0 Tf
+0.850 0.880 0.920 rg
+220.00 693.00 Td
+(2026-09-14 06:58Z -> 2026-09-15 06:58Z) Tj
+ET
+BT
+/F1 9.0 Tf
+0.500 0.550 0.620 rg
+420.00 708.00 Td
+(GENERATED AT) Tj
+ET
+BT
+/F3 9.0 Tf
+0.850 0.880 0.920 rg
+420.00 693.00 Td
+(2026-09-15 06:58Z) Tj
+ET
+BT
+/F1 10.0 Tf
+0.950 0.350 0.350 rg
+50.00 665.00 Td
+(OVERALL RISK: CRITICAL) Tj
+ET
+BT
+/F3 9.0 Tf
+0.700 0.750 0.800 rg
+220.00 665.00 Td
+(ANALYZED FLOWS: 8   |   FLAGGED: 5   |   PEAK SCORE: 0.91) Tj
+ET
+0.080 0.100 0.140 rg
+35.00 545.00 525.00 90.00 re f
+0.200 0.250 0.320 RG
+1.0 w
+35.00 545.00 m 560.00 545.00 l S
+BT
+/F1 11.0 Tf
+0.220 0.850 0.740 rg
+50.00 618.00 Td
+(EXECUTIVE SUMMARY & EXPLAINABILITY ASSESSMENT) Tj
+ET
+BT
+/F2 10.0 Tf
+0.880 0.900 0.940 rg
+50.00 598.00 Td
+(This window was flagged primarily due to elevated SYN/ACK ratio and port on) Tj
+ET
+BT
+/F2 10.0 Tf
+0.880 0.900 0.940 rg
+50.00 583.00 Td
+(sequential access ports 22, 23 and 445, combined with 14 SMB session setups) Tj
+ET
+BT
+/F2 10.0 Tf
+0.880 0.900 0.940 rg
+50.00 568.00 Td
+(from fin-db-02 to distinct hosts inside 90 seconds. Flow duration and TTL variance argue slightly against compromise but do not offset the session fan-out.) Tj
+ET
+BT
+/F3 8.0 Tf
+0.550 0.650 0.700 rg
+50.00 553.00 Td
+(SparseRSSM State Transition: High predictive confidence \(0.94\) for Lateral Movement across subnets.) Tj
+ET
+BT
+/F1 12.0 Tf
+1.000 1.000 1.000 rg
+35.00 515.00 Td
+(TOP FLAGGED NETWORK FLOWS) Tj
+ET
+0.120 0.160 0.220 rg
+35.00 480.00 525.00 22.00 re f
+0.250 0.300 0.380 RG
+1.0 w
+35.00 480.00 m 560.00 480.00 l S
+BT
+/F1 8.0 Tf
+0.650 0.700 0.750 rg
+45.00 488.00 Td
+(SOURCE) Tj
+ET
+BT
+/F1 8.0 Tf
+0.650 0.700 0.750 rg
+180.00 488.00 Td
+(DESTINATION) Tj
+ET
+BT
+/F1 8.0 Tf
+0.650 0.700 0.750 rg
+320.00 488.00 Td
+(PROTO) Tj
+ET
+BT
+/F1 8.0 Tf
+0.650 0.700 0.750 rg
+370.00 488.00 Td
+(FLAGS) Tj
+ET
+BT
+/F1 8.0 Tf
+0.650 0.700 0.750 rg
+430.00 488.00 Td
+(SCORE) Tj
+ET
+BT
+/F1 8.0 Tf
+0.650 0.700 0.750 rg
+490.00 488.00 Td
+(STAGE) Tj
+ET
+0.070 0.090 0.130 rg
+35.00 453.00 525.00 20.00 re f
+0.150 0.180 0.240 RG
+0.5 w
+35.00 453.00 m 560.00 453.00 l S
+BT
+/F3 8.0 Tf
+0.900 0.920 0.950 rg
+45.00 458.00 Td
+(10.24.8.31:49722) Tj
+ET
+BT
+/F3 8.0 Tf
+0.900 0.920 0.950 rg
+180.00 458.00 Td
+(10.24.8.14:445) Tj
+ET
+BT
+/F2 8.0 Tf
+0.750 0.800 0.850 rg
+320.00 458.00 Td
+(TCP) Tj
+ET
+BT
+/F3 8.0 Tf
+0.700 0.750 0.800 rg
+370.00 458.00 Td
+(0x018) Tj
+ET
+BT
+/F1 8.0 Tf
+0.950 0.400 0.400 rg
+430.00 458.00 Td
+(0.91) Tj
+ET
+BT
+/F2 8.0 Tf
+0.700 0.750 0.800 rg
+490.00 458.00 Td
+(Lateral movement) Tj
+ET
+0.150 0.180 0.240 RG
+0.5 w
+35.00 431.00 m 560.00 431.00 l S
+BT
+/F3 8.0 Tf
+0.900 0.920 0.950 rg
+45.00 436.00 Td
+(10.24.1.4:51344) Tj
+ET
+BT
+/F3 8.0 Tf
+0.900 0.920 0.950 rg
+180.00 436.00 Td
+(203.0.113.77:8443) Tj
+ET
+BT
+/F2 8.0 Tf
+0.750 0.800 0.850 rg
+320.00 436.00 Td
+(TCP) Tj
+ET
+BT
+/F3 8.0 Tf
+0.700 0.750 0.800 rg
+370.00 436.00 Td
+(0x010) Tj
+ET
+BT
+/F1 8.0 Tf
+0.950 0.400 0.400 rg
+430.00 436.00 Td
+(0.83) Tj
+ET
+BT
+/F2 8.0 Tf
+0.700 0.750 0.800 rg
+490.00 436.00 Td
+(Lateral movement) Tj
+ET
+0.070 0.090 0.130 rg
+35.00 409.00 525.00 20.00 re f
+0.150 0.180 0.240 RG
+0.5 w
+35.00 409.00 m 560.00 409.00 l S
+BT
+/F3 8.0 Tf
+0.900 0.920 0.950 rg
+45.00 414.00 Td
+(10.24.19.8:33012) Tj
+ET
+BT
+/F3 8.0 Tf
+0.900 0.920 0.950 rg
+180.00 414.00 Td
+(198.51.100.20:443) Tj
+ET
+BT
+/F2 8.0 Tf
+0.750 0.800 0.850 rg
+320.00 414.00 Td
+(TCP) Tj
+ET
+BT
+/F3 8.0 Tf
+0.700 0.750 0.800 rg
+370.00 414.00 Td
+(0x018) Tj
+ET
+BT
+/F1 8.0 Tf
+0.220 0.850 0.740 rg
+430.00 414.00 Td
+(0.71) Tj
+ET
+BT
+/F2 8.0 Tf
+0.700 0.750 0.800 rg
+490.00 414.00 Td
+(Reconnaissance) Tj
+ET
+0.150 0.180 0.240 RG
+0.5 w
+35.00 387.00 m 560.00 387.00 l S
+BT
+/F3 8.0 Tf
+0.900 0.920 0.950 rg
+45.00 392.00 Td
+(10.24.4.19:44100) Tj
+ET
+BT
+/F3 8.0 Tf
+0.900 0.920 0.950 rg
+180.00 392.00 Td
+(10.24.4.20:22) Tj
+ET
+BT
+/F2 8.0 Tf
+0.750 0.800 0.850 rg
+320.00 392.00 Td
+(TCP) Tj
+ET
+BT
+/F3 8.0 Tf
+0.700 0.750 0.800 rg
+370.00 392.00 Td
+(0x002) Tj
+ET
+BT
+/F1 8.0 Tf
+0.220 0.850 0.740 rg
+430.00 392.00 Td
+(0.66) Tj
+ET
+BT
+/F2 8.0 Tf
+0.700 0.750 0.800 rg
+490.00 392.00 Td
+(Reconnaissance) Tj
+ET
+0.070 0.090 0.130 rg
+35.00 365.00 525.00 20.00 re f
+0.150 0.180 0.240 RG
+0.5 w
+35.00 365.00 m 560.00 365.00 l S
+BT
+/F3 8.0 Tf
+0.900 0.920 0.950 rg
+45.00 370.00 Td
+(10.24.12.77:60122) Tj
+ET
+BT
+/F3 8.0 Tf
+0.900 0.920 0.950 rg
+180.00 370.00 Td
+(10.24.12.0/24:*) Tj
+ET
+BT
+/F2 8.0 Tf
+0.750 0.800 0.850 rg
+320.00 370.00 Td
+(TCP) Tj
+ET
+BT
+/F3 8.0 Tf
+0.700 0.750 0.800 rg
+370.00 370.00 Td
+(0x002) Tj
+ET
+BT
+/F1 8.0 Tf
+0.220 0.850 0.740 rg
+430.00 370.00 Td
+(0.58) Tj
+ET
+BT
+/F2 8.0 Tf
+0.700 0.750 0.800 rg
+490.00 370.00 Td
+(Reconnaissance) Tj
+ET
+0.150 0.180 0.240 RG
+0.5 w
+35.00 343.00 m 560.00 343.00 l S
+BT
+/F3 8.0 Tf
+0.900 0.920 0.950 rg
+45.00 348.00 Td
+(10.24.6.42:57812) Tj
+ET
+BT
+/F3 8.0 Tf
+0.900 0.920 0.950 rg
+180.00 348.00 Td
+(10.24.6.9:3389) Tj
+ET
+BT
+/F2 8.0 Tf
+0.750 0.800 0.850 rg
+320.00 348.00 Td
+(TCP) Tj
+ET
+BT
+/F3 8.0 Tf
+0.700 0.750 0.800 rg
+370.00 348.00 Td
+(0x012) Tj
+ET
+BT
+/F1 8.0 Tf
+0.220 0.850 0.740 rg
+430.00 348.00 Td
+(0.44) Tj
+ET
+BT
+/F2 8.0 Tf
+0.700 0.750 0.800 rg
+490.00 348.00 Td
+(Reconnaissance) Tj
+ET
+0.070 0.090 0.130 rg
+35.00 321.00 525.00 20.00 re f
+0.150 0.180 0.240 RG
+0.5 w
+35.00 321.00 m 560.00 321.00 l S
+BT
+/F3 8.0 Tf
+0.900 0.920 0.950 rg
+45.00 326.00 Td
+(10.24.3.55:5353) Tj
+ET
+BT
+/F3 8.0 Tf
+0.900 0.920 0.950 rg
+180.00 326.00 Td
+(224.0.0.251:5353) Tj
+ET
+BT
+/F2 8.0 Tf
+0.750 0.800 0.850 rg
+320.00 326.00 Td
+(UDP) Tj
+ET
+BT
+/F3 8.0 Tf
+0.700 0.750 0.800 rg
+370.00 326.00 Td
+(—) Tj
+ET
+BT
+/F1 8.0 Tf
+0.220 0.850 0.740 rg
+430.00 326.00 Td
+(0.12) Tj
+ET
+BT
+/F2 8.0 Tf
+0.700 0.750 0.800 rg
+490.00 326.00 Td
+(Reconnaissance) Tj
+ET
+0.150 0.180 0.240 RG
+0.5 w
+35.00 299.00 m 560.00 299.00 l S
+BT
+/F3 8.0 Tf
+0.900 0.920 0.950 rg
+45.00 304.00 Td
+(10.24.9.18:49001) Tj
+ET
+BT
+/F3 8.0 Tf
+0.900 0.920 0.950 rg
+180.00 304.00 Td
+(10.24.2.5:53) Tj
+ET
+BT
+/F2 8.0 Tf
+0.750 0.800 0.850 rg
+320.00 304.00 Td
+(UDP) Tj
+ET
+BT
+/F3 8.0 Tf
+0.700 0.750 0.800 rg
+370.00 304.00 Td
+(—) Tj
+ET
+BT
+/F1 8.0 Tf
+0.220 0.850 0.740 rg
+430.00 304.00 Td
+(0.09) Tj
+ET
+BT
+/F2 8.0 Tf
+0.700 0.750 0.800 rg
+490.00 304.00 Td
+(Reconnaissance) Tj
+ET
+0.200 0.250 0.300 RG
+1.0 w
+35.00 60.00 m 560.00 60.00 l S
+BT
+/F2 8.0 Tf
+0.450 0.500 0.550 rg
+35.00 45.00 Td
+(Aegis Vantage Autonomous NDR Platform · End-to-End Threat Verification) Tj
+ET
+BT
+/F3 8.0 Tf
+0.450 0.500 0.550 rg
+450.00 45.00 Td
+(Page 1 of 1 · CONFIDENTIAL) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+7 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000019 00000 n 
+0000000068 00000 n 
+0000000125 00000 n 
+0000000277 00000 n 
+0000007360 00000 n 
+0000007435 00000 n 
+0000007505 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+7573
+%%EOF

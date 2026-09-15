@@ -235,3 +235,268 @@
 @utility pulse-node {
   animation: pulse-node 2.8s ease-in-out infinite;
 }
+
+@keyframes radar-pulse {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.22);
+    opacity: 0.25;
+  }
+  100% {
+    transform: scale(1.45);
+    opacity: 0;
+  }
+}
+
+@utility animate-radar {
+  animation: radar-pulse 2.4s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+  transform-origin: center;
+}
+
+@keyframes fast-particle {
+  to {
+    stroke-dashoffset: -48;
+  }
+}
+
+@utility particle-flow-fast {
+  stroke-dasharray: 4 12;
+  animation: fast-particle 1.1s linear infinite;
+}
+
+/* Strategy Utilities for Design Switcher */
+@utility strategy-glass {
+  background: linear-gradient(135deg, color-mix(in oklab, var(--void-800) 52%, transparent), color-mix(in oklab, var(--void-900) 68%, transparent));
+  border: 1px solid color-mix(in oklab, var(--signal-teal) 26%, transparent);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+}
+
+
+@utility strategy-minimal {
+  background: var(--void-900);
+  border: 1px solid var(--fog-600);
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+@utility strategy-neomorph {
+  background: var(--void-800);
+  border: 1px solid color-mix(in oklab, var(--void-700) 80%, transparent);
+  box-shadow: 5px 5px 14px #070a12, -5px -5px 14px #1a2336;
+}
+
+@utility strategy-neomorph-inset {
+  background: var(--void-800);
+  border: 1px solid color-mix(in oklab, var(--void-700) 60%, transparent);
+  box-shadow: inset 3px 3px 7px #070a12, inset -3px -3px 7px #1a2336;
+}
+
+@import "katex/dist/katex.min.css";
+
+/* ── Refined Subtle Text Accents (De-Glowed & Crisp) ── */
+@utility text-glow-teal {
+  text-shadow: 0 0 8px rgba(45, 212, 191, 0.22);
+}
+
+@utility text-glow-amber {
+  text-shadow: 0 0 8px rgba(251, 191, 36, 0.22);
+}
+
+@utility text-glow-crimson {
+  text-shadow: 0 0 8px rgba(244, 63, 94, 0.25);
+}
+
+@utility text-glow-white {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes text-shimmer-kf {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@utility animate-text-shimmer {
+  background-size: 200% auto;
+  animation: text-shimmer-kf 4s ease infinite;
+}
+
+@keyframes glow-pulse-kf {
+  0%, 100% {
+    opacity: 0.95;
+    filter: drop-shadow(0 0 4px rgba(45, 212, 191, 0.2));
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 8px rgba(45, 212, 191, 0.35));
+  }
+}
+
+@utility animate-glow-pulse {
+  animation: glow-pulse-kf 3s ease-in-out infinite;
+}
+
+/* KaTeX Dark Mode & Scrollbar Elimination */
+.katex {
+  color: var(--paper-100) !important;
+  font-size: 1.05em;
+}
+
+.katex-display {
+  margin: 0.5em 0 !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.katex-display::-webkit-scrollbar,
+.katex-block-container::-webkit-scrollbar,
+.katex-inline-container::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.katex-inline-container {
+  display: inline !important;
+  overflow: visible !important;
+}
+
+
+
+/* ── Scroll-Focused Section Spotlight ── */
+.scroll-spotlight-active {
+  opacity: 1 !important;
+  transform: scale(1) translateY(0) !important;
+  filter: blur(0px) !important;
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-spotlight-dimmed {
+  opacity: 0.38 !important;
+  transform: scale(0.985) translateY(4px) !important;
+  filter: blur(0.8px) saturate(0.7) !important;
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-spotlight-dimmed:hover {
+  opacity: 0.85 !important;
+  transform: scale(0.995) !important;
+  filter: blur(0px) !important;
+}
+
+/* ==========================================================================
+   Google Translate Styling & Logo/Banner Suppression
+   ========================================================================== */
+
+/* 1. Prevent top push-down banner iframe and reset body position */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame,
+iframe.goog-te-banner-frame,
+body > .skiptranslate {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  width: 0 !important;
+}
+
+body {
+  top: 0px !important;
+  position: static !important;
+}
+
+/* 2. Hide Google branding, 'Powered by' text, and logo images/links */
+.goog-logo-link,
+.goog-te-gadget > span,
+.goog-te-gadget > span > a,
+.goog-te-gadget img,
+.goog-te-gadget-icon {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Setting font-size: 0 on parent gadget completely hides 'Powered by' text */
+.goog-te-gadget {
+  font-size: 0px !important;
+  color: transparent !important;
+  line-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+/* 3. Style the Google Translate <select> dropdown cleanly like the user reference */
+.goog-te-gadget .goog-te-combo {
+  display: inline-block !important;
+  font-family: inherit !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  line-height: normal !important;
+  color: #e2e8f0 !important;
+  background-color: rgba(15, 23, 42, 0.85) !important;
+  border: 1px solid rgba(148, 163, 184, 0.35) !important;
+  border-radius: 6px !important;
+  padding: 5px 26px 5px 10px !important;
+  margin: 0 !important;
+  cursor: pointer !important;
+  outline: none !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%232dd4bf'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 8px center !important;
+  background-size: 12px !important;
+  transition: all 0.2s ease-in-out !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+}
+
+.goog-te-gadget .goog-te-combo:hover {
+  border-color: rgba(45, 212, 191, 0.6) !important;
+  background-color: rgba(15, 23, 42, 0.95) !important;
+  box-shadow: 0 0 8px rgba(45, 212, 191, 0.25) !important;
+}
+
+.goog-te-gadget .goog-te-combo:focus {
+  border-color: #2dd4bf !important;
+  box-shadow: 0 0 0 2px rgba(45, 212, 191, 0.3) !important;
+}
+
+.goog-te-gadget .goog-te-combo option {
+  background-color: #0b1120 !important;
+  color: #f1f5f9 !important;
+  padding: 6px 10px !important;
+}
+
+/* 4. Suppress Google hover balloons, tooltips, and highlighted text */
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+.goog-text-highlight {
+  background: none !important;
+  box-shadow: none !important;
+}
+
+.skiptranslate > iframe {
+  display: none !important;
+}

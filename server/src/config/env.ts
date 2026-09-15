@@ -22,6 +22,7 @@ const envSchema = z.object({
 
   // ML Service (optional)
   ML_SERVICE_URL: z.string().url().optional().or(z.literal('')),
+  PYTHON_PATH: z.string().optional().or(z.literal('')),
 
   // S3 / Object Storage (optional)
   S3_ENDPOINT: z.string().optional().or(z.literal('')),

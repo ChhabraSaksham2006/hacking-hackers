@@ -418,21 +418,181 @@ export function useHostDetails(id: string, scrub?: number | undefined) {
   });
 }
 
+export interface TopologySegment {
+  _id: string;
+  name: string;
+  hosts: number;
+  activeAlerts: number;
+  trafficVolume: number;
+  throughputMbps: number;
+  state: RiskState;
+  threatScore: number;
+  isolated: boolean;
+  lastIncident: string;
+  sparkline: number[];
+  modelProbability?: number;
+  modelStage?: string;
+  modelConfidence?: string;
+  topTalkers: Array<{
+    ip: string;
+    hostname: string;
+    role: string;
+    flows: number;
+    bytes: string;
+    state: RiskState;
+  }>;
+  protocols: Array<{
+    name: string;
+    port: number;
+    pct: number;
+  }>;
+  hostInventory?: Array<{
+    ip: string;
+    hostname: string;
+    role: string;
+    os: string;
+    baselineFlows: number;
+  }>;
+}
+
+export interface InterSegmentLink {
+  id: string;
+  source: string;
+  target: string;
+  trafficVolume: number;
+  throughput: string;
+  protocol: string;
+  status: "normal" | "watch" | "critical";
+  threatStage: string | null;
+  description: string;
+  activeFlowCount: number;
+  modelScore?: number;
+}
+
+export interface ModelIntelligence {
+  engine: string;
+  modelVersion: string;
+  inferenceSource: string;
+  mlServiceOnline: boolean;
+  windowIndex: number;
+  timestamp: string;
+  ensembleProbability: number;
+  rssmProbability: number;
+  tfcProbability: number;
+  confidence: string;
+  leadTimeSeconds: number;
+  currentStage: string;
+  riskLevel: string;
+  detectionThreshold: number;
+  probabilityTimeline: number[];
+  flaggedHostsCount: string;
+  activeFlowsCount: string;
+  featureContributions: Array<{
+    feature: string;
+    value: string;
+    weight: number;
+    category?: string;
+  }>;
+  modelFlows: Array<{
+    src: string;
+    dst: string;
+    proto: string;
+    flags: string;
+    bytes: string;
+    prob: number;
+  }>;
+}
+
+export interface TopologyOverview {
+  segments: TopologySegment[];
+  interSegmentLinks: InterSegmentLink[];
+  summary: {
+    totalSegments: number;
+    totalHosts: number;
+    totalThroughputMbps: number;
+    criticalSegments: number;
+    watchSegments: number;
+    isolatedSegments: number;
+    healthScore: number;
+    activeThreatVector: string;
+    activeWindowIndex: number;
+    timestamp: string;
+  };
+  modelIntelligence?: ModelIntelligence;
+}
+
+export interface SegmentModelAnalysis {
+  riskState: RiskState;
+  probability: number;
+  confidence: string;
+  stage: string;
+  rssmScore: number;
+  tfcScore: number;
+  leadTimeSeconds: number;
+  featureDrivers: Array<{
+    feature: string;
+    value: string;
+    weight: number;
+    description?: string;
+  }>;
+  modelFlows: Array<{
+    src: string;
+    dst: string;
+    proto: string;
+    flags: string;
+    bytes: string;
+    prob: number;
+  }>;
+}
+
+export interface SegmentDeepDive {
+  segment: TopologySegment;
+  hosts: TopologySegment["topTalkers"];
+  hostRoster: Array<{ ip: string; hostname: string; role: string; os: string; baselineFlows: number }>;
+  protocols: Array<{ name: string; port: number; pct: number }>;
+  policies: Array<{ id: string; rule: string; action: string; priority: number; status: string; updatedAt: string }>;
+  relatedAlerts: Alert[];
+  microsegStatus: "ISOLATED" | "INTEGRATED";
+  modelAnalysis?: SegmentModelAnalysis;
+}
+
 export function useSegments() {
   return useQuery({
     queryKey: ["segments"],
-    queryFn: () =>
-      apiFetch<
-        Array<{
-          _id: string;
-          name: string;
-          hosts: number;
-          activeAlerts: number;
-          trafficVolume: number;
-          state: RiskState;
-          lastIncident: string;
-        }>
-      >("/api/segments"),
+    queryFn: () => apiFetch<TopologySegment[]>("/api/segments"),
+  });
+}
+
+export function useTopology() {
+  return useQuery({
+    queryKey: ["topology"],
+    queryFn: () => apiFetch<TopologyOverview>("/api/segments/topology"),
+    refetchInterval: 6000,
+  });
+}
+
+export function useSegmentDeepDive(name: string | null) {
+  return useQuery({
+    queryKey: ["segment-deepdive", name],
+    queryFn: () => apiFetch<SegmentDeepDive>(`/api/segments/${encodeURIComponent(name!)}/deepdive`),
+    enabled: !!name,
+  });
+}
+
+export function useIsolateSegment() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ name, isolate }: { name: string; isolate: boolean }) =>
+      apiFetch<{ success: boolean; message: string; segment: any }>(
+        `/api/segments/${encodeURIComponent(name)}/${isolate ? "isolate" : "restore"}`,
+        { method: "POST" }
+      ),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["topology"] });
+      queryClient.invalidateQueries({ queryKey: ["segments"] });
+      queryClient.invalidateQueries({ queryKey: ["segment-deepdive", variables.name] });
+      queryClient.invalidateQueries({ queryKey: ["audit"] });
+    },
   });
 }
 
@@ -581,6 +741,182 @@ export function useMarkAllNotificationsRead() {
   });
 }
 
+// ── Model versions & Benchmark ───────────────────────────
+
+export interface ModelVersionRecord {
+  _id: string;
+  version: string;
+  releasedAt: string;
+  note: string;
+  isProduction: boolean;
+  metrics: {
+    cicIds: { f1: number; precision: number; recall: number; fpr: number };
+    ctu13:  { f1: number; precision: number; recall: number; fpr: number };
+  };
+  confusionMatrices: {
+    cicIds: { cells: number[] };
+    ctu13:  { cells: number[] };
+  };
+  lossCurve: { train: number[]; val: number[] };
+  promotedBy?: { name: string; initials: string };
+}
+
+export function useModelVersions() {
+  return useQuery({
+    queryKey: ["models"],
+    queryFn: () => apiFetch<ModelVersionRecord[]>("/api/models"),
+  });
+}
+
+export interface BenchmarkResponse {
+  productionVersion: string;
+  rows: { metric: string; wmA: number; lrA: number; wmB: number; lrB: number }[];
+  matrices: { name: string; dataset: string; cells: number[] }[];
+}
+
+export function useBenchmark() {
+  return useQuery({
+    queryKey: ["models", "benchmark"],
+    queryFn: () => apiFetch<BenchmarkResponse>("/api/models/benchmark"),
+  });
+}
+
+export function usePromoteModel() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) =>
+      apiFetch<{ message: string; model: ModelVersionRecord }>(`/api/models/${id}/promote`, {
+        method: "POST",
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["models"] });
+    },
+  });
+}
+
+// ── Reports & Export ──────────────────────────────────────
+
+export interface ReportRecord {
+  _id: string;
+  name: string;
+  scope: string;
+  format: "PDF" | "CSV";
+  timeWindow: { start: string; end: string };
+  segmentOrAlert: string;
+  storagePath: string;
+  fileSize: number;
+  status: "generating" | "complete" | "failed";
+  createdAt: string;
+  createdBy?: { _id: string; name: string; initials: string; email: string };
+}
+
+export interface ReportsListResponse {
+  data: ReportRecord[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    pages: number;
+  };
+}
+
+export function useReports(page = 1, limit = 50) {
+  return useQuery({
+    queryKey: ["reports", page, limit],
+    queryFn: () =>
+      apiFetch<ReportsListResponse>(`/api/reports?page=${page}&limit=${limit}`),
+  });
+}
+
+export interface ReportPreviewData {
+  reportName: string;
+  scope: string;
+  segmentOrAlert: string;
+  timeWindow: { start: string; end: string };
+  orgName: string;
+  generatedBy: string;
+  createdAt: string;
+  sparkline: number[];
+  flaggedFlows: Array<{
+    timestamp: string;
+    src: string;
+    dst: string;
+    proto: string;
+    flags: string;
+    bytes: number;
+    packets: number;
+    score: number;
+    stage?: string;
+  }>;
+  explainabilitySummary: string;
+  metrics: {
+    totalFlows: number;
+    flaggedFlows: number;
+    maxScore: number;
+    riskLevel: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+  };
+}
+
+export function useReportPreview(params: {
+  timeWindow?: string;
+  segmentOrAlert?: string;
+  startDate?: string;
+  endDate?: string;
+}) {
+  const qs = new URLSearchParams();
+  if (params.timeWindow) qs.set("timeWindow", params.timeWindow);
+  if (params.segmentOrAlert) qs.set("segmentOrAlert", params.segmentOrAlert);
+  if (params.startDate) qs.set("startDate", params.startDate);
+  if (params.endDate) qs.set("endDate", params.endDate);
+  const qStr = qs.toString();
+
+  return useQuery({
+    queryKey: [
+      "reports",
+      "preview",
+      params.timeWindow,
+      params.segmentOrAlert,
+      params.startDate,
+      params.endDate,
+    ],
+    queryFn: () =>
+      apiFetch<ReportPreviewData>(`/api/reports/preview${qStr ? `?${qStr}` : ""}`),
+  });
+}
+
+export function useGenerateReport() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (body: {
+      name?: string;
+      scope: string;
+      format: "PDF" | "CSV";
+      timeWindow: { start: string; end: string };
+      segmentOrAlert?: string;
+    }) =>
+      apiFetch<{ message: string; report: ReportRecord }>("/api/reports/generate", {
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["reports"] });
+    },
+  });
+}
+
+export function useDeleteReport() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) =>
+      apiFetch<{ message: string; id: string }>(`/api/reports/${id}`, {
+        method: "DELETE",
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["reports"] });
+    },
+  });
+}
+
 // ── Telemetry AI Copilot (RAG) ─────────────────────────────
 
 export interface ChatQueryRequest {
@@ -637,4 +973,3 @@ export function useSuggestedQueries(windowIndex?: number | undefined) {
     staleTime: 2000,
   });
 }
-

@@ -22,6 +22,8 @@ export const AUDIT_EVENTS = [
   'LOGIN_SUCCESS',
   'LOGIN_FAILED',
   'LOGOUT',
+  'SEGMENT_ISOLATED',
+  'SEGMENT_RESTORED',
 ] as const;
 
 export type AuditEvent = (typeof AUDIT_EVENTS)[number];
