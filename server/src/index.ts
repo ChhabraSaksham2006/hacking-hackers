@@ -32,6 +32,7 @@ import orgsRouter from './routes/orgs.js';
 import explainabilityRouter from './routes/explainability.js';
 import notificationsRouter from './routes/notifications.js';
 import chatRouter from './routes/chat.js';
+import demonstrationRouter from './routes/demonstration.js';
 
 const app = express();
 
@@ -79,6 +80,7 @@ app.use('/api/orgs', orgsRouter);
 app.use('/api/explainability', explainabilityRouter);
 app.use('/api/notifications', notificationsRouter);
 app.use('/api/chat', chatRouter);
+app.use('/api/demonstration', demonstrationRouter);
 
 // ── 404 Route Not Found ─────────────────────────────────
 app.use((_req, _res, next) => {

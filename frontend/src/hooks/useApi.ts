@@ -973,3 +973,121 @@ export function useSuggestedQueries(windowIndex?: number | undefined) {
     staleTime: 2000,
   });
 }
+
+// ── Demonstration Interface & Inference Lab ──────────────────
+
+export interface IDemonstrationTimelinePoint {
+  windowIndex: number;
+  timeOffset: string;
+  probability: number;
+  calibratedProbPct: string;
+  confidence: number;
+  stage: string;
+  riskLevel: 'normal' | 'watch' | 'critical';
+  flowCount: number;
+  packetCount: number;
+  byteRate: number;
+  portEntropy: number;
+  authPortRatio: number;
+  isAttackOnset: boolean;
+}
+
+export interface IStageAnnotation {
+  id: string;
+  stage: string;
+  label: string;
+  startWindow: number;
+  endWindow: number;
+  startOffset: string;
+  endOffset: string;
+  peakProbability: number;
+  techniqueId: string;
+  techniqueName: string;
+  description: string;
+  mitigation: string;
+  color: string;
+}
+
+export interface IFlaggedFlow {
+  id: string;
+  windowIndex: number;
+  timestamp: string;
+  src: string;
+  dst: string;
+  proto: string;
+  flags: string;
+  bytes: number;
+  packets: number;
+  duration: number;
+  score: number;
+  stage: string;
+  reason: string;
+  techniqueId: string;
+}
+
+export interface DemonstrationPreset {
+  id: string;
+  name: string;
+  description: string;
+  fileType: string;
+  duration: string;
+  attackOnset: string;
+  expectedStages: string[];
+}
+
+export interface DemonstrationAnalysisResult {
+  fileMetadata: {
+    filename: string;
+    fileSize: number;
+    fileType: 'pcap' | 'pcapng' | 'csv' | 'preset';
+    analyzedWindowsCount: number;
+    totalPacketsParsed: number;
+    totalFlowsParsed: number;
+    durationSeconds: number;
+    processedAt: string;
+    inferenceEngine: string;
+  };
+  summary: {
+    peakProbability: number;
+    peakProbabilityPct: string;
+    dominantStage: string;
+    overallRiskLevel: 'normal' | 'watch' | 'critical';
+    modelConfidence: string;
+    earlyWarningLeadTimeSeconds: number;
+    attackOnsetWindow: number;
+    flaggedFlowsCount: number;
+    anomalousHostsCount: number;
+  };
+  timeline: IDemonstrationTimelinePoint[];
+  stageAnnotations: IStageAnnotation[];
+  flaggedFlows: IFlaggedFlow[];
+}
+
+export function useDemonstrationPresets() {
+  return useQuery({
+    queryKey: ["demonstration-presets"],
+    queryFn: () =>
+      apiFetch<{ presets: DemonstrationPreset[] }>("/api/demonstration/presets"),
+    staleTime: 60000,
+  });
+}
+
+export function useAnalyzeCapture() {
+  return useMutation({
+    mutationFn: (variables: { file?: File | undefined; presetId?: string | undefined }) => {
+      if (variables.file) {
+        const formData = new FormData();
+        formData.append("file", variables.file);
+        return apiFetch<DemonstrationAnalysisResult>("/api/demonstration/analyze", {
+          method: "POST",
+          body: formData,
+        });
+      }
+      return apiFetch<DemonstrationAnalysisResult>("/api/demonstration/analyze", {
+        method: "POST",
+        body: JSON.stringify({ presetId: variables.presetId }),
+      });
+    },
+  });
+}
+

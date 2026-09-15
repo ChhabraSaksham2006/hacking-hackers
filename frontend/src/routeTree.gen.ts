@@ -26,6 +26,7 @@ import { Route as AppAlertsRouteImport } from './routes/app/alerts'
 import { Route as AppAuditRouteImport } from './routes/app/audit'
 import { Route as AppBenchmarkRouteImport } from './routes/app/benchmark'
 import { Route as AppDashboardRouteImport } from './routes/app/dashboard'
+import { Route as AppDemonstrationRouteImport } from './routes/app/demonstration'
 import { Route as AppExplainabilityRouteImport } from './routes/app/explainability'
 import { Route as AppExplorerRouteImport } from './routes/app/explorer'
 import { Route as AppIngestionRouteImport } from './routes/app/ingestion'
@@ -121,6 +122,11 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
+const AppDemonstrationRoute = AppDemonstrationRouteImport.update({
+  id: '/demonstration',
+  path: '/demonstration',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppExplainabilityRoute = AppExplainabilityRouteImport.update({
   id: '/explainability',
   path: '/explainability',
@@ -184,6 +190,7 @@ export interface FileRoutesByFullPath {
   '/app/audit': typeof AppAuditRoute
   '/app/benchmark': typeof AppBenchmarkRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/demonstration': typeof AppDemonstrationRoute
   '/app/explainability': typeof AppExplainabilityRoute
   '/app/explorer': typeof AppExplorerRoute
   '/app/ingestion': typeof AppIngestionRoute
@@ -211,6 +218,7 @@ export interface FileRoutesByTo {
   '/app/audit': typeof AppAuditRoute
   '/app/benchmark': typeof AppBenchmarkRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/demonstration': typeof AppDemonstrationRoute
   '/app/explainability': typeof AppExplainabilityRoute
   '/app/explorer': typeof AppExplorerRoute
   '/app/ingestion': typeof AppIngestionRoute
@@ -240,6 +248,7 @@ export interface FileRoutesById {
   '/app/audit': typeof AppAuditRoute
   '/app/benchmark': typeof AppBenchmarkRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/demonstration': typeof AppDemonstrationRoute
   '/app/explainability': typeof AppExplainabilityRoute
   '/app/explorer': typeof AppExplorerRoute
   '/app/ingestion': typeof AppIngestionRoute
@@ -270,6 +279,7 @@ export interface FileRouteTypes {
     | '/app/audit'
     | '/app/benchmark'
     | '/app/dashboard'
+    | '/app/demonstration'
     | '/app/explainability'
     | '/app/explorer'
     | '/app/ingestion'
@@ -297,6 +307,7 @@ export interface FileRouteTypes {
     | '/app/audit'
     | '/app/benchmark'
     | '/app/dashboard'
+    | '/app/demonstration'
     | '/app/explainability'
     | '/app/explorer'
     | '/app/ingestion'
@@ -325,6 +336,7 @@ export interface FileRouteTypes {
     | '/app/audit'
     | '/app/benchmark'
     | '/app/dashboard'
+    | '/app/demonstration'
     | '/app/explainability'
     | '/app/explorer'
     | '/app/ingestion'
@@ -473,6 +485,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/demonstration': {
+      id: '/app/demonstration'
+      path: '/demonstration'
+      fullPath: '/app/demonstration'
+      preLoaderRoute: typeof AppDemonstrationRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/explainability': {
       id: '/app/explainability'
       path: '/explainability'
@@ -544,6 +563,7 @@ interface AppRouteChildren {
   AppAuditRoute: typeof AppAuditRoute
   AppBenchmarkRoute: typeof AppBenchmarkRoute
   AppDashboardRoute: typeof AppDashboardRoute
+  AppDemonstrationRoute: typeof AppDemonstrationRoute
   AppExplainabilityRoute: typeof AppExplainabilityRoute
   AppExplorerRoute: typeof AppExplorerRoute
   AppIngestionRoute: typeof AppIngestionRoute
@@ -561,6 +581,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAuditRoute: AppAuditRoute,
   AppBenchmarkRoute: AppBenchmarkRoute,
   AppDashboardRoute: AppDashboardRoute,
+  AppDemonstrationRoute: AppDemonstrationRoute,
   AppExplainabilityRoute: AppExplainabilityRoute,
   AppExplorerRoute: AppExplorerRoute,
   AppIngestionRoute: AppIngestionRoute,

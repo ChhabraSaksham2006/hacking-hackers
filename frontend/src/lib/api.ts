@@ -20,13 +20,19 @@ export async function apiFetch<T>(
 
   // When SSR in TanStack Start, you might need a full URL if relative fails,
   // but let's stick to standard relative URL for now since it relies on Vite proxy.
+  const isFormData = typeof FormData !== "undefined" && options.body instanceof FormData;
+  const headers: Record<string, string> = {};
+  if (!isFormData) {
+    headers["Content-Type"] = "application/json";
+  }
+  if (options.headers) {
+    Object.assign(headers, options.headers);
+  }
+
   const response = await fetch(url, {
     ...options,
     credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      ...options.headers,
-    },
+    headers,
   });
 
   if (!response.ok) {
