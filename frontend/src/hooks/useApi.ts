@@ -741,7 +741,6 @@ export function useMarkAllNotificationsRead() {
   });
 }
 
-<<<<<<< HEAD
 // ── Model versions & Benchmark ───────────────────────────
 
 export interface ModelVersionRecord {
