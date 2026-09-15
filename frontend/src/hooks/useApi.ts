@@ -858,10 +858,10 @@ export interface ReportPreviewData {
 }
 
 export function useReportPreview(params: {
-  timeWindow?: string;
-  segmentOrAlert?: string;
-  startDate?: string;
-  endDate?: string;
+  timeWindow?: string | undefined;
+  segmentOrAlert?: string | undefined;
+  startDate?: string | undefined;
+  endDate?: string | undefined;
 }) {
   const qs = new URLSearchParams();
   if (params.timeWindow) qs.set("timeWindow", params.timeWindow);
@@ -888,11 +888,11 @@ export function useGenerateReport() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (body: {
-      name?: string;
+      name?: string | undefined;
       scope: string;
       format: "PDF" | "CSV";
       timeWindow: { start: string; end: string };
-      segmentOrAlert?: string;
+      segmentOrAlert?: string | undefined;
     }) =>
       apiFetch<{ message: string; report: ReportRecord }>("/api/reports/generate", {
         method: "POST",

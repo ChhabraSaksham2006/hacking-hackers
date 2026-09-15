@@ -802,9 +802,11 @@ function Topology() {
             /* Treemap View with Sized Tiles & Mini Sparklines */
             <HeroPanel
               title="Adaptive Segment Treemap"
-              subtitle="Tile surface area tracks physical traffic share; dynamic aura reflects real-time threat stage."
               state={segments.some((s) => s.state === "critical") ? "critical" : "normal"}
             >
+              <p className="mb-3 text-[12px] text-fog font-mono">
+                Tile surface area tracks physical traffic share; dynamic aura reflects real-time threat stage.
+              </p>
               <div className="flex flex-wrap gap-3">
                 {filteredSegments.map((s) => {
                   const isSelected = selectedSegment === s.name;
@@ -914,7 +916,7 @@ function Topology() {
           {/* Segment Telemetry Table Roster */}
           <FlatPanel
             title="Monitored Subnet Roster"
-            actions={
+            control={
               <div className="relative w-48">
                 <Search className="absolute left-2.5 top-2.5 size-3.5 text-fog" />
                 <input

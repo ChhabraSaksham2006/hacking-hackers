@@ -357,7 +357,7 @@ function Reports() {
         {/* Live Interactive Preview */}
         <FlatPanel
           title="Preview"
-          action={
+          control={
             isFetchingPreview ? (
               <span className="flex items-center gap-1 text-[11px] text-teal">
                 <Loader2 className="h-3 w-3 animate-spin" /> Live syncing
