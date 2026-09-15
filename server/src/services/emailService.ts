@@ -20,7 +20,7 @@ interface BrevoPayload {
  * Send a transactional email via Brevo HTTP API.
  * Fails silently in development when BREVO_API_KEY is not configured.
  */
-async function sendRaw(
+export async function sendRaw(
   to: BrevoRecipient[],
   subject: string,
   htmlContent: string,

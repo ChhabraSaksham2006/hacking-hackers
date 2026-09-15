@@ -68,7 +68,7 @@ const userSchema = new Schema<IUser>(
     emailVerificationExpires: { type: Date },
     passwordResetToken: { type: String },
     passwordResetExpires: { type: Date },
-    alertNotificationsEnabled: { type: Boolean, default: true },
+    alertNotificationsEnabled: { type: Boolean, default: false },
     refreshTokens: { type: [refreshTokenSchema], default: [] },
   },
   {

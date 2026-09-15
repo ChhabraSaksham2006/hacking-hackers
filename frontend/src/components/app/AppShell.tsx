@@ -19,8 +19,10 @@ import {
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { useAlerts, useAuthMe, useLogout } from "@/hooks/useApi";
+import { useSocket } from "@/hooks/useSocket";
 import { cn } from "@/lib/utils";
 import { ConsolePanel } from "./ConsolePanel";
+import { NotificationBell } from "./notifications/NotificationBell";
 
 const nav = [
   { to: "/app/dashboard", label: "Dashboard", icon: Gauge },
@@ -44,6 +46,9 @@ export function AppShell({ children }: { children: ReactNode }) {
   const { data: user } = useAuthMe();
   const logout = useLogout();
   const openAlerts = alerts?.data?.filter((a) => a.status !== "Resolved").length ?? 0;
+  
+  // Initialize global socket connection
+  const { isConnected } = useSocket();
 
   return (
     <div className="network-field min-h-screen">
@@ -109,11 +114,21 @@ export function AppShell({ children }: { children: ReactNode }) {
                 alerts
               </span>
             </div>
-            <div className="flex items-center gap-3 text-[13px]">
-              <span className="text-fog">{user?.role ?? "SOC Lead"}</span>
-              <span className="mono flex size-8 items-center justify-center rounded-full bg-void-700 text-[11px] text-paper">
-                {user?.initials ?? "SC"}
-              </span>
+            <div className="flex items-center gap-4 text-[13px]">
+              <div 
+                className="flex items-center gap-1.5 rounded-full border border-fog-deep/50 bg-void-800 px-2 py-1 text-[11px] font-medium text-fog"
+                title={isConnected ? "Real-time updates active" : "Reconnecting..."}
+              >
+                <span className={cn("size-1.5 rounded-full", isConnected ? "bg-teal shadow-[0_0_8px_1px_rgba(20,184,166,0.6)]" : "bg-crimson animate-pulse")} />
+                {isConnected ? "Connected" : "Offline"}
+              </div>
+              <NotificationBell />
+              <div className="flex items-center gap-3">
+                <span className="text-fog">{user?.role ?? "SOC Lead"}</span>
+                <span className="mono flex size-8 items-center justify-center rounded-full bg-void-700 text-[11px] text-paper">
+                  {user?.initials ?? "SC"}
+                </span>
+              </div>
             </div>
           </header>
           <main className="flex-1 px-6 py-6">{children}</main>
