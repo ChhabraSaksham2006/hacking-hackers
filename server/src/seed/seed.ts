@@ -141,27 +141,27 @@ async function seed() {
   // ── Model versions ──────────────────────────────────────
   await ModelVersion.insertMany([
     {
-      version: 'wm-v4.2.1', releasedAt: new Date('2026-09-06'), note: 'F1 +0.021, FPR −0.006', isProduction: true, promotedBy: userSC._id,
-      metrics: { cicIds: { f1: 0.943, precision: 0.951, recall: 0.936, fpr: 0.014 }, ctu13: { f1: 0.918, precision: 0.927, recall: 0.909, fpr: 0.021 } },
-      confusionMatrices: { cicIds: { cells: [948, 14, 39, 999] }, ctu13: { cells: [930, 22, 48, 980] } },
+      version: 'wm-soc-v1.0.0', releasedAt: new Date('2026-09-06'), note: 'Two-Stage Operational SOC (615,248 params, 100% onset recall, 0.12 FA/hr)', isProduction: true, promotedBy: userSC._id,
+      metrics: { cicIds: { f1: 0.9841, precision: 0.9688, recall: 1.000, fpr: 0.6614 }, ctu13: { f1: 0.9920, precision: 0.9842, recall: 1.000, fpr: 0.2104 } },
+      confusionMatrices: { cicIds: { cells: [6, 1, 0, 7] }, ctu13: { cells: [28, 1, 0, 29] } },
       lossCurve: { train: [0.68, 0.51, 0.4, 0.33, 0.28, 0.24, 0.21, 0.19, 0.17, 0.16, 0.15, 0.14], val: [0.71, 0.55, 0.45, 0.38, 0.34, 0.31, 0.29, 0.28, 0.27, 0.27, 0.26, 0.26] },
     },
     {
-      version: 'wm-v4.1.0', releasedAt: new Date('2026-08-22'), note: 'F1 +0.014, recall +0.019', isProduction: false,
-      metrics: { cicIds: { f1: 0.922, precision: 0.935, recall: 0.917, fpr: 0.02 }, ctu13: { f1: 0.901, precision: 0.912, recall: 0.895, fpr: 0.028 } },
-      confusionMatrices: { cicIds: { cells: [812, 91, 143, 954] }, ctu13: { cells: [820, 85, 130, 945] } },
+      version: 'tfcnet-f-v1.0.0', releasedAt: new Date('2026-08-22'), note: 'TFCNet-F Raw Spectral Backbone (400,914 params, 100% onset recall)', isProduction: false,
+      metrics: { cicIds: { f1: 0.5512, precision: 0.3808, recall: 0.9976, fpr: 0.6664 }, ctu13: { f1: 0.6259, precision: 0.4672, recall: 0.9478, fpr: 0.2040 } },
+      confusionMatrices: { cicIds: { cells: [2, 5, 0, 7] }, ctu13: { cells: [23, 6, 1, 28] } },
       lossCurve: { train: [0.7, 0.54, 0.43, 0.36, 0.31, 0.27, 0.24, 0.22, 0.2, 0.19, 0.18, 0.17], val: [0.74, 0.58, 0.48, 0.42, 0.38, 0.35, 0.33, 0.32, 0.31, 0.3, 0.3, 0.29] },
     },
     {
-      version: 'wm-v4.0.3', releasedAt: new Date('2026-08-04'), note: 'FPR −0.011', isProduction: false,
-      metrics: { cicIds: { f1: 0.908, precision: 0.92, recall: 0.898, fpr: 0.031 }, ctu13: { f1: 0.887, precision: 0.9, recall: 0.876, fpr: 0.039 } },
-      confusionMatrices: { cicIds: { cells: [800, 98, 155, 947] }, ctu13: { cells: [790, 100, 160, 930] } },
+      version: 'sparserssm-v1.0.0', releasedAt: new Date('2026-08-04'), note: 'SparseRSSM Raw Rollout (214,334 params, Top-K=32 sparsity)', isProduction: false,
+      metrics: { cicIds: { f1: 0.5537, precision: 0.3890, recall: 0.9605, fpr: 0.6196 }, ctu13: { f1: 0.6729, precision: 0.5106, recall: 0.9867, fpr: 0.1786 } },
+      confusionMatrices: { cicIds: { cells: [2, 5, 0, 7] }, ctu13: { cells: [23, 6, 1, 28] } },
       lossCurve: { train: [0.72, 0.56, 0.45, 0.39, 0.34, 0.3, 0.27, 0.25, 0.23, 0.22, 0.21, 0.2], val: [0.76, 0.6, 0.5, 0.44, 0.4, 0.37, 0.35, 0.34, 0.33, 0.32, 0.32, 0.31] },
     },
     {
-      version: 'wm-v3.9.0', releasedAt: new Date('2026-07-15'), note: 'baseline for current architecture', isProduction: false,
-      metrics: { cicIds: { f1: 0.894, precision: 0.905, recall: 0.884, fpr: 0.042 }, ctu13: { f1: 0.871, precision: 0.885, recall: 0.86, fpr: 0.05 } },
-      confusionMatrices: { cicIds: { cells: [780, 110, 170, 940] }, ctu13: { cells: [760, 120, 175, 925] } },
+      version: 'gru-baseline-v1.0.0', releasedAt: new Date('2026-07-15'), note: 'Temporal GRU Baseline (239,517 params, 42.9% onset recall)', isProduction: false,
+      metrics: { cicIds: { f1: 0.4797, precision: 0.4691, recall: 0.4907, fpr: 0.2278 }, ctu13: { f1: 0.6201, precision: 0.4505, recall: 0.9947, fpr: 0.2291 } },
+      confusionMatrices: { cicIds: { cells: [5, 2, 4, 3] }, ctu13: { cells: [22, 7, 1, 28] } },
       lossCurve: { train: [0.75, 0.6, 0.5, 0.44, 0.39, 0.35, 0.32, 0.3, 0.28, 0.27, 0.26, 0.25], val: [0.8, 0.65, 0.55, 0.49, 0.45, 0.42, 0.4, 0.38, 0.37, 0.36, 0.36, 0.35] },
     },
   ]);

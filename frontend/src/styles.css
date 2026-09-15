@@ -347,7 +347,7 @@
   animation: glow-pulse-kf 3s ease-in-out infinite;
 }
 
-/* KaTeX Dark Mode Theme */
+/* KaTeX Dark Mode & Scrollbar Elimination */
 .katex {
   color: var(--paper-100) !important;
   font-size: 1.05em;
@@ -355,7 +355,25 @@
 
 .katex-display {
   margin: 0.5em 0 !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
+
+.katex-display::-webkit-scrollbar,
+.katex-block-container::-webkit-scrollbar,
+.katex-inline-container::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.katex-inline-container {
+  display: inline !important;
+  overflow: visible !important;
+}
+
 
 
 /* ── Scroll-Focused Section Spotlight ── */

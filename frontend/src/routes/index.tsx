@@ -425,37 +425,37 @@ function Landing() {
                       Component 1: Recurrent State-Space Model
                     </span>
                     <h3 className="mt-2 font-display text-xl font-bold text-paper">
-                      SparseRSSM: 256-D Latent Network Manifold
+                      SparseRSSM: 214,334-Param Latent Recurrent World Model
                     </h3>
                     <p className="mt-3 text-sm text-fog leading-relaxed">
-                      SparseRSSM compresses the continuous stream of 54-dimensional behavioral network features into a dual-state representation: a 128-dimensional deterministic recurrent hidden state <code>h_t</code> and a 128-dimensional stochastic posterior <code>z_t</code> parameterized as a diagonal Gaussian.
+                      SparseRSSM compresses continuous 54-dimensional behavioral state vectors into a dual representation: a 128-D deterministic GRU memory <code>h_t</code> and a 128-D sparsified latent state <code>z_t</code> with Top-K selection (<MathFormula math="k_{\text{keep}} = 32" displayMode={false} />, 25% keep ratio) trained via Straight-Through Estimators (STE).
                     </p>
                     <ul className="mt-4 space-y-2.5 text-xs font-mono text-paper/90">
                       <li className="flex items-center gap-2.5">
                         <CheckCircle2 className="size-4 text-teal shrink-0" />
-                        <span>1.0 L1 Sparsity Ratio eliminates noise in benign traffic baselines</span>
+                        <span>Top-K sparsity (k=32) eliminates noisy benign state perturbations</span>
                       </li>
                       <li className="flex items-center gap-2.5">
                         <CheckCircle2 className="size-4 text-teal shrink-0" />
-                        <span>Forward dynamics predict K=10 windows ahead into future states</span>
+                        <span>Autoregressive forward rollout predicts K=10 windows (20s lead time)</span>
                       </li>
                       <li className="flex items-center gap-2.5">
                         <CheckCircle2 className="size-4 text-teal shrink-0" />
-                        <span>FastAPI PyTorch inference executed in under 25ms per window</span>
+                        <span>Deterministic latent dynamics (no stochastic Gaussian or KL divergence)</span>
                       </li>
                     </ul>
                   </div>
 
                   <div className="rounded-xl border border-teal/40 bg-void-950/90 p-5 shadow-inner">
-                    <span className="text-xs font-mono text-teal font-semibold">PyTorch Mathematical Loss Objective:</span>
-                    <div className="mt-3 overflow-x-auto py-3 text-center">
+                    <span className="text-xs font-mono text-teal font-semibold">SparseRSSM Latent Dynamics & Sparsity:</span>
+                    <div className="mt-3 overflow-x-auto py-3 text-center scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                       <MathFormula
-                        math="\mathcal{L}_{\text{RSSM}} = \mathbb{E}_{q} \left[ -\log p(x_t \mid h_t, z_t) + D_{\mathrm{KL}}\big(q(z_t \mid h_t, x_t) \,\|\, p(z_t \mid h_t)\big) \right] + \lambda_1 \|W_{\text{sparse}}\|_1"
+                        math="\hat{z}_t = \operatorname{TopK}(z_t, k=32), \quad h_t = \operatorname{GRUCell}(\hat{z}_t, h_{t-1}), \quad r_k = [\hat{z}_k \parallel h_k]"
                         displayMode={true}
                       />
                     </div>
                     <p className="mt-3 text-[11px] text-fog border-t border-fog-deep/30 pt-2 font-mono">
-                      Operates natively on normalized 54-feature slices derived from raw network interfaces and PCAP captures.
+                      Deterministic latent rollout with Top-K sparsity (k=32, 25% keep ratio) trained via Straight-Through Estimators (STE). No stochastic KL term.
                     </p>
                   </div>
                 </div>
@@ -466,45 +466,45 @@ function Landing() {
               <div className={cardStyleClass}>
                 <div className="grid gap-8 lg:grid-cols-2">
                   <div>
-                    <span className="font-mono text-xs text-amber uppercase font-bold text-glow-amber">
-                      Component 2: Dual-Domain Transformer
+                    <span className="font-mono text-xs text-amber uppercase font-bold">
+                      Component 2: Multi-Scale Time–Frequency Network
                     </span>
                     <h3 className="mt-2 font-display text-xl font-bold text-paper">
-                      TFCNet: Time-Frequency Consistency Network
+                      TFCNet-F: Dilated Convolutions & Spectral Projection
                     </h3>
                     <p className="mt-3 text-sm text-fog leading-relaxed">
-                      Attackers often attempt to evade temporal sequence detection by varying packet intervals. TFCNet applies Fast Fourier Transforms (FFT) across 10 temporal windows to uncover periodic C2 beaconing and automated lateral scanning in the frequency spectrum.
+                      Attackers introduce temporal jitter to evade static sequential detectors. TFCNet-F couples 4 parallel multi-scale dilated 1D convolutions with an RFFT spectral projection branch through a sigmoid gated fusion and inverted variable-token Transformer.
                     </p>
                     <ul className="mt-4 space-y-2.5 text-xs font-mono text-paper/90">
                       <li className="flex items-center gap-2.5">
                         <CheckCircle2 className="size-4 text-amber shrink-0" />
-                        <span>2-Layer Inverted Transformer with 4 Multi-Head Cross-Attentions</span>
+                        <span>4 Dilated 1D Convs (k, d) in &#123;(1,1), (3,1), (5,1), (3,2)&#125;</span>
                       </li>
                       <li className="flex items-center gap-2.5">
                         <CheckCircle2 className="size-4 text-amber shrink-0" />
-                        <span>Detects high-entropy outbound beaconing on ports 8080/8443</span>
+                        <span>Real Fast Fourier Transform (RFFT) across 6 spectral frequency bins</span>
                       </li>
                       <li className="flex items-center gap-2.5">
                         <CheckCircle2 className="size-4 text-amber shrink-0" />
-                        <span>Frequency spectral consistency loss enforces cross-domain alignment</span>
+                        <span>Inverted Transformer tokenizing 54 physical variables rather than timesteps</span>
                       </li>
                     </ul>
                   </div>
 
                   <div className="rounded-xl border border-amber/40 bg-void-950/90 p-5 shadow-inner">
-                    <span className="text-xs font-mono text-amber font-semibold">Time-Frequency Alignment Equations:</span>
-                    <div className="mt-3 overflow-x-auto py-2 space-y-2 text-center">
+                    <span className="text-xs font-mono text-amber font-semibold">Time-Frequency Gated Fusion Equations:</span>
+                    <div className="mt-3 overflow-x-auto py-2 space-y-2 text-center scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                       <MathFormula
-                        math="X_{\text{freq}} = \operatorname{FFT}(X_{\text{temporal}}, \dim = -1)"
+                        math="h^{(i)}_{\text{conv}} = \operatorname{GELU}\left(\operatorname{Conv1D}_{k_i, d_i}(X)\right), \quad Z_{\text{spectral}} = \operatorname{Re}(\hat{X}) W_\Re - \operatorname{Im}(\hat{X}) W_\Im"
                         displayMode={true}
                       />
                       <MathFormula
-                        math="\operatorname{Attn}_{\text{cross}} = \operatorname{Softmax}\left(\frac{Q_{\text{temp}} K_{\text{freq}}^\top}{\sqrt{d_k}}\right) V_{\text{freq}}"
+                        math="G = \sigma\left(\operatorname{Linear}(Z_{\text{temporal}} \parallel Z_{\text{spectral}})\right), \quad Z_{\text{fused}} = G \odot Z_{\text{temporal}} + (1 - G) \odot Z_{\text{spectral}}"
                         displayMode={true}
                       />
                     </div>
                     <p className="mt-3 text-[11px] text-fog border-t border-fog-deep/30 pt-2 font-mono">
-                      Isolates hidden periodic signals even when packet intervals are jittered to avoid traditional signature detectors.
+                      Couples multi-scale temporal receptive fields (1, 3, 5 steps) with frequency power spectral density.
                     </p>
                   </div>
                 </div>
@@ -515,30 +515,30 @@ function Landing() {
               <div className={cardStyleClass}>
                 <div className="grid gap-8 lg:grid-cols-2">
                   <div>
-                    <span className="font-mono text-xs text-teal uppercase font-bold text-glow-teal">
-                      Component 3: Gated Deep Fusion
+                    <span className="font-mono text-xs text-teal uppercase font-bold">
+                      Component 3: Two-Stage SOC Architecture
                     </span>
                     <h3 className="mt-2 font-display text-xl font-bold text-paper">
-                      Deep Ensemble Fusion & Calibrated Confidence
+                      Zero-Parameter Confirmation & Incident Aggregation
                     </h3>
                     <p className="mt-3 text-sm text-fog leading-relaxed">
-                      A gating mechanism balances the temporal state-space probability from SparseRSSM (60% weight) with the spectral transformer probability from TFCNet (40% weight). The resulting score is calibrated against an empirical detection threshold to provide actionable lead time.
+                      Rather than brittle representation fusion, the Two-Stage SOC couples SparseRSSM and TFCNet-F via a deterministic rule hierarchy: a sensitive Stage 1 Scout, a multi-condition Stage 2 Confirmation Gate, and a Stage 3 Temporal Aggregator.
                     </p>
-                    <div className="mt-4 overflow-x-auto py-2">
+                    <div className="mt-4 overflow-x-auto py-2 scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                       <MathFormula
-                        math="\hat{y}_t = \sigma\big( 0.60 \cdot \hat{y}_{\text{RSSM}} + 0.40 \cdot \hat{y}_{\text{TFCNet}} \big)"
+                        math="p_{\text{risk}} = \max(p_R, p_T, p_E), \quad C_t = [p \ge 0.30] \lor [\text{slope} \ge 0.05 \land p \ge 0.15]"
                         displayMode={true}
                       />
                     </div>
                     <div className="mt-4 flex flex-wrap gap-2.5 text-xs font-mono">
                       <span className="rounded bg-teal/15 px-3 py-1 text-teal border border-teal/40 font-semibold shadow-xs">
-                        60% SparseRSSM
+                        Stage 1: Scout Rule
                       </span>
                       <span className="rounded bg-amber/15 px-3 py-1 text-amber border border-amber/40 font-semibold shadow-xs">
-                        40% TFCNet
+                        Stage 2: Confirmation Gate
                       </span>
                       <span className="rounded bg-paper/10 px-3 py-1 text-paper border border-fog-deep font-semibold">
-                        Calibrated Threshold: 0.04
+                        Stage 3: G_max=5, C=10 (20s Cooldown)
                       </span>
                     </div>
                   </div>

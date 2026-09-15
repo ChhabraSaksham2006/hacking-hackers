@@ -7,7 +7,7 @@ interface MathFormulaProps {
   className?: string;
 }
 
-export function MathFormula({ math, displayMode = true, className = "" }: MathFormulaProps) {
+export function MathFormula({ math, displayMode = false, className = "" }: MathFormulaProps) {
   const html = useMemo(() => {
     try {
       return katex.renderToString(math, {
@@ -21,9 +21,18 @@ export function MathFormula({ math, displayMode = true, className = "" }: MathFo
     }
   }, [math, displayMode]);
 
+  if (displayMode) {
+    return (
+      <div
+        className={`katex-block-container block w-full overflow-x-auto py-2 scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden text-center ${className}`}
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
+    );
+  }
+
   return (
     <span
-      className={`katex-render-container inline-block max-w-full overflow-x-auto ${className}`}
+      className={`katex-inline-container inline align-baseline whitespace-nowrap overflow-visible ${className}`}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );
