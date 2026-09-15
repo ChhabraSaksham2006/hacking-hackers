@@ -47,3 +47,5 @@ venv/
 *.tsbuildinfo
 server/storage/reports/*
 !server/storage/reports/.gitkeep
+*.pdf
+

@@ -27,6 +27,7 @@ import { pageHead } from "@/lib/head";
 import { probabilitySeries } from "@/lib/telemetry";
 import { ThreeManifold } from "@/components/landing/ThreeManifold";
 import { BackgroundDotEffect } from "@/components/landing/BackgroundDotEffect";
+import { MathFormula } from "@/components/common/MathFormula";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
@@ -176,7 +177,7 @@ function Landing() {
       <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-fog-deep/40 px-6 backdrop-blur-xl bg-void-900/85 md:px-12">
         <div className="flex items-center gap-3">
           <span className="size-[20px] rotate-45 rounded-[4px] border-2 border-teal shadow-xs shadow-teal/50 animate-glow-pulse" />
-          <span className="font-display text-base font-bold tracking-tight text-paper text-glow-white hover:text-teal transition-colors cursor-pointer">
+          <span className="font-display text-base font-bold tracking-tight text-paper hover:text-teal transition-colors cursor-pointer">
             Aegis Vantage
           </span>
           <span className="hidden rounded-full border border-teal/40 bg-teal/10 px-2.5 py-0.5 font-mono text-[10px] text-teal sm:inline-block shadow-xs shadow-teal/30">
@@ -198,7 +199,7 @@ function Landing() {
         <nav className="flex items-center gap-3">
           <Link
             to="/docs"
-            className="hidden font-mono text-[13px] text-fog hover:text-teal hover:text-glow-teal transition-all md:block"
+            className="hidden font-mono text-[13px] text-fog hover:text-teal transition-all md:block"
           >
             Whitepaper
           </Link>
@@ -229,20 +230,20 @@ function Landing() {
         >
           <div>
             {/* Tag / Category Badge with animated glow */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-teal/50 bg-teal/10 px-3.5 py-1.5 text-xs font-mono text-teal backdrop-blur-md shadow-[0_0_20px_rgba(45,212,191,0.25)] hover:scale-105 transition-transform">
+            <div className="inline-flex items-center gap-2 rounded-full border border-teal/50 bg-teal/10 px-3.5 py-1.5 text-xs font-mono text-teal backdrop-blur-md shadow-[0_0_15px_rgba(45,212,191,0.15)] hover:scale-105 transition-transform">
               <Sparkles className="size-3.5 animate-pulse text-teal" />
               <span className="tracking-wide">Cyber World Model · 20.0s Intervention Margin</span>
             </div>
 
-            <h1 className="mt-6 font-display text-4xl font-extrabold leading-[1.12] tracking-tight text-paper sm:text-5xl lg:text-6xl text-glow-white">
+            <h1 className="mt-6 font-display text-4xl font-extrabold leading-[1.12] tracking-tight text-paper sm:text-5xl lg:text-6xl">
               Forecasts attacker progression{" "}
-              <span className="block mt-1 text-transparent bg-clip-text bg-gradient-to-r from-teal via-emerald-300 to-teal animate-text-shimmer text-glow-teal">
+              <span className="block mt-1 text-transparent bg-clip-text bg-gradient-to-r from-teal via-emerald-300 to-teal animate-text-shimmer">
                 before compromise completes
               </span>
             </h1>
 
             <p className="mt-6 max-w-[62ch] text-base leading-relaxed text-fog sm:text-lg">
-              Static classifiers inspect isolated packets after damage is done. Aegis Vantage runs a continuous temporal world model over 54-dimensional network telemetry, projecting latent kill-chain trajectories forward to catch lateral movement <strong className="text-paper text-glow-white">20 seconds before</strong> domain takeover.
+              Static classifiers inspect isolated packets after damage is done. Aegis Vantage runs a continuous temporal world model over 54-dimensional network telemetry, projecting latent kill-chain trajectories forward to catch lateral movement <strong className="text-paper">20 seconds before</strong> domain takeover.
             </p>
 
             {/* CTA Buttons */}
@@ -264,7 +265,7 @@ function Landing() {
                 <p className="mt-1 text-xs font-mono text-fog group-hover:text-paper transition-colors">Early Warning Horizon</p>
               </div>
               <div className="group cursor-default p-2 rounded-xl transition-all duration-300 hover:bg-void-800/40 hover:scale-105">
-                <p className="font-mono text-2xl font-extrabold text-paper lg:text-3xl text-glow-white group-hover:scale-110 transition-transform">
+                <p className="font-mono text-2xl font-extrabold text-paper lg:text-3xl group-hover:scale-110 transition-transform">
                   94.3%
                 </p>
                 <p className="mt-1 text-xs font-mono text-fog group-hover:text-paper transition-colors">CIC-IDS-2018 F1 Score</p>
@@ -316,7 +317,7 @@ function Landing() {
             <span className="rounded-full border border-teal/40 bg-teal/10 px-3 py-1 font-mono text-xs text-teal">
               02 · Detection Paradigm Shift
             </span>
-            <h2 className="mt-4 font-display text-3xl font-bold text-paper sm:text-4xl text-glow-white">
+            <h2 className="mt-4 font-display text-3xl font-bold text-paper sm:text-4xl">
               Per-Packet Detection vs. Continuous Cyber World Model
             </h2>
             <p className="mt-3 text-sm text-fog leading-relaxed">
@@ -377,7 +378,7 @@ function Landing() {
             <span className="rounded-full border border-teal/40 bg-teal/10 px-3.5 py-1 font-mono text-xs text-teal">
               03 · Deep Hybrid Ensemble Formulation
             </span>
-            <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-paper sm:text-4xl text-glow-white">
+            <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-paper sm:text-4xl">
               Inside the Cyber World Model Architecture
             </h2>
             <p className="mt-3 text-sm text-fog">
@@ -423,7 +424,7 @@ function Landing() {
                     <span className="font-mono text-xs text-teal uppercase font-bold text-glow-teal">
                       Component 1: Recurrent State-Space Model
                     </span>
-                    <h3 className="mt-2 font-display text-xl font-bold text-paper text-glow-white">
+                    <h3 className="mt-2 font-display text-xl font-bold text-paper">
                       SparseRSSM: 256-D Latent Network Manifold
                     </h3>
                     <p className="mt-3 text-sm text-fog leading-relaxed">
@@ -445,16 +446,15 @@ function Landing() {
                     </ul>
                   </div>
 
-                  <div className="rounded-xl border border-fog-deep/40 bg-void-900/90 p-5 font-mono text-xs shadow-inner">
-                    <span className="text-fog">PyTorch Mathematical Loss Objective:</span>
-                    <pre className="mt-3 text-teal overflow-x-auto p-3.5 rounded bg-void-950 border border-teal/30 shadow-xs">
-{`L_RSSM = E_q [ 
-  -log p(x_t | h_t, z_t)
-  + D_KL(q(z_t | h_t, x_t) || p(z_t | h_t))
-  + λ * ||W_sparse||_1
-]`}
-                    </pre>
-                    <p className="mt-3 text-[11px] text-fog">
+                  <div className="rounded-xl border border-teal/40 bg-void-950/90 p-5 shadow-inner">
+                    <span className="text-xs font-mono text-teal font-semibold">PyTorch Mathematical Loss Objective:</span>
+                    <div className="mt-3 overflow-x-auto py-3 text-center">
+                      <MathFormula
+                        math="\mathcal{L}_{\text{RSSM}} = \mathbb{E}_{q} \left[ -\log p(x_t \mid h_t, z_t) + D_{\mathrm{KL}}\big(q(z_t \mid h_t, x_t) \,\|\, p(z_t \mid h_t)\big) \right] + \lambda_1 \|W_{\text{sparse}}\|_1"
+                        displayMode={true}
+                      />
+                    </div>
+                    <p className="mt-3 text-[11px] text-fog border-t border-fog-deep/30 pt-2 font-mono">
                       Operates natively on normalized 54-feature slices derived from raw network interfaces and PCAP captures.
                     </p>
                   </div>
@@ -469,7 +469,7 @@ function Landing() {
                     <span className="font-mono text-xs text-amber uppercase font-bold text-glow-amber">
                       Component 2: Dual-Domain Transformer
                     </span>
-                    <h3 className="mt-2 font-display text-xl font-bold text-paper text-glow-white">
+                    <h3 className="mt-2 font-display text-xl font-bold text-paper">
                       TFCNet: Time-Frequency Consistency Network
                     </h3>
                     <p className="mt-3 text-sm text-fog leading-relaxed">
@@ -491,14 +491,19 @@ function Landing() {
                     </ul>
                   </div>
 
-                  <div className="rounded-xl border border-fog-deep/40 bg-void-900/90 p-5 font-mono text-xs shadow-inner">
-                    <span className="text-fog">Time-Frequency Alignment Tensor:</span>
-                    <pre className="mt-3 text-amber overflow-x-auto p-3.5 rounded bg-void-950 border border-amber/30 shadow-xs">
-{`F_freq = FFT(X_temporal, dim=-1)
-Attn_cross = Softmax((Q_temp * K_freq^T) / sqrt(d_k)) * V_freq
-L_TFC = CosineDistance(Z_temporal, Z_spectral)`}
-                    </pre>
-                    <p className="mt-3 text-[11px] text-fog">
+                  <div className="rounded-xl border border-amber/40 bg-void-950/90 p-5 shadow-inner">
+                    <span className="text-xs font-mono text-amber font-semibold">Time-Frequency Alignment Equations:</span>
+                    <div className="mt-3 overflow-x-auto py-2 space-y-2 text-center">
+                      <MathFormula
+                        math="X_{\text{freq}} = \operatorname{FFT}(X_{\text{temporal}}, \dim = -1)"
+                        displayMode={true}
+                      />
+                      <MathFormula
+                        math="\operatorname{Attn}_{\text{cross}} = \operatorname{Softmax}\left(\frac{Q_{\text{temp}} K_{\text{freq}}^\top}{\sqrt{d_k}}\right) V_{\text{freq}}"
+                        displayMode={true}
+                      />
+                    </div>
+                    <p className="mt-3 text-[11px] text-fog border-t border-fog-deep/30 pt-2 font-mono">
                       Isolates hidden periodic signals even when packet intervals are jittered to avoid traditional signature detectors.
                     </p>
                   </div>
@@ -513,13 +518,19 @@ L_TFC = CosineDistance(Z_temporal, Z_spectral)`}
                     <span className="font-mono text-xs text-teal uppercase font-bold text-glow-teal">
                       Component 3: Gated Deep Fusion
                     </span>
-                    <h3 className="mt-2 font-display text-xl font-bold text-paper text-glow-white">
+                    <h3 className="mt-2 font-display text-xl font-bold text-paper">
                       Deep Ensemble Fusion & Calibrated Confidence
                     </h3>
                     <p className="mt-3 text-sm text-fog leading-relaxed">
                       A gating mechanism balances the temporal state-space probability from SparseRSSM (60% weight) with the spectral transformer probability from TFCNet (40% weight). The resulting score is calibrated against an empirical detection threshold to provide actionable lead time.
                     </p>
-                    <div className="mt-5 flex flex-wrap gap-2.5 text-xs font-mono">
+                    <div className="mt-4 overflow-x-auto py-2">
+                      <MathFormula
+                        math="\hat{y}_t = \sigma\big( 0.60 \cdot \hat{y}_{\text{RSSM}} + 0.40 \cdot \hat{y}_{\text{TFCNet}} \big)"
+                        displayMode={true}
+                      />
+                    </div>
+                    <div className="mt-4 flex flex-wrap gap-2.5 text-xs font-mono">
                       <span className="rounded bg-teal/15 px-3 py-1 text-teal border border-teal/40 font-semibold shadow-xs">
                         60% SparseRSSM
                       </span>
@@ -655,7 +666,7 @@ L_TFC = CosineDistance(Z_temporal, Z_spectral)`}
                   </p>
                 </div>
                 <div className="mt-6 border-t border-fog-deep/30 pt-4">
-                  <p className="font-display font-bold text-paper text-sm text-glow-white">{t.author}</p>
+                  <p className="font-display font-bold text-paper text-sm">{t.author}</p>
                   <p className="text-xs text-fog">{t.role} · <strong className="text-fog-deep group-hover:text-teal transition-colors">{t.org}</strong></p>
                 </div>
               </div>
@@ -671,9 +682,9 @@ L_TFC = CosineDistance(Z_temporal, Z_spectral)`}
             getSectionFocusClass("cta")
           )}
         >
-          <div className={cn(cardStyleClass, "text-center py-16 px-8 border-teal/40 bg-void-800/90 shadow-[0_0_50px_rgba(45,212,191,0.15)] group")}>
-            <span className="size-3.5 rounded-full bg-teal inline-block animate-ping mb-3 shadow-[0_0_12px_#2dd4bf]" />
-            <h2 className="font-display text-3xl font-extrabold text-paper sm:text-4xl text-glow-white">
+          <div className={cn(cardStyleClass, "text-center py-16 px-8 border-teal/40 bg-void-800/90 shadow-[0_0_35px_rgba(45,212,191,0.12)] group")}>
+            <span className="size-3.5 rounded-full bg-teal inline-block animate-ping mb-3 shadow-[0_0_8px_#2dd4bf]" />
+            <h2 className="font-display text-3xl font-extrabold text-paper sm:text-4xl">
               Ready to forecast compromise before it happens?
             </h2>
             <p className="mt-3 max-w-xl mx-auto text-sm text-fog group-hover:text-paper/90 transition-colors">
@@ -696,26 +707,26 @@ L_TFC = CosineDistance(Z_temporal, Z_spectral)`}
         <div className="mx-auto flex max-w-[1360px] flex-wrap items-center justify-between gap-6">
           <div className="flex items-center gap-3">
             <span className="size-[16px] rotate-45 rounded-[3px] border-2 border-teal shadow-xs shadow-teal/50" />
-            <span className="font-display text-sm font-semibold text-paper text-glow-white">
+            <span className="font-display text-sm font-semibold text-paper">
               Aegis Vantage
             </span>
             <span className="text-fog-deep">· Cyber World Model</span>
           </div>
 
           <div className="flex flex-wrap gap-6 font-mono text-[12px]">
-            <Link to="/security" className="hover:text-teal hover:text-glow-teal transition-all">
+            <Link to="/security" className="hover:text-teal transition-all">
               Security Architecture
             </Link>
-            <Link to="/privacy" className="hover:text-teal hover:text-glow-teal transition-all">
+            <Link to="/privacy" className="hover:text-teal transition-all">
               Privacy Policy
             </Link>
-            <Link to="/terms" className="hover:text-teal hover:text-glow-teal transition-all">
+            <Link to="/terms" className="hover:text-teal transition-all">
               Terms of Service & SLA
             </Link>
-            <Link to="/docs" className="hover:text-teal hover:text-glow-teal transition-all">
+            <Link to="/docs" className="hover:text-teal transition-all">
               Documentation
             </Link>
-            <Link to="/app/dashboard" className="hover:text-teal hover:text-glow-teal transition-all">
+            <Link to="/app/dashboard" className="hover:text-teal transition-all">
               Console
             </Link>
           </div>

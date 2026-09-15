@@ -296,21 +296,23 @@
   box-shadow: inset 3px 3px 7px #070a12, inset -3px -3px 7px #1a2336;
 }
 
-/* ── Glowing Text Shadows & Shimmer ── */
+@import "katex/dist/katex.min.css";
+
+/* ── Refined Subtle Text Accents (De-Glowed & Crisp) ── */
 @utility text-glow-teal {
-  text-shadow: 0 0 16px rgba(45, 212, 191, 0.45), 0 0 32px rgba(45, 212, 191, 0.25);
+  text-shadow: 0 0 8px rgba(45, 212, 191, 0.22);
 }
 
 @utility text-glow-amber {
-  text-shadow: 0 0 16px rgba(251, 191, 36, 0.45), 0 0 32px rgba(251, 191, 36, 0.25);
+  text-shadow: 0 0 8px rgba(251, 191, 36, 0.22);
 }
 
 @utility text-glow-crimson {
-  text-shadow: 0 0 16px rgba(244, 63, 94, 0.5), 0 0 32px rgba(244, 63, 94, 0.25);
+  text-shadow: 0 0 8px rgba(244, 63, 94, 0.25);
 }
 
 @utility text-glow-white {
-  text-shadow: 0 0 14px rgba(255, 255, 255, 0.4), 0 0 30px rgba(255, 255, 255, 0.15);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 @keyframes text-shimmer-kf {
@@ -332,18 +334,29 @@
 
 @keyframes glow-pulse-kf {
   0%, 100% {
-    opacity: 0.9;
-    filter: drop-shadow(0 0 8px rgba(45, 212, 191, 0.3));
+    opacity: 0.95;
+    filter: drop-shadow(0 0 4px rgba(45, 212, 191, 0.2));
   }
   50% {
     opacity: 1;
-    filter: drop-shadow(0 0 20px rgba(45, 212, 191, 0.65));
+    filter: drop-shadow(0 0 8px rgba(45, 212, 191, 0.35));
   }
 }
 
 @utility animate-glow-pulse {
   animation: glow-pulse-kf 3s ease-in-out infinite;
 }
+
+/* KaTeX Dark Mode Theme */
+.katex {
+  color: var(--paper-100) !important;
+  font-size: 1.05em;
+}
+
+.katex-display {
+  margin: 0.5em 0 !important;
+}
+
 
 /* ── Scroll-Focused Section Spotlight ── */
 .scroll-spotlight-active {
