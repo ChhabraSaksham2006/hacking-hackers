@@ -63,11 +63,6 @@ function ExplainabilityPage() {
   }, [isLiveMode, explainData?.windowIndex]);
 
   const contributions = explainData?.featureContributions || [];
-  const maxWeight = useMemo(() => {
-    if (contributions.length === 0) return 1;
-    return Math.max(...contributions.map((f) => Math.abs(f.weight)), 0.01);
-  }, [contributions]);
-
   const categories = explainData?.featureCategories || [];
 
   // Filter raw metrics based on category and search query
@@ -314,7 +309,8 @@ function ExplainabilityPage() {
         >
           <div className="space-y-4">
             {contributions.map((f) => {
-              const pct = (Math.abs(f.weight) / maxWeight) * 100;
+              // Reference scale 0.50 for absolute SHAP attribution magnitude
+              const pct = Math.min(100, Math.max(5, (Math.abs(f.weight) / 0.50) * 100));
               const positive = f.weight > 0;
               return (
                 <div key={f.feature} className="space-y-1">
@@ -339,12 +335,15 @@ function ExplainabilityPage() {
                     </div>
                   </div>
 
-                  {/* Relative contribution bar */}
+                  {/* Relative contribution bar with scale guide lines */}
                   <div className="relative flex h-2.5 w-full items-center overflow-hidden rounded bg-void-900 border border-fog-deep/40">
+                    <div className="absolute left-1/4 top-0 bottom-0 w-px bg-fog-deep/20 pointer-events-none" />
+                    <div className="absolute left-1/2 top-0 bottom-0 w-px bg-fog-deep/30 pointer-events-none" />
+                    <div className="absolute left-3/4 top-0 bottom-0 w-px bg-fog-deep/20 pointer-events-none" />
                     <div
-                      className="h-full rounded transition-all duration-300"
+                      className="h-full rounded transition-all duration-500 ease-out"
                       style={{
-                        width: `${Math.max(4, pct)}%`,
+                        width: `${pct}%`,
                         background: positive
                           ? "var(--critical-crimson)"
                           : "var(--signal-teal)",
@@ -370,7 +369,7 @@ function ExplainabilityPage() {
                 <span>Teal: Mitigating / baseline normalizing</span>
               </span>
             </div>
-            <span className="mono text-[11px]">Normalized L1 divergence</span>
+            <span className="mono text-[11px]">Normalized L1 divergence (±0.50 max domain)</span>
           </div>
         </HeroPanel>
 

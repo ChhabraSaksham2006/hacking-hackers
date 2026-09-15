@@ -10,7 +10,13 @@ import { notifyOrgUsersOfAlert } from './emailService.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const REPLAY_FILE = path.resolve(__dirname, '../data/cic_ids_2018_thursday_replay.json');
+let REPLAY_FILE = path.resolve(__dirname, '../data/cic_ids_2018_thursday_replay.json');
+if (!fs.existsSync(REPLAY_FILE)) {
+  const fallback = path.resolve(__dirname, '../../src/data/cic_ids_2018_thursday_replay.json');
+  if (fs.existsSync(fallback)) {
+    REPLAY_FILE = fallback;
+  }
+}
 
 export interface IReplayFlow {
   src: string;
