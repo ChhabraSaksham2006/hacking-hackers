@@ -22,11 +22,32 @@ export interface Alert {
   notes?: string;
 }
 
+export interface PacketFrame {
+  frameNumber: number;
+  offsetSeconds: number;
+  timeFormatted: string;
+  source: string;
+  destination: string;
+  direction: 'inbound' | 'outbound';
+  protocol: string;
+  flags?: string;
+  length: number;
+  ttl: number;
+  winSize?: number;
+  seq?: number;
+  ack?: number;
+  info: string;
+  layers: string[];
+  hexDump: string[];
+  payloadAscii?: string;
+}
+
 export interface Flow {
   _id: string;
   src: string;
   dst: string;
   proto: string;
+  service?: string;
   flags: string;
   bytes: number;
   packets: number;
@@ -38,7 +59,11 @@ export interface Flow {
   window: number;
   retrans: number;
   score: number;
+  riskState?: 'normal' | 'watch' | 'critical';
+  mitreTactic?: string;
+  mitreTechnique?: string;
   timestamp: string;
+  packetSequence?: PacketFrame[];
 }
 
 export interface DashboardSummary {
@@ -272,21 +297,55 @@ export function useUpdateAlert() {
 }
 
 export interface FlowPaginated {
+  isLive?: boolean | undefined;
+  activeLiveWindowIndex?: number | undefined;
+  windowIndex?: number | undefined;
+  timestampStart?: string | undefined;
+  phase?: string | undefined;
+  stage?: string | undefined;
+  probability?: number | undefined;
   data: Flow[];
   pagination: { page: number; limit: number; total: number; totalPages: number };
+  summary?: {
+    totalFlows: number;
+    threatFlows: number;
+    totalBytes: number;
+    totalPackets: number;
+    topService: string;
+  } | undefined;
 }
 
-export function useFlows(filters: { page: number; limit: number; minScore?: number; flaggedOnly?: boolean; search?: string }) {
+export interface UseFlowsFilters {
+  page: number;
+  limit: number;
+  minScore?: number | undefined;
+  flaggedOnly?: boolean | undefined;
+  search?: string | undefined;
+  windowIndex?: number | undefined;
+  scrub?: number | undefined;
+  live?: boolean | undefined;
+  proto?: string | undefined;
+  service?: string | undefined;
+}
+
+export function useFlows(filters: UseFlowsFilters) {
+  const isLive = filters.live ?? (filters.windowIndex === undefined && filters.scrub === undefined);
   const query = new URLSearchParams();
   query.set("page", filters.page.toString());
   query.set("limit", filters.limit.toString());
   if (filters.minScore !== undefined) query.set("minScore", filters.minScore.toString());
   if (filters.flaggedOnly) query.set("flaggedOnly", "true");
   if (filters.search) query.set("search", filters.search);
+  if (isLive) query.set("live", "true");
+  else if (filters.windowIndex !== undefined) query.set("windowIndex", filters.windowIndex.toString());
+  else if (filters.scrub !== undefined) query.set("scrub", filters.scrub.toString());
+  if (filters.proto) query.set("proto", filters.proto);
+  if (filters.service) query.set("service", filters.service);
 
   return useQuery({
-    queryKey: ["flows", filters],
+    queryKey: ["flows", filters, isLive],
     queryFn: () => apiFetch<FlowPaginated>(`/api/flows?${query.toString()}`),
+    refetchInterval: isLive ? 2500 : false,
   });
 }
 
