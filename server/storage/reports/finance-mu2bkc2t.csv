@@ -1,0 +1,17 @@
+# Aegis Vantage Threat Detection Report
+# Scope: finance · 24h
+# Time Window: 2026-09-08T06:57:16.917Z to 2026-09-15T06:57:16.919Z
+# Organization: Northwind Energy
+# Generated: 2026-09-15T06:57:17.092Z
+# Total Analyzed Flows: 8
+# Risk Level: CRITICAL
+#
+timestamp,source,destination,protocol,flags,bytes,packets,anomaly_score,stage_classification
+"2026-09-06T14:40:00.000Z","10.24.8.31:49722","10.24.8.14:445","TCP","0x018",1284551,2210,0.9100,"Lateral movement"
+"2026-09-06T14:40:00.000Z","10.24.1.4:51344","203.0.113.77:8443","TCP","0x010",44120,388,0.8300,"Lateral movement"
+"2026-09-06T14:40:00.000Z","10.24.19.8:33012","198.51.100.20:443","TCP","0x018",88214773,61240,0.7100,"Reconnaissance"
+"2026-09-06T14:40:00.000Z","10.24.4.19:44100","10.24.4.20:22","TCP","0x002",3120,52,0.6600,"Reconnaissance"
+"2026-09-06T14:40:00.000Z","10.24.12.77:60122","10.24.12.0/24:*","TCP","0x002",18422,424,0.5800,"Reconnaissance"
+"2026-09-06T14:40:00.000Z","10.24.6.42:57812","10.24.6.9:3389","TCP","0x012",240110,1804,0.4400,"Reconnaissance"
+"2026-09-06T14:40:00.000Z","10.24.3.55:5353","224.0.0.251:5353","UDP","—",9820,142,0.1200,"Reconnaissance"
+"2026-09-06T14:40:00.000Z","10.24.9.18:49001","10.24.2.5:53","UDP","—",4210,88,0.0900,"Reconnaissance"

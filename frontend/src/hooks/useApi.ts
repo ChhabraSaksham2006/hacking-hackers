@@ -536,3 +536,180 @@ export function useExplainability(params?: { windowIndex?: number | undefined; s
   });
 }
 
+// ── Model versions & Benchmark ───────────────────────────
+
+export interface ModelVersionRecord {
+  _id: string;
+  version: string;
+  releasedAt: string;
+  note: string;
+  isProduction: boolean;
+  metrics: {
+    cicIds: { f1: number; precision: number; recall: number; fpr: number };
+    ctu13:  { f1: number; precision: number; recall: number; fpr: number };
+  };
+  confusionMatrices: {
+    cicIds: { cells: number[] };
+    ctu13:  { cells: number[] };
+  };
+  lossCurve: { train: number[]; val: number[] };
+  promotedBy?: { name: string; initials: string };
+}
+
+export function useModelVersions() {
+  return useQuery({
+    queryKey: ["models"],
+    queryFn: () => apiFetch<ModelVersionRecord[]>("/api/models"),
+  });
+}
+
+export interface BenchmarkResponse {
+  productionVersion: string;
+  rows: { metric: string; wmA: number; lrA: number; wmB: number; lrB: number }[];
+  matrices: { name: string; dataset: string; cells: number[] }[];
+}
+
+export function useBenchmark() {
+  return useQuery({
+    queryKey: ["models", "benchmark"],
+    queryFn: () => apiFetch<BenchmarkResponse>("/api/models/benchmark"),
+  });
+}
+
+export function usePromoteModel() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) =>
+      apiFetch<{ message: string; model: ModelVersionRecord }>(`/api/models/${id}/promote`, {
+        method: "POST",
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["models"] });
+    },
+  });
+}
+
+// ── Reports & Export ──────────────────────────────────────
+
+export interface ReportRecord {
+  _id: string;
+  name: string;
+  scope: string;
+  format: "PDF" | "CSV";
+  timeWindow: { start: string; end: string };
+  segmentOrAlert: string;
+  storagePath: string;
+  fileSize: number;
+  status: "generating" | "complete" | "failed";
+  createdAt: string;
+  createdBy?: { _id: string; name: string; initials: string; email: string };
+}
+
+export interface ReportsListResponse {
+  data: ReportRecord[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    pages: number;
+  };
+}
+
+export function useReports(page = 1, limit = 50) {
+  return useQuery({
+    queryKey: ["reports", page, limit],
+    queryFn: () =>
+      apiFetch<ReportsListResponse>(`/api/reports?page=${page}&limit=${limit}`),
+  });
+}
+
+export interface ReportPreviewData {
+  reportName: string;
+  scope: string;
+  segmentOrAlert: string;
+  timeWindow: { start: string; end: string };
+  orgName: string;
+  generatedBy: string;
+  createdAt: string;
+  sparkline: number[];
+  flaggedFlows: Array<{
+    timestamp: string;
+    src: string;
+    dst: string;
+    proto: string;
+    flags: string;
+    bytes: number;
+    packets: number;
+    score: number;
+    stage?: string;
+  }>;
+  explainabilitySummary: string;
+  metrics: {
+    totalFlows: number;
+    flaggedFlows: number;
+    maxScore: number;
+    riskLevel: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+  };
+}
+
+export function useReportPreview(params: {
+  timeWindow?: string;
+  segmentOrAlert?: string;
+  startDate?: string;
+  endDate?: string;
+}) {
+  const qs = new URLSearchParams();
+  if (params.timeWindow) qs.set("timeWindow", params.timeWindow);
+  if (params.segmentOrAlert) qs.set("segmentOrAlert", params.segmentOrAlert);
+  if (params.startDate) qs.set("startDate", params.startDate);
+  if (params.endDate) qs.set("endDate", params.endDate);
+  const qStr = qs.toString();
+
+  return useQuery({
+    queryKey: [
+      "reports",
+      "preview",
+      params.timeWindow,
+      params.segmentOrAlert,
+      params.startDate,
+      params.endDate,
+    ],
+    queryFn: () =>
+      apiFetch<ReportPreviewData>(`/api/reports/preview${qStr ? `?${qStr}` : ""}`),
+  });
+}
+
+export function useGenerateReport() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (body: {
+      name?: string;
+      scope: string;
+      format: "PDF" | "CSV";
+      timeWindow: { start: string; end: string };
+      segmentOrAlert?: string;
+    }) =>
+      apiFetch<{ message: string; report: ReportRecord }>("/api/reports/generate", {
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["reports"] });
+    },
+  });
+}
+
+export function useDeleteReport() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) =>
+      apiFetch<{ message: string; id: string }>(`/api/reports/${id}`, {
+        method: "DELETE",
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["reports"] });
+    },
+  });
+}
+
+

@@ -47,12 +47,13 @@ async function seed() {
 
   // ── Users ───────────────────────────────────────────────
   const pw = await hashPassword('Aegis2026!test');
+  const pwReal = await hashPassword('1234ASdf@/12');
 
   const [userSC, userRM, userAK, userAdmin] = await User.insertMany([
-    { email: 's.chhabra@northwind.example', passwordHash: pw, name: 'Saksham Chhabra', initials: 'SC', role: 'SOC Lead', orgId: northwind._id },
-    { email: 'r.mehta@northwind.example', passwordHash: pw, name: 'Riya Mehta', initials: 'RM', role: 'Analyst', orgId: northwind._id },
-    { email: 'a.kaur@northwind.example', passwordHash: pw, name: 'Amrit Kaur', initials: 'AK', role: 'SOC Lead', orgId: northwind._id },
-    { email: 'admin@northwind.example', passwordHash: pw, name: 'System Admin', initials: 'SA', role: 'Super Admin', orgId: northwind._id },
+    { email: 'hackinghackers2026@gmail.com', passwordHash: pwReal, name: 'Saksham Chhabra', initials: 'SC', role: 'SOC Lead', orgId: northwind._id, emailVerified: true },
+    { email: 'r.mehta@northwind.example', passwordHash: pw, name: 'Riya Mehta', initials: 'RM', role: 'Analyst', orgId: northwind._id, emailVerified: true },
+    { email: 'a.kaur@northwind.example', passwordHash: pw, name: 'Amrit Kaur', initials: 'AK', role: 'SOC Lead', orgId: northwind._id, emailVerified: true },
+    { email: 'admin@northwind.example', passwordHash: pw, name: 'System Admin', initials: 'SA', role: 'Super Admin', orgId: northwind._id, emailVerified: true },
   ]);
   console.log('✅ Users: 4');
 
@@ -227,10 +228,10 @@ async function seed() {
   // ── Summary ─────────────────────────────────────────────
   console.log('\n🎉 Seed complete!');
   console.log('\n📋 Login credentials:');
-  console.log('   s.chhabra@northwind.example / Aegis2026!test (SOC Lead)');
-  console.log('   r.mehta@northwind.example   / Aegis2026!test (Analyst)');
-  console.log('   a.kaur@northwind.example    / Aegis2026!test (SOC Lead)');
-  console.log('   admin@northwind.example     / Aegis2026!test (Super Admin)');
+  console.log('   hackinghackers2026@gmail.com / 1234ASdf@/12  (SOC Lead) ← YOUR LOGIN');
+  console.log('   r.mehta@northwind.example    / Aegis2026!test (Analyst)');
+  console.log('   a.kaur@northwind.example     / Aegis2026!test (SOC Lead)');
+  console.log('   admin@northwind.example      / Aegis2026!test (Super Admin)');
 
   await mongoose.disconnect();
   process.exit(0);
