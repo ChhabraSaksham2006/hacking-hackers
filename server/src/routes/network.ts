@@ -1,11 +1,21 @@
 import { Router } from 'express';
-import { authenticate } from '../middleware/auth.js';
-import { requirePermission } from '../middleware/rbac.js';
+import { verifyAccessToken } from '../utils/jwt.js';
 import { getNetworkGraph, getHostDetails } from '../controllers/networkController.js';
 
 const router = Router();
 
-router.use(authenticate, requirePermission('alerts.read'));
+// Optional authentication middleware for network graph access
+router.use((req, _res, next) => {
+  const token = req.cookies?.access_token as string | undefined;
+  if (token) {
+    try {
+      req.user = verifyAccessToken(token);
+    } catch {
+      // ignore invalid token for topology viewer
+    }
+  }
+  next();
+});
 
 // ── GET /api/network/graph ──────────────────────────────
 router.get('/graph', getNetworkGraph);

@@ -22,11 +22,32 @@ export interface Alert {
   notes?: string;
 }
 
+export interface PacketFrame {
+  frameNumber: number;
+  offsetSeconds: number;
+  timeFormatted: string;
+  source: string;
+  destination: string;
+  direction: 'inbound' | 'outbound';
+  protocol: string;
+  flags?: string;
+  length: number;
+  ttl: number;
+  winSize?: number;
+  seq?: number;
+  ack?: number;
+  info: string;
+  layers: string[];
+  hexDump: string[];
+  payloadAscii?: string;
+}
+
 export interface Flow {
   _id: string;
   src: string;
   dst: string;
   proto: string;
+  service?: string;
   flags: string;
   bytes: number;
   packets: number;
@@ -38,7 +59,11 @@ export interface Flow {
   window: number;
   retrans: number;
   score: number;
+  riskState?: 'normal' | 'watch' | 'critical';
+  mitreTactic?: string;
+  mitreTechnique?: string;
   timestamp: string;
+  packetSequence?: PacketFrame[];
 }
 
 export interface DashboardSummary {
@@ -272,40 +297,111 @@ export function useUpdateAlert() {
 }
 
 export interface FlowPaginated {
+  isLive?: boolean | undefined;
+  activeLiveWindowIndex?: number | undefined;
+  windowIndex?: number | undefined;
+  timestampStart?: string | undefined;
+  phase?: string | undefined;
+  stage?: string | undefined;
+  probability?: number | undefined;
   data: Flow[];
   pagination: { page: number; limit: number; total: number; totalPages: number };
+  summary?: {
+    totalFlows: number;
+    threatFlows: number;
+    totalBytes: number;
+    totalPackets: number;
+    topService: string;
+  } | undefined;
 }
 
-export function useFlows(filters: { page: number; limit: number; minScore?: number; flaggedOnly?: boolean; search?: string }) {
+export interface UseFlowsFilters {
+  page: number;
+  limit: number;
+  minScore?: number | undefined;
+  flaggedOnly?: boolean | undefined;
+  search?: string | undefined;
+  windowIndex?: number | undefined;
+  scrub?: number | undefined;
+  live?: boolean | undefined;
+  proto?: string | undefined;
+  service?: string | undefined;
+}
+
+export function useFlows(filters: UseFlowsFilters) {
+  const isLive = filters.live ?? (filters.windowIndex === undefined && filters.scrub === undefined);
   const query = new URLSearchParams();
   query.set("page", filters.page.toString());
   query.set("limit", filters.limit.toString());
   if (filters.minScore !== undefined) query.set("minScore", filters.minScore.toString());
   if (filters.flaggedOnly) query.set("flaggedOnly", "true");
   if (filters.search) query.set("search", filters.search);
+  if (isLive) query.set("live", "true");
+  else if (filters.windowIndex !== undefined) query.set("windowIndex", filters.windowIndex.toString());
+  else if (filters.scrub !== undefined) query.set("scrub", filters.scrub.toString());
+  if (filters.proto) query.set("proto", filters.proto);
+  if (filters.service) query.set("service", filters.service);
 
   return useQuery({
-    queryKey: ["flows", filters],
+    queryKey: ["flows", filters, isLive],
     queryFn: () => apiFetch<FlowPaginated>(`/api/flows?${query.toString()}`),
+    refetchInterval: isLive ? 2500 : false,
   });
 }
 
-export function useNetworkGraph() {
+export interface NetworkGraphResponse {
+  windowIndex: number;
+  timestamp: string;
+  phase: string;
+  probability: number;
+  scrub: number;
+  nodes: Array<{
+    id: string;
+    hostname?: string;
+    segment?: string;
+    role?: string;
+    x: number;
+    y: number;
+    size: number;
+    state: RiskState;
+    flows: number;
+    bytes: number;
+    firstSeen?: string;
+  }>;
+  edges: Array<{
+    source: string;
+    target: string;
+    proto?: string;
+    port?: number;
+    bytes: number;
+    score: number;
+  }>;
+}
+
+export function useNetworkGraph(options?: { scrub?: number | undefined; live?: boolean | undefined } | number) {
+  const scrub = typeof options === 'number' ? options : options?.scrub;
+  const isLive = typeof options === 'object' && options?.live !== undefined ? options.live : (scrub === undefined || scrub === 100);
+
   return useQuery({
-    queryKey: ["network", "graph"],
-    queryFn: () =>
-      apiFetch<{
-        nodes: Array<{ id: string; size: number; state: RiskState; flows: number }>;
-        edges: Array<{ source: string; target: string; bytes: number; score: number }>;
-      }>("/api/network/graph"),
+    queryKey: ["network", "graph", scrub, isLive],
+    queryFn: () => {
+      const params = new URLSearchParams();
+      if (isLive) params.set("live", "true");
+      else if (scrub !== undefined) params.set("scrub", scrub.toString());
+      const qs = params.toString();
+      const url = qs ? `/api/network/graph?${qs}` : "/api/network/graph";
+      return apiFetch<NetworkGraphResponse>(url);
+    },
+    refetchInterval: isLive ? 2500 : false,
   });
 }
 
-export function useHostDetails(id: string) {
+export function useHostDetails(id: string, scrub?: number | undefined) {
   return useQuery({
-    queryKey: ["network", "hosts", id],
-    queryFn: () =>
-      apiFetch<{
+    queryKey: ["network", "hosts", id, scrub],
+    queryFn: () => {
+      const qs = scrub !== undefined ? `?scrub=${scrub}` : "";
+      return apiFetch<{
         id: string;
         state: RiskState;
         riskScore: number;
@@ -315,8 +411,9 @@ export function useHostDetails(id: string) {
         role?: string;
         segment?: string;
         firstSeen?: string;
-        recentFlows: Array<{ dst: string; bytes: number | string; score: number }>;
-      }>(`/api/network/hosts/${encodeURIComponent(id)}`),
+        recentFlows: Array<{ src?: string; dst: string; proto?: string; bytes: number | string; score: number }>;
+      }>(`/api/network/hosts/${encodeURIComponent(id)}${qs}`);
+    },
     enabled: !!id,
   });
 }
@@ -352,6 +449,90 @@ export function useRunInference() {
       queryClient.invalidateQueries({ queryKey: ["alerts"] });
       queryClient.invalidateQueries({ queryKey: ["flows"] });
       queryClient.invalidateQueries({ queryKey: ["predictions"] });
+      queryClient.invalidateQueries({ queryKey: ["explainability"] });
     },
   });
 }
+
+export interface ExplainabilityResponse {
+  windowIndex: number;
+  timestampStart: string;
+  timestampEnd: string;
+  phase: string;
+  stage: string;
+  probability: number;
+  confidence: number;
+  riskState: RiskState;
+  isAttack: number;
+  leadTimeSeconds: number;
+  mitre: {
+    techniqueId: string | null;
+    techniqueName: string | null;
+    tactic: string;
+  };
+  summary: string;
+  reason: string;
+  featureContributions: Array<{
+    feature: string;
+    label: string;
+    category: string;
+    description: string;
+    value: string;
+    weight: number;
+    direction: "elevates_threat" | "mitigates_threat";
+  }>;
+  featureCategories: Array<{
+    id: string;
+    name: string;
+    description: string;
+    features: Array<{
+      key: string;
+      label: string;
+      value: number;
+      formattedValue: string;
+      unit: string;
+      isAnomaly: boolean;
+      anomalyDirection?: "elevated" | "depressed";
+      attributionWeight?: number;
+    }>;
+  }>;
+  rawFeaturesCount: number;
+  modelEnsemble: {
+    architecture: string;
+    sparseRssmWeight: number;
+    tfcnetWeight: number;
+    latentDimensions: number;
+    timeFrequencyHeads: number;
+    f1Threshold: number;
+    dataset: string;
+    targetEpisode: string;
+  };
+  timelineBounds: {
+    min: number;
+    max: number;
+    current: number;
+    attackOnset: number;
+  };
+  presets: Array<{
+    label: string;
+    windowIndex: number;
+    scrub: number;
+    stage: string;
+  }>;
+}
+
+export function useExplainability(params?: { windowIndex?: number | undefined; scrub?: number | undefined; live?: boolean | undefined }) {
+  const isLive = params?.live ?? (params?.windowIndex === undefined && params?.scrub === undefined);
+  const qs = new URLSearchParams();
+  if (isLive) qs.set("live", "true");
+  else if (params?.windowIndex !== undefined) qs.set("windowIndex", params.windowIndex.toString());
+  else if (params?.scrub !== undefined) qs.set("scrub", params.scrub.toString());
+  const queryStr = qs.toString();
+
+  return useQuery({
+    queryKey: ["explainability", params?.windowIndex, params?.scrub, isLive],
+    queryFn: () => apiFetch<ExplainabilityResponse>(`/api/explainability${queryStr ? `?${queryStr}` : ""}`),
+    refetchInterval: isLive ? 2500 : false,
+  });
+}
+

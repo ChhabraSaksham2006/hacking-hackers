@@ -27,6 +27,7 @@ import modelsRouter from './routes/models.js';
 import auditRouter from './routes/audit.js';
 import rolesRouter from './routes/roles.js';
 import orgsRouter from './routes/orgs.js';
+import explainabilityRouter from './routes/explainability.js';
 
 const app = express();
 
@@ -71,6 +72,7 @@ app.use('/api/models', modelsRouter);
 app.use('/api/audit', auditRouter);
 app.use('/api/roles', rolesRouter);
 app.use('/api/orgs', orgsRouter);
+app.use('/api/explainability', explainabilityRouter);
 
 // ── 404 Route Not Found ─────────────────────────────────
 app.use((_req, _res, next) => {
