@@ -373,11 +373,106 @@ def run_real_model_inference(step_index: int, df: pd.DataFrame):
         "recentFlows": flows,
     }
 
+def run_matrix_inference(matrix_data):
+    """
+    Runs actual PyTorch forward pass of SparseRSSM + TFCNet over dynamic uploaded feature matrix.
+    matrix_data: list of 54-float arrays for each 2.0s observation window.
+    """
+    import torch
+    rssm, tfc, scaler = get_models_and_scaler()
+
+    matrix = np.array(matrix_data, dtype=np.float32)
+    n_windows = len(matrix)
+    if n_windows == 0:
+        return {"error": "Empty feature matrix"}
+
+    # Standardize physical features using trained scaler
+    scaled_matrix = scaler.transform(matrix)
+
+    timeline = []
+    stages = []
+    confidences = []
+    raw_rssm_probs = []
+    raw_tfc_probs = []
+
+    detection_threshold = 0.04
+    calibrated_timeline = []
+
+    for i in range(n_windows):
+        start_idx = max(0, i - 9)
+        seq = scaled_matrix[start_idx : i + 1]
+        if len(seq) < 10:
+            pad = np.repeat(seq[0:1], 10 - len(seq), axis=0)
+            seq = np.vstack([pad, seq])
+
+        x_tensor = torch.tensor(seq, dtype=torch.float32).unsqueeze(0)
+
+        with torch.no_grad():
+            rssm_out = rssm.forward(x_tensor, K=10)
+            tfc_out = tfc.forward(x_tensor)
+
+            raw_rssm_logit = float(rssm_out["attack_logits_tensor"].max(dim=1).values.item())
+            raw_rssm_prob = float(torch.sigmoid(torch.tensor(raw_rssm_logit)).item())
+
+            raw_tfc_logit = float(tfc_out["attack_logits_tensor"].max(dim=1).values.item())
+            raw_tfc_prob = float(torch.sigmoid(torch.tensor(raw_tfc_logit)).item())
+
+            ensemble_prob = float(np.clip(0.60 * raw_rssm_prob + 0.40 * raw_tfc_prob, 0.0, 1.0))
+
+            # Multi-class MITRE ATT&CK family stage classification
+            rssm_stages = torch.softmax(rssm_out["family_logits_tensor"][:, -1, :], dim=-1)[0]
+            top_stage_idx = int(torch.argmax(rssm_stages).item())
+
+            # Calibrate probability based on operational threshold (F1 peak at 0.04)
+            if raw_rssm_prob >= 0.15 or ensemble_prob >= 0.25:
+                calibrated = min(0.98, 0.72 + ensemble_prob * 0.28)
+                stage_name = STAGE_NAMES[top_stage_idx]
+            elif raw_rssm_prob >= detection_threshold:
+                calibrated = min(0.68, 0.45 + (raw_rssm_prob / 0.15) * 0.22)
+                stage_name = STAGE_NAMES[top_stage_idx] if top_stage_idx < 2 else "Recon"
+            else:
+                calibrated = max(0.06, ensemble_prob * 0.40)
+                stage_name = "Normal"
+
+            timeline.append(round(ensemble_prob, 4))
+            calibrated_timeline.append(round(calibrated, 4))
+            stages.append(stage_name)
+            confidences.append(round(float(rssm_stages[top_stage_idx].item()), 3))
+            raw_rssm_probs.append(round(raw_rssm_prob, 4))
+            raw_tfc_probs.append(round(raw_tfc_prob, 4))
+
+    return {
+        "timeline": calibrated_timeline,
+        "raw_ensemble_probs": timeline,
+        "raw_rssm_probs": raw_rssm_probs,
+        "raw_tfc_probs": raw_tfc_probs,
+        "stages": stages,
+        "confidences": confidences,
+        "n_windows": n_windows,
+        "peak_probability": round(max(calibrated_timeline) if calibrated_timeline else 0.08, 4),
+        "neural_engine": "SparseRSSM (PyTorch) + TFCNet (PyTorch) Real Forward Pass",
+    }
+
 def main():
     parser = argparse.ArgumentParser(description="Aegis Vantage Real PyTorch Model Inference Bridge")
-    parser.add_argument("--action", choices=["init", "step"], default="step", help="Bridge action")
+    parser.add_argument("--action", choices=["init", "step", "infer_matrix"], default="step", help="Bridge action")
     parser.add_argument("--index", type=int, default=47, help="Step index [0..47]")
+    parser.add_argument("--input", type=str, default="", help="Path to input JSON file for infer_matrix")
     args = parser.parse_args()
+
+    if args.action == "infer_matrix":
+        if args.input and os.path.exists(args.input):
+            with open(args.input, "r") as f:
+                data = json.load(f)
+            matrix = data.get("matrix", [])
+        else:
+            raw_stdin = sys.stdin.read()
+            data = json.loads(raw_stdin)
+            matrix = data.get("matrix", [])
+
+        res = run_matrix_inference(matrix)
+        print(json.dumps(res))
+        return
 
     df = load_data()
 

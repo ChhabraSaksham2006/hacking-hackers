@@ -19,7 +19,6 @@ import {
   Layers,
   Terminal,
   Search,
-  FileCode,
   Sliders,
 } from "lucide-react";
 import {
@@ -51,55 +50,6 @@ export const Route = createFileRoute("/app/demonstration")({
   component: DemonstrationPage,
 });
 
-interface DownloadableSample {
-  filename: string;
-  name: string;
-  type: "pcap" | "csv";
-  sizeText: string;
-  scenario: string;
-  attackVector: string;
-  relativeUrl: string;
-}
-
-const DOWNLOADABLE_SAMPLES: DownloadableSample[] = [
-  {
-    filename: "sample_1_mirai_synflood_ddos.pcap",
-    name: "Mirai Botnet TCP SYN Flood (DDoS)",
-    type: "pcap",
-    sizeText: "17.4 KB",
-    scenario: "High-rate distributed TCP SYN flood against perimeter web servers (Ports 80/443) from randomized botnet source IPs causing socket exhaustion.",
-    attackVector: "Denial of Service (T1498) • Volumetric Traffic Shock",
-    relativeUrl: "/sample_captures/sample_1_mirai_synflood_ddos.pcap",
-  },
-  {
-    filename: "sample_2_ransomware_eternalblue_smb.pcap",
-    name: "EternalBlue SMB Lateral Spread (Ransomware)",
-    type: "pcap",
-    sizeText: "14.0 KB",
-    scenario: "Compromised internal host pivoting across internal file servers via SMBv1 negotiation and tree connect requests over TCP Port 445.",
-    attackVector: "Lateral Movement (T1021.002) • MS17-010 Exploitation",
-    relativeUrl: "/sample_captures/sample_2_ransomware_eternalblue_smb.pcap",
-  },
-  {
-    filename: "sample_3_c2_dns_tunnel_exfiltration.csv",
-    name: "Covert DNS Tunneling & Exfiltration",
-    type: "csv",
-    sizeText: "16.8 KB (100 flows)",
-    scenario: "Workstation staging stolen confidential database dumps via base64 encoded TXT queries to rogue DNS nameserver 198.51.100.53.",
-    attackVector: "Exfiltration (T1048.003) & C2 (T1071.004)",
-    relativeUrl: "/sample_captures/sample_3_c2_dns_tunnel_exfiltration.csv",
-  },
-  {
-    filename: "sample_4_ssh_bruteforce_auth_spray.csv",
-    name: "Automated SSH Credential Brute-Force Spray",
-    type: "csv",
-    sizeText: "13.2 KB (90 flows)",
-    scenario: "External threat actor executing rapid dictionary credential stuffing against Linux Bastion over Port 22.",
-    attackVector: "Initial Access (T1110.001) • Password Spraying",
-    relativeUrl: "/sample_captures/sample_4_ssh_bruteforce_auth_spray.csv",
-  },
-];
-
 function DemonstrationPage() {
   const [selectedPresetId, setSelectedPresetId] = useState<string>("thursday_infiltration");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -112,31 +62,6 @@ function DemonstrationPage() {
 
   const { data: presetsData, isLoading: presetsLoading } = useDemonstrationPresets();
   const analyzeMutation = useAnalyzeCapture();
-
-  const loadSampleFromUrl = async (sample: DownloadableSample) => {
-    try {
-      const response = await fetch(sample.relativeUrl);
-      const blob = await response.blob();
-      const file = new File([blob], sample.filename, {
-        type: sample.type === "pcap" ? "application/vnd.tcpdump.pcap" : "text/csv",
-      });
-      setSelectedFile(file);
-      setSelectedPresetId("");
-      analyzeMutation.mutate(
-        { file },
-        {
-          onSuccess: (data) => {
-            setActiveAnalysis(data);
-            if (data.flaggedFlows.length > 0) {
-              setSelectedFlow(data.flaggedFlows[0] ?? null);
-            }
-          },
-        }
-      );
-    } catch (err) {
-      console.error("Failed to load sample file:", err);
-    }
-  };
 
   // Load default preset on mount if analysis is empty
   const presets = presetsData?.presets || [
@@ -403,82 +328,6 @@ function DemonstrationPage() {
               </div>
             )}
           </div>
-        </div>
-      </div>
-
-      {/* ── Ready-to-Test Sample Captures Section ── */}
-      <div className="rounded-xl border border-fog-deep/40 bg-void-800/40 p-4">
-        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-          <div>
-            <h3 className="font-display text-[15px] font-semibold text-paper flex items-center gap-2">
-              <FileCode className="size-4 text-teal" />
-              Downloadable Sample Captures for Judge Demonstrations
-            </h3>
-            <p className="text-[12px] text-fog">
-              Distinct attack scenarios different from the continuous dashboard dataset. Download any file below to test drag-and-drop file ingestion, or click "Load into Lab" for instant zero-latency evaluation.
-            </p>
-          </div>
-          <span className="rounded bg-void-900 px-2 py-1 mono text-[11px] text-teal border border-teal/30">
-            Stored in /sample_captures/ & public CDN
-          </span>
-        </div>
-
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {DOWNLOADABLE_SAMPLES.map((sample) => (
-            <div
-              key={sample.filename}
-              className="flex flex-col justify-between rounded-xl border border-fog-deep/40 bg-void-900/60 p-3.5 transition-colors hover:border-fog-deep/80 hover:bg-void-900/90"
-            >
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span
-                    className={cn(
-                      "mono rounded px-2 py-0.5 text-[10px] font-bold uppercase",
-                      sample.type === "pcap"
-                        ? "bg-teal/15 text-teal border border-teal/40"
-                        : "bg-amber-400/15 text-amber-400 border border-amber-400/40"
-                    )}
-                  >
-                    .{sample.type}
-                  </span>
-                  <span className="mono text-[10px] text-fog">{sample.sizeText}</span>
-                </div>
-
-                <h4 className="font-display text-[13px] font-semibold text-paper line-clamp-2">
-                  {sample.name}
-                </h4>
-
-                <div className="text-[10px] font-medium text-amber-400/90 mono">
-                  {sample.attackVector}
-                </div>
-
-                <p className="text-[11px] text-fog/90 leading-relaxed line-clamp-3">
-                  {sample.scenario}
-                </p>
-              </div>
-
-              <div className="mt-3 grid grid-cols-2 gap-2 border-t border-fog-deep/30 pt-2.5">
-                <a
-                  href={sample.relativeUrl}
-                  download={sample.filename}
-                  className="flex items-center justify-center gap-1.5 rounded-lg border border-fog-deep/60 bg-void-800 py-1.5 text-[11px] font-medium text-paper transition-colors hover:border-teal/50 hover:bg-void-700"
-                  title="Download file to computer for manual drag & drop"
-                >
-                  <Download className="size-3 text-teal" />
-                  Download
-                </a>
-                <button
-                  onClick={() => loadSampleFromUrl(sample)}
-                  disabled={analyzeMutation.isPending}
-                  className="flex items-center justify-center gap-1.5 rounded-lg border border-teal/40 bg-teal/10 py-1.5 text-[11px] font-medium text-teal transition-colors hover:bg-teal/20"
-                  title="Directly load and analyze this sample file"
-                >
-                  <Play className="size-3 text-teal" />
-                  Load into Lab
-                </button>
-              </div>
-            </div>
-          ))}
         </div>
       </div>
 
