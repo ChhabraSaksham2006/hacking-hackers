@@ -38,6 +38,10 @@ const envSchema = z.object({
   BREVO_API_KEY: z.string().min(1, 'BREVO_API_KEY is required for email').optional().or(z.literal('')),
   BREVO_SENDER_EMAIL: z.string().email().default('noreply@aegisvantage.com'),
   BREVO_SENDER_NAME: z.string().default('Aegis Vantage'),
+
+  // AI Chat & RAG LLM Providers (Groq -> OpenRouter -> Cyber Engine fallback)
+  GROQ_API_KEY: z.string().optional().default(() => (process.env.GROQ_API_KEY || process.env.GR0Q_API_KEY || process.env.GROK_API_KEY || '').trim()),
+  OPENROUTER_API_KEY: z.string().optional().default(() => (process.env.OPENROUTER_API_KEY || '').trim()),
 });
 
 function validateEnv() {
