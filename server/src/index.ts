@@ -31,6 +31,7 @@ import rolesRouter from './routes/roles.js';
 import orgsRouter from './routes/orgs.js';
 import explainabilityRouter from './routes/explainability.js';
 import notificationsRouter from './routes/notifications.js';
+import chatRouter from './routes/chat.js';
 
 const app = express();
 
@@ -77,6 +78,7 @@ app.use('/api/roles', rolesRouter);
 app.use('/api/orgs', orgsRouter);
 app.use('/api/explainability', explainabilityRouter);
 app.use('/api/notifications', notificationsRouter);
+app.use('/api/chat', chatRouter);
 
 // ── 404 Route Not Found ─────────────────────────────────
 app.use((_req, _res, next) => {

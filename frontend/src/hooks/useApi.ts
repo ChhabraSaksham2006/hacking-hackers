@@ -580,3 +580,59 @@ export function useMarkAllNotificationsRead() {
     },
   });
 }
+
+// ── Telemetry AI Copilot (RAG) ─────────────────────────────
+
+export interface ChatQueryRequest {
+  query: string;
+  windowIndex?: number | undefined;
+  contextHint?: string | undefined;
+}
+
+export interface ChatQueryResponse {
+  answer: string;
+  references: string[];
+  suggestedQueries: string[];
+  context: {
+    windowIndex: number;
+    timestamp: string;
+    stage: string;
+    probability: number;
+    riskLevel: string;
+    confidence: number;
+    leadTimeSeconds: number;
+    provider: string;
+  };
+}
+
+export interface SuggestedQueriesResponse {
+  suggestedQueries: string[];
+  liveState: {
+    windowIndex: number;
+    timestamp: string;
+    stage: string;
+    probability: number;
+    riskLevel: string;
+    leadTimeSeconds: number;
+  };
+}
+
+export function useChatQuery() {
+  return useMutation({
+    mutationFn: (data: ChatQueryRequest) =>
+      apiFetch<ChatQueryResponse>("/api/chat/query", {
+        method: "POST",
+        body: JSON.stringify(data),
+      }),
+  });
+}
+
+export function useSuggestedQueries(windowIndex?: number | undefined) {
+  const qs = windowIndex !== undefined ? `?windowIndex=${windowIndex}` : "";
+  return useQuery({
+    queryKey: ["chat-suggested", windowIndex],
+    queryFn: () => apiFetch<SuggestedQueriesResponse>(`/api/chat/suggested${qs}`),
+    staleTime: 10000,
+  });
+}
+
