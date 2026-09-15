@@ -9,6 +9,10 @@ export interface ISegment extends Document {
   state: RiskState;
   lastIncident: string;
   orgId: mongoose.Types.ObjectId;
+  isolated?: boolean;
+  throughputMbps?: number;
+  sparkline?: number[];
+  description?: string;
 }
 
 const segmentSchema = new Schema<ISegment>(
@@ -23,6 +27,10 @@ const segmentSchema = new Schema<ISegment>(
       enum: ['normal', 'watch', 'critical'],
     },
     lastIncident: { type: String, default: '—' },
+    isolated: { type: Boolean, default: false },
+    throughputMbps: { type: Number, default: 0 },
+    sparkline: { type: [Number], default: [] },
+    description: { type: String, default: '' },
     orgId: {
       type: Schema.Types.ObjectId,
       ref: 'Organisation',

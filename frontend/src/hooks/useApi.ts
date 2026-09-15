@@ -418,21 +418,181 @@ export function useHostDetails(id: string, scrub?: number | undefined) {
   });
 }
 
+export interface TopologySegment {
+  _id: string;
+  name: string;
+  hosts: number;
+  activeAlerts: number;
+  trafficVolume: number;
+  throughputMbps: number;
+  state: RiskState;
+  threatScore: number;
+  isolated: boolean;
+  lastIncident: string;
+  sparkline: number[];
+  modelProbability?: number;
+  modelStage?: string;
+  modelConfidence?: string;
+  topTalkers: Array<{
+    ip: string;
+    hostname: string;
+    role: string;
+    flows: number;
+    bytes: string;
+    state: RiskState;
+  }>;
+  protocols: Array<{
+    name: string;
+    port: number;
+    pct: number;
+  }>;
+  hostInventory?: Array<{
+    ip: string;
+    hostname: string;
+    role: string;
+    os: string;
+    baselineFlows: number;
+  }>;
+}
+
+export interface InterSegmentLink {
+  id: string;
+  source: string;
+  target: string;
+  trafficVolume: number;
+  throughput: string;
+  protocol: string;
+  status: "normal" | "watch" | "critical";
+  threatStage: string | null;
+  description: string;
+  activeFlowCount: number;
+  modelScore?: number;
+}
+
+export interface ModelIntelligence {
+  engine: string;
+  modelVersion: string;
+  inferenceSource: string;
+  mlServiceOnline: boolean;
+  windowIndex: number;
+  timestamp: string;
+  ensembleProbability: number;
+  rssmProbability: number;
+  tfcProbability: number;
+  confidence: string;
+  leadTimeSeconds: number;
+  currentStage: string;
+  riskLevel: string;
+  detectionThreshold: number;
+  probabilityTimeline: number[];
+  flaggedHostsCount: string;
+  activeFlowsCount: string;
+  featureContributions: Array<{
+    feature: string;
+    value: string;
+    weight: number;
+    category?: string;
+  }>;
+  modelFlows: Array<{
+    src: string;
+    dst: string;
+    proto: string;
+    flags: string;
+    bytes: string;
+    prob: number;
+  }>;
+}
+
+export interface TopologyOverview {
+  segments: TopologySegment[];
+  interSegmentLinks: InterSegmentLink[];
+  summary: {
+    totalSegments: number;
+    totalHosts: number;
+    totalThroughputMbps: number;
+    criticalSegments: number;
+    watchSegments: number;
+    isolatedSegments: number;
+    healthScore: number;
+    activeThreatVector: string;
+    activeWindowIndex: number;
+    timestamp: string;
+  };
+  modelIntelligence?: ModelIntelligence;
+}
+
+export interface SegmentModelAnalysis {
+  riskState: RiskState;
+  probability: number;
+  confidence: string;
+  stage: string;
+  rssmScore: number;
+  tfcScore: number;
+  leadTimeSeconds: number;
+  featureDrivers: Array<{
+    feature: string;
+    value: string;
+    weight: number;
+    description?: string;
+  }>;
+  modelFlows: Array<{
+    src: string;
+    dst: string;
+    proto: string;
+    flags: string;
+    bytes: string;
+    prob: number;
+  }>;
+}
+
+export interface SegmentDeepDive {
+  segment: TopologySegment;
+  hosts: TopologySegment["topTalkers"];
+  hostRoster: Array<{ ip: string; hostname: string; role: string; os: string; baselineFlows: number }>;
+  protocols: Array<{ name: string; port: number; pct: number }>;
+  policies: Array<{ id: string; rule: string; action: string; priority: number; status: string; updatedAt: string }>;
+  relatedAlerts: Alert[];
+  microsegStatus: "ISOLATED" | "INTEGRATED";
+  modelAnalysis?: SegmentModelAnalysis;
+}
+
 export function useSegments() {
   return useQuery({
     queryKey: ["segments"],
-    queryFn: () =>
-      apiFetch<
-        Array<{
-          _id: string;
-          name: string;
-          hosts: number;
-          activeAlerts: number;
-          trafficVolume: number;
-          state: RiskState;
-          lastIncident: string;
-        }>
-      >("/api/segments"),
+    queryFn: () => apiFetch<TopologySegment[]>("/api/segments"),
+  });
+}
+
+export function useTopology() {
+  return useQuery({
+    queryKey: ["topology"],
+    queryFn: () => apiFetch<TopologyOverview>("/api/segments/topology"),
+    refetchInterval: 6000,
+  });
+}
+
+export function useSegmentDeepDive(name: string | null) {
+  return useQuery({
+    queryKey: ["segment-deepdive", name],
+    queryFn: () => apiFetch<SegmentDeepDive>(`/api/segments/${encodeURIComponent(name!)}/deepdive`),
+    enabled: !!name,
+  });
+}
+
+export function useIsolateSegment() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ name, isolate }: { name: string; isolate: boolean }) =>
+      apiFetch<{ success: boolean; message: string; segment: any }>(
+        `/api/segments/${encodeURIComponent(name)}/${isolate ? "isolate" : "restore"}`,
+        { method: "POST" }
+      ),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["topology"] });
+      queryClient.invalidateQueries({ queryKey: ["segments"] });
+      queryClient.invalidateQueries({ queryKey: ["segment-deepdive", variables.name] });
+      queryClient.invalidateQueries({ queryKey: ["audit"] });
+    },
   });
 }
 
