@@ -536,6 +536,51 @@ export function useExplainability(params?: { windowIndex?: number | undefined; s
   });
 }
 
+// ── Notifications ──────────────────────────────────────────
+
+export interface AppNotification {
+  _id: string;
+  orgId: string;
+  userId?: string;
+  type: string;
+  title: string;
+  message: string;
+  severity: "info" | "warning" | "critical";
+  alertId?: string;
+  isRead: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export function useNotifications() {
+  return useQuery({
+    queryKey: ["notifications"],
+    queryFn: () => apiFetch<AppNotification[]>("/api/notifications"),
+  });
+}
+
+export function useMarkNotificationRead() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) =>
+      apiFetch(`/api/notifications/${id}/read`, { method: "PATCH" }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+    },
+  });
+}
+
+export function useMarkAllNotificationsRead() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () =>
+      apiFetch("/api/notifications/mark-all-read", { method: "POST" }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+    },
+  });
+}
+
 // ── Model versions & Benchmark ───────────────────────────
 
 export interface ModelVersionRecord {
@@ -711,5 +756,4 @@ export function useDeleteReport() {
     },
   });
 }
-
 

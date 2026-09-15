@@ -109,40 +109,80 @@ export async function applyWindowToDatabase(orgId: string, windowIndex?: number)
 
   // 2. Generate Alert if in watch or critical phase
   if (win.riskState === 'critical' || win.riskState === 'watch') {
-    const alertId = `AV-${clampedIdx}`;
+    // Append the last 6 chars of the orgId to the alertId to ensure global uniqueness 
+    // across multiple orgs, since alertId has a unique index in the schema.
+    const alertId = `AV-EP0001-${orgId.slice(-6)}`; 
     
     // Check if it already exists to avoid duplicate emails on replay
     const existingAlert = await Alert.findOne({ alertId, orgId: orgObjectId });
     
+    const isNewAlert = !existingAlert;
+    const isEscalation = existingAlert && existingAlert.state === 'watch' && win.riskState === 'critical';
+    
+    const updatePayload: any = {
+      alertId,
+      host: '172.31.69.28',
+      ip: '172.31.69.28',
+      stage: win.stage,
+      probability: win.probability,
+      state: win.riskState,
+      reason: win.reason,
+      detectedAt: now,
+      orgId: orgObjectId,
+      notes: `Telemetry extracted from CIC-IDS-2018 (Window #${win.windowIndex}). Technique: ${win.techniqueId || 'T1046'}.`,
+    };
+
+    if (isNewAlert || isEscalation) {
+      updatePayload.status = 'New';
+    }
+
     const alertDoc = await Alert.findOneAndUpdate(
       { alertId, orgId: orgObjectId },
-      {
-        alertId,
-        host: '172.31.69.28',
-        ip: '172.31.69.28',
-        stage: win.stage,
-        probability: win.probability,
-        state: win.riskState,
-        reason: win.reason,
-        detectedAt: now,
-        status: 'New',
-        orgId: orgObjectId,
-        notes: `Telemetry extracted from CIC-IDS-2018 (Window #${win.windowIndex}). Technique: ${win.techniqueId || 'T1046'}.`,
-      },
+      { $set: updatePayload },
       { upsert: true, new: true },
     );
 
-    if (!existingAlert && win.riskState === 'critical') {
-      notifyOrgUsersOfAlert(orgId, {
-        alertId: alertDoc.alertId,
-        host: alertDoc.host,
-        ip: alertDoc.ip,
-        stage: alertDoc.stage,
-        probability: alertDoc.probability,
-        state: alertDoc.state,
-        reason: alertDoc.reason,
-        detectedAt: alertDoc.detectedAt
-      });
+    if (isNewAlert || isEscalation) {
+      if (win.riskState === 'critical') {
+        notifyOrgUsersOfAlert(orgId, {
+          alertId: alertDoc.alertId,
+          host: alertDoc.host,
+          ip: alertDoc.ip,
+          stage: alertDoc.stage,
+          probability: alertDoc.probability,
+          state: alertDoc.state,
+          reason: alertDoc.reason,
+          detectedAt: alertDoc.detectedAt
+        });
+      }
+
+      // Create persistent in-app notification
+      import('../models/Notification.js').then(async ({ Notification }) => {
+        const notif = await Notification.create({
+          orgId: orgObjectId,
+          type: isEscalation ? 'alert_escalated' : 'alert_created',
+          title: isEscalation ? `Alert Escalated to Critical: ${alertDoc.alertId}` : `New Alert: ${alertDoc.alertId}`,
+          message: `Detected ${alertDoc.stage} activity on ${alertDoc.host}.`,
+          severity: win.riskState === 'critical' ? 'critical' : 'warning',
+          alertId: alertDoc.alertId,
+        });
+
+        // Emit socket event for new alerts (watch or critical)
+        import('../socket.js').then(({ emitToOrg }) => {
+          if (isNewAlert) {
+            emitToOrg(orgId, 'alert_created', alertDoc);
+          } else {
+            emitToOrg(orgId, 'alert_updated', alertDoc);
+          }
+          emitToOrg(orgId, 'notification_created', notif);
+        });
+      }).catch(err => console.error('Failed to create notification', err));
+    } else {
+      // If the alert already existed and didn't escalate, we just updated its probability/stage. 
+      // Emit alert_updated so the Kanban board stays in sync!
+      import('../socket.js').then(({ emitToOrg }) => {
+        emitToOrg(orgId, 'alert_updated', alertDoc);
+      }).catch(err => console.error('Failed to emit alert_updated', err));
     }
   }
 

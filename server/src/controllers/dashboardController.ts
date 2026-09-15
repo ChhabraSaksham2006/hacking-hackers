@@ -25,18 +25,35 @@ export function getFullState(_req: Request, res: Response): void {
   res.json(dashboardStore.getState());
 }
 
-export async function stepForward(_req: Request, res: Response): Promise<void> {
+import { applyWindowToDatabase } from '../services/replayService.js';
+
+export async function stepForward(req: Request, res: Response): Promise<void> {
   const state = await dashboardStore.stepForward();
+  try {
+    await applyWindowToDatabase(req.user!.orgId.toString(), state.actual_window_index);
+  } catch (err) {
+    console.error('[DashboardController] Failed to sync step to database:', err);
+  }
   res.json({ message: 'Stepped forward', state });
 }
 
-export async function resetBaseline(_req: Request, res: Response): Promise<void> {
+export async function resetBaseline(req: Request, res: Response): Promise<void> {
   const state = await dashboardStore.reset(0);
+  try {
+    await applyWindowToDatabase(req.user!.orgId.toString(), state.actual_window_index);
+  } catch (err) {
+    console.error('[DashboardController] Failed to sync reset to database:', err);
+  }
   res.json({ message: 'Reset to benign baseline', state });
 }
 
-export async function jumpAttack(_req: Request, res: Response): Promise<void> {
+export async function jumpAttack(req: Request, res: Response): Promise<void> {
   const state = await dashboardStore.jumpAttack();
+  try {
+    await applyWindowToDatabase(req.user!.orgId.toString(), state.actual_window_index);
+  } catch (err) {
+    console.error('[DashboardController] Failed to sync jump to database:', err);
+  }
   res.json({ message: 'Jumped to infiltration onset', state });
 }
 

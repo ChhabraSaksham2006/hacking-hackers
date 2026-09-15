@@ -106,6 +106,10 @@ export async function updateAlert(req: Request, res: Response, next: NextFunctio
       });
     }
 
+    import('../socket.js').then(({ emitToOrg }) => {
+      emitToOrg(req.user!.orgId, 'alert_updated', alert);
+    }).catch(err => console.error('Failed to emit alert_updated', err));
+
     res.json(alert);
   } catch (err) {
     next(err);

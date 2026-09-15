@@ -10,7 +10,8 @@ import {
 import { cn } from "@/lib/utils";
 
 function path(series: number[], w: number, h: number, pad = 0) {
-  const stepX = (w - pad * 2) / (series.length - 1);
+  if (!series || series.length === 0) return `M${pad},${h - pad}`;
+  const stepX = (w - pad * 2) / Math.max(1, series.length - 1);
   return series
     .map((v, i) => {
       const x = pad + i * stepX;

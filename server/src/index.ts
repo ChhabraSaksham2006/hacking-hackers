@@ -10,6 +10,8 @@ import { corsOptions } from './config/cors.js';
 import { errorHandler, AppError } from './middleware/errorHandler.js';
 import mongoose from 'mongoose';
 import { dashboardStore } from './models/dashboardModel.js';
+import { initSocket } from './socket.js';
+import { initCronJobs } from './services/cronService.js';
 
 // ── Route Imports ───────────────────────────────────────
 import authRouter from './routes/auth.js';
@@ -28,6 +30,7 @@ import auditRouter from './routes/audit.js';
 import rolesRouter from './routes/roles.js';
 import orgsRouter from './routes/orgs.js';
 import explainabilityRouter from './routes/explainability.js';
+import notificationsRouter from './routes/notifications.js';
 
 const app = express();
 
@@ -73,6 +76,7 @@ app.use('/api/audit', auditRouter);
 app.use('/api/roles', rolesRouter);
 app.use('/api/orgs', orgsRouter);
 app.use('/api/explainability', explainabilityRouter);
+app.use('/api/notifications', notificationsRouter);
 
 // ── 404 Route Not Found ─────────────────────────────────
 app.use((_req, _res, next) => {
@@ -86,6 +90,7 @@ app.use(errorHandler);
 async function start() {
   await connectDB();
   await dashboardStore.init();
+  initCronJobs();
 
   const server = app.listen(env.PORT, () => {
     console.log(`🚀 Aegis Vantage API running on port ${env.PORT}`);
@@ -93,10 +98,22 @@ async function start() {
     console.log(`   Frontend:    ${env.FRONTEND_URL}`);
   });
 
+  // Initialize Socket.io
+  initSocket(server);
+
   // Master Clock / Ticker Loop: step simulation every 3,000 ms
   const ticker = setInterval(async () => {
     try {
-      await dashboardStore.stepForward();
+      const state = await dashboardStore.stepForward();
+      
+      // Lazily import to avoid circular dependencies during initialization
+      const { applyWindowToDatabase } = await import('./services/replayService.js');
+      const { Organisation } = await import('./models/Organisation.js');
+      
+      const orgs = await Organisation.find({}, '_id');
+      for (const org of orgs) {
+        await applyWindowToDatabase(org._id.toString(), state.actual_window_index);
+      }
     } catch (err) {
       console.error('Ticker step error:', err);
     }

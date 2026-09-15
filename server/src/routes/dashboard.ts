@@ -12,7 +12,10 @@ import {
   streamDashboard,
 } from '../controllers/dashboardController.js';
 
+import { authenticate } from '../middleware/auth.js';
+
 const router = Router();
+router.use(authenticate);
 
 // ── Real-time SSE Stream ─────────────────────────────────
 router.get('/stream', streamDashboard);
