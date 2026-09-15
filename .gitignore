@@ -45,3 +45,5 @@ venv/
 .venv/
 .pytest_cache/
 *.tsbuildinfo
+server/storage/reports/*
+!server/storage/reports/.gitkeep
