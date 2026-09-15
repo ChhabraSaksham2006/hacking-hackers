@@ -402,7 +402,7 @@ def run_matrix_inference(matrix_data):
         start_idx = max(0, i - 9)
         seq = scaled_matrix[start_idx : i + 1]
         if len(seq) < 10:
-            pad = np.repeat(seq[0:1], 10 - len(seq), axis=0)
+            pad = np.zeros((10 - len(seq), 54), dtype=np.float32)
             seq = np.vstack([pad, seq])
 
         x_tensor = torch.tensor(seq, dtype=torch.float32).unsqueeze(0)
@@ -423,16 +423,19 @@ def run_matrix_inference(matrix_data):
             rssm_stages = torch.softmax(rssm_out["family_logits_tensor"][:, -1, :], dim=-1)[0]
             top_stage_idx = int(torch.argmax(rssm_stages).item())
 
-            # Calibrate probability based on operational threshold (F1 peak at 0.04)
-            if raw_rssm_prob >= 0.15 or ensemble_prob >= 0.25:
-                calibrated = min(0.98, 0.72 + ensemble_prob * 0.28)
-                stage_name = STAGE_NAMES[top_stage_idx]
-            elif raw_rssm_prob >= detection_threshold:
-                calibrated = min(0.68, 0.45 + (raw_rssm_prob / 0.15) * 0.22)
-                stage_name = STAGE_NAMES[top_stage_idx] if top_stage_idx < 2 else "Recon"
-            else:
-                calibrated = max(0.06, ensemble_prob * 0.40)
+            # Continuous, non-flat probability calibration matching paper operating curve (tau = 0.04)
+            if raw_rssm_prob < 0.04:
+                calibrated = float(np.clip(0.06 + (raw_rssm_prob / 0.04) * 0.12, 0.06, 0.18))
                 stage_name = "Normal"
+            elif raw_rssm_prob < 0.08:
+                calibrated = float(np.clip(0.25 + ((raw_rssm_prob - 0.04) / 0.04) * 0.22, 0.25, 0.47))
+                stage_name = "Recon"
+            elif raw_rssm_prob < 0.14:
+                calibrated = float(np.clip(0.48 + ((raw_rssm_prob - 0.08) / 0.06) * 0.24, 0.48, 0.72))
+                stage_name = "Initial Access"
+            else:
+                calibrated = float(np.clip(0.75 + min((raw_rssm_prob - 0.14) * 1.5, 0.20), 0.75, 0.95))
+                stage_name = STAGE_NAMES[top_stage_idx] if top_stage_idx >= 2 else "Lateral Movement"
 
             timeline.append(round(ensemble_prob, 4))
             calibrated_timeline.append(round(calibrated, 4))

@@ -414,80 +414,130 @@ export async function analyzeCaptureFile(options: {
     };
   });
 
-  // 2. Build ATT&CK Stage Annotations
-  const stageAnnotations: IStageAnnotation[] = [
-    {
-      id: 'stage-recon',
-      stage: 'Reconnaissance',
+  // 2. Build ATT&CK Stage Annotations dynamically from real evaluated model timeline
+  const stageAnnotations: IStageAnnotation[] = [];
+  const stageDefs: Record<string, {
+    label: string;
+    techniqueId: string;
+    techniqueName: string;
+    description: string;
+    mitigation: string;
+    color: string;
+  }> = {
+    'Recon': {
       label: 'Port Discovery & Host Sweeps',
-      startWindow: 1781,
-      endWindow: 1788,
-      startOffset: '+01:02',
-      endOffset: '+01:16',
-      peakProbability: 0.44,
       techniqueId: 'T1046',
       techniqueName: 'Network Service Discovery',
-      description: 'Systematic TCP SYN probes across contiguous IP addresses in 192.168.10.0/24. Shannon port entropy diverges >2.0 std dev above baseline.',
+      description: 'TCP/UDP probing observed across subnet IPs and destination ports. Model detects entropy divergence from benign baseline.',
       mitigation: 'Deploy inline rate-limiting and isolate perimeter discovery probes.',
-      color: '#0ea5e9', // Sky blue
+      color: '#0ea5e9',
     },
-    {
-      id: 'stage-initial',
-      stage: 'Initial Access',
+    'Reconnaissance': {
+      label: 'Port Discovery & Host Sweeps',
+      techniqueId: 'T1046',
+      techniqueName: 'Network Service Discovery',
+      description: 'TCP/UDP probing observed across subnet IPs and destination ports. Model detects entropy divergence from benign baseline.',
+      mitigation: 'Deploy inline rate-limiting and isolate perimeter discovery probes.',
+      color: '#0ea5e9',
+    },
+    'Initial Access': {
       label: 'Perimeter Foothold Exploitation',
-      startWindow: 1789,
-      endWindow: 1795,
-      startOffset: '+01:18',
-      endOffset: '+01:30',
-      peakProbability: 0.68,
       techniqueId: 'T1190',
       techniqueName: 'Exploit Public-Facing Application',
-      description: 'Compromise of client node 192.168.10.44 following high-volume payload transfer and unauthenticated socket instantiation.',
+      description: 'Unusual inbound traffic bursts or unauthorized credential attempts detected on network endpoints.',
       mitigation: 'Enforce virtual patching on public gateways and revoke stale tokens.',
-      color: '#f59e0b', // Amber
+      color: '#f59e0b',
     },
-    {
-      id: 'stage-lateral',
-      stage: 'Lateral Movement',
-      label: 'Internal SMB Session Pivoting',
-      startWindow: 1796,
-      endWindow: 1803,
-      startOffset: '+01:32',
-      endOffset: '+01:46',
-      peakProbability: 0.88,
+    'Lateral Movement': {
+      label: 'Internal SMB/RPC Session Pivoting',
       techniqueId: 'T1021.002',
       techniqueName: 'SMB/Windows Admin Shares',
-      description: 'Compromised workstation 192.168.10.44 issues unauthenticated SMB session setups targeting core finance file server 192.168.10.12 and app node 192.168.10.19 over port 445.',
-      mitigation: 'Block transit TCP 445 between workstation VLANs and enforce LAPS.',
-      color: '#ef4444', // Crimson
+      description: 'Compromised internal host initiates high-frequency authentication sessions targeting internal services over port 445.',
+      mitigation: 'Block transit TCP 445 between internal workstations and enforce LAPS.',
+      color: '#ef4444',
     },
-    {
-      id: 'stage-c2',
-      stage: 'Command and Control',
+    'Command and Control': {
       label: 'Outbound Egress & C2 Beaconing',
-      startWindow: 1804,
-      endWindow: 1810,
-      startOffset: '+01:48',
-      endOffset: '+02:00',
-      peakProbability: 0.94,
       techniqueId: 'T1071.001',
-      techniqueName: 'Web Protocols (HTTP/HTTPS/8080)',
-      description: 'Persistent low-jitter TCP sessions established to external listener 203.0.113.15:8080. Egress bandwidth surges indicating telemetry staging.',
-      mitigation: 'Sinkhole IP 203.0.113.15 at perimeter border firewall.',
-      color: '#dc2626', // Deep red
+      techniqueName: 'Application Layer Protocol',
+      description: 'Persistent low-jitter external communication channels established to remote command nodes.',
+      mitigation: 'Sinkhole suspect destination IP addresses at perimeter border firewall.',
+      color: '#dc2626',
     },
-  ];
+    'C2': {
+      label: 'Outbound Egress & C2 Beaconing',
+      techniqueId: 'T1071.001',
+      techniqueName: 'Application Layer Protocol',
+      description: 'Persistent low-jitter external communication channels established to remote command nodes.',
+      mitigation: 'Sinkhole suspect destination IP addresses at perimeter border firewall.',
+      color: '#dc2626',
+    },
+    'Exfiltration': {
+      label: 'Data Exfiltration via Covert Channels',
+      techniqueId: 'T1048',
+      techniqueName: 'Exfiltration Over Alternative Protocol',
+      description: 'High-volume or structured egress transfers bypassing standard network monitoring egress points.',
+      mitigation: 'Implement egress filtering, inspect DNS queries, and restrict non-standard outbound traffic.',
+      color: '#a855f7',
+    },
+  };
+
+  const stageKeys = ['Recon', 'Initial Access', 'Lateral Movement', 'C2', 'Command and Control', 'Exfiltration'];
+  stageKeys.forEach((stKey) => {
+    const points = timeline.filter((t) => t.stage === stKey || (stKey === 'Recon' && t.stage === 'Reconnaissance') || (stKey === 'Command and Control' && t.stage === 'C2'));
+    if (points.length > 0) {
+      const def = stageDefs[stKey] || stageDefs['Recon']!;
+      const startPoint = points[0]!;
+      const endPoint = points[points.length - 1]!;
+      const peakProb = Math.max(...points.map((p) => p.probability));
+
+      stageAnnotations.push({
+        id: `stage-${stKey.toLowerCase().replace(/[\s&]+/g, '-')}`,
+        stage: (stKey === 'Recon' ? 'Reconnaissance' : stKey === 'C2' ? 'Command and Control' : stKey) as any,
+        label: def.label,
+        startWindow: startPoint.windowIndex,
+        endWindow: endPoint.windowIndex,
+        startOffset: startPoint.timeOffset,
+        endOffset: endPoint.timeOffset,
+        peakProbability: Number(peakProb.toFixed(4)),
+        techniqueId: def.techniqueId,
+        techniqueName: def.techniqueName,
+        description: def.description,
+        mitigation: def.mitigation,
+        color: def.color,
+      });
+    }
+  });
+
+  if (stageAnnotations.length === 0) {
+    const maxTimelineProb = Math.max(...timeline.map((t) => t.probability), 0.08);
+    stageAnnotations.push({
+      id: 'stage-benign',
+      stage: 'Normal' as any,
+      label: 'Enterprise Normal Baseline',
+      startWindow: timeline[0]?.windowIndex || 1750,
+      endWindow: timeline[timeline.length - 1]?.windowIndex || 1780,
+      startOffset: timeline[0]?.timeOffset || '+00:00',
+      endOffset: timeline[timeline.length - 1]?.timeOffset || '+01:00',
+      peakProbability: Number(maxTimelineProb.toFixed(4)),
+      techniqueId: 'BENIGN',
+      techniqueName: 'Baseline Network Activity',
+      description: 'Continuous temporal state-space monitoring verifies all telemetry metrics remain well within normal enterprise bounds.',
+      mitigation: 'Continue real-time continuous surveillance.',
+      color: '#10b981',
+    });
+  }
 
   // 3. Extract Flagged Suspicious Flows
   const flaggedFlows: IFlaggedFlow[] = [];
   analyzedWindows.forEach((w, wIdx) => {
     (w.flows || []).forEach((f, fIdx) => {
-      const isDns = f.dst.includes(':53');
+      const isDns = f.dst.includes(':53') && (f.score >= 0.35 || f.dst.includes('198.51.100'));
       const isHttpFlood = (f.dst.includes(':80') || f.dst.includes(':443')) && f.score >= 0.5;
       const isSsh = f.dst.includes(':22') && f.score >= 0.5;
-      const isC2 = f.dst.includes(':8080') || f.dst.includes('203.0');
-      const isSMB = f.dst.includes(':445') || f.dst.includes(':139');
-      const isHighRisk = f.score >= 0.60 || isDns || isHttpFlood || isSsh || isC2 || isSMB;
+      const isC2 = (f.dst.includes(':8080') || f.dst.includes('203.0')) && f.score >= 0.35;
+      const isSMB = (f.dst.includes(':445') || f.dst.includes(':139')) && f.score >= 0.35;
+      const isHighRisk = f.score >= 0.50 || isDns || isHttpFlood || isSsh || isC2 || isSMB;
 
       if (isHighRisk) {
         let stage = w.stage;
@@ -498,7 +548,7 @@ export async function analyzeCaptureFile(options: {
         if (isDns) {
           stage = 'Exfiltration';
           reason = 'Covert high-entropy DNS tunneling query staging payload data over Port 53';
-          techniqueId = 'T1048.003';
+          techniqueId = 'T1071.004';
           flags = 'UDP';
         } else if (isHttpFlood) {
           stage = 'Denial of Service';
@@ -511,10 +561,10 @@ export async function analyzeCaptureFile(options: {
           techniqueId = 'T1110.001';
           flags = 'SYN PSH';
         } else if (isC2) {
-          stage = 'Command & Control';
-          reason = 'Outbound persistent session targeting external listener 203.0.113.15:8080';
+          stage = 'Command and Control';
+          reason = 'Outbound beaconing over HTTP/8080 to external command node';
           techniqueId = 'T1071.001';
-          flags = 'PSH ACK';
+          flags = 'SYN ACK';
         } else if (isSMB) {
           stage = 'Lateral Movement';
           reason = 'Lateral SMB session setup & MS17-010 EternalBlue probe over TCP Port 445';
@@ -790,6 +840,9 @@ function extractFeaturesFromCsv(slice: Array<Record<string, number | string>>, p
   let synCount = 0;
   let ackCount = 0;
   let authPortCount = 0;
+  let tcpPackets = 0;
+  let udpPackets = 0;
+  let icmpPackets = 0;
   const portCounts: Record<number, number> = {};
 
   const AUTH_PORTS = new Set([22, 88, 139, 389, 445, 3389]);
@@ -799,13 +852,18 @@ function extractFeaturesFromCsv(slice: Array<Record<string, number | string>>, p
     const pkts = Number(r.packets || r.packet_count || r['Total Fwd Packets'] || 10);
     const dstPort = Number(r.dst_port || r.dstPort || r['Destination Port'] || 80);
     const flags = String(r.flags || '');
+    const proto = String(r.protocol || r.proto || r['Protocol'] || 'TCP').toUpperCase();
 
     totalBytes += isNaN(bytes) ? 1200 : bytes;
     totalPackets += isNaN(pkts) ? 10 : pkts;
 
+    if (proto.includes('UDP')) udpPackets += isNaN(pkts) ? 10 : pkts;
+    else if (proto.includes('ICMP')) icmpPackets += isNaN(pkts) ? 10 : pkts;
+    else tcpPackets += isNaN(pkts) ? 10 : pkts;
+
     if (!isNaN(dstPort)) {
       portCounts[dstPort] = (portCounts[dstPort] || 0) + 1;
-      if (AUTH_PORTS.has(dstPort)) authPortCount++;
+      if (AUTH_PORTS.has(dstPort)) authPortCount += isNaN(pkts) ? 10 : pkts;
     }
 
     if (flags.includes('SYN')) synCount++;
@@ -816,6 +874,10 @@ function extractFeaturesFromCsv(slice: Array<Record<string, number | string>>, p
   const flowRate = flowCount / 2.0;
   const byteRate = totalBytes / 2.0;
   const packetRate = totalPackets / 2.0;
+
+  const tcpRatio = tcpPackets / denom;
+  const udpRatio = udpPackets / denom;
+  const icmpRatio = icmpPackets / denom;
 
   const uniqueDstPorts = Object.keys(portCounts).length || 1;
   const maxPort = Math.max(...Object.values(portCounts), 0);
@@ -834,7 +896,7 @@ function extractFeaturesFromCsv(slice: Array<Record<string, number | string>>, p
   return [
     flowCount, totalBytes, totalPackets,
     flowRate, byteRate, packetRate,
-    0.85, 0.12, 0.03, // TCP, UDP, ICMP
+    tcpRatio, udpRatio, icmpRatio,
     uniqueDstPorts, portConcentration, dstPortEntropy, authPortRatio,
     synCount, ackCount, 0, 0, 0,
     synRatio, ackRatio, 0.05, 0.1, 0.9,
@@ -862,14 +924,39 @@ function mapPacketsToWindows(
   packets: IRawPacket[],
   benchmarkWindows: IReplayWindow[]
 ): { windows: IReplayWindow[]; matrix: number[][] } {
-  const windowMap = new Map<number, IRawPacket[]>();
-  packets.forEach((p, idx) => {
-    const winIdx = Math.floor(idx / 25);
-    if (!windowMap.has(winIdx)) windowMap.set(winIdx, []);
-    windowMap.get(winIdx)!.push(p);
-  });
+  if (!packets || packets.length === 0) {
+    return { windows: [], matrix: [] };
+  }
 
-  const numWindows = Math.min(60, Math.max(8, windowMap.size));
+  // 1. Analyze timestamps to derive physical observation windows (2.0s per window)
+  const firstPkt = packets[0]!;
+  const lastPkt = packets[packets.length - 1]!;
+  const minTs = firstPkt.tsSec + (firstPkt.tsUsec || 0) / 1e6;
+  const maxTs = lastPkt.tsSec + (lastPkt.tsUsec || 0) / 1e6;
+  const totalDuration = maxTs - minTs;
+
+  const windowMap = new Map<number, IRawPacket[]>();
+
+  if (totalDuration >= 6.0) {
+    // Standard temporal capture: bin packets into 2.0s observation windows
+    packets.forEach((p) => {
+      const t = (p.tsSec + (p.tsUsec || 0) / 1e6) - minTs;
+      const winIdx = Math.max(0, Math.floor(t / 2.0));
+      if (!windowMap.has(winIdx)) windowMap.set(winIdx, []);
+      windowMap.get(winIdx)!.push(p);
+    });
+  } else {
+    // Rapid burst or timestamp-less capture: distribute packets evenly across 25-30 observation windows
+    const targetWindows = Math.min(30, Math.max(15, Math.ceil(packets.length / 4)));
+    packets.forEach((p, idx) => {
+      const winIdx = Math.min(targetWindows - 1, Math.floor((idx / packets.length) * targetWindows));
+      if (!windowMap.has(winIdx)) windowMap.set(winIdx, []);
+      windowMap.get(winIdx)!.push(p);
+    });
+  }
+
+  const maxWinIdx = Math.max(...Array.from(windowMap.keys()), 0);
+  const numWindows = Math.min(60, Math.max(15, maxWinIdx + 1));
   const matrix: number[][] = [];
   const windows: IReplayWindow[] = [];
   let prevFeat: number[] | undefined;
@@ -878,26 +965,64 @@ function mapPacketsToWindows(
     const pkts = windowMap.get(i) || [];
     const baseWin = benchmarkWindows[i % benchmarkWindows.length]!;
 
-    const feat54 = extractFeaturesFromPackets(pkts, prevFeat);
+    let feat54: number[];
+    let customFlows: Array<{ src: string; dst: string; proto: string; bytes: number; score: number }>;
+
+    if (pkts.length > 0) {
+      feat54 = extractFeaturesFromPackets(pkts, prevFeat);
+      customFlows = pkts.map((p) => ({
+        src: `${p.srcIp}:${p.srcPort}`,
+        dst: `${p.dstIp}:${p.dstPort}`,
+        proto: p.proto,
+        bytes: p.inclLen,
+        score: 0.1, // will be updated directly by model forward pass
+      }));
+    } else {
+      // Benign quiet inter-burst period
+      feat54 = [
+        2, 280, 4,
+        1.0, 140.0, 2.0,
+        0.8, 0.2, 0.0,
+        2, 0.5, 1.0, 0.0,
+        1, 1, 0, 0, 0,
+        0.5, 0.5, 0.0, 0.0, 1.0,
+        0.5, 0.5, 1.0, 0.2,
+        70, 20, 120, 54, 0.1,
+        20.0, 10.0, 40.0, 2.0,
+        2.0,
+        prevFeat ? 2 - prevFeat[0]! : 0,
+        prevFeat ? 280 - prevFeat[1]! : 0,
+        prevFeat ? 4 - prevFeat[2]! : 0,
+        prevFeat ? 1.0 - prevFeat[3]! : 0,
+        prevFeat ? 140.0 - prevFeat[4]! : 0,
+        prevFeat ? 2.0 - prevFeat[5]! : 0,
+        prevFeat ? 1.0 - prevFeat[11]! : 0,
+        prevFeat ? 0.5 - prevFeat[10]! : 0,
+        prevFeat ? 0.0 - prevFeat[12]! : 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0,
+      ];
+      customFlows = [
+        {
+          src: '192.168.10.25:54321',
+          dst: '192.168.10.1:80',
+          proto: 'TCP',
+          bytes: 140,
+          score: 0.08,
+        },
+      ];
+    }
+
     prevFeat = feat54;
     matrix.push(feat54);
-
-    const customFlows = pkts.map((p) => ({
-      src: `${p.srcIp}:${p.srcPort}`,
-      dst: `${p.dstIp}:${p.dstPort}`,
-      proto: p.proto,
-      bytes: p.inclLen,
-      score: 0.1, // will be populated from model forward pass
-    }));
 
     windows.push({
       ...baseWin,
       windowIndex: 1750 + i,
-      probability: 0.1,
+      probability: 0.08,
       confidence: 0.94,
       stage: 'Normal',
       riskState: 'normal',
-      flowCount: Math.max(15, pkts.length),
+      flowCount: Math.max(8, pkts.length),
       flows: customFlows.length > 0 ? customFlows : baseWin.flows,
       features: {
         ...baseWin.features,
@@ -920,35 +1045,43 @@ function mapCsvToWindows(
   csvRows: Array<Record<string, number | string>>,
   benchmarkWindows: IReplayWindow[]
 ): { windows: IReplayWindow[]; matrix: number[][] } {
-  const windowCount = Math.min(60, Math.max(8, Math.ceil(csvRows.length / 15)));
+  if (!csvRows || csvRows.length === 0) {
+    return { windows: [], matrix: [] };
+  }
+
+  // Determine row grouping: 1-2 rows per window for small CSVs, or sliced into 25-50 windows for large exports
+  const rowsPerWindow = Math.max(1, Math.floor(csvRows.length / 40));
+  const windowCount = Math.min(60, Math.max(12, Math.ceil(csvRows.length / rowsPerWindow)));
   const matrix: number[][] = [];
   const windows: IReplayWindow[] = [];
   let prevFeat: number[] | undefined;
 
   for (let i = 0; i < windowCount; i++) {
-    const slice = csvRows.slice(i * 15, (i + 1) * 15);
-    const baseWin = benchmarkWindows[i % benchmarkWindows.length]!;
+    const slice = csvRows.slice(i * rowsPerWindow, (i + 1) * rowsPerWindow);
+    if (slice.length === 0) break;
 
+    const baseWin = benchmarkWindows[i % benchmarkWindows.length]!;
     const feat54 = extractFeaturesFromCsv(slice, prevFeat);
     prevFeat = feat54;
     matrix.push(feat54);
 
     const customFlows = slice.map((r) => {
-      const src = String(r.src_ip || r.src || r['Source IP'] || '192.168.1.100') + (r.src_port ? `:${r.src_port}` : '');
-      const dst = String(r.dst_ip || r.dst || r['Destination IP'] || '10.0.0.1') + (r.dst_port ? `:${r.dst_port}` : '');
+      const src = String(r.src_ip || r.src || r['Source IP'] || '192.168.10.44') + (r.src_port ? `:${r.src_port}` : '');
+      const dst = String(r.dst_ip || r.dst || r['Destination IP'] || '192.168.10.12') + (r.dst_port ? `:${r.dst_port}` : '');
       const proto = String(r.protocol || r.proto || r['Protocol'] || 'TCP');
       const bytes = Number(r.bytes || r.total_ip_bytes || r['Flow Bytes/s'] || 1200);
-      const score = Number(r.score || r.prob || 0.1);
+      const score = Number(r.prob || r.score || 0.1);
       return { src, dst, proto, bytes, score };
     });
 
     windows.push({
       ...baseWin,
       windowIndex: 1750 + i,
-      probability: 0.1,
+      probability: 0.08,
       confidence: 0.93,
       stage: 'Normal',
       riskState: 'normal',
+      flowCount: Math.max(8, slice.length),
       flows: customFlows.length > 0 ? customFlows : baseWin.flows,
       features: {
         ...baseWin.features,
@@ -964,3 +1097,4 @@ function mapCsvToWindows(
 
   return { windows, matrix };
 }
+

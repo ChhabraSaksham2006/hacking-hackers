@@ -1,101 +1,61 @@
 timestamp,src_ip,src_port,dst_ip,dst_port,protocol,flags,total_ip_bytes,packet_count,duration_seconds,prob,stage,anomaly_reason,technique_id
-2024-06-10 06:13:20,172.16.8.22,52000,198.51.100.53,53,UDP,UDP,1400,14,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:13:22,172.16.8.22,52001,198.51.100.53,53,UDP,UDP,1437,15,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:13:24,172.16.8.22,52002,198.51.100.53,53,UDP,UDP,1474,16,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:13:26,172.16.8.22,52003,198.51.100.53,53,UDP,UDP,1511,17,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:13:28,172.16.8.22,52004,198.51.100.53,53,UDP,UDP,1548,18,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:13:30,172.16.8.22,52005,198.51.100.53,53,UDP,UDP,1585,19,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:13:32,172.16.8.22,52006,198.51.100.53,53,UDP,UDP,1622,14,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:13:34,172.16.8.22,52007,198.51.100.53,53,UDP,UDP,1659,15,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:13:36,172.16.8.22,52008,198.51.100.53,53,UDP,UDP,1696,16,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:13:38,172.16.8.22,52009,198.51.100.53,53,UDP,UDP,1733,17,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:13:40,172.16.8.22,52010,198.51.100.53,53,UDP,UDP,1770,18,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:13:42,172.16.8.22,52011,198.51.100.53,53,UDP,UDP,1807,19,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:13:44,172.16.8.22,52012,198.51.100.53,53,UDP,UDP,1844,14,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:13:46,172.16.8.22,52013,198.51.100.53,53,UDP,UDP,1881,15,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:13:48,172.16.8.22,52014,198.51.100.53,53,UDP,UDP,1918,16,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:13:50,172.16.8.22,52015,198.51.100.53,53,UDP,UDP,1955,17,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:13:52,172.16.8.22,52016,198.51.100.53,53,UDP,UDP,1992,18,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:13:54,172.16.8.22,52017,198.51.100.53,53,UDP,UDP,2029,19,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:13:56,172.16.8.22,52018,198.51.100.53,53,UDP,UDP,2066,14,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:13:58,172.16.8.22,52019,198.51.100.53,53,UDP,UDP,2103,15,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:14:00,172.16.8.22,52020,198.51.100.53,53,UDP,UDP,2140,16,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:14:02,172.16.8.22,52021,198.51.100.53,53,UDP,UDP,2177,17,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:14:04,172.16.8.22,52022,198.51.100.53,53,UDP,UDP,1414,18,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:14:06,172.16.8.22,52023,198.51.100.53,53,UDP,UDP,1451,19,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:14:08,172.16.8.22,52024,198.51.100.53,53,UDP,UDP,1488,14,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:14:10,172.16.8.22,52025,198.51.100.53,53,UDP,UDP,1525,15,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:14:12,172.16.8.22,52026,198.51.100.53,53,UDP,UDP,1562,16,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:14:14,172.16.8.22,52027,198.51.100.53,53,UDP,UDP,1599,17,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:14:16,172.16.8.22,52028,198.51.100.53,53,UDP,UDP,1636,18,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:14:18,172.16.8.22,52029,198.51.100.53,53,UDP,UDP,1673,19,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:14:20,172.16.8.22,52030,198.51.100.53,53,UDP,UDP,1710,14,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:14:22,172.16.8.22,52031,198.51.100.53,53,UDP,UDP,1747,15,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:14:24,172.16.8.22,52032,198.51.100.53,53,UDP,UDP,1784,16,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:14:26,172.16.8.22,52033,198.51.100.53,53,UDP,UDP,1821,17,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:14:28,172.16.8.22,52034,198.51.100.53,53,UDP,UDP,1858,18,2.0,0.06,Normal,"Routine internal DNS lookup queries to local resolver",None
-2024-06-10 06:14:30,172.16.8.22,52035,198.51.100.53,53,UDP,UDP,91750,600,2.0,0.58,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:14:32,172.16.8.22,52036,198.51.100.53,53,UDP,UDP,93000,608,2.0,0.595,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:14:34,172.16.8.22,52037,198.51.100.53,53,UDP,UDP,94250,616,2.0,0.61,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:14:36,172.16.8.22,52038,198.51.100.53,53,UDP,UDP,95500,624,2.0,0.625,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:14:38,172.16.8.22,52039,198.51.100.53,53,UDP,UDP,96750,632,2.0,0.64,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:14:40,172.16.8.22,52040,198.51.100.53,53,UDP,UDP,98000,640,2.0,0.655,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:14:42,172.16.8.22,52041,198.51.100.53,53,UDP,UDP,99250,648,2.0,0.67,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:14:44,172.16.8.22,52042,198.51.100.53,53,UDP,UDP,100500,656,2.0,0.685,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:14:46,172.16.8.22,52043,198.51.100.53,53,UDP,UDP,101750,664,2.0,0.7,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:14:48,172.16.8.22,52044,198.51.100.53,53,UDP,UDP,103000,672,2.0,0.715,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:14:50,172.16.8.22,52045,198.51.100.53,53,UDP,UDP,104250,680,2.0,0.73,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:14:52,172.16.8.22,52046,198.51.100.53,53,UDP,UDP,105500,688,2.0,0.745,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:14:54,172.16.8.22,52047,198.51.100.53,53,UDP,UDP,106750,696,2.0,0.76,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:14:56,172.16.8.22,52048,198.51.100.53,53,UDP,UDP,108000,704,2.0,0.775,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:14:58,172.16.8.22,52049,198.51.100.53,53,UDP,UDP,109250,712,2.0,0.79,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:15:00,172.16.8.22,52050,198.51.100.53,53,UDP,UDP,110500,720,2.0,0.805,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:15:02,172.16.8.22,52051,198.51.100.53,53,UDP,UDP,111750,728,2.0,0.82,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:15:04,172.16.8.22,52052,198.51.100.53,53,UDP,UDP,113000,736,2.0,0.835,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:15:06,172.16.8.22,52053,198.51.100.53,53,UDP,UDP,114250,744,2.0,0.85,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:15:08,172.16.8.22,52054,198.51.100.53,53,UDP,UDP,115500,752,2.0,0.865,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:15:10,172.16.8.22,52055,198.51.100.53,53,UDP,UDP,116750,760,2.0,0.88,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:15:12,172.16.8.22,52056,198.51.100.53,53,UDP,UDP,118000,768,2.0,0.895,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:15:14,172.16.8.22,52057,198.51.100.53,53,UDP,UDP,119250,776,2.0,0.91,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:15:16,172.16.8.22,52058,198.51.100.53,53,UDP,UDP,120500,784,2.0,0.925,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:15:18,172.16.8.22,52059,198.51.100.53,53,UDP,UDP,121750,792,2.0,0.94,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:15:20,172.16.8.22,52060,198.51.100.53,53,UDP,UDP,123000,800,2.0,0.955,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:15:22,172.16.8.22,52061,198.51.100.53,53,UDP,UDP,124250,808,2.0,0.96,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:15:24,172.16.8.22,52062,198.51.100.53,53,UDP,UDP,125500,816,2.0,0.96,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:15:26,172.16.8.22,52063,198.51.100.53,53,UDP,UDP,126750,824,2.0,0.96,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:15:28,172.16.8.22,52064,198.51.100.53,53,UDP,UDP,128000,832,2.0,0.96,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:15:30,172.16.8.22,52065,198.51.100.53,53,UDP,UDP,129250,840,2.0,0.96,Command & Control,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1071.004
-2024-06-10 06:15:32,172.16.8.22,52066,198.51.100.53,53,UDP,UDP,130500,848,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:15:34,172.16.8.22,52067,198.51.100.53,53,UDP,UDP,131750,856,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:15:36,172.16.8.22,52068,198.51.100.53,53,UDP,UDP,133000,864,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:15:38,172.16.8.22,52069,198.51.100.53,53,UDP,UDP,134250,872,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:15:40,172.16.8.22,52070,198.51.100.53,53,UDP,UDP,135500,880,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:15:42,172.16.8.22,52071,198.51.100.53,53,UDP,UDP,136750,888,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:15:44,172.16.8.22,52072,198.51.100.53,53,UDP,UDP,138000,896,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:15:46,172.16.8.22,52073,198.51.100.53,53,UDP,UDP,139250,904,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:15:48,172.16.8.22,52074,198.51.100.53,53,UDP,UDP,140500,912,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:15:50,172.16.8.22,52075,198.51.100.53,53,UDP,UDP,141750,920,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:15:52,172.16.8.22,52076,198.51.100.53,53,UDP,UDP,143000,928,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:15:54,172.16.8.22,52077,198.51.100.53,53,UDP,UDP,144250,936,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:15:56,172.16.8.22,52078,198.51.100.53,53,UDP,UDP,145500,944,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:15:58,172.16.8.22,52079,198.51.100.53,53,UDP,UDP,146750,952,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:16:00,172.16.8.22,52080,198.51.100.53,53,UDP,UDP,148000,960,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:16:02,172.16.8.22,52081,198.51.100.53,53,UDP,UDP,149250,968,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:16:04,172.16.8.22,52082,198.51.100.53,53,UDP,UDP,150500,976,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:16:06,172.16.8.22,52083,198.51.100.53,53,UDP,UDP,151750,984,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:16:08,172.16.8.22,52084,198.51.100.53,53,UDP,UDP,153000,992,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:16:10,172.16.8.22,52085,198.51.100.53,53,UDP,UDP,154250,1000,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:16:12,172.16.8.22,52086,198.51.100.53,53,UDP,UDP,155500,1008,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:16:14,172.16.8.22,52087,198.51.100.53,53,UDP,UDP,156750,1016,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:16:16,172.16.8.22,52088,198.51.100.53,53,UDP,UDP,158000,1024,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:16:18,172.16.8.22,52089,198.51.100.53,53,UDP,UDP,159250,1032,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:16:20,172.16.8.22,52090,198.51.100.53,53,UDP,UDP,160500,1040,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:16:22,172.16.8.22,52091,198.51.100.53,53,UDP,UDP,161750,1048,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:16:24,172.16.8.22,52092,198.51.100.53,53,UDP,UDP,163000,1056,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:16:26,172.16.8.22,52093,198.51.100.53,53,UDP,UDP,164250,1064,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:16:28,172.16.8.22,52094,198.51.100.53,53,UDP,UDP,165500,1072,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:16:30,172.16.8.22,52095,198.51.100.53,53,UDP,UDP,166750,1080,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:16:32,172.16.8.22,52096,198.51.100.53,53,UDP,UDP,168000,1088,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:16:34,172.16.8.22,52097,198.51.100.53,53,UDP,UDP,169250,1096,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:16:36,172.16.8.22,52098,198.51.100.53,53,UDP,UDP,170500,1104,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
-2024-06-10 06:16:38,172.16.8.22,52099,198.51.100.53,53,UDP,UDP,171750,1112,2.0,0.96,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53",T1048.003
+2024-06-10 06:13:20,172.16.8.22,52000,10.0.0.1,53,UDP,UDP,140,2,2.0,0.06,Normal,"Standard enterprise internal DNS query",None
+2024-06-10 06:13:22,172.16.8.22,52001,10.0.0.1,53,UDP,UDP,140,2,2.0,0.06,Normal,"Standard enterprise internal DNS query",None
+2024-06-10 06:13:24,172.16.8.22,52002,10.0.0.1,53,UDP,UDP,140,2,2.0,0.06,Normal,"Standard enterprise internal DNS query",None
+2024-06-10 06:13:26,172.16.8.22,52003,10.0.0.1,53,UDP,UDP,140,2,2.0,0.06,Normal,"Standard enterprise internal DNS query",None
+2024-06-10 06:13:28,172.16.8.22,52004,10.0.0.1,53,UDP,UDP,140,2,2.0,0.06,Normal,"Standard enterprise internal DNS query",None
+2024-06-10 06:13:30,172.16.8.22,52005,10.0.0.1,53,UDP,UDP,140,2,2.0,0.06,Normal,"Standard enterprise internal DNS query",None
+2024-06-10 06:13:32,172.16.8.22,52006,10.0.0.1,53,UDP,UDP,140,2,2.0,0.06,Normal,"Standard enterprise internal DNS query",None
+2024-06-10 06:13:34,172.16.8.22,52007,10.0.0.1,53,UDP,UDP,140,2,2.0,0.06,Normal,"Standard enterprise internal DNS query",None
+2024-06-10 06:13:36,172.16.8.22,52008,10.0.0.1,53,UDP,UDP,140,2,2.0,0.06,Normal,"Standard enterprise internal DNS query",None
+2024-06-10 06:13:38,172.16.8.22,52009,10.0.0.1,53,UDP,UDP,140,2,2.0,0.06,Normal,"Standard enterprise internal DNS query",None
+2024-06-10 06:13:40,172.16.8.22,52010,10.0.0.1,53,UDP,UDP,140,2,2.0,0.06,Normal,"Standard enterprise internal DNS query",None
+2024-06-10 06:13:42,172.16.8.22,52011,10.0.0.1,53,UDP,UDP,140,2,2.0,0.06,Normal,"Standard enterprise internal DNS query",None
+2024-06-10 06:13:44,172.16.8.22,52012,10.0.0.1,53,UDP,UDP,140,2,2.0,0.06,Normal,"Standard enterprise internal DNS query",None
+2024-06-10 06:13:46,172.16.8.22,52013,10.0.0.1,53,UDP,UDP,140,2,2.0,0.06,Normal,"Standard enterprise internal DNS query",None
+2024-06-10 06:13:48,172.16.8.22,52014,10.0.0.1,53,UDP,UDP,140,2,2.0,0.06,Normal,"Standard enterprise internal DNS query",None
+2024-06-10 06:13:50,172.16.8.22,52015,10.0.0.1,53,UDP,UDP,140,2,2.0,0.06,Normal,"Standard enterprise internal DNS query",None
+2024-06-10 06:13:52,172.16.8.22,52016,10.0.0.1,53,UDP,UDP,140,2,2.0,0.06,Normal,"Standard enterprise internal DNS query",None
+2024-06-10 06:13:54,172.16.8.22,52017,10.0.0.1,53,UDP,UDP,140,2,2.0,0.06,Normal,"Standard enterprise internal DNS query",None
+2024-06-10 06:13:56,172.16.8.22,52018,10.0.0.1,53,UDP,UDP,140,2,2.0,0.06,Normal,"Standard enterprise internal DNS query",None
+2024-06-10 06:13:58,172.16.8.22,52019,10.0.0.1,53,UDP,UDP,140,2,2.0,0.06,Normal,"Standard enterprise internal DNS query",None
+2024-06-10 06:14:00,172.16.8.22,52000,198.51.100.53,53,UDP,UDP,850,8,2.0,0.42,Command & Control,"Periodic low-jitter DNS check-in to external nameserver 198.51.100.53",T1071.004
+2024-06-10 06:14:02,172.16.8.22,52001,198.51.100.53,53,UDP,UDP,850,8,2.0,0.42,Command & Control,"Periodic low-jitter DNS check-in to external nameserver 198.51.100.53",T1071.004
+2024-06-10 06:14:04,172.16.8.22,52002,198.51.100.53,53,UDP,UDP,850,8,2.0,0.42,Command & Control,"Periodic low-jitter DNS check-in to external nameserver 198.51.100.53",T1071.004
+2024-06-10 06:14:06,172.16.8.22,52003,198.51.100.53,53,UDP,UDP,850,8,2.0,0.42,Command & Control,"Periodic low-jitter DNS check-in to external nameserver 198.51.100.53",T1071.004
+2024-06-10 06:14:08,172.16.8.22,52004,198.51.100.53,53,UDP,UDP,850,8,2.0,0.42,Command & Control,"Periodic low-jitter DNS check-in to external nameserver 198.51.100.53",T1071.004
+2024-06-10 06:14:10,172.16.8.22,52005,198.51.100.53,53,UDP,UDP,850,8,2.0,0.42,Command & Control,"Periodic low-jitter DNS check-in to external nameserver 198.51.100.53",T1071.004
+2024-06-10 06:14:12,172.16.8.22,52006,198.51.100.53,53,UDP,UDP,850,8,2.0,0.42,Command & Control,"Periodic low-jitter DNS check-in to external nameserver 198.51.100.53",T1071.004
+2024-06-10 06:14:14,172.16.8.22,52007,198.51.100.53,53,UDP,UDP,850,8,2.0,0.42,Command & Control,"Periodic low-jitter DNS check-in to external nameserver 198.51.100.53",T1071.004
+2024-06-10 06:14:16,172.16.8.22,52008,198.51.100.53,53,UDP,UDP,850,8,2.0,0.42,Command & Control,"Periodic low-jitter DNS check-in to external nameserver 198.51.100.53",T1071.004
+2024-06-10 06:14:18,172.16.8.22,52009,198.51.100.53,53,UDP,UDP,850,8,2.0,0.42,Command & Control,"Periodic low-jitter DNS check-in to external nameserver 198.51.100.53",T1071.004
+2024-06-10 06:14:20,172.16.8.22,52010,198.51.100.53,53,UDP,UDP,850,8,2.0,0.42,Command & Control,"Periodic low-jitter DNS check-in to external nameserver 198.51.100.53",T1071.004
+2024-06-10 06:14:22,172.16.8.22,52011,198.51.100.53,53,UDP,UDP,850,8,2.0,0.42,Command & Control,"Periodic low-jitter DNS check-in to external nameserver 198.51.100.53",T1071.004
+2024-06-10 06:14:24,172.16.8.22,52012,198.51.100.53,53,UDP,UDP,850,8,2.0,0.42,Command & Control,"Periodic low-jitter DNS check-in to external nameserver 198.51.100.53",T1071.004
+2024-06-10 06:14:26,172.16.8.22,52013,198.51.100.53,53,UDP,UDP,850,8,2.0,0.42,Command & Control,"Periodic low-jitter DNS check-in to external nameserver 198.51.100.53",T1071.004
+2024-06-10 06:14:28,172.16.8.22,52014,198.51.100.53,53,UDP,UDP,850,8,2.0,0.42,Command & Control,"Periodic low-jitter DNS check-in to external nameserver 198.51.100.53",T1071.004
+2024-06-10 06:14:30,172.16.8.22,52015,198.51.100.53,53,UDP,UDP,70000,380,2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003
+2024-06-10 06:14:32,172.16.8.22,52016,198.51.100.53,53,UDP,UDP,70800,384,2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003
+2024-06-10 06:14:34,172.16.8.22,52017,198.51.100.53,53,UDP,UDP,71600,388,2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003
+2024-06-10 06:14:36,172.16.8.22,52018,198.51.100.53,53,UDP,UDP,72400,392,2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003
+2024-06-10 06:14:38,172.16.8.22,52019,198.51.100.53,53,UDP,UDP,73200,396,2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003
+2024-06-10 06:14:40,172.16.8.22,52000,198.51.100.53,53,UDP,UDP,74000,400,2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003
+2024-06-10 06:14:42,172.16.8.22,52001,198.51.100.53,53,UDP,UDP,74800,404,2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003
+2024-06-10 06:14:44,172.16.8.22,52002,198.51.100.53,53,UDP,UDP,75600,408,2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003
+2024-06-10 06:14:46,172.16.8.22,52003,198.51.100.53,53,UDP,UDP,76400,412,2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003
+2024-06-10 06:14:48,172.16.8.22,52004,198.51.100.53,53,UDP,UDP,77200,416,2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003
+2024-06-10 06:14:50,172.16.8.22,52005,198.51.100.53,53,UDP,UDP,78000,420,2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003
+2024-06-10 06:14:52,172.16.8.22,52006,198.51.100.53,53,UDP,UDP,78800,424,2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003
+2024-06-10 06:14:54,172.16.8.22,52007,198.51.100.53,53,UDP,UDP,79600,428,2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003
+2024-06-10 06:14:56,172.16.8.22,52008,198.51.100.53,53,UDP,UDP,80400,432,2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003
+2024-06-10 06:14:58,172.16.8.22,52009,198.51.100.53,53,UDP,UDP,81200,436,2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003
+2024-06-10 06:15:00,172.16.8.22,52010,198.51.100.53,53,UDP,UDP,82000,440,2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003
+2024-06-10 06:15:02,172.16.8.22,52011,198.51.100.53,53,UDP,UDP,82800,444,2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003
+2024-06-10 06:15:04,172.16.8.22,52012,198.51.100.53,53,UDP,UDP,83600,448,2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003
+2024-06-10 06:15:06,172.16.8.22,52013,198.51.100.53,53,UDP,UDP,84400,452,2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003
+2024-06-10 06:15:08,172.16.8.22,52014,198.51.100.53,53,UDP,UDP,85200,456,2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003
+2024-06-10 06:15:10,172.16.8.22,52015,198.51.100.53,53,UDP,UDP,86000,460,2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003
+2024-06-10 06:15:12,172.16.8.22,52016,198.51.100.53,53,UDP,UDP,86800,464,2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003
+2024-06-10 06:15:14,172.16.8.22,52017,198.51.100.53,53,UDP,UDP,87600,468,2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003
+2024-06-10 06:15:16,172.16.8.22,52018,198.51.100.53,53,UDP,UDP,88400,472,2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003
+2024-06-10 06:15:18,172.16.8.22,52019,198.51.100.53,53,UDP,UDP,89200,476,2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003

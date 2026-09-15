@@ -85,37 +85,55 @@ function createPcapBuffer(packets) {
 }
 
 // ── 2. Generate Sample 1: Mirai SYN Flood DDoS (.pcap) ─────────────
-// Scenario: Volumetric TCP SYN flood assaulting web service 192.168.1.200:80
-// High packet rate, random spoofed botnet source IPs, 100% SYN flags.
-
+// Multi-stage progression: Normal HTTP -> Recon SYN Sweep -> Volumetric DDoS Flood
 const synFloodPackets = [];
 const botnetIps = [
-  '185.220.101.5',
-  '45.142.214.88',
-  '91.240.118.12',
-  '194.26.29.4',
-  '103.145.13.77',
-  '185.196.220.31',
-  '79.137.195.120',
-  '193.32.162.9',
+  '185.220.101.5', '45.142.214.88', '91.240.118.12', '194.26.29.4',
+  '103.145.13.77', '185.196.220.31', '79.137.195.120', '193.32.162.9',
 ];
 
-for (let i = 0; i < 180; i++) {
-  const srcIp = botnetIps[i % botnetIps.length];
-  const srcPort = 32768 + ((i * 137) % 32000);
-  const dstPort = i % 5 === 0 ? 443 : 80;
-  const isAttack = i >= 30; // Onset at packet 30
+for (let i = 0; i < 240; i++) {
+  const tSec = Math.floor(i * 0.25); // spans 60.0 seconds
+  const tUsec = (i * 250000) % 1000000;
   
-  synFloodPackets.push({
-    tsSec: 1718000000 + Math.floor(i * 0.2),
-    tsUsec: (i * 200000) % 1000000,
-    srcIp: isAttack ? srcIp : '192.168.1.55',
-    dstIp: '192.168.1.200',
-    srcPort: isAttack ? srcPort : 54321,
-    dstPort,
-    flags: isAttack ? 0x02 : (i % 2 === 0 ? 0x12 : 0x10), // SYN flood vs normal
-    payload: isAttack ? Buffer.from('GET / HTTP/1.1\r\nHost: target\r\n\r\n') : Buffer.alloc(0),
-  });
+  if (tSec < 22) {
+    // Phase 1: Baseline Normal Web Traffic (0 - 22s)
+    synFloodPackets.push({
+      tsSec: 1718000000 + tSec,
+      tsUsec: tUsec,
+      srcIp: '192.168.1.45',
+      dstIp: '192.168.1.200',
+      srcPort: 52100 + (i % 5),
+      dstPort: 80,
+      flags: i % 3 === 0 ? 0x02 : 0x10, // normal SYN then ACK
+      payload: Buffer.from('GET /index.html HTTP/1.1\r\n\r\n'),
+    });
+  } else if (tSec < 36) {
+    // Phase 2: Reconnaissance Port Sweep (22 - 36s)
+    synFloodPackets.push({
+      tsSec: 1718000000 + tSec,
+      tsUsec: tUsec,
+      srcIp: '45.142.214.88',
+      dstIp: '192.168.1.200',
+      srcPort: 40000 + (i * 17) % 20000,
+      dstPort: 70 + (i % 20),
+      flags: 0x02, // SYN scan
+      payload: Buffer.alloc(0),
+    });
+  } else {
+    // Phase 3: Volumetric TCP SYN Flood Assault (36 - 60s)
+    const srcIp = botnetIps[i % botnetIps.length];
+    synFloodPackets.push({
+      tsSec: 1718000000 + tSec,
+      tsUsec: tUsec,
+      srcIp,
+      dstIp: '192.168.1.200',
+      srcPort: 32768 + (i * 137) % 32000,
+      dstPort: i % 4 === 0 ? 443 : 80,
+      flags: 0x02, // Pure SYN
+      payload: Buffer.alloc(0),
+    });
+  }
 }
 
 const pcap1 = createPcapBuffer(synFloodPackets);
@@ -124,31 +142,58 @@ fs.writeFileSync(path.join(publicSampleDir, 'sample_1_mirai_synflood_ddos.pcap')
 console.log('✓ Generated sample_1_mirai_synflood_ddos.pcap (%d bytes)', pcap1.length);
 
 // ── 3. Generate Sample 2: EternalBlue Lateral SMB Spread (.pcap) ──
-// Scenario: Internal host 10.0.4.15 laterally exploiting Port 445 on 10.0.4.50, 10.0.4.55
-
+// Multi-stage progression: Normal Intranet -> Port Discovery -> SMB Lateral Exploitation
 const smbPackets = [];
-const smbTargets = ['10.0.4.50', '10.0.4.55', '10.0.4.60', '10.0.4.65'];
+const smbTargets = ['10.0.4.50', '10.0.4.55', '10.0.4.60'];
 
-for (let i = 0; i < 140; i++) {
-  const dstIp = smbTargets[Math.floor(i / 35) % smbTargets.length];
-  const isAttack = i >= 20;
-  const srcPort = 49152 + (i % 50);
+for (let i = 0; i < 240; i++) {
+  const tSec = Math.floor(i * 0.25); // spans 60.0 seconds
+  const tUsec = (i * 250000) % 1000000;
 
-  // SMB negotiation payload snippet
-  const smbPayload = isAttack
-    ? Buffer.from('\xffSMBs\x00\x00\x00\x00\x18\x07\xc8\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xfe\x00\x00\x40\x00')
-    : Buffer.alloc(0);
-
-  smbPackets.push({
-    tsSec: 1718000000 + Math.floor(i * 0.35),
-    tsUsec: (i * 350000) % 1000000,
-    srcIp: '10.0.4.15',
-    dstIp,
-    srcPort,
-    dstPort: 445,
-    flags: isAttack ? 0x18 : 0x02, // PSH ACK during exploit negotiation
-    payload: smbPayload,
-  });
+  if (tSec < 22) {
+    // Phase 1: Baseline Normal Workstation Traffic (0 - 22s)
+    // Routine DNS and internal web communication (Ports 53, 80)
+    smbPackets.push({
+      tsSec: 1718000000 + tSec,
+      tsUsec: tUsec,
+      srcIp: '10.0.4.15',
+      dstIp: i % 2 === 0 ? '10.0.0.1' : '10.0.4.2',
+      srcPort: 49152 + (i % 10),
+      dstPort: i % 2 === 0 ? 53 : 80,
+      flags: 0x10, // ACK
+      payload: Buffer.from('Standard client request data'),
+    });
+  } else if (tSec < 36) {
+    // Phase 2: Internal Discovery & Service Enumeration (22 - 36s)
+    // Probing internal subnet across ports 135, 139, 445, 3389
+    const probePorts = [135, 139, 445, 3389];
+    smbPackets.push({
+      tsSec: 1718000000 + tSec,
+      tsUsec: tUsec,
+      srcIp: '10.0.4.15',
+      dstIp: smbTargets[i % smbTargets.length],
+      srcPort: 50000 + i,
+      dstPort: probePorts[i % probePorts.length],
+      flags: 0x02, // SYN probe
+      payload: Buffer.alloc(0),
+    });
+  } else {
+    // Phase 3: EternalBlue MS17-010 SMB Session Exploitation (36 - 60s)
+    // Heavy SMB negotiation and exploit payload on Port 445
+    const smbPayload = Buffer.from(
+      '\xffSMBs\x00\x00\x00\x00\x18\x07\xc8\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xfe\x00\x00\x40\x00'
+    );
+    smbPackets.push({
+      tsSec: 1718000000 + tSec,
+      tsUsec: tUsec,
+      srcIp: '10.0.4.15',
+      dstIp: smbTargets[i % smbTargets.length],
+      srcPort: 49152 + (i % 30),
+      dstPort: 445,
+      flags: 0x18, // PSH ACK
+      payload: smbPayload,
+    });
+  }
 }
 
 const pcap2 = createPcapBuffer(smbPackets);
@@ -157,26 +202,28 @@ fs.writeFileSync(path.join(publicSampleDir, 'sample_2_ransomware_eternalblue_smb
 console.log('✓ Generated sample_2_ransomware_eternalblue_smb.pcap (%d bytes)', pcap2.length);
 
 // ── 4. Generate Sample 3: DNS Tunneling & Exfiltration (.csv) ──────
-// Scenario: Host 172.16.8.22 tunneling sensitive documents over Port 53 queries
-
 const csvHeader = 'timestamp,src_ip,src_port,dst_ip,dst_port,protocol,flags,total_ip_bytes,packet_count,duration_seconds,prob,stage,anomaly_reason,technique_id\n';
 const dnsRows = [];
 
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 60; i++) {
   const ts = new Date(1718000000000 + i * 2000).toISOString().replace('T', ' ').slice(0, 19);
-  const isAttack = i >= 35;
-  const bytes = isAttack ? 48000 + (i * 1250) : 1400 + ((i * 37) % 800);
-  const pkts = isAttack ? 320 + (i * 8) : 14 + (i % 6);
-  const prob = isAttack ? Number(Math.min(0.96, 0.58 + (i - 35) * 0.015).toFixed(3)) : 0.06;
-  const stage = isAttack ? (i > 65 ? 'Exfiltration' : 'Command & Control') : 'Normal';
-  const reason = isAttack
-    ? 'Covert DNS TXT tunnel transmitting encoded database chunks to rogue NS 198.51.100.53'
-    : 'Routine internal DNS lookup queries to local resolver';
-  const techId = isAttack ? (i > 65 ? 'T1048.003' : 'T1071.004') : 'None';
-
-  dnsRows.push(
-    `${ts},172.16.8.22,${52000 + (i % 200)},198.51.100.53,53,UDP,UDP,${bytes},${pkts},2.0,${prob},${stage},"${reason}",${techId}`
-  );
+  
+  if (i < 20) {
+    // Normal Baseline (0 - 40s)
+    dnsRows.push(
+      `${ts},172.16.8.22,${52000 + (i % 20)},10.0.0.1,53,UDP,UDP,140,2,2.0,0.06,Normal,"Standard enterprise internal DNS query",None`
+    );
+  } else if (i < 35) {
+    // Initial Access / C2 Beaconing (40 - 70s)
+    dnsRows.push(
+      `${ts},172.16.8.22,${52000 + (i % 20)},198.51.100.53,53,UDP,UDP,850,8,2.0,0.42,Command & Control,"Periodic low-jitter DNS check-in to external nameserver 198.51.100.53",T1071.004`
+    );
+  } else {
+    // Exfiltration Surge (70 - 120s)
+    dnsRows.push(
+      `${ts},172.16.8.22,${52000 + (i % 20)},198.51.100.53,53,UDP,UDP,${42000 + i * 800},${240 + i * 4},2.0,0.89,Exfiltration,"Covert DNS TXT tunnel transmitting encoded database chunks",T1048.003`
+    );
+  }
 }
 
 const csvContent = csvHeader + dnsRows.join('\n');
@@ -185,24 +232,26 @@ fs.writeFileSync(path.join(publicSampleDir, 'sample_3_c2_dns_tunnel_exfiltration
 console.log('✓ Generated sample_3_c2_dns_tunnel_exfiltration.csv (%d rows)', dnsRows.length);
 
 // ── 5. Generate Sample 4: SSH Brute Force Credential Spray (.csv) ──
-// Scenario: External IP 91.240.118.172 spraying SSH logins against Bastion 10.20.1.10:22
-
 const sshRows = [];
-for (let i = 0; i < 90; i++) {
+for (let i = 0; i < 60; i++) {
   const ts = new Date(1718000000000 + i * 2000).toISOString().replace('T', ' ').slice(0, 19);
-  const isAttack = i >= 25;
-  const bytes = isAttack ? 32000 + (i * 850) : 2100;
-  const pkts = isAttack ? 180 + (i * 5) : 18;
-  const prob = isAttack ? Number(Math.min(0.92, 0.52 + (i - 25) * 0.016).toFixed(3)) : 0.05;
-  const stage = isAttack ? (i > 55 ? 'Initial Access' : 'Reconnaissance') : 'Normal';
-  const reason = isAttack
-    ? 'High-velocity SSH authentication failure storm probing root and admin accounts'
-    : 'Standard authorized SSH key exchange session';
-  const techId = isAttack ? 'T1110.001' : 'None';
-
-  sshRows.push(
-    `${ts},91.240.118.172,${41000 + (i % 100)},10.20.1.10,22,TCP,SYN PSH,${bytes},${pkts},2.0,${prob},${stage},"${reason}",${techId}`
-  );
+  
+  if (i < 20) {
+    // Normal Baseline
+    sshRows.push(
+      `${ts},10.20.1.50,49152,10.20.1.10,22,TCP,ACK,2100,14,2.0,0.05,Normal,"Authorized administrator SSH session",None`
+    );
+  } else if (i < 35) {
+    // Recon / Port Probes
+    sshRows.push(
+      `${ts},91.240.118.172,${41000 + i},10.20.1.10,22,TCP,SYN,340,3,2.0,0.38,Reconnaissance,"Slow rate SSH port verification probe",T1046`
+    );
+  } else {
+    // Aggressive Brute Force Storm
+    sshRows.push(
+      `${ts},91.240.118.172,${41000 + i},10.20.1.10,22,TCP,SYN PSH,${28000 + i * 600},${180 + i * 5},2.0,0.88,Initial Access,"High-velocity dictionary credential stuffing storm against root/admin accounts",T1110.001`
+    );
+  }
 }
 
 const sshContent = csvHeader + sshRows.join('\n');
@@ -210,6 +259,4 @@ fs.writeFileSync(path.join(rootSampleDir, 'sample_4_ssh_bruteforce_auth_spray.cs
 fs.writeFileSync(path.join(publicSampleDir, 'sample_4_ssh_bruteforce_auth_spray.csv'), sshContent);
 console.log('✓ Generated sample_4_ssh_bruteforce_auth_spray.csv (%d rows)', sshRows.length);
 
-console.log('\nAll 4 sample capture files generated successfully in:');
-console.log('1. Root: %s', rootSampleDir);
-console.log('2. Public Web: %s', publicSampleDir);
+console.log('\nAll 4 sample capture files generated with realistic multi-stage progression.');
