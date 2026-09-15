@@ -24,6 +24,7 @@ export function GoogleTranslate({
           new window.google.translate.TranslateElement(
             {
               pageLanguage: "en",
+              includedLanguages: "en,hi,bn,te,mr,ta,ur,gu,kn,ml,pa,or,as",
               autoDisplay: false,
             },
             id
