@@ -1,0 +1,28 @@
+{
+  "sensor_id": "edge-sensor-alpha-01",
+  "version": "1.0.0",
+  "description": "Aegis Vantage Edge Sensor Agent for distributed network perimeter monitoring",
+  "pipeline": {
+    "window_seconds": 2.0,
+    "feature_dimensions": 54,
+    "idle_flow_timeout_seconds": 60.0,
+    "active_flow_timeout_seconds": 120.0
+  },
+  "upstream": {
+    "enabled": false,
+    "url": "http://localhost:5000/api/demonstration/analyze",
+    "batch_size": 5,
+    "retry_attempts": 3
+  },
+  "logging": {
+    "local_ndjson_enabled": true,
+    "log_file": "telemetry_edge.ndjson",
+    "max_log_size_mb": 50
+  },
+  "triage_thresholds": {
+    "entropy_recon_threshold": 3.0,
+    "syn_flood_ratio_threshold": 0.70,
+    "auth_port_ratio_threshold": 0.40,
+    "exfiltration_byte_rate_threshold": 80000.0
+  }
+}
