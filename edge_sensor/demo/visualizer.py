@@ -79,7 +79,7 @@ class TerminalVisualizer:
         out = []
         out.append(f"{BG_BLUE}{WHITE}{BOLD}  AEGIS VANTAGE :: DISTRIBUTED EDGE SENSOR AGENT  {RESET}  {DIM}ID:{RESET} {CYAN}{self.sensor_id}{RESET} | {DIM}MODE:{RESET} {GREEN}{self.mode}{RESET}")
         out.append(f"{DIM}Uptime: {elapsed:05.1f}s | Ingress Rate: {pkt_rate:6.1f} pkts/s | Throughput: {kb_rate:7.2f} KB/s | Active Sessions: {len(active_flows)}{RESET}")
-        out.append(f"{CYAN}{'─' * 78}{RESET}")
+        out.append(f"{CYAN}{'-' * 78}{RESET}")
 
         # ── 1. Ingress Packet Stream (Stage 1) ──────────────────────
         out.append(f"{BOLD}[STAGE 1: PACKET INGRESS & TAP]{RESET} {DIM}Latest Dissected Wire Frames:{RESET}")
@@ -87,8 +87,8 @@ class TerminalVisualizer:
             flag_str = f"{YELLOW}{p.tcp_flags}{RESET}" if p.tcp_flags else f"{DIM}N/A{RESET}"
             proto_color = GREEN if p.protocol == "TCP" else CYAN
             out.append(
-                f"  {DIM}▸{RESET} {proto_color}{p.protocol:4s}{RESET} "
-                f"{p.src_ip:>15s}:{p.src_port:<5d} → {p.dst_ip:>15s}:{p.dst_port:<5d} "
+                f"  {DIM}>{RESET} {proto_color}{p.protocol:4s}{RESET} "
+                f"{p.src_ip:>15s}:{p.src_port:<5d} -> {p.dst_ip:>15s}:{p.dst_port:<5d} "
                 f"{p.wire_len:4d}B  [{flag_str:10s}]"
             )
 
@@ -99,9 +99,11 @@ class TerminalVisualizer:
         sorted_flows = sorted(active_flows, key=lambda x: x.total_packets, reverse=True)[:4]
         for f in sorted_flows:
             state_color = GREEN if f.tcp_state == "ESTABLISHED" else RED if f.tcp_state == "RESET" else YELLOW
+            src_str = f"{f.src_ip}:{f.src_port}"
+            dst_str = f"{f.dst_ip}:{f.dst_port}"
             out.append(
                 f"  {CYAN}{f.flow_id:<12s}{RESET} "
-                f"{f.src_ip}:{f.src_port:<15s} → {f.dst_ip}:{f.dst_port:<15s} "
+                f"{src_str:<21s} -> {dst_str:<21s} "
                 f"{f.protocol:<5s} {f.total_packets:<8d} {f.total_bytes:<8d} "
                 f"{state_color}{f.tcp_state}{RESET}"
             )
@@ -110,10 +112,10 @@ class TerminalVisualizer:
         pct = min(100, int(current_progress * 100))
         bar_len = 30
         filled = int((pct / 100.0) * bar_len)
-        bar = f"{GREEN}{'█' * filled}{DIM}{'░' * (bar_len - filled)}{RESET}"
+        bar = f"{GREEN}{'#' * filled}{DIM}{'-' * (bar_len - filled)}{RESET}"
 
         win_idx_str = f"#{self.windows_emitted}" if self.last_window else "#0"
-        out.append(f"\n{BOLD}[STAGE 3: TEMPORAL WINDOW AGGREGATOR (Δt = 2.0s)]{RESET} Window {CYAN}{win_idx_str}{RESET}")
+        out.append(f"\n{BOLD}[STAGE 3: TEMPORAL WINDOW AGGREGATOR (Delta-t = 2.0s)]{RESET} Window {CYAN}{win_idx_str}{RESET}")
         out.append(f"  Aggregating Buffer: [{bar}] {pct:3d}%  (Emitted Windows: {self.windows_emitted})")
 
         # ── 4. Extracted 54-D State Vector (Stage 4) ────────────────
@@ -150,9 +152,9 @@ class TerminalVisualizer:
                 out.append(f"    {DIM}Description:{RESET} {a.description}")
                 out.append(f"    {DIM}Edge Action:{RESET} {YELLOW}{a.recommended_edge_action}{RESET}")
         else:
-            out.append(f"  {GREEN}✓ Normal Baseline Operations{RESET} {DIM}— zero local heuristic violations detected.{RESET}")
+            out.append(f"  {GREEN}[OK] Normal Baseline Operations{RESET} {DIM}- zero local heuristic violations detected.{RESET}")
 
-        out.append(f"\n{CYAN}{'─' * 78}{RESET}")
+        out.append(f"\n{CYAN}{'-' * 78}{RESET}")
         out.append(f"{DIM}Press Ctrl+C to safely detach sensor agent.{RESET}")
 
         sys.stdout.write("\n".join(out) + "\n")
