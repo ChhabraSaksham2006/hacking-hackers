@@ -13,9 +13,10 @@ export function useSocket() {
     if (!user) return;
 
     if (!socketInstance) {
-      const serverUrl = import.meta.env['VITE_API_URL'];
-      
-      socketInstance = io(serverUrl || undefined, {
+      // By passing undefined, socket.io will connect to the same origin as the frontend.
+      // In production, Vercel will proxy this to the backend using the vercel.json rewrite rule,
+      // preserving the SameSite=Strict cookies.
+      socketInstance = io(undefined, {
         withCredentials: true,
         reconnection: true,
         reconnectionDelay: 1000,
