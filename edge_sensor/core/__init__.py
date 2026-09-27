@@ -8,6 +8,7 @@ from .flow_tracker import FlowTracker, FlowRecord
 from .feature_extractor import FeatureExtractor, TemporalWindow
 from .edge_sentinel import EdgeSentinel, TriageAlert
 from .telemetry_dispatcher import TelemetryDispatcher
+from .live_gateway import LiveEdgeGateway
 
 __all__ = [
     "PacketIngress",
@@ -19,4 +20,5 @@ __all__ = [
     "EdgeSentinel",
     "TriageAlert",
     "TelemetryDispatcher",
+    "LiveEdgeGateway",
 ]

@@ -73,21 +73,34 @@ edge_sensor/
 
 ## 4. Quick Start & Execution Modes
 
-### Mode A: Interactive Multi-Stage Attack Demonstration
-Launches an animated terminal dashboard demonstrating live traffic flowing through all 5 stages of the sensor agent:
+### Mode 1: Live External Device Gateway (Smartphone / Audience Demo)
+Allows any external phone or laptop connected to the same Wi-Fi / local network to interact directly with the sensor in real time:
+```bash
+python edge_sensor/run_sensor.py --mode live
+```
+1. The sensor agent automatically detects the host computer's LAN IP and hosts an interactive portal (e.g. `http://192.168.1.31:8888`).
+2. Anyone (judge, presenter, team member) opens that URL in their mobile browser.
+3. The sensor terminal immediately shows:
+   - **Device Ingress & Platform Detection**: Client IP, User-Agent (iPhone, Android, Windows, Mac), and socket status.
+   - **Real-Time Verification Logs**: Exact wire frames, timestamp, source port, destination port, payload bytes, and actions recorded to `live_ingress.log`.
+   - **Interactive Actions**: The mobile screen provides buttons to send Normal Traffic, trigger Reconnaissance Sweeps, surge privileged SMB/Auth ports (445/22), launch Exfiltration bursts, or inject a custom judge identification message.
+   - **Zero Dummy Data**: Every packet is parsed from a genuine TCP socket request, tracks real TCP state, slices into 2.0s windows, extracts genuine 54-D mathematical features, and triggers zero-latency triage alerts.
+
+### Mode 2: Multi-Stage Attack Simulation Visualizer
+Launches an animated terminal dashboard demonstrating simulated traffic flowing through all 5 stages of the sensor agent:
 ```bash
 python edge_sensor/run_sensor.py --mode demo --speed 2.0
 ```
-- Cycles through: Normal Enterprise Baseline $\to$ Reconnaissance Port Sweep $\to$ SMB EternalBlue Exploitation $\to$ Exfiltration.
+- Cycles through: Normal Enterprise Baseline -> Reconnaissance Port Sweep -> SMB EternalBlue Exploitation -> Exfiltration.
 - Displays live packet stream, top flow sessions, 2.0s window progress bar, 54-D vector values, and local triage alerts.
 
-### Mode B: Replay Real Binary PCAP Capture
+### Mode 3: Replay Real Binary PCAP Capture
 Feeds an actual binary `.pcap` capture through the edge sensor:
 ```bash
 python edge_sensor/run_sensor.py --mode pcap --file sample_captures/sample_2_ransomware_eternalblue_smb.pcap --speed 3.0
 ```
 
-### Mode C: Headless Telemetry Daemon (Production)
+### Mode 4: Headless Telemetry Daemon (Production)
 Streams 54-D temporal state windows and edge triage alerts to a local NDJSON log file or central REST endpoint:
 ```bash
 python edge_sensor/run_sensor.py --mode headless --output edge_sensor/telemetry.ndjson

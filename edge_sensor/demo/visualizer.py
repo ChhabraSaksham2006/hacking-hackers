@@ -67,7 +67,14 @@ class TerminalVisualizer:
             if len(self.recent_alerts) > 5:
                 self.recent_alerts = self.recent_alerts[-5:]
 
-    def render(self, active_flows: List[FlowRecord], current_progress: float = 0.0):
+    def render(
+        self,
+        active_flows: List[FlowRecord],
+        current_progress: float = 0.0,
+        gateway_url: Optional[str] = None,
+        connected_devices: Optional[List[dict]] = None,
+        recent_logs: Optional[List[str]] = None,
+    ):
         """Draws the live sensor telemetry frame."""
         elapsed = time.time() - self.start_time
         pkt_rate = self.total_packets / max(0.1, elapsed)
@@ -80,6 +87,31 @@ class TerminalVisualizer:
         out.append(f"{BG_BLUE}{WHITE}{BOLD}  AEGIS VANTAGE :: DISTRIBUTED EDGE SENSOR AGENT  {RESET}  {DIM}ID:{RESET} {CYAN}{self.sensor_id}{RESET} | {DIM}MODE:{RESET} {GREEN}{self.mode}{RESET}")
         out.append(f"{DIM}Uptime: {elapsed:05.1f}s | Ingress Rate: {pkt_rate:6.1f} pkts/s | Throughput: {kb_rate:7.2f} KB/s | Active Sessions: {len(active_flows)}{RESET}")
         out.append(f"{CYAN}{'-' * 78}{RESET}")
+
+        # ── 0. Live External Device Gateway & Ingress Verification Logs ─────────
+        if gateway_url:
+            out.append(f"{BOLD}[LIVE INGRESS GATEWAY]{RESET} Connect phone/laptop: {YELLOW}{BOLD}{gateway_url}{RESET}")
+            if connected_devices:
+                out.append(f"  {DIM}Connected External Devices ({len(connected_devices)}):{RESET}")
+                for dev in connected_devices[-3:]:
+                    dev_ip = dev.get("ip", "Unknown")
+                    dev_type = dev.get("device", "Unknown Device")
+                    reqs = dev.get("requests", 0)
+                    last_seen_sec = max(0, int(time.time() - dev.get("last_seen", time.time())))
+                    out.append(
+                        f"    {GREEN}*{RESET} {CYAN}{dev_ip:<15s}{RESET} | "
+                        f"{WHITE}{dev_type:<24s}{RESET} | "
+                        f"{DIM}Packets/Reqs:{RESET} {reqs:<4d} | "
+                        f"{DIM}Active:{RESET} {last_seen_sec}s ago"
+                    )
+            else:
+                out.append(f"  {DIM}Status: Waiting for remote device to navigate to {gateway_url}...{RESET}")
+
+            if recent_logs:
+                out.append(f"\n{BOLD}[LIVE INGRESS VERIFICATION LOGS]{RESET} {DIM}(Recorded in real-time -> live_ingress.log):{RESET}")
+                for log_line in recent_logs[-3:]:
+                    out.append(f"  {MAGENTA}>{RESET} {DIM}{log_line}{RESET}")
+            out.append(f"{CYAN}{'-' * 78}{RESET}")
 
         # ── 1. Ingress Packet Stream (Stage 1) ──────────────────────
         out.append(f"{BOLD}[STAGE 1: PACKET INGRESS & TAP]{RESET} {DIM}Latest Dissected Wire Frames:{RESET}")
