@@ -5,6 +5,8 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import { nitro } from "nitro/vite";
 
+import { fileURLToPath, URL } from "node:url";
+
 export default defineConfig({
   plugins: [
     tanstackStart({
@@ -18,6 +20,9 @@ export default defineConfig({
     }),
   ],
   resolve: {
+    alias: {
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
     dedupe: ["react", "react-dom", "@tanstack/react-router"],
   },
   server: {
