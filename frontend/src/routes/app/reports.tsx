@@ -109,7 +109,7 @@ function Reports() {
     }
 
     try {
-      const scopeLabel = `${segmentOrAlert} Â· ${isCustom ? "custom" : timeWindow.replace("last ", "")}`;
+      const scopeLabel = `${segmentOrAlert} · ${isCustom ? "custom" : timeWindow.replace("last ", "")}`;
       const res = await generateReport.mutateAsync({
         name: customName.trim() || undefined,
         scope: scopeLabel,
@@ -263,7 +263,7 @@ function Reports() {
                 <optgroup label="Network Segments">
                   {segments.map((s) => (
                     <option key={s._id || s.name} value={s.name}>
-                      {s.name} ({s.hosts} hosts Â· {s.trafficVolume} flows/s)
+                      {s.name} ({s.hosts} hosts · {s.trafficVolume} flows/s)
                     </option>
                   ))}
                   {segments.length === 0 && (
@@ -379,7 +379,7 @@ function Reports() {
                       Incident report â€” {preview?.segmentOrAlert || segmentOrAlert}
                     </p>
                     <p className="mono mt-1 text-[12px] text-fog">
-                      {formatDate(preview?.timeWindow?.start)} â†’ {formatDate(preview?.timeWindow?.end)}
+                      {formatDate(preview?.timeWindow?.start)} → {formatDate(preview?.timeWindow?.end)}
                     </p>
                   </div>
                   {preview?.metrics?.riskLevel && (
@@ -426,7 +426,7 @@ function Reports() {
                           className="flex items-center justify-between rounded bg-void-800/80 px-2 py-1"
                         >
                           <span className="truncate">
-                            {f.src} â†’ {f.dst}
+                            {f.src} → {f.dst}
                           </span>
                           <span
                             className={`ml-2 font-semibold ${

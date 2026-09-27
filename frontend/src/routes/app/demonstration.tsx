@@ -259,7 +259,7 @@ function DemonstrationPage() {
 
                   <div className="mt-3 flex items-center justify-between border-t border-fog-deep/30 pt-2 text-[10px] text-fog">
                     <span className="mono">{preset.duration}</span>
-                    <span className="text-teal font-medium">Run Pass â†’</span>
+                    <span className="text-teal font-medium">Run Pass →</span>
                   </div>
                 </button>
               );
@@ -570,7 +570,7 @@ function DemonstrationPage() {
                         Phase {idx + 1}: {stage.stage}
                       </span>
                       <span className="mono text-[11px] text-fog">
-                        {stage.startOffset} â†’ {stage.endOffset}
+                        {stage.startOffset} → {stage.endOffset}
                       </span>
                     </div>
 
@@ -671,7 +671,7 @@ function DemonstrationPage() {
                             >
                               <td className="py-2.5">
                                 <div className="text-[12px] font-medium text-paper">
-                                  {flow.src} â†’ {flow.dst}
+                                  {flow.src} → {flow.dst}
                                 </div>
                                 <span className="text-[10px] text-fog">{flow.timestamp}</span>
                               </td>
@@ -711,7 +711,7 @@ function DemonstrationPage() {
                                   }}
                                   className="text-[11px] text-teal hover:underline"
                                 >
-                                  Inspect â†’
+                                  Inspect →
                                 </button>
                               </td>
                             </tr>

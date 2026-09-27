@@ -63,7 +63,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <Link
             to="/app/dashboard"
             className="flex h-14 items-center gap-3 overflow-hidden px-[18px]"
-            title="Flow दृष्टि — Dashboard"
+            title="Flow दृष्टि Dashboard"
           >
             <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-white p-1 shadow-sm ring-1 ring-black/10 transition-transform group-hover/rail:scale-105">
               <img

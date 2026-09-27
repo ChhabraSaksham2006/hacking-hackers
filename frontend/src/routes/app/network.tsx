@@ -100,7 +100,7 @@ function NetworkState() {
                 className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono text-amber border border-amber/40 rounded bg-amber/10 hover:bg-amber/20 transition-colors"
               >
                 <Radio className="size-3 text-amber animate-pulse" />
-                Resume Live Stream â†’
+                Resume Live Stream →
               </button>
             )}
             <button
@@ -216,7 +216,7 @@ function NetworkState() {
               <span className="mono text-fog">Window #1750 (Baseline)</span>
               <div className="flex items-center gap-2">
                 <span className="mono text-paper font-semibold">Window #{currentWindow}</span>
-                <span className="text-fog">Â·</span>
+                <span className="text-fog">·</span>
                 <span className={cn("mono font-semibold", overallState === "critical" ? "text-crimson" : overallState === "watch" ? "text-amber" : "text-teal")}>
                   {currentProb} Risk
                 </span>
@@ -287,7 +287,7 @@ function NetworkState() {
             {hostDetail?.recentFlows && hostDetail.recentFlows.length > 0 ? (
               hostDetail.recentFlows.map((rf: any, idx: number) => (
                 <li key={idx} className="flex items-center justify-between rounded bg-paper/5 p-2">
-                  <span>â†’ {rf.dst}</span>
+                  <span>→ {rf.dst}</span>
                   <span className="text-paper">{typeof rf.bytes === 'number' ? `${(rf.bytes / 1024).toFixed(1)} KB` : rf.bytes}</span>
                 </li>
               ))
@@ -300,7 +300,7 @@ function NetworkState() {
             to="/app/explorer"
             className="mt-6 inline-block text-[13px] font-medium text-teal hover:underline"
           >
-            Investigate host in flow explorer â†’
+            Investigate host in flow explorer →
           </Link>
         </aside>
       ) : null}

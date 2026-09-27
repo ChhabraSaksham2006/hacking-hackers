@@ -161,7 +161,7 @@ export async function getReportPreview(
 
   return {
     reportName: `incident-report-${scopeSegment.replace(/\s+/g, '-').toLowerCase()}`,
-    scope: `${scopeSegment} Â· ${params.timeWindow || '24h'}`,
+    scope: `${scopeSegment} · ${params.timeWindow || '24h'}`,
     segmentOrAlert: scopeSegment,
     timeWindow: { start, end },
     orgName,
@@ -562,7 +562,7 @@ export function buildPdfReport(data: ReportDataPayload): Promise<Buffer> {
         .font('Helvetica')
         .fontSize(7)
         .fillColor(slateMuted)
-        .text('Flow दृष्टि Autonomous NDR Platform Â· Certified Cryptographic Audit Trail', margin, footerY + 8);
+        .text('Flow दृष्टि Autonomous NDR Platform · Certified Cryptographic Audit Trail', margin, footerY + 8);
 
       doc
         .font('Helvetica-Bold')

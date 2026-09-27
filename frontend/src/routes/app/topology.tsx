@@ -184,7 +184,7 @@ function Topology() {
                   </span>
                 </div>
                 <p className="text-[11px] text-fog">
-                  Active window index: <strong className="text-paper font-mono">W#{modelIntel.windowIndex}</strong> Â· Inference Source: <strong className="text-teal font-mono">{modelIntel.inferenceSource}</strong>
+                  Active window index: <strong className="text-paper font-mono">W#{modelIntel.windowIndex}</strong> · Inference Source: <strong className="text-teal font-mono">{modelIntel.inferenceSource}</strong>
                 </p>
               </div>
             </div>
@@ -650,7 +650,7 @@ function Topology() {
                             className="font-mono text-[10px] font-semibold"
                             fill={isThreat ? "#f43f5e" : isWatch ? "#fbbf24" : "#2dd4bf"}
                           >
-                            {link.throughput} {link.modelScore !== undefined ? `Â· P:${Math.round(link.modelScore * 100)}%` : ""}
+                            {link.throughput} {link.modelScore !== undefined ? `· P:${Math.round(link.modelScore * 100)}%` : ""}
                           </text>
                         </g>
                       </g>
@@ -737,7 +737,7 @@ function Topology() {
                           className="font-mono text-[10px]"
                           fill="#94a3b8"
                         >
-                          {seg.hosts} hosts Â· {seg.throughputMbps}M
+                          {seg.hosts} hosts · {seg.throughputMbps}M
                         </text>
 
                         {/* Neural Model Probability Badge */}
@@ -866,7 +866,7 @@ function Topology() {
                             {s.name}
                           </p>
                           <p className="mt-1 text-[12px] font-mono text-fog">
-                            {s.hosts} hosts Â· {s.trafficVolume}% estate share
+                            {s.hosts} hosts · {s.trafficVolume}% estate share
                           </p>
                         </div>
                       </div>
@@ -1036,7 +1036,7 @@ function Topology() {
                     <RiskBadge state={deepDive.segment.state} />
                   </div>
                   <p className="mt-1 text-[12px] text-fog">
-                    {deepDive.segment.hosts} physical endpoints Â· Last incident: {deepDive.segment.lastIncident}
+                    {deepDive.segment.hosts} physical endpoints · Last incident: {deepDive.segment.lastIncident}
                   </p>
                 </div>
 
@@ -1170,7 +1170,7 @@ function Topology() {
                             className="flex items-center justify-between rounded bg-void-900/60 px-2 py-1 text-[10px] font-mono border border-fog-deep/20"
                           >
                             <span className="text-paper truncate max-w-[170px]" title={`${fl.src} -> ${fl.dst}`}>
-                              {fl.src.split(":")[0]} â†’ {fl.dst}
+                              {fl.src.split(":")[0]} → {fl.dst}
                             </span>
                             <span className="text-fog">{fl.proto} [{fl.flags}]</span>
                             <span className={cn("font-bold", fl.prob >= 0.7 ? "text-crimson" : "text-amber")}>
@@ -1251,7 +1251,7 @@ function Topology() {
                           <span className="font-mono text-[11px] text-fog">({host.ip})</span>
                         </div>
                         <p className="text-[11px] text-fog">
-                          {host.role} Â· <span className="text-fog-deep">{host.os}</span>
+                          {host.role} · <span className="text-fog-deep">{host.os}</span>
                         </p>
                       </div>
 
@@ -1308,7 +1308,7 @@ function Topology() {
                       to="/app/alerts"
                       className="font-mono text-[11px] text-fog hover:text-paper"
                     >
-                      View in Alerts Kanban â†’
+                      View in Alerts Kanban →
                     </Link>
                   </div>
                   <div className="mt-2.5 flex flex-col gap-2">
@@ -1319,7 +1319,7 @@ function Topology() {
                       >
                         <div className="flex items-center justify-between">
                           <span className="font-mono text-[12px] font-bold text-crimson">
-                            {a.alertId} Â· {a.host}
+                            {a.alertId} · {a.host}
                           </span>
                           <RiskBadge state={a.state} />
                         </div>

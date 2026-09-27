@@ -99,7 +99,7 @@ function SecurityPage() {
       </main>
 
       <footer className="border-t border-fog-deep/40 px-6 py-8 text-center text-xs text-fog">
-        Flow दृष्टि Security Office Â· security@aegis-vantage.internal Â· PGP Key Fingerprint: 4F92 B109 82E1 773C
+        Flow दृष्टि Security Office · security@aegis-vantage.internal · PGP Key Fingerprint: 4F92 B109 82E1 773C
       </footer>
     </div>
   );

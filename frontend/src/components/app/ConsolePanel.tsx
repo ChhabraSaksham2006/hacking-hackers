@@ -447,8 +447,8 @@ Inquire below about current attack probability, model confidence, flow/packet fe
             </div>
             <p className="text-[11px] text-fog">
               {liveState
-                ? `Window #${liveState.windowIndex} Â· ${liveState.stage} Â· ${(liveState.probability * 100).toFixed(0)}% Risk`
-                : "Active Stream Â· CSE-CIC-IDS2018 Infiltration"}
+                ? `Window #${liveState.windowIndex} · ${liveState.stage} · ${(liveState.probability * 100).toFixed(0)}% Risk`
+                : "Active Stream · CSE-CIC-IDS2018 Infiltration"}
             </p>
           </div>
         </div>
@@ -628,7 +628,7 @@ Inquire below about current attack probability, model confidence, flow/packet fe
           </button>
         </form>
         <div className="mt-1.5 flex items-center justify-between text-[10px] text-fog mono">
-          <span>Grounded RAG Â· Zero-key offline engine enabled</span>
+          <span>Grounded RAG · Zero-key offline engine enabled</span>
           <span>Esc to minimize</span>
         </div>
       </div>

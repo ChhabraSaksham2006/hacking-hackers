@@ -35,404 +35,7 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
   head: pageHead(
-    "Flow à¤¦à¥ƒà¤·à¥à¤Ÿà¤¿ â€” Cyber World Model Defense",
-    "Deep hybrid world model (SparseRSSM + TFCNet) forecasting attacker lateral movement and C2 progression before kill-chain completion.",
-  ),
-  component: Landing,
-});
-
-type DesignStrategy = "glass" | "minimalism" | "neomorphism";
-type SectionId = "hero" | "comparison" | "architecture" | "testimonials" | "cta";
-
-const SECTIONS: { id: SectionId; label: string; number: string }[] = [
-  { id: "hero", label: "Neural Horizon", number: "01" },
-  { id: "comparison", label: "Detection Gap", number: "02" },
-  { id: "architecture", label: "World Model", number: "03" },
-  { id: "testimonials", label: "SOC Intel", number: "04" },
-  { id: "cta", label: "Deployment", number: "05" },
-];
-
-function Landing() {
-  const [strategy, setStrategy] = useState<DesignStrategy>("glass");
-  const [activeArchTab, setActiveArchTab] = useState<"rssm" | "tfcnet" | "fusion" | "features">("rssm");
-  const [activeSection, setActiveSection] = useState<SectionId>("hero");
-  const [focusModeEnabled, setFocusModeEnabled] = useState<boolean>(true);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
-
-  // Dynamic styling based on design strategy + hover enlargement
-  const cardStyleClass =
-    strategy === "glass"
-      ? "strategy-glass rounded-2xl p-4 sm:p-6 transition-all duration-400 ease-out hover:border-teal/60 hover:shadow-[0_16px_48px_rgba(45,212,191,0.18)] sm:hover:scale-[1.02] sm:hover:-translate-y-1"
-      : strategy === "minimalism"
-      ? "strategy-minimal rounded-lg p-4 sm:p-6 transition-all duration-300 ease-out hover:border-paper/90 hover:shadow-lg sm:hover:scale-[1.015]"
-      : "strategy-neomorph rounded-2xl p-4 sm:p-6 transition-all duration-400 ease-out hover:shadow-[9px_9px_22px_#05080e,-9px_-9px_22px_#1e293f] sm:hover:scale-[1.02]";
-
-  const buttonPrimaryClass =
-    strategy === "glass"
-      ? "rounded-xl bg-teal px-5 py-3 text-sm font-semibold text-void-900 shadow-lg shadow-teal/25 transition-all duration-300 hover:bg-teal/90 hover:shadow-teal/50 hover:scale-[1.04] hover:-translate-y-0.5 active:scale-[0.98]"
-      : strategy === "minimalism"
-      ? "rounded-none border border-teal bg-teal/10 px-5 py-3 font-mono text-sm font-bold text-teal transition-all duration-200 hover:bg-teal hover:text-void-900 hover:shadow-[0_0_20px_rgba(45,212,191,0.4)]"
-      : "rounded-xl bg-void-800 px-5 py-3 font-mono text-sm font-semibold text-teal shadow-[4px_4px_10px_#070a12,-4px_-4px_10px_#1e283d] transition-all duration-300 hover:scale-[1.03] hover:shadow-[inset_3px_3px_6px_#070a12,inset_-3px_-3px_6px_#1e283d]";
-
-  const buttonSecondaryClass =
-    strategy === "glass"
-      ? "rounded-xl border border-fog-deep/60 bg-void-800/60 backdrop-blur-md px-5 py-3 text-sm font-semibold text-paper transition-all duration-300 hover:bg-void-700/80 hover:border-teal/50 hover:scale-[1.03]"
-      : strategy === "minimalism"
-      ? "rounded-none border border-fog-deep bg-void-900 px-5 py-3 font-mono text-sm font-medium text-paper transition-all duration-200 hover:bg-void-800 hover:border-paper"
-      : "rounded-xl bg-void-800 px-5 py-3 font-mono text-sm font-medium text-paper shadow-[4px_4px_10px_#070a12,-4px_-4px_10px_#1e283d] transition-all duration-300 hover:scale-[1.02] hover:shadow-[inset_2px_2px_5px_#070a12,inset_-2px_-2px_5px_#1e283d]";
-
-  // Scroll spotlight observer: focus shifts to the section currently in view
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + window.innerHeight * 0.42;
-
-      for (const section of SECTIONS) {
-        const el = document.getElementById(section.id);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            setActiveSection(section.id);
-            break;
-          }
-        }
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // initial check
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const scrollToSection = (id: SectionId) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-  };
-
-  const getSectionFocusClass = (id: SectionId) => {
-    if (!focusModeEnabled) return "transition-all duration-500";
-    return activeSection === id
-      ? "scroll-spotlight-active relative"
-      : "scroll-spotlight-dimmed relative";
-  };
-
-  return (
-    <div className="relative min-h-screen selection:bg-teal selection:text-void-900 w-full max-w-[100vw] overflow-x-hidden bg-void-900">
-      {/* â”€â”€ Background Dot Effect â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <BackgroundDotEffect
-        dotColor="rgba(148, 163, 184, 0.22)"
-        glowColor="rgba(45, 212, 191, 0.85)"
-        spacing={30}
-        dotSize={1.4}
-      />
-
-      {/* â”€â”€ Floating Right Rail: Scroll Focus Navigator â”€â”€â”€â”€ */}
-      <div className="fixed right-4 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col items-end gap-3 pointer-events-auto">
-        <div className="flex flex-col items-center gap-2.5 rounded-full border border-teal/30 bg-void-900/85 p-2 backdrop-blur-xl shadow-2xl shadow-teal/10">
-          {SECTIONS.map((sec) => {
-            const isFocused = activeSection === sec.id;
-            return (
-              <button
-                key={sec.id}
-                type="button"
-                onClick={() => scrollToSection(sec.id)}
-                title={`${sec.number}. ${sec.label}`}
-                className="group relative flex items-center justify-center p-1.5 focus:outline-none"
-              >
-                {/* Floating tooltip label on hover */}
-                <span className="pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded-md border border-teal/40 bg-void-950/90 px-2 py-0.5 font-mono text-[11px] text-paper opacity-0 shadow-lg backdrop-blur-md transition-all group-hover:opacity-100 group-hover:-translate-x-1">
-                  <span className="text-teal font-bold mr-1.5">{sec.number}</span>
-                  {sec.label}
-                </span>
-
-                {/* Focus dot with animated ripple */}
-                <span
-                  className={cn(
-                    "rounded-full transition-all duration-300",
-                    isFocused
-                      ? "size-3 bg-teal shadow-[0_0_12px_#2dd4bf] scale-125 ring-2 ring-teal/40"
-                      : "size-2 bg-fog-deep/80 group-hover:bg-paper group-hover:scale-110"
-                  )}
-                />
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Scroll Focus Mode Toggle Pill */}
-        <button
-          type="button"
-          onClick={() => setFocusModeEnabled(!focusModeEnabled)}
-          className={cn(
-            "flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[10px] backdrop-blur-md transition-all shadow-md",
-            focusModeEnabled
-              ? "border-teal/50 bg-teal/15 text-teal shadow-teal/20"
-              : "border-fog-deep/50 bg-void-900/80 text-fog hover:text-paper"
-          )}
-        >
-          <Crosshair className={cn("size-3", focusModeEnabled && "animate-spin-slow text-teal")} />
-          <span>Spotlight {focusModeEnabled ? "ON" : "OFF"}</span>
-        </button>
-      </div>
-
-      {/* â”€â”€ Top Strategy & Navigation Bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <header className="sticky top-0 z-50 border-b border-fog-deep/40 backdrop-blur-xl bg-void-900/90">
-        <div className="mx-auto flex h-16 max-w-[1360px] items-center justify-between px-4 sm:px-6 md:px-12">
-          {/* Brand Logo & Name */}
-          <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
-            <div className="flex size-8 sm:size-9 items-center justify-center rounded-lg bg-white p-1 shadow-sm ring-1 ring-black/10 transition-transform group-hover:scale-105">
-              <img src="/flow-drishti-icon.png" alt="Flow à¤¦à¥ƒà¤·à¥à¤Ÿà¤¿" className="size-6 sm:size-7 object-contain" />
-            </div>
-            <span className="font-display text-base font-bold tracking-tight text-paper group-hover:text-teal transition-colors">
-              Flow <span className="text-teal font-sans">à¤¦à¥ƒà¤·à¥à¤Ÿà¤¿</span>
-            </span>
-            <span className="hidden rounded-full border border-teal/40 bg-teal/10 px-2 py-0.5 font-mono text-[10px] text-teal sm:inline-block shadow-xs shadow-teal/30">
-              wm-v4.2.1
-            </span>
-          </Link>
-
-          {/* Center (Desktop): Google Translate & Strategy Badge */}
-          <div className="hidden md:flex items-center gap-3">
-            <GoogleTranslate id="google_translate_landing" />
-            <div className="hidden lg:flex items-center gap-2 rounded-full border border-teal/40 bg-teal/10 px-3 py-1 backdrop-blur-xl shadow-xs shadow-teal/30">
-              <span className="size-2 rounded-full bg-teal animate-pulse" />
-              <span className="font-mono text-[11px] font-semibold text-teal tracking-wide">
-                Cyber Glass
-              </span>
-            </div>
-          </div>
-
-          {/* Desktop Navigation CTA */}
-          <nav className="hidden md:flex items-center gap-3">
-            <Link
-              to="/docs"
-              className="font-mono text-[13px] text-fog hover:text-teal transition-colors px-2 py-1"
-            >
-              Whitepaper
-            </Link>
-            <Link
-              to="/login"
-              className="rounded-lg border border-fog-deep/60 px-3.5 py-1.5 font-mono text-[13px] text-paper hover:bg-void-700 transition-all hover:scale-105"
-            >
-              Log in
-            </Link>
-            <Link
-              to="/app/dashboard"
-              className="rounded-lg bg-teal px-3.5 py-1.5 font-mono text-[13px] font-semibold text-void-900 hover:bg-teal/90 transition-all shadow-md shadow-teal/30 hover:scale-105 active:scale-95"
-            >
-              Live Console
-            </Link>
-          </nav>
-
-          {/* Mobile Right Controls: Live Console & Hamburger Menu */}
-          <div className="flex md:hidden items-center gap-2">
-            <Link
-              to="/app/dashboard"
-              className="rounded-lg bg-teal px-2.5 py-1 font-mono text-xs font-semibold text-void-900 shadow-sm"
-            >
-              Console
-            </Link>
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="flex size-9 items-center justify-center rounded-lg border border-fog-deep/50 bg-void-800 text-fog hover:text-paper focus:outline-none"
-              aria-label="Toggle Navigation Menu"
-            >
-              {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Dropdown Drawer */}
-        {mobileMenuOpen && (
-          <div className="md:hidden border-t border-fog-deep/40 bg-void-950/95 px-5 py-4 backdrop-blur-2xl transition-all animate-in slide-in-from-top-2 duration-200">
-            <div className="flex flex-col gap-3">
-              <div className="pb-2 border-b border-fog-deep/30">
-                <GoogleTranslate id="google_translate_mobile" />
-              </div>
-              <Link
-                to="/docs"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-between py-2 font-mono text-sm text-paper hover:text-teal"
-              >
-                <span>Whitepaper & Technical Docs</span>
-                <ChevronRight className="size-4 text-fog" />
-              </Link>
-              <Link
-                to="/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-between py-2 font-mono text-sm text-paper hover:text-teal"
-              >
-                <span>Log in to SOC Console</span>
-                <ChevronRight className="size-4 text-fog" />
-              </Link>
-              <Link
-                to="/security"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-between py-2 font-mono text-sm text-paper hover:text-teal"
-              >
-                <span>Security Architecture</span>
-                <ChevronRight className="size-4 text-fog" />
-              </Link>
-              <Link
-                to="/app/dashboard"
-                onClick={() => setMobileMenuOpen(false)}
-                className="mt-2 flex items-center justify-center rounded-xl bg-teal py-2.5 font-mono text-sm font-semibold text-void-900 shadow-md shadow-teal/30"
-              >
-                Launch Live SOC Console â†’
-              </Link>
-            </div>
-          </div>
-        )}
-      </header>
-
-      {/* â”€â”€ Main Content Container â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <main className="relative z-10 mx-auto max-w-[1360px] w-full min-w-0 px-4 py-8 sm:px-6 sm:py-10 md:px-12">
-        {/* â”€â”€ 01. Hero Section with 3D Three.js Manifold â”€â”€â”€â”€â”€ */}
-        <section
-          id="hero"
-          className={cn(
-            "grid min-w-0 w-full items-center gap-8 sm:gap-10 py-4 sm:py-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:py-14 scroll-mt-20",
-            getSectionFocusClass("hero")
-          )}
-        >
-          <div className="min-w-0 w-full">
-            {/* Tag / Category Badge with animated glow */}
-            <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-teal/50 bg-teal/10 px-3 py-1.5 text-[11px] sm:text-xs font-mono text-teal backdrop-blur-md shadow-[0_0_15px_rgba(45,212,191,0.15)] hover:scale-105 transition-transform">
-              <Sparkles className="size-3.5 animate-pulse text-teal shrink-0" />
-              <span className="tracking-wide truncate sm:overflow-visible">Cyber World Model Â· 20.0s Intervention Margin</span>
-            </div>
-
-            <h1 className="mt-5 sm:mt-6 font-display text-3xl font-extrabold leading-[1.14] tracking-tight text-paper sm:text-5xl lg:text-6xl break-words">
-              Forecasts attacker progression{" "}
-              <span className="block mt-1 text-transparent bg-clip-text bg-gradient-to-r from-teal via-emerald-300 to-teal animate-text-shimmer">
-                before compromise completes
-              </span>
-            </h1>
-
-            <p className="mt-4 sm:mt-6 max-w-[62ch] text-sm sm:text-base lg:text-lg leading-relaxed text-fog break-words">
-              Static classifiers inspect isolated packets after damage is done. Flow दृष्टि runs a continuous temporal world model over 54-dimensional network telemetry, projecting latent kill-chain trajectories forward to catch lateral movement <strong className="text-paper">20 seconds before</strong> domain takeover.
-            </p>
-
-            {/* CTA Buttons */}
-            <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full">
-              <Link to="/app/dashboard" className={cn(buttonPrimaryClass, "text-center w-full sm:w-auto")}>
-                Launch Live SOC Console â†’
-              </Link>
-              <Link to="/docs" className={cn(buttonSecondaryClass, "text-center w-full sm:w-auto")}>
-                Read Model Whitepaper
-              </Link>
-            </div>
-
-            {/* Metric Strip with responsive columns & font sizes */}
-            <div className="mt-8 sm:mt-12 grid grid-cols-3 gap-2 sm:gap-4 border-t border-fog-deep/40 pt-6 w-full min-w-0">
-              <div className="group cursor-default p-1.5 sm:p-2 rounded-xl transition-all duration-300 hover:bg-void-800/40 min-w-0">
-                <p className="font-mono text-lg sm:text-2xl lg:text-3xl font-extrabold text-teal text-glow-teal truncate">
-                  20.0s
-                </p>
-                <p className="mt-1 text-[10px] sm:text-xs font-mono text-fog group-hover:text-paper transition-colors leading-tight truncate">
-                  Early Warning
-                </p>
-              </div>
-              <div className="group cursor-default p-1.5 sm:p-2 rounded-xl transition-all duration-300 hover:bg-void-800/40 min-w-0">
-                <p className="font-mono text-lg sm:text-2xl lg:text-3xl font-extrabold text-paper truncate">
-                  94.3%
-                </p>
-                <p className="mt-1 text-[10px] sm:text-xs font-mono text-fog group-hover:text-paper transition-colors leading-tight truncate">
-                  CIC-IDS F1
-                </p>
-              </div>
-              <div className="group cursor-default p-1.5 sm:p-2 rounded-xl transition-all duration-300 hover:bg-void-800/40 min-w-0">
-                <p className="font-mono text-lg sm:text-2xl lg:text-3xl font-extrabold text-amber text-glow-amber truncate">
-                  0.014
-                </p>
-                <p className="mt-1 text-[10px] sm:text-xs font-mono text-fog group-hover:text-paper transition-colors leading-tight truncate">
-                  False Positive
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* 3D Three.js Interactive Canvas Container with responsive height */}
-          <div className="relative min-w-0 w-full flex items-center justify-center">
-            <div
-              className={cn(
-                "relative h-[300px] w-full max-w-full overflow-hidden sm:h-[420px] lg:h-[510px] group transition-all duration-500",
-                cardStyleClass
-              )}
-            >
-              {/* Floating diagnostic overlay badges */}
-              <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-10 flex items-center gap-1.5 sm:gap-2 rounded-lg border border-teal/40 bg-void-900/90 px-2.5 py-1 sm:px-3 sm:py-1.5 backdrop-blur-md shadow-lg shadow-teal/15 group-hover:border-teal transition-colors">
-                <span className="size-2 rounded-full bg-teal animate-ping" />
-                <span className="font-mono text-[10px] sm:text-[11px] text-paper font-semibold">
-                  54-D State Manifold (PyTorch)
-                </span>
-              </div>
-
-              <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 z-10 rounded-lg border border-fog-deep/40 bg-void-900/85 px-2.5 py-1 sm:px-3 sm:py-1.5 font-mono text-[10px] sm:text-[11px] text-fog backdrop-blur-md shadow-md group-hover:text-paper transition-colors">
-                <span>Drag to Rotate Â· Mouse Parallax</span>
-              </div>
-
-              {/* Three.js Canvas */}
-              <ThreeManifold themeStrategy={strategy} />
-            </div>
-          </div>
-        </section>
-
-        {/* â”€â”€ 02. Live Model Trajectory Comparison â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-        <section
-          id="comparison"
-          className={cn(
-            "mt-16 sm:mt-20 border-t border-fog-deep/40 pt-12 sm:pt-16 scroll-mt-20",
-            getSectionFocusClass("comparison")
-          )}
-        >
-          <div className="text-center max-w-3xl mx-auto">
-            <span className="rounded-full border border-teal/40 bg-teal/10 px-3 py-1 font-mono text-xs text-teal">
-              02 Â· Detection Paradigm Shift
-            </span>
-            <h2 className="mt-4 font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-paper">
-              Per-Packet Detection vs. Continuous Cyber World Model
-            </h2>
-            <p className="mt-3 text-sm text-fog leading-relaxed">
-              Single-connection classifiers treat each packet in isolation, missing multi-stage infiltration. Flow दृष्टि encodes physical network state across 10 consecutive time windows.
-            </p>
-          </div>
-
-          <div className="mt-8 sm:mt-12 grid min-w-0 w-full gap-6 sm:gap-8 lg:grid-cols-2">
-            {/* Traditional Classifiers */}
-            <div className={cn(cardStyleClass, "group border-fog-deep/50 min-w-0 w-full")}>
-              <div className="flex items-center justify-between border-b border-fog-deep/30 pb-3">
-                <span className="font-mono text-xs font-bold uppercase text-fog group-hover:text-paper transition-colors">
-                  Legacy Per-Flow Classifier
-                </span>
-                <span className="rounded bg-fog/10 px-2 py-0.5 font-mono text-[11px] text-fog">
-                  Post-Compromise Only
-                </span>
-              </div>
-              <p className="mt-4 text-sm text-fog leading-relaxed">
-                Scores each TCP/UDP stream independently. A slow port scan, an authorized SMB session setup, and an outbound HTTPS session each appear benign. Alerts fire only after ransomware encryption or exfiltration starts.
-              </p>
-              <div className="mt-6 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 rounded-xl bg-void-950/60 p-4 border border-fog-deep/30 group-hover:border-fog-deep/60 transition-colors">
-                <Sparkline series={[0.08, 0.11, 0.09, 0.12, 0.1, 0.14, 0.11]} color="var(--fog-400)" />
-                <span className="font-mono text-xs text-fog">Flat per-flow score (undetected)</span>
-              </div>
-            </div>
-
-            {/* Flow à¤¦à¥ƒà¤·à¥à¤Ÿà¤¿ World Model */}
-            <div className={cn(cardStyleClass, "group border-teal/50 shadow-teal/10 min-w-0 w-full")}>
-              <div className="flex items-center justify-between border-b border-fog-deep/30 pb-3">
-                <span className="font-mono text-xs font-bold uppercase text-teal text-glow-teal group-hover:scale-105 transition-transform">
-                  Flow à¤¦à¥ƒà¤·à¥à¤Ÿà¤¿ World Model
-                </span>
-                <span className="rounded bg-teal/15 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-teal border border-teal/40 shadow-xs shadow-teal/30">
-                  20s Early Horizon
-                </span>
-              </div>
-              <p className="mt-4 text-sm text-fog leading-relaxed">
-                Compresses 54 behavioral statistical dimensions across 10 temporal windows. As sequential port entropy and SMB session fan-out escalate, the model forecasts lateral propagation trajectory with 94.3% precision.
+    "Flow दृष्टि forecasts lateral propagation trajectory with 94.3% precision.
               </p>
               <div className="mt-6 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 rounded-xl bg-void-950/60 p-4 border border-teal/30 shadow-[0_0_20px_rgba(45,212,191,0.12)] group-hover:border-teal/60 transition-all">
                 <Sparkline series={[0.08, 0.18, 0.34, 0.52, 0.68, 0.82, 0.91]} color="#2dd4bf" />
@@ -452,7 +55,7 @@ function Landing() {
         >
           <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
             <span className="rounded-full border border-teal/40 bg-teal/10 px-3.5 py-1 font-mono text-xs text-teal">
-              03 Â· Deep Hybrid Ensemble Formulation
+              03 · Deep Hybrid Ensemble Formulation
             </span>
             <h2 className="mt-4 font-display text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-paper">
               Inside the Cyber World Model Architecture
@@ -625,19 +228,19 @@ function Landing() {
                     <div className="mt-3 space-y-2 text-xs font-mono">
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between rounded p-2.5 bg-void-950 border border-fog-deep/30 hover:border-teal/40 transition-colors gap-1 sm:gap-2">
                         <span className="text-fog">Normal Baseline:</span>
-                        <span className="text-teal font-semibold">P &lt; 0.20 Â· 0 flagged hosts</span>
+                        <span className="text-teal font-semibold">P &lt; 0.20 · 0 flagged hosts</span>
                       </div>
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between rounded p-2.5 bg-void-950 border border-fog-deep/30 hover:border-amber/40 transition-colors gap-1 sm:gap-2">
                         <span className="text-fog">Reconnaissance (T1046):</span>
-                        <span className="text-amber font-semibold">P 0.24â€“0.46 Â· Port entropy &gt; 3.8</span>
+                        <span className="text-amber font-semibold">P 0.24â€“0.46 · Port entropy &gt; 3.8</span>
                       </div>
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between rounded p-2.5 bg-void-950 border border-fog-deep/30 hover:border-amber/40 transition-colors gap-1 sm:gap-2">
                         <span className="text-fog">Initial Access (T1190):</span>
-                        <span className="text-amber font-semibold">P 0.48â€“0.76 Â· SYN spike</span>
+                        <span className="text-amber font-semibold">P 0.48â€“0.76 · SYN spike</span>
                       </div>
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between rounded p-2.5 bg-void-950 border border-crimson/40 hover:border-crimson transition-colors shadow-xs shadow-crimson/20 gap-1 sm:gap-2">
                         <span className="text-crimson font-bold">Lateral Movement (T1021):</span>
-                        <span className="text-crimson font-bold text-glow-crimson">P &gt; 0.85 Â· Port 445 SMB fan-out</span>
+                        <span className="text-crimson font-bold text-glow-crimson">P &gt; 0.85 · Port 445 SMB fan-out</span>
                       </div>
                     </div>
                   </div>
@@ -690,7 +293,7 @@ function Landing() {
         >
           <div className="text-center max-w-2xl mx-auto">
             <span className="rounded-full border border-teal/40 bg-teal/10 px-3.5 py-1 font-mono text-xs text-teal">
-              04 Â· Validated in Production
+              04 · Validated in Production
             </span>
             <h2 className="mt-4 font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-paper text-glow-white">
               Trusted by Threat Hunters & SOC Leads
@@ -744,7 +347,7 @@ function Landing() {
                 </div>
                 <div className="mt-6 border-t border-fog-deep/30 pt-4">
                   <p className="font-display font-bold text-paper text-sm">{t.author}</p>
-                  <p className="text-xs text-fog">{t.role} Â· <strong className="text-fog-deep group-hover:text-teal transition-colors">{t.org}</strong></p>
+                  <p className="text-xs text-fog">{t.role} · <strong className="text-fog-deep group-hover:text-teal transition-colors">{t.org}</strong></p>
                 </div>
               </div>
             ))}
@@ -784,12 +387,12 @@ function Landing() {
         <div className="mx-auto flex max-w-[1360px] flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
           <div className="flex items-center gap-3">
             <div className="flex size-8 items-center justify-center rounded-lg bg-white p-1 shadow-sm ring-1 ring-black/10">
-              <img src="/flow-drishti-icon.png" alt="Flow à¤¦à¥ƒà¤·à¥à¤Ÿà¤¿" className="size-6 object-contain" />
+              <img src="/flow-drishti-icon.png" alt="Flow दृष्टि" className="size-6 object-contain" />
             </div>
             <span className="font-display text-sm font-bold text-paper">
-              Flow <span className="text-teal font-sans">à¤¦à¥ƒà¤·à¥à¤Ÿà¤¿</span>
+              Flow <span className="text-teal font-sans">दृष्टि</span>
             </span>
-            <span className="text-fog-deep">Â· Cyber World Model</span>
+            <span className="text-fog-deep">· Cyber World Model</span>
           </div>
 
           <div className="flex flex-wrap justify-center sm:justify-start gap-4 sm:gap-6 font-mono text-[12px]">
@@ -811,7 +414,7 @@ function Landing() {
           </div>
 
           <p className="font-mono text-fog-deep">
-            Â© 2026 Flow à¤¦à¥ƒà¤·à¥à¤Ÿà¤¿. All rights reserved.
+            © 2026 Flow दृष्टि. All rights reserved.
           </p>
         </div>
       </footer>

@@ -35,13 +35,13 @@ export function DocsPage() {
         <div className="border-b border-fog-deep/40 pb-8">
           <div className="inline-flex items-center gap-2 rounded-full border border-teal/40 bg-teal/10 px-3.5 py-1 text-xs font-mono text-teal">
             <BookOpen className="size-3.5 text-teal" />
-            Official Research Publication Â· Neural AI, DTU
+            Official Research Publication · Neural AI, DTU
           </div>
           <h1 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-paper sm:text-4xl">
             Temporal World Modeling for Network Attack Forecasting with Latent-Recurrent and Timeâ€“Frequency Dynamics
           </h1>
           <p className="mt-3 font-mono text-xs text-teal">
-            Nakshatra Yadav, Lakshay Bharti, Nidhi Jha, Saksham Chhabra, Arihant Srivastava, Soumil Srivastava Â· Neural AI, Delhi Technological University
+            Nakshatra Yadav, Lakshay Bharti, Nidhi Jha, Saksham Chhabra, Arihant Srivastava, Soumil Srivastava · Neural AI, Delhi Technological University
           </p>
           <p className="mt-4 max-w-[84ch] text-sm text-fog leading-relaxed">
             Conventional Intrusion Detection Systems (IDS) map single traffic slices to benign/malicious labels, discarding temporal evolution. We reformulate network defense as a continuous temporal forecasting problem: traffic is encoded into 54-dimensional physical network state vectors, consumed by two complementary neural backbones (SparseRSSM + TFCNet-F) to forecast future states <MathFormula math="\hat{S}_{t+1..t+K}" displayMode={false} /> and future attack risk <MathFormula math="\hat{y}_{t+K}" displayMode={false} /> at a 20-second early horizon.
@@ -157,7 +157,7 @@ export function DocsPage() {
 
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               <div className="rounded-xl border border-fog-deep/30 bg-void-950/80 p-4">
-                <span className="text-xs font-mono text-teal font-semibold">1. Deterministic Latent Encoder (54 â†’ 128):</span>
+                <span className="text-xs font-mono text-teal font-semibold">1. Deterministic Latent Encoder (54 → 128):</span>
                 <div className="mt-2">
                   <MathFormula
                     math="z_t = W_3 \operatorname{GELU}\big(W_2 \operatorname{GELU}(\operatorname{LN}(W_1 S_t + b_1)) + b_2\big) + b_3"
@@ -320,7 +320,7 @@ export function DocsPage() {
                   Master Research Benchmark Evaluation Matrix (Verbatim Record)
                 </h2>
               </div>
-              <span className="font-mono text-xs text-fog">CSE-CIC-IDS2018 Â· K=10 (20s Lead)</span>
+              <span className="font-mono text-xs text-fog">CSE-CIC-IDS2018 · K=10 (20s Lead)</span>
             </div>
 
             <p className="mt-4 text-sm text-fog leading-relaxed">
@@ -448,7 +448,7 @@ export function DocsPage() {
       </main>
 
       <footer className="border-t border-fog-deep/40 px-6 py-8 text-center text-xs font-mono text-fog bg-void-950/80">
-        Flow दृष्टि Research Publications Â· Neural AI DTU Â· Verbatim Experimental Record
+        Flow दृष्टि Research Publications · Neural AI DTU · Verbatim Experimental Record
       </footer>
     </div>
   );

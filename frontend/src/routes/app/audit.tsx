@@ -53,7 +53,7 @@ import { useSocket } from "@/hooks/useSocket";
 export const Route = createFileRoute("/app/audit")({
   head: pageHead(
     "Audit Log â€” Flow दृष्टि",
-    "Append-only cryptographic compliance ledger Â· Retained under SOC 2 Type II controls for 7 years.",
+    "Append-only cryptographic compliance ledger · Retained under SOC 2 Type II controls for 7 years.",
   ),
   component: AuditPage,
 });
@@ -693,7 +693,7 @@ function AuditPage() {
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center justify-between">
                     <span className="text-[12px] font-medium text-paper">
-                      Forensic Telemetry Metadata Â· {current.event} ({current.target})
+                      Forensic Telemetry Metadata · {current.event} ({current.target})
                     </span>
                     <button
                       onClick={() => setExpandedId(null)}

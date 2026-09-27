@@ -290,10 +290,10 @@ function Benchmark() {
             <thead className="text-[12px] text-fog">
               <tr className="border-b border-fog-deep/60">
                 <th className="px-5 py-2.5 font-medium">Metric</th>
-                <th className="px-5 py-2.5 text-right font-medium">Two-Stage SOC Â· OOD (C)</th>
-                <th className="px-5 py-2.5 text-right font-medium">LR Â· OOD (C)</th>
-                <th className="px-5 py-2.5 text-right font-medium">Two-Stage SOC Â· Seen (A)</th>
-                <th className="px-5 py-2.5 text-right font-medium">LR Â· Seen (A)</th>
+                <th className="px-5 py-2.5 text-right font-medium">Two-Stage SOC · OOD (C)</th>
+                <th className="px-5 py-2.5 text-right font-medium">LR · OOD (C)</th>
+                <th className="px-5 py-2.5 text-right font-medium">Two-Stage SOC · Seen (A)</th>
+                <th className="px-5 py-2.5 text-right font-medium">LR · Seen (A)</th>
               </tr>
             </thead>
             <tbody>
@@ -533,7 +533,7 @@ function Benchmark() {
                   </ActionButton>
                 )}
                 <span className="mono ml-auto text-[12px] text-fog">
-                  F1 {v.metrics.cicIds.f1.toFixed(4)} Â· FPR {v.metrics.cicIds.fpr.toFixed(4)}
+                  F1 {v.metrics.cicIds.f1.toFixed(4)} · FPR {v.metrics.cicIds.fpr.toFixed(4)}
                 </span>
               </div>
             </li>

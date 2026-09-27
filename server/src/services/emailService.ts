@@ -58,7 +58,7 @@ export async function sendRaw(
       return false;
     }
 
-    console.log(`ðŸ“§ [EMAIL SENT] "${subject}" â†’ ${to.map(r => r.email).join(', ')}`);
+    console.log(`ðŸ“§ [EMAIL SENT] "${subject}" → ${to.map(r => r.email).join(', ')}`);
     return true;
   } catch (err) {
     console.error('ðŸ“§ [EMAIL ERROR] Failed to send email:', err);
@@ -103,7 +103,7 @@ function wrapTemplate(title: string, body: string): string {
           <!-- Footer -->
           <tr>
             <td style="padding-top:24px;text-align:center;font-size:12px;color:#6b7280;">
-              Flow दृष्टि Â· Predictive Cyber-Defence Console<br>
+              Flow दृष्टि — Predictive Cyber-Defence Console<br>
               This is an automated message â€” please do not reply.
             </td>
           </tr>

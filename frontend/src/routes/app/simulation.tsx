@@ -51,7 +51,7 @@ function Simulation() {
               <p className="mono text-fog">1 â€” define state</p>
               <p className="mt-1.5 text-[15px]">corp-core at 14:40Z</p>
               <p className="mono mt-1 text-fog">
-                412 hosts Â· 12,481 flows Â· p 0.88
+                412 hosts · 12,481 flows · p 0.88
               </p>
             </li>
             <li>

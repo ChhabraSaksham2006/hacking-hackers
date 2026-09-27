@@ -303,7 +303,7 @@ function ExplainabilityPage() {
           state={riskState}
           control={
             <span className="mono text-fog text-[12px]">
-              window #{targetWindow} Â· {contributions.length} driving indicators
+              window #{targetWindow} · {contributions.length} driving indicators
             </span>
           }
         >
@@ -369,7 +369,7 @@ function ExplainabilityPage() {
                 <span>Teal: Mitigating / baseline normalizing</span>
               </span>
             </div>
-            <span className="mono text-[11px]">Normalized L1 divergence (Â±0.50 max domain)</span>
+            <span className="mono text-[11px]">Normalized L1 divergence (±0.50 max domain)</span>
           </div>
         </HeroPanel>
 

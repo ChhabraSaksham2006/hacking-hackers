@@ -75,7 +75,7 @@ function TermsPage() {
       </main>
 
       <footer className="border-t border-fog-deep/40 px-6 py-8 text-center text-xs text-fog">
-        Flow दृष्टि Legal & Compliance Â· Legal entity Northwind Enterprise Defense LLC
+        Flow दृष्टि Legal & Compliance · Legal entity Northwind Enterprise Defense LLC
       </footer>
     </div>
   );

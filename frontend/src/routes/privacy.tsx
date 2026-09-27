@@ -78,7 +78,7 @@ function PrivacyPage() {
       </main>
 
       <footer className="border-t border-fog-deep/40 px-6 py-8 text-center text-xs text-fog">
-        Flow दृष्टि Privacy Office Â· ISO/IEC 27701 Privacy Information Management Certified
+        Flow दृष्टि Privacy Office · ISO/IEC 27701 Privacy Information Management Certified
       </footer>
     </div>
   );

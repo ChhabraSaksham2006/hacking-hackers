@@ -96,8 +96,8 @@ function Settings() {
           {section === "Data sources" ? (
             <ul className="max-w-[620px] divide-y divide-fog-deep/40">
               {[
-                { name: "pcap-store-eu-west", ok: true, note: "S3 Â· 4.2 TB retained" },
-                { name: "netflow-collector-01", ok: true, note: "IPFIX Â· 12k flows/min" },
+                { name: "pcap-store-eu-west", ok: true, note: "S3 · 4.2 TB retained" },
+                { name: "netflow-collector-01", ok: true, note: "IPFIX · 12k flows/min" },
                 { name: "netflow-collector-02", ok: false, note: "no data for 41m" },
               ].map((d) => (
                 <li key={d.name} className="flex items-center justify-between py-3">
