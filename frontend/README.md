@@ -1,24 +1,29 @@
-# Your Dream Website
+# Aegis Vantage — Frontend
 
-Create the website according to the system prompt
-
-This project was built with [Lovable](https://lovable.dev).
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/2ecb0227-0a1e-4676-a498-9d65dabcc629).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+Predictive cyber-defence dashboard built with **TanStack Start**, **React 19**, **Tailwind CSS 4**, and **Recharts**.
 
 ## Development
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+npm install
 npm run dev
 ```
+
+The dev server starts at [http://localhost:8080](http://localhost:8080) and proxies `/api/*` requests to the backend at `http://localhost:5000`.
+
+## Production Build
+
+```sh
+npm run build
+```
+
+Output goes to `.vercel/output/` (Nitro vercel preset) — ready for Vercel deployment.
+
+## Tech Stack
+
+- **Framework**: TanStack Start (SSR via Nitro)
+- **UI**: React 19 + Radix UI + shadcn/ui
+- **Styling**: Tailwind CSS 4
+- **Charts**: Recharts
+- **State**: TanStack Query
+- **Realtime**: Socket.IO
