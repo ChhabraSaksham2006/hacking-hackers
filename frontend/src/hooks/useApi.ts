@@ -1091,3 +1091,108 @@ export function useAnalyzeCapture() {
   });
 }
 
+// ── Audit Log Types & Hooks ──────────────────────────────────
+export interface AuditEntryItem {
+  _id: string;
+  timestamp: string;
+  actor: string;
+  actorUserId?: string;
+  event: string;
+  target: string;
+  ip?: string;
+  metadata?: Record<string, any>;
+}
+
+export interface AuditPagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+}
+
+export interface AuditResponse {
+  data: AuditEntryItem[];
+  pagination: AuditPagination;
+}
+
+export interface AuditStats {
+  totalEntries: number;
+  todayCount: number;
+  recentVelocity: number;
+  topActors: Array<{ actor: string; count: number }>;
+  categoryCounts: {
+    alerts?: number;
+    simulations?: number;
+    network?: number;
+    models?: number;
+    reports?: number;
+    auth?: number;
+  };
+  integrity: {
+    status: string;
+    standard: string;
+    chainedHash: string;
+    lastVerifiedAt: string;
+    retentionPolicy: string;
+  };
+}
+
+export interface AuditFiltersData {
+  actors: string[];
+  events: string[];
+  categories: string[];
+}
+
+export interface AuditQueryParams {
+  page?: number;
+  limit?: number;
+  actor?: string;
+  event?: string;
+  category?: string;
+  search?: string;
+  startDate?: string;
+  endDate?: string;
+  sort?: "asc" | "desc";
+}
+
+export function useAuditLogs(params: AuditQueryParams = {}) {
+  const queryParams = new URLSearchParams();
+  if (params.page) queryParams.set("page", params.page.toString());
+  if (params.limit) queryParams.set("limit", params.limit.toString());
+  if (params.actor && params.actor !== "all") queryParams.set("actor", params.actor);
+  if (params.event && params.event !== "all") queryParams.set("event", params.event);
+  if (params.category && params.category !== "all") queryParams.set("category", params.category);
+  if (params.search?.trim()) queryParams.set("search", params.search.trim());
+  if (params.startDate) queryParams.set("startDate", params.startDate);
+  if (params.endDate) queryParams.set("endDate", params.endDate);
+  if (params.sort) queryParams.set("sort", params.sort);
+
+  const queryStr = queryParams.toString();
+  const endpoint = `/api/audit${queryStr ? `?${queryStr}` : ""}`;
+
+  return useQuery({
+    queryKey: ["audit", params],
+    queryFn: () => apiFetch<AuditResponse>(endpoint),
+    staleTime: 5000,
+  });
+}
+
+export function useAuditStats() {
+  return useQuery({
+    queryKey: ["audit-stats"],
+    queryFn: () => apiFetch<AuditStats>("/api/audit/stats"),
+    staleTime: 10000,
+  });
+}
+
+export function useAuditFilters() {
+  return useQuery({
+    queryKey: ["audit-filters"],
+    queryFn: () => apiFetch<AuditFiltersData>("/api/audit/filters"),
+    staleTime: 30000,
+  });
+}
+
+

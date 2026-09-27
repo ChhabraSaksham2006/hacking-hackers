@@ -62,11 +62,18 @@ export function AppShell({ children }: { children: ReactNode }) {
         >
           <Link
             to="/app/dashboard"
-            className="flex h-14 items-center gap-3 overflow-hidden px-[26px]"
+            className="flex h-14 items-center gap-3 overflow-hidden px-[18px]"
+            title="Flow दृष्टि — Dashboard"
           >
-            <span className="size-[18px] shrink-0 rotate-45 rounded-[4px] border-2 border-teal" />
-            <span className="font-display text-[15px] font-semibold whitespace-nowrap opacity-0 transition-opacity group-hover/rail:opacity-100">
-              Aegis Vantage
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-white p-1 shadow-sm ring-1 ring-black/10 transition-transform group-hover/rail:scale-105">
+              <img
+                src="/flow-drishti-icon.png"
+                alt="Flow दृष्टि"
+                className="size-7 object-contain"
+              />
+            </div>
+            <span className="font-display text-[15px] font-bold whitespace-nowrap opacity-0 transition-opacity duration-200 group-hover/rail:opacity-100 text-paper">
+              Flow <span className="text-teal font-sans">दृष्टि</span>
             </span>
           </Link>
           <ul className="flex flex-1 flex-col gap-0.5 overflow-y-auto py-2">

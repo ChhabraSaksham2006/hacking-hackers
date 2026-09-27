@@ -46,6 +46,7 @@ export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
   Analyst: [
     'alerts.read',
     'reports.export',
+    'audit.read',
     'orgs.read',
   ],
   'SOC Lead': [
@@ -56,6 +57,7 @@ export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     'ingestion.create',
     'simulation.run',
     'reports.export',
+    'audit.read',
     'orgs.read',
     'settings.read',
   ],

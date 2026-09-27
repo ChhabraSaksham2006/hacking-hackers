@@ -73,11 +73,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Aegis Vantage — Predictive cyber defence" },
+      { title: "Flow दृष्टि — Predictive Cyber Defence & Neural World Model" },
       {
         name: "description",
         content:
-          "Aegis Vantage forecasts attacker progression before compromise completes.",
+          "Flow दृष्टि forecasts attacker progression before compromise completes.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

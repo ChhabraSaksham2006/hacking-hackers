@@ -8,6 +8,7 @@ import { dashboardStore } from '../models/dashboardModel.js';
 import { logAuditEvent } from '../services/auditService.js';
 import { z } from 'zod';
 import { validate } from '../middleware/validate.js';
+import { env } from '../config/env.js';
 
 const router = Router();
 
@@ -265,7 +266,7 @@ router.get('/topology', async (req, res, next) => {
     const modelIntelligence = {
       engine: rawOutputs.neuralEngine || 'SparseRSSM + TFCNet Ensemble (Temporal State-Space + Spectral Transformer)',
       modelVersion: latestPrediction?.modelVersion || 'wm-v4.2.1',
-      inferenceSource: dashboardStore.lastInferenceSource === 'fastapi_microservice' ? 'FastAPI Microservice (http://localhost:7860)' : 'Local PyTorch Bridge',
+      inferenceSource: dashboardStore.lastInferenceSource === 'fastapi_microservice' ? `FastAPI Microservice (${env.ML_SERVICE_URL || 'Remote'})` : 'Local PyTorch Bridge',
       mlServiceOnline: true,
       windowIndex: dashboardStore.actual_window_index || 1797,
       timestamp: dashboardStore.timestamp || new Date().toISOString(),

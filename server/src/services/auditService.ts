@@ -43,18 +43,33 @@ export async function logAuditEvent(
   metadata?: Record<string, unknown>,
 ): Promise<void> {
   try {
-    await AuditEntry.create({
+    const actorEmail =
+      req.user?.email ||
+      (typeof metadata?.actor === 'string' ? metadata.actor : undefined) ||
+      (typeof req.body?.email === 'string' ? req.body.email : undefined) ||
+      'system';
+
+    const entry = await AuditEntry.create({
       timestamp: new Date(),
-      actor: req.user?.email ?? 'anonymous',
+      actor: actorEmail,
       actorUserId: req.user?.userId,
       event,
       target,
       orgId: req.user?.orgId,
-      ip: req.ip,
+      ip: req.ip || req.socket?.remoteAddress,
       metadata,
     });
+
+    if (entry.orgId) {
+      import('../socket.js')
+        .then(({ emitToOrg }) => {
+          emitToOrg(entry.orgId!, 'audit_created', entry.toObject ? entry.toObject() : entry);
+        })
+        .catch(() => {});
+    }
   } catch (err) {
     // Audit failures should never break the request
     console.error('Failed to write audit entry:', err);
   }
 }
+

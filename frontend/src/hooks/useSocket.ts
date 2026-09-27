@@ -13,9 +13,9 @@ export function useSocket() {
     if (!user) return;
 
     if (!socketInstance) {
-      const serverUrl = import.meta.env['VITE_API_URL'] || 'http://localhost:5000';
+      const serverUrl = import.meta.env['VITE_API_URL'];
       
-      socketInstance = io(serverUrl, {
+      socketInstance = io(serverUrl || undefined, {
         withCredentials: true,
         reconnection: true,
         reconnectionDelay: 1000,

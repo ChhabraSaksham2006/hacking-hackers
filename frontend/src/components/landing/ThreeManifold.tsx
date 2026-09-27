@@ -28,8 +28,9 @@ export function ThreeManifold({ className = "", themeStrategy = "glass" }: Three
     }
 
     // ── Three.js Scene Setup ─────────────────────────────
-    const width = container.clientWidth || 600;
-    const height = container.clientHeight || 500;
+    const rect = container.getBoundingClientRect();
+    const width = Math.floor(rect.width) || 300;
+    const height = Math.floor(rect.height) || 300;
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
@@ -40,8 +41,12 @@ export function ThreeManifold({ className = "", themeStrategy = "glass" }: Three
       antialias: true,
       powerPreference: "high-performance",
     });
-    renderer.setSize(width, height);
+    renderer.setSize(width, height, false);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.domElement.style.width = "100%";
+    renderer.domElement.style.height = "100%";
+    renderer.domElement.style.maxWidth = "100%";
+    renderer.domElement.style.display = "block";
     container.appendChild(renderer.domElement);
 
     // ── Color Theme Mappings ─────────────────────────────
@@ -179,13 +184,17 @@ export function ThreeManifold({ className = "", themeStrategy = "glass" }: Three
     window.addEventListener("pointermove", onPointerMove);
 
     // ── Responsive Resize Observer ───────────────────────
-    const resizeObserver = new ResizeObserver(() => {
+    const resizeObserver = new ResizeObserver((entries) => {
       if (!container) return;
-      const newWidth = container.clientWidth || 600;
-      const newHeight = container.clientHeight || 500;
-      camera.aspect = newWidth / newHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(newWidth, newHeight);
+      for (const entry of entries) {
+        const newWidth = Math.floor(entry.contentRect.width);
+        const newHeight = Math.floor(entry.contentRect.height);
+        if (newWidth > 0 && newHeight > 0) {
+          camera.aspect = newWidth / newHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(newWidth, newHeight, false);
+        }
+      }
     });
     resizeObserver.observe(container);
 
@@ -266,7 +275,7 @@ export function ThreeManifold({ className = "", themeStrategy = "glass" }: Three
   return (
     <div
       ref={containerRef}
-      className={`relative h-full min-h-[420px] w-full cursor-grab active:cursor-grabbing overflow-hidden ${className}`}
+      className={`relative h-full w-full max-w-full cursor-grab active:cursor-grabbing overflow-hidden ${className}`}
       title="Interactive 3D Neural Manifold — Drag or move mouse to rotate 54-D state space"
     />
   );

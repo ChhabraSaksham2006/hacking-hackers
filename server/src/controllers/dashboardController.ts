@@ -26,6 +26,7 @@ export function getFullState(_req: Request, res: Response): void {
 }
 
 import { applyWindowToDatabase } from '../services/replayService.js';
+import { logAuditEvent } from '../services/auditService.js';
 
 export async function stepForward(req: Request, res: Response): Promise<void> {
   const state = await dashboardStore.stepForward();
@@ -34,6 +35,19 @@ export async function stepForward(req: Request, res: Response): Promise<void> {
   } catch (err) {
     console.error('[DashboardController] Failed to sync step to database:', err);
   }
+  await logAuditEvent(
+    'INFERENCE_RUN',
+    `Replay Step: Window W#${state.actual_window_index} (${state.summary?.currentStage || 'Lateral Movement'})`,
+    req,
+    {
+      action: 'step',
+      windowIndex: state.actual_window_index,
+      currentStage: state.summary?.currentStage,
+      probability: state.summary?.infiltrationProbability,
+      riskLevel: state.summary?.riskLevel,
+      leadTimeSeconds: state.summary?.leadTimeSeconds,
+    },
+  );
   res.json({ message: 'Stepped forward', state });
 }
 
@@ -44,6 +58,17 @@ export async function resetBaseline(req: Request, res: Response): Promise<void> 
   } catch (err) {
     console.error('[DashboardController] Failed to sync reset to database:', err);
   }
+  await logAuditEvent(
+    'SIMULATION_RUN',
+    'Replay Baseline Reset (Window W#0 — Benign Baseline)',
+    req,
+    {
+      action: 'reset',
+      windowIndex: 0,
+      currentStage: 'Normal',
+      probability: state.summary?.infiltrationProbability ?? 0.08,
+    },
+  );
   res.json({ message: 'Reset to benign baseline', state });
 }
 
@@ -54,6 +79,17 @@ export async function jumpAttack(req: Request, res: Response): Promise<void> {
   } catch (err) {
     console.error('[DashboardController] Failed to sync jump to database:', err);
   }
+  await logAuditEvent(
+    'SIMULATION_RUN',
+    `Replay Infiltration Jump: Window W#${state.actual_window_index} (Onset Lead-Time 20.0s)`,
+    req,
+    {
+      action: 'jump_attack',
+      windowIndex: state.actual_window_index,
+      currentStage: state.summary?.currentStage || 'Lateral Movement',
+      probability: state.summary?.infiltrationProbability ?? 0.91,
+    },
+  );
   res.json({ message: 'Jumped to infiltration onset', state });
 }
 
