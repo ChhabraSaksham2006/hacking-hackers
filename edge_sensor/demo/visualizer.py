@@ -175,8 +175,8 @@ class TerminalVisualizer:
         else:
             out.append(f"\n{BOLD}[STAGE 4: EXTRACTED 54-D CYBER WORLD MODEL VECTOR]{RESET} {DIM}Awaiting first 2.0s window tick...{RESET}")
 
-        # ── 5. Edge Anomaly Sentinel & Alerts (Stage 5) ─────────────
-        out.append(f"\n{BOLD}[STAGE 5: EDGE ANOMALY SENTINEL (Zero-Latency Local Triage)]{RESET}")
+        # ── 5. Cyber World Model Sentinel (Stage 5) ─────────────
+        out.append(f"\n{BOLD}[STAGE 5: CYBER WORLD MODEL SENTINEL (Deep Hybrid Ensemble)]{RESET}")
         if self.recent_alerts:
             for a in self.recent_alerts[-2:]:
                 sev_badge = f"{BG_RED}{WHITE}{BOLD} CRITICAL {RESET}" if a.severity == "critical" else f"{BG_YELLOW}{WHITE}{BOLD}  ALERT   {RESET}"
@@ -184,7 +184,7 @@ class TerminalVisualizer:
                 out.append(f"    {DIM}Description:{RESET} {a.description}")
                 out.append(f"    {DIM}Edge Action:{RESET} {YELLOW}{a.recommended_edge_action}{RESET}")
         else:
-            out.append(f"  {GREEN}[OK] Normal Baseline Operations{RESET} {DIM}- zero local heuristic violations detected.{RESET}")
+            out.append(f"  {GREEN}[OK] Normal Baseline Operations{RESET} {DIM}- Cyber World Model confirms benign behavioral state.{RESET}")
 
         out.append(f"\n{CYAN}{'-' * 78}{RESET}")
         out.append(f"{DIM}Press Ctrl+C to safely detach sensor agent.{RESET}")

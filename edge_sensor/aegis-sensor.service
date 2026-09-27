@@ -1,0 +1,21 @@
+[Unit]
+Description=Aegis Vantage Distributed Edge Sensor Agent
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/aegis-sensor
+ExecStart=/usr/bin/python3 /opt/aegis-sensor/run_sensor.py --mode tap --interface eth0 --headless --output /var/log/aegis_telemetry.ndjson
+Restart=always
+RestartSec=5s
+
+# Security sandboxing
+AmbientCapabilities=CAP_NET_RAW CAP_NET_ADMIN
+CapabilityBoundingSet=CAP_NET_RAW CAP_NET_ADMIN
+ProtectSystem=full
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

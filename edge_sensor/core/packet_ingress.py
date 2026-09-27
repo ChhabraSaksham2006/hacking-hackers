@@ -7,9 +7,10 @@ Zero third-party dependencies: uses standard library struct and socket modules.
 import os
 import socket
 import struct
+import sys
 import time
 from dataclasses import dataclass
-from typing import Generator, Optional, Tuple
+from typing import Any, Generator, Optional, Tuple
 
 
 @dataclass
@@ -211,3 +212,76 @@ class PacketIngress:
             last_pkt_ts = packet.timestamp
             last_wall_time = time.time()
             yield packet
+
+    @classmethod
+    def open_live_interface(
+        cls, interface: Optional[str] = None, stop_event: Optional[Any] = None
+    ) -> Generator[RawPacket, None, None]:
+        """
+        Passively sniffs real live network frames directly from the host operating system's network interface.
+        - On Linux (servers/containers): uses socket.AF_PACKET for high-speed zero-copy raw capture.
+        - On Windows: uses socket.IPPROTO_IP with SIO_RCVALL promiscuous mode.
+        """
+        # 1. Linux / Container Raw AF_PACKET Tap
+        if hasattr(socket, "AF_PACKET"):
+            try:
+                # 0x0003 = ETH_P_ALL (capture all protocols: IPv4, IPv6, ARP)
+                s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.ntohs(0x0003))
+                if interface:
+                    s.bind((interface, 0))
+            except PermissionError as e:
+                print(f"\n[!] Access Denied: Raw packet capture on Linux requires root or CAP_NET_RAW capability: {e}")
+                print("[*] In Docker / Kubernetes: Add '--cap-add=NET_RAW --net=host' to container flags.\n")
+                return
+            try:
+                s.settimeout(0.2)
+                while True:
+                    if stop_event and stop_event.is_set():
+                        break
+                    try:
+                        data = s.recv(65535)
+                    except socket.timeout:
+                        continue
+                    now = time.time()
+                    pkt = cls.dissect_ethernet_frame(data, ts=now, ts_sec=int(now), ts_usec=int((now % 1) * 1e6))
+                    if pkt:
+                        yield pkt
+            finally:
+                s.close()
+
+        # 2. Windows Raw IP Socket Tap
+        elif sys.platform == "win32":
+            try:
+                s = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_IP)
+                host_ip = interface if interface else socket.gethostbyname(socket.gethostname())
+                s.bind((host_ip, 0))
+                s.setsockopt(socket.IPPROTO_IP, socket.IP_HDRINCL, 1)
+                s.ioctl(socket.SIO_RCVALL, socket.RCVALL_ON)
+            except (PermissionError, OSError) as e:
+                print("\n[!] Access Denied: Windows raw packet interface sniffing requires Administrator privileges.")
+                print(f"[*] Details: {e}")
+                print("[*] To sniff raw interface on Windows: Open PowerShell as Administrator and run the command.")
+                print("[*] Alternatively: Use '--mode live' for interactive user gateway without elevated privileges.\n")
+                return
+            try:
+                s.settimeout(0.2)
+                while True:
+                    if stop_event and stop_event.is_set():
+                        break
+                    try:
+                        data = s.recv(65535)
+                    except socket.timeout:
+                        continue
+                    now = time.time()
+                    eth_frame = b"\x00" * 12 + struct.pack("!H", 0x0800) + data
+                    pkt = cls.dissect_ethernet_frame(eth_frame, ts=now, ts_sec=int(now), ts_usec=int((now % 1) * 1e6))
+                    if pkt:
+                        yield pkt
+            finally:
+                try:
+                    s.ioctl(socket.SIO_RCVALL, socket.RCVALL_OFF)
+                except Exception:
+                    pass
+                s.close()
+        else:
+            raise NotImplementedError(f"Live interface capture not supported on platform: {sys.platform}")

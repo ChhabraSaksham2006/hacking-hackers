@@ -29,11 +29,15 @@ class EdgeSentinel:
     directly on emitted 54-D state windows before central model inference.
     """
 
-    def __init__(self):
+    def __init__(self, enable_heuristics: bool = True):
         self.alert_counter = 0
+        self.enable_heuristics = enable_heuristics
 
     def evaluate(self, window: TemporalWindow) -> List[TriageAlert]:
         """Evaluates a temporal window against edge security baselines."""
+        if not self.enable_heuristics:
+            return []
+
         alerts: List[TriageAlert] = []
         feat = window.feature_dict
 
@@ -46,8 +50,13 @@ class EdgeSentinel:
         byte_rate = feat.get("byte_rate", 0.0)
         delta_entropy = feat.get("delta_dst_port_entropy", 0.0)
 
-        # 1. High-Entropy Port Sweep & Reconnaissance Detection
-        if (dst_port_entropy >= 3.0 and unique_ports >= 6) or delta_entropy >= 2.0:
+        # 1. High-Entropy Port Sweep & Reconnaissance Detection (MITRE T1046)
+        is_port_sweep = (
+            (dst_port_entropy >= 3.2 and unique_ports >= 8 and (syn_ratio >= 0.20 or packet_rate >= 12.0))
+            or (unique_ports >= 20)
+            or (delta_entropy >= 2.2 and unique_ports >= 8 and syn_ratio >= 0.20)
+        )
+        if is_port_sweep:
             self.alert_counter += 1
             alerts.append(
                 TriageAlert(
@@ -58,8 +67,8 @@ class EdgeSentinel:
                     threat_type="Reconnaissance Sweep",
                     technique_id="T1046",
                     technique_name="Network Service Discovery",
-                    description=f"Shannon destination port entropy diverged to {dst_port_entropy:.2f} across {int(unique_ports)} distinct ports.",
-                    trigger_metric=f"dst_port_entropy={dst_port_entropy:.2f}, unique_ports={int(unique_ports)}",
+                    description=f"Shannon destination port entropy diverged to {dst_port_entropy:.2f} across {int(unique_ports)} distinct ports (SYN Ratio: {syn_ratio*100:.1f}%).",
+                    trigger_metric=f"dst_port_entropy={dst_port_entropy:.2f}, unique_ports={int(unique_ports)}, syn_ratio={syn_ratio:.2f}",
                     recommended_edge_action="Activate dynamic edge rate-limiting for scanning IP address.",
                 )
             )
@@ -98,24 +107,6 @@ class EdgeSentinel:
                     description=f"Authentication port ratio surged to {auth_port_ratio * 100:.1f}% targeting administrative services (445/139/22/3389).",
                     trigger_metric=f"auth_port_ratio={auth_port_ratio:.2f}",
                     recommended_edge_action="Quarantine source host VLAN and revoke active SMB/Kerberos tickets.",
-                )
-            )
-
-        # 4. Data Volume Shock / Exfiltration Spike
-        if byte_rate >= 80000.0 and packet_rate >= 40.0:
-            self.alert_counter += 1
-            alerts.append(
-                TriageAlert(
-                    alert_id=f"EDGE-{self.alert_counter:04d}",
-                    timestamp=window.timestamp_start,
-                    window_idx=window.window_idx,
-                    severity="high",
-                    threat_type="Covert Exfiltration Shock",
-                    technique_id="T1048",
-                    technique_name="Exfiltration Over Alternative Protocol",
-                    description=f"Edge egress bandwidth surged to {byte_rate / 1024:.1f} KB/s across anomalous channels.",
-                    trigger_metric=f"byte_rate={byte_rate:.1f} B/s",
-                    recommended_edge_action="Block outbound connection to external IP destination.",
                 )
             )
 

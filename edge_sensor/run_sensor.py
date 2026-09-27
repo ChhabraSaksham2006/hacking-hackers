@@ -32,14 +32,31 @@ if REPO_ROOT not in sys.path:
     sys.path.insert(0, REPO_ROOT)
 
 import queue
+import threading
+from typing import Optional
+
 from core.packet_ingress import PacketIngress
 from core.flow_tracker import FlowTracker
 from core.feature_extractor import FeatureExtractor
 from core.edge_sentinel import EdgeSentinel
+from core.neural_evaluator import NeuralEvaluator
 from core.telemetry_dispatcher import TelemetryDispatcher
 from core.live_gateway import LiveEdgeGateway, get_all_host_ips
 from demo.traffic_generator import generate_synthetic_traffic_stream
 from demo.visualizer import TerminalVisualizer
+
+
+def check_raw_socket_permission() -> bool:
+    """Checks whether the current process has administrator/root privilege for raw packet capture."""
+    if sys.platform == "win32":
+        try:
+            import ctypes
+            return ctypes.windll.shell32.IsUserAnAdmin() != 0
+        except Exception:
+            return False
+    elif hasattr(os, "geteuid"):
+        return os.geteuid() == 0
+    return False
 
 
 def run_pipeline(
@@ -48,6 +65,8 @@ def run_pipeline(
     window_sec: float = 2.0,
     speed: float = 2.0,
     upstream_url: str = "",
+    model_url: str = "",
+    enable_heuristics: bool = False,
     output_file: str = "telemetry_edge.ndjson",
     ingress_log: str = "live_ingress.log",
     sensor_id: str = "edge-probe-vanguard-01",
@@ -55,15 +74,17 @@ def run_pipeline(
     duration: float = 30.0,
     port: int = 8888,
     with_baseline: bool = True,
+    interface: str = "",
 ):
     print(f"[*] Initializing Aegis Vantage Edge Sensor Agent [{sensor_id}]...")
-    display_mode = f"LIVE GATEWAY (Port {port})" if mode == "live" else f"{mode.upper()} (Speed: {speed}x)"
+    display_mode = f"LIVE GATEWAY (Port {port})" if mode == "live" else f"PASSIVE TAP ({interface or 'auto'})" if mode == "tap" else f"{mode.upper()} (Speed: {speed}x)"
     print(f"[*] Operating Mode: {display_mode} | Observation Window: {window_sec}s")
 
     # 1. Initialize Pipeline Stages
     flow_tracker = FlowTracker(idle_timeout=60.0)
     feature_extractor = FeatureExtractor(window_seconds=window_sec)
-    edge_sentinel = EdgeSentinel()
+    edge_sentinel = EdgeSentinel(enable_heuristics=enable_heuristics)
+    neural_evaluator = NeuralEvaluator(model_url=model_url if model_url else None)
     dispatcher = TelemetryDispatcher(
         sensor_id=sensor_id,
         upstream_url=upstream_url if upstream_url else None,
@@ -74,22 +95,47 @@ def run_pipeline(
     gateway: Optional[LiveEdgeGateway] = None
     gateway_url: Optional[str] = None
     baseline_stream = None
+    tap_stop_event: Optional[threading.Event] = None
+    tap_thread: Optional[threading.Thread] = None
 
     # 2. Select Ingress Packet Source
-    if mode == "live":
+    if mode in ("live", "tap"):
+        if mode == "tap" and not check_raw_socket_permission():
+            print("\n[!] Access Denied: Windows raw packet interface sniffing requires Administrator privileges.")
+            print("[*] To sniff raw interface on Windows: Open PowerShell as Administrator and run the command.")
+            print("[*] Alternatively: Use '--mode live' for interactive user gateway without elevated privileges.\n")
+            return 1
+
         gateway = LiveEdgeGateway(host="0.0.0.0", port=port, log_path=ingress_log, sensor_id=sensor_id)
         gateway.start()
         gateway_url = f"http://{gateway.lan_ip}:{gateway.port}"
 
         print("\n" + "=" * 68)
-        print(f"[*] Live Edge Ingress Gateway Active (Port {port})")
+        title_suffix = f"Passive Physical Interface Tap ({interface or 'auto'})" if mode == "tap" else f"Interactive Device Gateway (Port {port})"
+        print(f"[*] Live Edge Ingress Gateway Active: {title_suffix}")
         print("[*] Connect any Phone or Laptop via any of these URLs:")
         for label, ip in gateway.all_ips:
             print(f"    - {label:<25s} -> http://{ip}:{port}")
         print("    - Public Internet (Anywhere)   -> Run: npx localtunnel --port " + str(port))
         print("=" * 68 + "\n")
 
-        if with_baseline:
+        if mode == "tap":
+            tap_stop_event = threading.Event()
+
+            def tap_worker():
+                try:
+                    for pkt in PacketIngress.open_live_interface(
+                        interface=interface if interface else None, stop_event=tap_stop_event
+                    ):
+                        if tap_stop_event.is_set():
+                            break
+                        gateway.packet_queue.put(pkt)
+                except Exception:
+                    pass
+
+            tap_thread = threading.Thread(target=tap_worker, daemon=True)
+            tap_thread.start()
+        elif with_baseline:
             baseline_stream = generate_synthetic_traffic_stream(duration_seconds=999999.0, speed_multiplier=1.0)
     elif mode == "pcap":
         if not pcap_file or not os.path.exists(pcap_file):
@@ -121,10 +167,10 @@ def run_pipeline(
     total_alerts = 0
 
     try:
-        if mode == "live":
+        if mode in ("live", "tap"):
             last_baseline_time = time.time()
             while True:
-                # 3a. Drain any packets received from live external devices
+                # 3a. Drain any packets received from live external devices / tap sniffer
                 pkts_to_process = []
                 try:
                     while True:
@@ -132,9 +178,9 @@ def run_pipeline(
                 except queue.Empty:
                     pass
 
-                # 3b. If no external packets and ambient baseline is active, pull 1 frame
+                # 3b. In live mode only: if no external packets and ambient baseline is active, pull 1 frame
                 now = time.time()
-                if not pkts_to_process and baseline_stream and (now - last_baseline_time) >= 0.15:
+                if mode == "live" and not pkts_to_process and baseline_stream and (now - last_baseline_time) >= 0.15:
                     try:
                         pkts_to_process.append(next(baseline_stream))
                         last_baseline_time = now
@@ -150,41 +196,21 @@ def run_pipeline(
                     flow = flow_tracker.update(packet)
                     window = feature_extractor.add_packet(packet, flow)
                     if window is not None:
-                        alerts = edge_sentinel.evaluate(window)
+                        # 1. Evaluate via Neural Cyber World Model Ensemble
+                        pred = neural_evaluator.evaluate(window)
+                        alerts = list(pred.alerts)
+                        if enable_heuristics:
+                            alerts.extend(edge_sentinel.evaluate(window))
+
                         if alerts:
                             total_alerts += len(alerts)
                         dispatcher.dispatch(window, alerts)
                         visualizer.update_window(window, alerts)
 
-                        # Update live mobile prediction dashboard
-                        feat = window.feature_dict
-                        ent = feat.get("dst_port_entropy", 0.0)
-                        auth = feat.get("auth_port_ratio", 0.0)
-                        syn = feat.get("syn_ratio", 0.0)
-                        br = feat.get("byte_rate", 0.0)
-
-                        if auth >= 0.40:
-                            p = min(0.96, 0.82 + (auth * 0.15))
-                            st = "Lateral Movement (T1021.002)"
-                            rk = "critical"
-                        elif ent >= 3.0:
-                            p = min(0.68, 0.35 + (ent / 10.0))
-                            st = "Reconnaissance (T1046)"
-                            rk = "watch"
-                        elif br >= 15000:
-                            p = min(0.98, 0.88 + min(0.1, br / 100000.0))
-                            st = "Data Exfiltration (T1048)"
-                            rk = "critical"
-                        elif syn >= 0.70:
-                            p = 0.74
-                            st = "Denial of Service (T1498)"
-                            rk = "high"
-                        else:
-                            p = max(0.04, min(0.18, 0.06 + (ent * 0.02)))
-                            st = "Normal Baseline Operations"
-                            rk = "normal"
-
-                        gateway.update_telemetry(window, alerts, p, st, rk)
+                        # 2. Update live mobile prediction dashboard directly from neural model output
+                        gateway.update_telemetry(
+                            window, alerts, pred.calibrated_probability, pred.stage, pred.risk_level
+                        )
 
                     visualizer.update_packet(packet)
 
@@ -213,7 +239,11 @@ def run_pipeline(
                 window = feature_extractor.add_packet(packet, flow)
 
                 if window is not None:
-                    alerts = edge_sentinel.evaluate(window)
+                    pred = neural_evaluator.evaluate(window)
+                    alerts = list(pred.alerts)
+                    if enable_heuristics:
+                        alerts.extend(edge_sentinel.evaluate(window))
+
                     if alerts:
                         total_alerts += len(alerts)
 
@@ -225,7 +255,7 @@ def run_pipeline(
                             f"[WINDOW #{window.window_idx:03d}] Pkts: {window.packet_count:4d} | "
                             f"Bytes: {window.byte_count:7d} | Flows: {window.flow_count:3d} | "
                             f"Entropy: {window.feature_dict['dst_port_entropy']:4.2f} | "
-                            f"AuthRatio: {window.feature_dict['auth_port_ratio']*100:4.1f}% | "
+                            f"Stage: {pred.stage} ({pred.calibrated_probability*100:.1f}%) | "
                             f"Alerts: {len(alerts)}"
                         )
 
@@ -242,7 +272,10 @@ def run_pipeline(
         # Flush final partial window if any
         if feature_extractor.current_packets:
             final_window = feature_extractor.flush()
-            final_alerts = edge_sentinel.evaluate(final_window)
+            pred = neural_evaluator.evaluate(final_window)
+            final_alerts = list(pred.alerts)
+            if enable_heuristics:
+                final_alerts.extend(edge_sentinel.evaluate(final_window))
             dispatcher.dispatch(final_window, final_alerts)
             visualizer.update_window(final_window, final_alerts)
 
@@ -250,6 +283,8 @@ def run_pipeline(
         print("\n[*] Detaching edge sensor agent on user interrupt...")
 
     finally:
+        if tap_stop_event:
+            tap_stop_event.set()
         if gateway:
             gateway.stop()
         dispatcher.close()
@@ -262,7 +297,7 @@ def run_pipeline(
         print(f"    - Windows Dispatched:   {feature_extractor.window_idx}")
         print(f"    - Triage Alerts Raised: {total_alerts}")
         print(f"    - Telemetry Log Sink:   {os.path.abspath(output_file) if output_file else 'None'}")
-        if mode == "live":
+        if mode in ("live", "tap"):
             print(f"    - Ingress Log Sink:     {os.path.abspath(ingress_log)}")
         print(f"{'=' * 65}")
 
@@ -276,10 +311,11 @@ def main():
     )
     parser.add_argument(
         "--mode",
-        choices=["live", "demo", "pcap", "headless"],
+        choices=["live", "tap", "demo", "pcap", "headless"],
         default="live",
-        help="Sensor operating mode: 'live' (interactive mobile/LAN device gateway), 'demo' (synthetic traffic visualizer), 'pcap' (binary capture replay), 'headless' (NDJSON stream)",
+        help="Sensor operating mode: 'live' (interactive mobile/LAN device gateway), 'tap' (passive live network interface sniffer), 'demo' (synthetic traffic visualizer), 'pcap' (binary capture replay), 'headless' (NDJSON stream)",
     )
+    parser.add_argument("--interface", type=str, default="", help="Network interface name for live passive tap (e.g., 'eth0', 'enp3s0')")
     parser.add_argument("--headless", action="store_true", help="Run in headless daemon mode without terminal visualizer")
     parser.add_argument("--file", type=str, default="", help="Path to input .pcap file for pcap replay mode")
     parser.add_argument("--port", type=int, default=8888, help="Port for live external device ingress portal (default: 8888)")
@@ -287,6 +323,8 @@ def main():
     parser.add_argument("--window", type=float, default=2.0, help="Temporal observation window in seconds (default 2.0)")
     parser.add_argument("--speed", type=float, default=2.5, help="Replay speed multiplier (1.0 = realtime, 2.5 = 2.5x faster, 0 = max)")
     parser.add_argument("--upstream", type=str, default="", help="Upstream Aegis Vantage ingestion endpoint URL")
+    parser.add_argument("--model-url", type=str, default="", help="Remote HTTP URL for Cyber World Model service (e.g. 'http://localhost:8000/predict'). Defaults to in-process PyTorch model.")
+    parser.add_argument("--heuristics", action="store_true", help="Enable legacy rule-based heuristic alerts alongside neural model (default: False)")
     parser.add_argument("--output", type=str, default="telemetry_edge.ndjson", help="Path to local telemetry log file")
     parser.add_argument("--ingress-log", type=str, default="live_ingress.log", help="Path to structured live ingress verification log")
     parser.add_argument("--sensor-id", type=str, default="edge-sensor-alpha-01", help="Sensor agent identifier")
@@ -308,6 +346,8 @@ def main():
         window_sec=args.window,
         speed=args.speed,
         upstream_url=args.upstream,
+        model_url=args.model_url,
+        enable_heuristics=args.heuristics,
         output_file=args.output,
         ingress_log=args.ingress_log,
         sensor_id=args.sensor_id,
@@ -315,6 +355,7 @@ def main():
         duration=duration,
         port=args.port,
         with_baseline=not args.no_baseline,
+        interface=args.interface,
     )
 
 
