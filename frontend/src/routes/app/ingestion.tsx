@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/ingestion")({
   head: pageHead(
-    "Ingestion â€” Flow दृष्टि",
+    "Ingestion — Flow दृष्टि",
     "Upload PCAP or NetFlow/IPFIX captures and follow the feature pipeline through to inference.",
   ),
   component: Ingestion,

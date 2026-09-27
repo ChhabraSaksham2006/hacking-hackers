@@ -6,7 +6,7 @@ import { useVerifyEmail } from "@/hooks/useApi";
 
 export const Route = createFileRoute("/verify-email")({
   head: pageHead(
-    "Verify Email â€” Flow दृष्टि",
+    "Verify Email — Flow दृष्टि",
     "Verifying your email address."
   ),
   validateSearch: (search: Record<string, unknown>): { token?: string } => {

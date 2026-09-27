@@ -28,7 +28,7 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/explorer")({
   head: pageHead(
-    "Flow & packet explorer â€” Flow दृष्टि",
+    "Flow & packet explorer — Flow दृष्टि",
     "Real-time and forensic flow reference table with deep packet inspection (DPI), protocol layer hierarchy, and Wireshark hex dumps.",
   ),
   component: Explorer,
@@ -135,7 +135,7 @@ function Explorer() {
                 className="flex items-center gap-1.5 rounded-full border border-amber/50 bg-amber/10 px-2.5 py-1 text-[11px] font-mono text-amber hover:bg-amber/20 transition-colors"
               >
                 <Radio className="size-3 text-amber animate-pulse" />
-                Forensic review (paused) â€” Track Live Stream &rarr;
+                Forensic review (paused) — Track Live Stream &rarr;
               </button>
             )}
 
@@ -438,7 +438,7 @@ function Explorer() {
                       {f.iatMean.toFixed(3)}s
                     </td>
                     <td className="mono px-3 py-3 text-right text-[12px] text-fog">
-                      {f.window || "â€”"}
+                      {f.window || "—"}
                     </td>
                     <td
                       className={cn(
@@ -601,7 +601,7 @@ function Explorer() {
                                               {pkt.flags}
                                             </span>
                                           ) : (
-                                            "â€”"
+                                            "—"
                                           )}
                                         </td>
                                         <td className="px-3 py-1.5 text-right">{pkt.length} B</td>

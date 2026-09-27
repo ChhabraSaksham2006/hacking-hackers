@@ -6,7 +6,7 @@ import { useVerify2FA, useSend2FAEmail } from "@/hooks/useApi";
 
 export const Route = createFileRoute("/two-factor")({
   head: pageHead(
-    "Verification â€” Flow दृष्टि",
+    "Verification — Flow दृष्टि",
     "Enter your six-digit verification code to reach the Flow दृष्टि console.",
   ),
   validateSearch: (search: Record<string, unknown>): { challengeId?: string | undefined } => ({

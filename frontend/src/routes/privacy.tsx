@@ -4,7 +4,7 @@ import { pageHead } from "@/lib/head";
 
 export const Route = createFileRoute("/privacy")({
   head: pageHead(
-    "Privacy Policy & Data Sovereignty â€” Flow दृष्टि",
+    "Privacy Policy & Data Sovereignty — Flow दृष्टि",
     "Detailed privacy disclosures covering zero payload retention, telemetry feature distillation, and global data sovereignty.",
   ),
   component: PrivacyPage,

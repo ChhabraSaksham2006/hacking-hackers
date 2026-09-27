@@ -10,7 +10,7 @@ import { subscribeDashboardStream } from "@/api/dashboardApi";
 
 export const Route = createFileRoute("/app/network")({
   head: pageHead(
-    "Network state â€” Flow दृष्टि",
+    "Network state — Flow दृष्टि",
     "Live host and flow graph with a time scrubber across historical and forecast network states.",
   ),
   component: NetworkState,
@@ -77,7 +77,7 @@ function NetworkState() {
 
   const currentWindow = graphData?.windowIndex ?? Math.round(1750 + (scrub / 100) * 60);
   const currentPhase = graphData?.phase ?? (scrub >= 77 ? "Lateral Movement" : scrub >= 52 ? "Recon" : "Benign Baseline");
-  const currentProb = graphData?.probability !== undefined ? `${(graphData.probability * 100).toFixed(0)}%` : "â€”";
+  const currentProb = graphData?.probability !== undefined ? `${(graphData.probability * 100).toFixed(0)}%` : "—";
 
   return (
     <>

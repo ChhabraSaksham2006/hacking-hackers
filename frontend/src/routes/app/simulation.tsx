@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/simulation")({
   head: pageHead(
-    "Simulation console â€” Flow दृष्टि",
+    "Simulation console — Flow दृष्टि",
     "Perturb the current network state and compare the forecast trajectory against what actually happened.",
   ),
   component: Simulation,
@@ -48,14 +48,14 @@ function Simulation() {
         <FlatPanel title="Run setup" className="h-fit">
           <ol className="space-y-5">
             <li>
-              <p className="mono text-fog">1 â€” define state</p>
+              <p className="mono text-fog">1 — define state</p>
               <p className="mt-1.5 text-[15px]">corp-core at 14:40Z</p>
               <p className="mono mt-1 text-fog">
                 412 hosts · 12,481 flows · p 0.88
               </p>
             </li>
             <li>
-              <p className="mono text-fog">2 â€” apply perturbation</p>
+              <p className="mono text-fog">2 — apply perturbation</p>
               <div className="mt-2 flex flex-col gap-1">
                 {perturbations.map((p) => (
                   <button
@@ -74,13 +74,13 @@ function Simulation() {
               </div>
             </li>
             <li>
-              <p className="mono text-fog">3 â€” run forward simulation</p>
+              <p className="mono text-fog">3 — run forward simulation</p>
               <ActionButton className="mt-2 w-full">
                 Run 8-step forecast
               </ActionButton>
             </li>
             <li>
-              <p className="mono text-fog">4 â€” compare</p>
+              <p className="mono text-fog">4 — compare</p>
               <button
                 onClick={() => setOverlay((v) => !v)}
                 className="mt-2 w-full rounded-md border border-fog-deep px-3 py-2 text-[13px] font-medium hover:bg-void-700"
@@ -93,7 +93,7 @@ function Simulation() {
 
         <div className="grid gap-5 content-start">
           <HeroPanel
-            title="Forecast trajectory â€” 8 steps"
+            title="Forecast trajectory — 8 steps"
             state="critical"
             control={<span className="mono text-fog">{applied}</span>}
           >

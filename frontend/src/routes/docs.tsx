@@ -6,7 +6,7 @@ import { GoogleTranslate } from "@/components/common/GoogleTranslate";
 
 export const Route = createFileRoute("/docs")({
   head: pageHead(
-    "Technical Documentation & Architecture Whitepaper â€” Flow दृष्टि",
+    "Technical Documentation & Architecture Whitepaper — Flow दृष्टि",
     "API reference, SparseRSSM + TFCNet-F architecture specifications, mathematical formulation, and experimental benchmark record.",
   ),
   component: DocsPage,
@@ -152,7 +152,7 @@ export function DocsPage() {
             </div>
 
             <p className="mt-3 text-sm text-fog leading-relaxed">
-              <em>Note on architectural provenance:</em> Unlike canonical RSSMs (e.g. Dreamer) that employ stochastic latents with a KL penalty, <strong>SparseRSSM is strictly deterministic</strong> â€” it utilizes a deterministic latent space regularized by Top-K sparsity with Straight-Through Estimators (STE).
+              <em>Note on architectural provenance:</em> Unlike canonical RSSMs (e.g. Dreamer) that employ stochastic latents with a KL penalty, <strong>SparseRSSM is strictly deterministic</strong> — it utilizes a deterministic latent space regularized by Top-K sparsity with Straight-Through Estimators (STE).
             </p>
 
             <div className="mt-6 grid gap-4 md:grid-cols-2">
@@ -269,7 +269,7 @@ export function DocsPage() {
             </div>
 
             <p className="mt-4 text-sm text-fog leading-relaxed">
-              A sensitive scout identifies early danger, a multi-path gate validates confirmation evidence, and an incident aggregator clusters alerts â€” adding <strong>exactly 0 trainable parameters</strong>:
+              A sensitive scout identifies early danger, a multi-path gate validates confirmation evidence, and an incident aggregator clusters alerts — adding <strong>exactly 0 trainable parameters</strong>:
             </p>
 
             <div className="mt-6 grid gap-4 sm:grid-cols-3">
@@ -350,7 +350,7 @@ export function DocsPage() {
                     <td className="p-3 text-right">99.66%</td>
                     <td className="p-3 text-right text-crimson">0.0% (0/7)</td>
                     <td className="p-3 text-right">0.00</td>
-                    <td className="p-3 text-right">â€”</td>
+                    <td className="p-3 text-right">—</td>
                   </tr>
                   <tr className="text-fog">
                     <td className="p-3">Logistic Regression (54-D)</td>
@@ -360,7 +360,7 @@ export function DocsPage() {
                     <td className="p-3 text-right">55.31%</td>
                     <td className="p-3 text-right text-amber">100% (7/7)</td>
                     <td className="p-3 text-right text-crimson">17.02</td>
-                    <td className="p-3 text-right">â€”</td>
+                    <td className="p-3 text-right">—</td>
                   </tr>
                   <tr className="text-fog">
                     <td className="p-3">Random Forest (54-D)</td>
@@ -370,7 +370,7 @@ export function DocsPage() {
                     <td className="p-3 text-right">56.00%</td>
                     <td className="p-3 text-right text-amber">100% (7/7)</td>
                     <td className="p-3 text-right text-crimson">4.99</td>
-                    <td className="p-3 text-right">â€”</td>
+                    <td className="p-3 text-right">—</td>
                   </tr>
                   <tr className="text-fog">
                     <td className="p-3">Temporal GRU (10-Step Seq)</td>

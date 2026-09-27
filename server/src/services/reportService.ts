@@ -592,7 +592,7 @@ export function buildCsvReport(data: ReportDataPayload): Buffer {
   const lines: string[] = [];
 
   lines.push(`# ==============================================================================`);
-  lines.push(`# Flow दृष्टि AUTONOMOUS NDR â€” THREAT TELEMETRY EXPORT`);
+  lines.push(`# Flow दृष्टि AUTONOMOUS NDR — THREAT TELEMETRY EXPORT`);
   lines.push(`# ==============================================================================`);
   lines.push(`# Report Title: ${data.reportName}`);
   lines.push(`# Scope: ${data.scope}`);

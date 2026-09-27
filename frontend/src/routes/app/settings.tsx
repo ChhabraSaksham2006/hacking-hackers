@@ -7,7 +7,7 @@ import { useAuthMe, useUpdateAlertNotifications } from "@/hooks/useApi";
 
 export const Route = createFileRoute("/app/settings")({
   head: pageHead(
-    "Settings â€” Flow दृष्टि",
+    "Settings — Flow दृष्टि",
     "Model configuration, data sources, notifications, integrations and team roles.",
   ),
   component: Settings,

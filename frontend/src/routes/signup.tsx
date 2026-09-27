@@ -6,7 +6,7 @@ import { useRegister } from "@/hooks/useApi";
 
 export const Route = createFileRoute("/signup")({
   head: pageHead(
-    "Sign up â€” Flow दृष्टि",
+    "Sign up — Flow दृष्टि",
     "Create an Flow दृष्टि workspace for your security operations team.",
   ),
   component: SignupPage,

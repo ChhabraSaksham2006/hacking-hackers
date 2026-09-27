@@ -28,7 +28,7 @@ import { subscribeDashboardStream } from "@/api/dashboardApi";
 
 export const Route = createFileRoute("/app/explainability")({
   head: pageHead(
-    "Explainability â€” Flow दृष्टि",
+    "Explainability — Flow दृष्टि",
     "Feature contributions, raw values and a plain-language summary behind a single prediction.",
   ),
   component: ExplainabilityPage,
@@ -129,7 +129,7 @@ function ExplainabilityPage() {
                 className="flex items-center gap-1.5 rounded-full border border-amber/50 bg-amber/10 px-2.5 py-1 text-[11px] font-mono text-amber hover:bg-amber/20 transition-colors"
               >
                 <Radio className="size-3 text-amber animate-pulse" />
-                Forensic review (paused) â€” Track Live Stream &rarr;
+                Forensic review (paused) — Track Live Stream &rarr;
               </button>
             )}
             <button
@@ -549,7 +549,7 @@ function ExplainabilityPage() {
                         {m.attributionWeight.toFixed(2)}
                       </span>
                     ) : (
-                      <span className="text-fog-deep">â€”</span>
+                      <span className="text-fog-deep">—</span>
                     )}
                   </td>
                   <td className="px-5 py-2.5 text-center">

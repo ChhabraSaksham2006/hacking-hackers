@@ -6,7 +6,7 @@ import { pageHead } from "@/lib/head";
 
 export const Route = createFileRoute("/app/rbac")({
   head: pageHead(
-    "Roles and permissions â€” Flow दृष्टि",
+    "Roles and permissions — Flow दृष्टि",
     "Role matrix covering alert triage, inference, user management, exports and integrations.",
   ),
   component: Rbac,

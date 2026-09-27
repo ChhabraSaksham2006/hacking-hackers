@@ -28,7 +28,7 @@ import {
 
 export const Route = createFileRoute("/app/reports")({
   head: pageHead(
-    "Reports and export â€” Flow दृष्टि",
+    "Reports and export — Flow दृष्टि",
     "Build a PDF or CSV incident report from a time window, alert or segment and preview it before export.",
   ),
   component: Reports,
@@ -42,7 +42,7 @@ function formatBytes(bytes?: number): string {
 }
 
 function formatDate(dateStr?: string | Date): string {
-  if (!dateStr) return "â€”";
+  if (!dateStr) return "—";
   const d = new Date(dateStr);
   return d.toISOString().replace("T", " ").slice(0, 16) + "Z";
 }
@@ -279,7 +279,7 @@ function Reports() {
                   <optgroup label="Active Alerts">
                     {alerts.map((a) => (
                       <option key={a._id} value={`alert ${a.alertId}`}>
-                        {a.alertId} â€” {a.host} ({a.stage})
+                        {a.alertId} — {a.host} ({a.stage})
                       </option>
                     ))}
                   </optgroup>
@@ -376,7 +376,7 @@ function Reports() {
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="font-display text-[18px] font-medium text-paper">
-                      Incident report â€” {preview?.segmentOrAlert || segmentOrAlert}
+                      Incident report — {preview?.segmentOrAlert || segmentOrAlert}
                     </p>
                     <p className="mono mt-1 text-[12px] text-fog">
                       {formatDate(preview?.timeWindow?.start)} → {formatDate(preview?.timeWindow?.end)}

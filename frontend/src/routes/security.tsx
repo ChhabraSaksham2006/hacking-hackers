@@ -4,7 +4,7 @@ import { pageHead } from "@/lib/head";
 
 export const Route = createFileRoute("/security")({
   head: pageHead(
-    "Security Architecture & Compliance â€” Flow दृष्टि",
+    "Security Architecture & Compliance — Flow दृष्टि",
     "Zero-trust telemetry ingestion, local on-premise neural inference, SOC2 Type II, ISO27001 compliance and cryptographic data safeguards.",
   ),
   component: SecurityPage,
@@ -86,7 +86,7 @@ function SecurityPage() {
         <div className="mt-14 rounded-2xl border border-fog-deep/40 bg-void-800/50 p-8">
           <h2 className="font-display text-xl font-semibold text-paper">Role-Based Access Control (RBAC) & Immutable Audit</h2>
           <p className="mt-2 text-sm text-fog">
-            Granular access controls enforce strict least-privilege policies across all SOC tiers: Analyst, SOC Lead, and Admin. Every mitigation actionâ€”including automated segment quarantineâ€”is recorded with actor identity, timestamp, and client TLS fingerprints.
+            Granular access controls enforce strict least-privilege policies across all SOC tiers: Analyst, SOC Lead, and Admin. Every mitigation action—including automated segment quarantine—is recorded with actor identity, timestamp, and client TLS fingerprints.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-4 font-mono text-xs">

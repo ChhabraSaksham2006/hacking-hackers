@@ -6,7 +6,7 @@ import { useResetPassword } from "@/hooks/useApi";
 
 export const Route = createFileRoute("/reset-password")({
   head: pageHead(
-    "Reset Password â€” Flow दृष्टि",
+    "Reset Password — Flow दृष्टि",
     "Choose a new password for your account."
   ),
   validateSearch: (search: Record<string, unknown>): { token?: string } => {

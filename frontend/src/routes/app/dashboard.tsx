@@ -29,7 +29,7 @@ import {
 
 export const Route = createFileRoute("/app/dashboard")({
   head: pageHead(
-    "Dashboard â€” Flow दृष्टि",
+    "Dashboard — Flow दृष्टि",
     "Current infiltration probability, predicted ATT&CK stage and recent alerts for the monitored estate.",
   ),
   component: Dashboard,

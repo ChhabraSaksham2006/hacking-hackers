@@ -4,7 +4,7 @@ import { pageHead } from "@/lib/head";
 
 export const Route = createFileRoute("/terms")({
   head: pageHead(
-    "Terms of Service & Enterprise SLA â€” Flow दृष्टि",
+    "Terms of Service & Enterprise SLA — Flow दृष्टि",
     "Terms of service, enterprise SLA, software licensing, and operational support guarantees.",
   ),
   component: TermsPage,

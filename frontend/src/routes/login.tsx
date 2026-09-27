@@ -6,7 +6,7 @@ import { useLogin, useResendVerification } from "@/hooks/useApi";
 
 export const Route = createFileRoute("/login")({
   head: pageHead(
-    "Log in â€” Flow दृष्टि",
+    "Log in — Flow दृष्टि",
     "Sign in to the Flow दृष्टि predictive cyber-defence console.",
   ),
   component: LoginPage,

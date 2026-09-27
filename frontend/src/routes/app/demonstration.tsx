@@ -44,7 +44,7 @@ import {
 
 export const Route = createFileRoute("/app/demonstration")({
   head: pageHead(
-    "Inference Lab â€” Flow दृष्टि",
+    "Inference Lab — Flow दृष्टि",
     "On-demand Cyber World Model demonstration interface for PCAP/CSV file upload, multi-stage infiltration timelines, flagged flows, and MITRE ATT&CK annotations.",
   ),
   component: DemonstrationPage,

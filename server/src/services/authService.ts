@@ -216,7 +216,7 @@ export async function refreshTokens(refreshTokenValue: string) {
     const familyId = tokenEntry.familyId;
     user.refreshTokens = user.refreshTokens.filter((t) => t.familyId !== familyId);
     await user.save();
-    throw new AppError(401, 'Refresh token reuse detected â€” session revoked');
+    throw new AppError(401, 'Refresh token reuse detected — session revoked');
   }
 
   // Atomically mark the token as used to prevent concurrency bypass
@@ -236,7 +236,7 @@ export async function refreshTokens(refreshTokenValue: string) {
     const familyId = tokenEntry.familyId;
     user.refreshTokens = user.refreshTokens.filter((t) => t.familyId !== familyId);
     await user.save();
-    throw new AppError(401, 'Refresh token reuse detected â€” session revoked');
+    throw new AppError(401, 'Refresh token reuse detected — session revoked');
   }
 
   // Issue new tokens in the same family using the updated user document
@@ -380,7 +380,7 @@ export async function resendVerificationEmail(email: string) {
 export async function requestPasswordReset(email: string) {
   const user = await User.findOne({ email });
   if (!user) {
-    // Don't reveal whether email exists â€” return silently
+    // Don't reveal whether email exists — return silently
     return;
   }
 

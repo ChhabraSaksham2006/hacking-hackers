@@ -6,7 +6,7 @@ import { useForgotPassword } from "@/hooks/useApi";
 
 export const Route = createFileRoute("/forgot-password")({
   head: pageHead(
-    "Forgot Password â€” Flow दृष्टि",
+    "Forgot Password — Flow दृष्टि",
     "Request a password reset link."
   ),
   component: ForgotPasswordPage,

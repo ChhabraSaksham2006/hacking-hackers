@@ -69,7 +69,7 @@ export async function runDailyDigest() {
       `;
 
       const recipients = users.map(u => ({ email: u.email, name: u.name }));
-      await sendRaw(recipients, `Daily Security Digest â€” ${org.name}`, html);
+      await sendRaw(recipients, `Daily Security Digest — ${org.name}`, html);
       
       console.log(`[Cron] Sent digest to ${users.length} users in org ${org.name}`);
     }

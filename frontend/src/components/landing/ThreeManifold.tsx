@@ -276,7 +276,7 @@ export function ThreeManifold({ className = "", themeStrategy = "glass" }: Three
     <div
       ref={containerRef}
       className={`relative h-full w-full max-w-full cursor-grab active:cursor-grabbing overflow-hidden ${className}`}
-      title="Interactive 3D Neural Manifold â€” Drag or move mouse to rotate 54-D state space"
+      title="Interactive 3D Neural Manifold — Drag or move mouse to rotate 54-D state space"
     />
   );
 }

@@ -104,7 +104,7 @@ function wrapTemplate(title: string, body: string): string {
           <tr>
             <td style="padding-top:24px;text-align:center;font-size:12px;color:#6b7280;">
               Flow दृष्टि — Predictive Cyber-Defence Console<br>
-              This is an automated message â€” please do not reply.
+              This is an automated message — please do not reply.
             </td>
           </tr>
         </table>
@@ -157,7 +157,7 @@ export async function sendVerificationEmail(
       ${escapeHtml(verifyUrl)}
     </p>`;
 
-  return sendRaw([{ email, name }], 'Verify your email â€” Flow दृष्टि', wrapTemplate('Verify Email', body));
+  return sendRaw([{ email, name }], 'Verify your email — Flow दृष्टि', wrapTemplate('Verify Email', body));
 }
 
 /**
@@ -189,7 +189,7 @@ export async function sendPasswordResetEmail(
       ${escapeHtml(resetUrl)}
     </p>`;
 
-  return sendRaw([{ email, name }], 'Reset your password â€” Flow दृष्टि', wrapTemplate('Reset Password', body));
+  return sendRaw([{ email, name }], 'Reset your password — Flow दृष्टि', wrapTemplate('Reset Password', body));
 }
 
 /**
@@ -222,7 +222,7 @@ export async function sendTwoFactorCodeEmail(
       If you didn't attempt to sign in, change your password immediately.
     </p>`;
 
-  return sendRaw([{ email, name }], `${code} â€” Flow दृष्टि verification code`, wrapTemplate('Verification Code', body));
+  return sendRaw([{ email, name }], `${code} — Flow दृष्टि verification code`, wrapTemplate('Verification Code', body));
 }
 
 /**
@@ -289,7 +289,7 @@ export async function sendAlertNotificationEmail(
 
   return sendRaw(
     [{ email, name }],
-    `ðŸ”´ ${stateLabel} alert: ${alert.alertId} â€” ${alert.host}`,
+    `🔴 ${stateLabel} alert: ${alert.alertId} — ${alert.host}`,
     wrapTemplate('Alert Notification', body),
   );
 }
@@ -319,12 +319,12 @@ export async function sendReportEmail(
       This link is valid for 7 days from generation.
     </p>`;
 
-  return sendRaw([{ email, name }], `Report ready: ${reportTitle} â€” Flow दृष्टि`, wrapTemplate('Report Ready', body));
+  return sendRaw([{ email, name }], `Report ready: ${reportTitle} — Flow दृष्टि`, wrapTemplate('Report Ready', body));
 }
 
 /**
  * Send alert notification emails to all eligible users in an org.
- * Fire-and-forget â€” errors are logged but never thrown.
+ * Fire-and-forget — errors are logged but never thrown.
  */
 export async function notifyOrgUsersOfAlert(
   orgId: string,

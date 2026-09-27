@@ -52,7 +52,7 @@ import { useSocket } from "@/hooks/useSocket";
 
 export const Route = createFileRoute("/app/audit")({
   head: pageHead(
-    "Audit Log â€” Flow दृष्टि",
+    "Audit Log — Flow दृष्टि",
     "Append-only cryptographic compliance ledger · Retained under SOC 2 Type II controls for 7 years.",
   ),
   component: AuditPage,
@@ -358,7 +358,7 @@ function AuditPage() {
           </div>
           <div className="mt-1.5 flex items-baseline gap-2">
             <span className="font-display text-2xl font-bold tracking-tight text-paper">
-              {stats?.totalEntries?.toLocaleString() ?? "â€”"}
+              {stats?.totalEntries?.toLocaleString() ?? "—"}
             </span>
             <span className="mono text-[11px] text-teal">Append-Only</span>
           </div>
@@ -672,7 +672,7 @@ function AuditPage() {
                           )}
                         </button>
                       ) : (
-                        <span className="mono text-[11px] text-fog/60">â€”</span>
+                        <span className="mono text-[11px] text-fog/60">—</span>
                       )}
                     </td>
                   </tr>

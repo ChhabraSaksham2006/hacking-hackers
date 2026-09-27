@@ -39,7 +39,7 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/topology")({
   head: pageHead(
-    "Topology overview â€” Flow दृष्टि",
+    "Topology overview — Flow दृष्टि",
     "Organisation-wide segment map sized by traffic volume, telemetry throughput, and live threat progression.",
   ),
   component: Topology,
@@ -877,7 +877,7 @@ function Topology() {
                         </span>
                         <span className="font-mono text-[11px] text-teal">Mbps</span>
                         <span className="ml-auto font-mono text-[11px] text-fog">
-                          Model P: <strong className={cn(s.modelProbability && s.modelProbability >= 0.7 ? "text-crimson" : "text-teal")}>{s.modelProbability ? `${Math.round(s.modelProbability * 100)}%` : "â€”"}</strong>
+                          Model P: <strong className={cn(s.modelProbability && s.modelProbability >= 0.7 ? "text-crimson" : "text-teal")}>{s.modelProbability ? `${Math.round(s.modelProbability * 100)}%` : "—"}</strong>
                         </span>
                       </div>
 
@@ -975,7 +975,7 @@ function Topology() {
                                 : "text-teal"
                             )}
                           >
-                            {s.modelProbability ? `${Math.round(s.modelProbability * 100)}%` : "â€”"}
+                            {s.modelProbability ? `${Math.round(s.modelProbability * 100)}%` : "—"}
                           </span>
                         </td>
                         <td className="mono px-4 py-2.5 text-right text-paper">
