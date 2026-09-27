@@ -1,0 +1,54 @@
+name: Render Services Keep-Alive & AutoPing
+
+on:
+  schedule:
+    # Run every 5 minutes, 24 hours a day, 7 days a week (100% free on GitHub Actions)
+    - cron: '*/5 * * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions UI anytime
+
+concurrency:
+  group: render-keepalive
+  cancel-in-progress: false
+
+jobs:
+  autoping:
+    name: AutoPing Health Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Ping Render ML Microservice
+        run: |
+          TARGET_URL="${{ secrets.ML_SERVICE_URL || 'https://hacking-hackers.onrender.com' }}"
+          HEALTH_URL="${TARGET_URL%/}/health"
+          echo "=========================================================="
+          echo "🏓 [AutoPing] Pinging ML Service at: ${HEALTH_URL}"
+          echo "⏰ Timestamp: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+          echo "=========================================================="
+          
+          START_TIME=$(date +%s%3N)
+          HTTP_STATUS=$(curl -s -o /tmp/health_response.json -w "%{http_code}" \
+            -H "User-Agent: AegisVantage-CloudKeepAlive/1.0 (GitHub Actions)" \
+            --connect-timeout 15 \
+            --max-time 45 \
+            "${HEALTH_URL}" || echo "FAILED")
+          END_TIME=$(date +%s%3N)
+          ELAPSED=$((END_TIME - START_TIME))
+
+          echo "HTTP Response Status: ${HTTP_STATUS} (Latency: ${ELAPSED}ms)"
+
+          if [ "${HTTP_STATUS}" = "200" ]; then
+            echo "✅ [SUCCESS] ML Microservice is active and healthy. Coldstart prevented!"
+            cat /tmp/health_response.json | head -c 200
+            echo ""
+          else
+            echo "⚠️ [WARMUP] Service responded with ${HTTP_STATUS} or was sleeping. Warming up container..."
+            # Retry once after 5s to ensure full awake state if in mid-spinup
+            sleep 5
+            RETRY_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+              -H "User-Agent: AegisVantage-CloudKeepAlive/1.0" \
+              --connect-timeout 20 \
+              --max-time 60 \
+              "${HEALTH_URL}" || echo "RETRY_FAILED")
+            echo "Retry response: ${RETRY_STATUS}"
+          fi
