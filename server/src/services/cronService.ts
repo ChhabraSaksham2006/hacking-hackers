@@ -78,7 +78,49 @@ export async function runDailyDigest() {
   }
 }
 
+import { env } from '../config/env.js';
+
+/**
+ * Auto-pings the Render ML Service /health endpoint every 5 minutes
+ * to prevent free-tier spinning down / coldstart (15m inactivity threshold).
+ */
+export async function autoPingMLService(): Promise<void> {
+  const rawUrl = env.ML_SERVICE_URL || 'https://hacking-hackers.onrender.com';
+  const mlUrl = rawUrl.replace(/\/+$/, '');
+  const healthEndpoint = `${mlUrl}/health`;
+
+  try {
+    const startTime = Date.now();
+    const res = await fetch(healthEndpoint, {
+      method: 'GET',
+      headers: {
+        'User-Agent': 'AegisVantage-AutoPing/1.0 (Keep-Alive Service)',
+        Accept: 'application/json',
+      },
+      signal: AbortSignal.timeout(20000), // 20s timeout in case of initial spin-up
+    });
+
+    const elapsed = Date.now() - startTime;
+    if (res.ok) {
+      console.log(`[AutoPing] 🏓 ML Service alive (${healthEndpoint}) -> HTTP ${res.status} (${elapsed}ms) [Coldstart Prevented]`);
+    } else {
+      console.warn(`[AutoPing] ⚠️ ML Service ping responded with status ${res.status} (${elapsed}ms)`);
+    }
+  } catch (err: any) {
+    console.warn(`[AutoPing] ❄️ ML Service warming up or unreachable (${healthEndpoint}): ${err?.message || err}`);
+  }
+}
+
 export function initCronJobs() {
-  // Run daily at 17:00 (5 PM)
+  // 1. Run daily digest at 17:00 (5 PM)
   cron.schedule('0 17 * * *', runDailyDigest);
+
+  // 2. Auto-ping ML service every 5 minutes (Render spins down after 15m of inactivity)
+  cron.schedule('*/5 * * * *', autoPingMLService);
+  console.log('[Cron] ⏱️ AutoPing scheduled: pinging ML service every 5 minutes to prevent Render coldstart.');
+
+  // 3. Immediately trigger initial warm-up ping on startup
+  autoPingMLService().catch((err) => {
+    console.warn('[AutoPing] Initial startup ping error:', err?.message || err);
+  });
 }
