@@ -37,7 +37,7 @@ from core.flow_tracker import FlowTracker
 from core.feature_extractor import FeatureExtractor
 from core.edge_sentinel import EdgeSentinel
 from core.telemetry_dispatcher import TelemetryDispatcher
-from core.live_gateway import LiveEdgeGateway
+from core.live_gateway import LiveEdgeGateway, get_all_host_ips
 from demo.traffic_generator import generate_synthetic_traffic_stream
 from demo.visualizer import TerminalVisualizer
 
@@ -80,7 +80,15 @@ def run_pipeline(
         gateway = LiveEdgeGateway(host="0.0.0.0", port=port, log_path=ingress_log, sensor_id=sensor_id)
         gateway.start()
         gateway_url = f"http://{gateway.lan_ip}:{gateway.port}"
-        print(f"[*] Live Ingress URL: {gateway_url} (Access on phone/laptop to test)")
+
+        print("\n" + "=" * 68)
+        print(f"[*] Live Edge Ingress Gateway Active (Port {port})")
+        print("[*] Connect any Phone or Laptop via any of these URLs:")
+        for label, ip in gateway.all_ips:
+            print(f"    - {label:<25s} -> http://{ip}:{port}")
+        print("    - Public Internet (Anywhere)   -> Run: npx localtunnel --port " + str(port))
+        print("=" * 68 + "\n")
+
         if with_baseline:
             baseline_stream = generate_synthetic_traffic_stream(duration_seconds=999999.0, speed_multiplier=1.0)
     elif mode == "pcap":
@@ -147,6 +155,37 @@ def run_pipeline(
                             total_alerts += len(alerts)
                         dispatcher.dispatch(window, alerts)
                         visualizer.update_window(window, alerts)
+
+                        # Update live mobile prediction dashboard
+                        feat = window.feature_dict
+                        ent = feat.get("dst_port_entropy", 0.0)
+                        auth = feat.get("auth_port_ratio", 0.0)
+                        syn = feat.get("syn_ratio", 0.0)
+                        br = feat.get("byte_rate", 0.0)
+
+                        if auth >= 0.40:
+                            p = min(0.96, 0.82 + (auth * 0.15))
+                            st = "Lateral Movement (T1021.002)"
+                            rk = "critical"
+                        elif ent >= 3.0:
+                            p = min(0.68, 0.35 + (ent / 10.0))
+                            st = "Reconnaissance (T1046)"
+                            rk = "watch"
+                        elif br >= 15000:
+                            p = min(0.98, 0.88 + min(0.1, br / 100000.0))
+                            st = "Data Exfiltration (T1048)"
+                            rk = "critical"
+                        elif syn >= 0.70:
+                            p = 0.74
+                            st = "Denial of Service (T1498)"
+                            rk = "high"
+                        else:
+                            p = max(0.04, min(0.18, 0.06 + (ent * 0.02)))
+                            st = "Normal Baseline Operations"
+                            rk = "normal"
+
+                        gateway.update_telemetry(window, alerts, p, st, rk)
+
                     visualizer.update_packet(packet)
 
                 # Render UI frame

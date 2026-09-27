@@ -50,7 +50,7 @@ class TestLiveGateway(unittest.TestCase):
             self.assertEqual(response.status, 200)
             content = response.read().decode("utf-8")
             self.assertIn("Aegis Vantage Edge Sensor", content)
-            self.assertIn("Live Ingress Gateway Active", content)
+            self.assertIn("predictionChart", content)
 
         # Verify packet was placed in ingress queue
         self.assertFalse(self.gateway.packet_queue.empty())
@@ -87,6 +87,17 @@ class TestLiveGateway(unittest.TestCase):
         # Verify structured log write
         logs = self.gateway.get_recent_logs()
         self.assertTrue(any("RECON_SWEEP" in l for l in logs))
+
+    def test_get_telemetry(self):
+        req = urllib.request.Request(f"http://127.0.0.1:{self.port}/api/telemetry")
+        with urllib.request.urlopen(req) as response:
+            self.assertEqual(response.status, 200)
+            data = json.loads(response.read().decode("utf-8"))
+            self.assertIn("probability", data)
+            self.assertIn("timeline", data)
+            self.assertIn("stage", data)
+            self.assertIn("entropy", data)
+            self.assertIsInstance(data["timeline"], list)
 
 
 if __name__ == "__main__":
