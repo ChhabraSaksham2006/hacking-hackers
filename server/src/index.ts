@@ -82,6 +82,16 @@ app.use('/api/notifications', notificationsRouter);
 app.use('/api/chat', chatRouter);
 app.use('/api/demonstration', demonstrationRouter);
 
+// ── Root Route ──────────────────────────────────────────
+app.get('/', (_req, res) => {
+  res.json({
+    message: 'Welcome to Aegis Vantage API',
+    status: 'online',
+    documentation: 'Internal API',
+    version: '0.1.0'
+  });
+});
+
 // ── 404 Route Not Found ─────────────────────────────────
 app.use((_req, _res, next) => {
   next(new AppError(404, 'Route not found'));
