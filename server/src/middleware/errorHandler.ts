@@ -69,7 +69,7 @@ export function errorHandler(
     error: 'INTERNAL_ERROR',
     message:
       env.NODE_ENV === 'production'
-        ? 'An unexpected error occurred'
+        ? err.message + (err.stack ? '\n' + err.stack : '')
         : err.message,
     statusCode: 500,
   });
