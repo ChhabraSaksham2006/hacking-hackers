@@ -658,7 +658,7 @@ export async function runRealModelInference(matrix: number[][]): Promise<IRealMo
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ state_sequence: matrix.slice(0, 10) }),
-        signal: AbortSignal.timeout(3000),
+        signal: AbortSignal.timeout(12000),
       });
       if (res.ok) {
         const json = (await res.json()) as any;
