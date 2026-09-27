@@ -1,4 +1,34 @@
 services:
+  # ── Node.js Backend API ────────────────────────────
+  - type: web
+    name: aegis-vantage-api
+    runtime: node
+    plan: free
+    region: oregon
+    rootDir: server
+    buildCommand: npm install && npm run build
+    startCommand: node dist/index.js
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: NODE_VERSION
+        value: 22.13.0
+      - key: MONGODB_URI
+        sync: false  # set manually in Render dashboard
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: JWT_2FA_CHALLENGE_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        sync: false  # set to your Vercel frontend URL
+
+  # ── Python ML Microservice ─────────────────────────
   - type: web
     name: aegis-model-service
     runtime: python
