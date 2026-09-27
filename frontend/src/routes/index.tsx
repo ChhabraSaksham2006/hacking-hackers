@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Activity,
@@ -35,7 +35,7 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
   head: pageHead(
-    "Flow à¤¦à¥ƒà¤·à¥à¤Ÿà¤¿ — Cyber World Model Defense",
+    "Flow दृष्टि — Cyber World Model Defense",
     "Deep hybrid world model (SparseRSSM + TFCNet) forecasting attacker lateral movement and C2 progression before kill-chain completion.",
   ),
   component: Landing,
@@ -120,7 +120,7 @@ function Landing() {
 
   return (
     <div className="relative min-h-screen selection:bg-teal selection:text-void-900 w-full max-w-[100vw] overflow-x-hidden bg-void-900">
-      {/* â”€â”€ Background Dot Effect â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ── Background Dot Effect ───────────────────────── */}
       <BackgroundDotEffect
         dotColor="rgba(148, 163, 184, 0.22)"
         glowColor="rgba(45, 212, 191, 0.85)"
@@ -128,7 +128,7 @@ function Landing() {
         dotSize={1.4}
       />
 
-      {/* â”€â”€ Floating Right Rail: Scroll Focus Navigator â”€â”€â”€â”€ */}
+      {/* ── Floating Right Rail: Scroll Focus Navigator ──── */}
       <div className="fixed right-4 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col items-end gap-3 pointer-events-auto">
         <div className="flex flex-col items-center gap-2.5 rounded-full border border-teal/30 bg-void-900/85 p-2 backdrop-blur-xl shadow-2xl shadow-teal/10">
           {SECTIONS.map((sec) => {
@@ -177,16 +177,16 @@ function Landing() {
         </button>
       </div>
 
-      {/* â”€â”€ Top Strategy & Navigation Bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ── Top Strategy & Navigation Bar ────────────────── */}
       <header className="sticky top-0 z-50 border-b border-fog-deep/40 backdrop-blur-xl bg-void-900/90">
         <div className="mx-auto flex h-16 max-w-[1360px] items-center justify-between px-4 sm:px-6 md:px-12">
           {/* Brand Logo & Name */}
           <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
             <div className="flex size-8 sm:size-9 items-center justify-center rounded-lg bg-white p-1 shadow-sm ring-1 ring-black/10 transition-transform group-hover:scale-105">
-              <img src="/flow-drishti-icon.png" alt="Flow à¤¦à¥ƒà¤·à¥à¤Ÿà¤¿" className="size-6 sm:size-7 object-contain" />
+              <img src="/flow-drishti-icon.png" alt="Flow दृष्टि" className="size-6 sm:size-7 object-contain" />
             </div>
             <span className="font-display text-base font-bold tracking-tight text-paper group-hover:text-teal transition-colors">
-              Flow <span className="text-teal font-sans">à¤¦à¥ƒà¤·à¥à¤Ÿà¤¿</span>
+              Flow <span className="text-teal font-sans">दृष्टि</span>
             </span>
             <span className="hidden rounded-full border border-teal/40 bg-teal/10 px-2 py-0.5 font-mono text-[10px] text-teal sm:inline-block shadow-xs shadow-teal/30">
               wm-v4.2.1
@@ -288,9 +288,9 @@ function Landing() {
         )}
       </header>
 
-      {/* â”€â”€ Main Content Container â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ── Main Content Container ───────────────────────── */}
       <main className="relative z-10 mx-auto max-w-[1360px] w-full min-w-0 px-4 py-8 sm:px-6 sm:py-10 md:px-12">
-        {/* â”€â”€ 01. Hero Section with 3D Three.js Manifold â”€â”€â”€â”€â”€ */}
+        {/* ── 01. Hero Section with 3D Three.js Manifold ───── */}
         <section
           id="hero"
           className={cn(
@@ -313,7 +313,7 @@ function Landing() {
             </h1>
 
             <p className="mt-4 sm:mt-6 max-w-[62ch] text-sm sm:text-base lg:text-lg leading-relaxed text-fog break-words">
-              Static classifiers inspect isolated packets after damage is done. Flow दृष्टि runs a continuous temporal world model over 54-dimensional network telemetry, projecting latent kill-chain trajectories forward to catch lateral movement <strong className="text-paper">20 seconds before</strong> domain takeover.
+              Static classifiers inspect isolated packets after damage is done. Aegis Vantage runs a continuous temporal world model over 54-dimensional network telemetry, projecting latent kill-chain trajectories forward to catch lateral movement <strong className="text-paper">20 seconds before</strong> domain takeover.
             </p>
 
             {/* CTA Buttons */}
@@ -381,7 +381,7 @@ function Landing() {
           </div>
         </section>
 
-        {/* â”€â”€ 02. Live Model Trajectory Comparison â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+        {/* ── 02. Live Model Trajectory Comparison ─────────── */}
         <section
           id="comparison"
           className={cn(
@@ -397,7 +397,7 @@ function Landing() {
               Per-Packet Detection vs. Continuous Cyber World Model
             </h2>
             <p className="mt-3 text-sm text-fog leading-relaxed">
-              Single-connection classifiers treat each packet in isolation, missing multi-stage infiltration. Flow दृष्टि encodes physical network state across 10 consecutive time windows.
+              Single-connection classifiers treat each packet in isolation, missing multi-stage infiltration. Aegis Vantage encodes physical network state across 10 consecutive time windows.
             </p>
           </div>
 
@@ -421,11 +421,11 @@ function Landing() {
               </div>
             </div>
 
-            {/* Flow à¤¦à¥ƒà¤·à¥à¤Ÿà¤¿ World Model */}
+            {/* Flow दृष्टि World Model */}
             <div className={cn(cardStyleClass, "group border-teal/50 shadow-teal/10 min-w-0 w-full")}>
               <div className="flex items-center justify-between border-b border-fog-deep/30 pb-3">
                 <span className="font-mono text-xs font-bold uppercase text-teal text-glow-teal group-hover:scale-105 transition-transform">
-                  Flow à¤¦à¥ƒà¤·à¥à¤Ÿà¤¿ World Model
+                  Flow दृष्टि World Model
                 </span>
                 <span className="rounded bg-teal/15 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-teal border border-teal/40 shadow-xs shadow-teal/30">
                   20s Early Horizon
@@ -442,7 +442,7 @@ function Landing() {
           </div>
         </section>
 
-        {/* â”€â”€ 03. Deep-Dive Model Architecture Explanation â”€â”€â”€ */}
+        {/* ── 03. Deep-Dive Model Architecture Explanation ─── */}
         <section
           id="architecture"
           className={cn(
@@ -544,7 +544,7 @@ function Landing() {
                 <div className="grid gap-6 sm:gap-8 lg:grid-cols-2">
                   <div>
                     <span className="font-mono text-xs text-amber uppercase font-bold">
-                      Component 2: Multi-Scale Timeâ€“Frequency Network
+                      Component 2: Multi-Scale Time–Frequency Network
                     </span>
                     <h3 className="mt-2 font-display text-lg sm:text-xl font-bold text-paper">
                       TFCNet-F: Dilated Convolutions & Spectral Projection
@@ -629,11 +629,11 @@ function Landing() {
                       </div>
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between rounded p-2.5 bg-void-950 border border-fog-deep/30 hover:border-amber/40 transition-colors gap-1 sm:gap-2">
                         <span className="text-fog">Reconnaissance (T1046):</span>
-                        <span className="text-amber font-semibold">P 0.24â€“0.46 · Port entropy &gt; 3.8</span>
+                        <span className="text-amber font-semibold">P 0.24–0.46 · Port entropy &gt; 3.8</span>
                       </div>
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between rounded p-2.5 bg-void-950 border border-fog-deep/30 hover:border-amber/40 transition-colors gap-1 sm:gap-2">
                         <span className="text-fog">Initial Access (T1190):</span>
-                        <span className="text-amber font-semibold">P 0.48â€“0.76 · SYN spike</span>
+                        <span className="text-amber font-semibold">P 0.48–0.76 · SYN spike</span>
                       </div>
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between rounded p-2.5 bg-void-950 border border-crimson/40 hover:border-crimson transition-colors shadow-xs shadow-crimson/20 gap-1 sm:gap-2">
                         <span className="text-crimson font-bold">Lateral Movement (T1021):</span>
@@ -680,7 +680,7 @@ function Landing() {
           </div>
         </section>
 
-        {/* â”€â”€ 04. Enterprise SOC Testimonials Section â”€â”€â”€â”€â”€â”€â”€â”€ */}
+        {/* ── 04. Enterprise SOC Testimonials Section ──────── */}
         <section
           id="testimonials"
           className={cn(
@@ -704,7 +704,7 @@ function Landing() {
             {[
               {
                 quote:
-                  "Flow दृष्टि flagged the lateral SMB pivot 22 seconds before the domain controller was touched. The early lead-time warning allowed automated microsegmentation to isolate the host with zero operational disruption.",
+                  "Aegis Vantage flagged the lateral SMB pivot 22 seconds before the domain controller was touched. The early lead-time warning allowed automated microsegmentation to isolate the host with zero operational disruption.",
                 author: "Marcus Vance",
                 role: "CISO",
                 org: "Global FinTech Holdings",
@@ -751,7 +751,7 @@ function Landing() {
           </div>
         </section>
 
-        {/* â”€â”€ 05. Ready to Protect Call-to-Action â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+        {/* ── 05. Ready to Protect Call-to-Action ──────────── */}
         <section
           id="cta"
           className={cn(
@@ -779,15 +779,15 @@ function Landing() {
         </section>
       </main>
 
-      {/* â”€â”€ Footer with Working Generated Pages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ── Footer with Working Generated Pages ─────────── */}
       <footer className="mt-16 sm:mt-24 border-t border-fog-deep/40 bg-void-950/90 px-4 sm:px-6 md:px-12 py-8 sm:py-12 text-xs text-fog relative z-10 backdrop-blur-md">
         <div className="mx-auto flex max-w-[1360px] flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
           <div className="flex items-center gap-3">
             <div className="flex size-8 items-center justify-center rounded-lg bg-white p-1 shadow-sm ring-1 ring-black/10">
-              <img src="/flow-drishti-icon.png" alt="Flow à¤¦à¥ƒà¤·à¥à¤Ÿà¤¿" className="size-6 object-contain" />
+              <img src="/flow-drishti-icon.png" alt="Flow दृष्टि" className="size-6 object-contain" />
             </div>
             <span className="font-display text-sm font-bold text-paper">
-              Flow <span className="text-teal font-sans">à¤¦à¥ƒà¤·à¥à¤Ÿà¤¿</span>
+              Flow <span className="text-teal font-sans">दृष्टि</span>
             </span>
             <span className="text-fog-deep">· Cyber World Model</span>
           </div>
@@ -811,7 +811,7 @@ function Landing() {
           </div>
 
           <p className="font-mono text-fog-deep">
-            Â© 2026 Flow à¤¦à¥ƒà¤·à¥à¤Ÿà¤¿. All rights reserved.
+            © 2026 Flow दृष्टि. All rights reserved.
           </p>
         </div>
       </footer>
