@@ -1,10 +1,10 @@
-# Aegis Vantage — Cyber World Model Microservice
+﻿# Flow Drishti â€” Cyber World Model Microservice
 
-Standalone **FastAPI** deep learning inference microservice powering the **Aegis Vantage** attack forecasting engine. Offloads heavy PyTorch tensor math and temporal state-space modeling from the primary Node.js / Express backend into a dedicated, containerized microservice.
+Standalone **FastAPI** deep learning inference microservice powering the **Flow Drishti** attack forecasting engine. Offloads heavy PyTorch tensor math and temporal state-space modeling from the primary Node.js / Express backend into a dedicated, containerized microservice.
 
 ---
 
-## 🚀 Architecture Highlights
+## ðŸš€ Architecture Highlights
 
 - **Models**:
   - **SparseRSSM**: 54-D State-Space World Model with 256-D recurrent latent dynamics forecasting up to 20 seconds into the future ($K=10$).
@@ -15,26 +15,26 @@ Standalone **FastAPI** deep learning inference microservice powering the **Aegis
 
 ---
 
-## 📁 Directory Structure
+## ðŸ“ Directory Structure
 
 ```text
 microservices/model_service/
-├── app.py                     # FastAPI application & inference endpoints
-├── Dockerfile                 # Multi-stage production container
-├── requirements.txt           # Python dependencies (torch, fastapi, uvicorn, etc.)
-├── README.md                  # Deployment & setup documentation
-├── model_arch/                # Self-contained neural network architectures
-│   ├── sparse_rssm.py
-│   └── tfcnet.py
-└── assets/                    # Pre-packaged weights & benchmark slice
-    ├── model.pt               # PyTorch SparseRSSM model checkpoint (~862 KB)
-    ├── scaler.pkl             # 54-dimensional StandardScaler (~1.7 KB)
-    └── cached_thursday_slice.parquet # Benchmark temporal slice (~78 KB)
+â”œâ”€â”€ app.py                     # FastAPI application & inference endpoints
+â”œâ”€â”€ Dockerfile                 # Multi-stage production container
+â”œâ”€â”€ requirements.txt           # Python dependencies (torch, fastapi, uvicorn, etc.)
+â”œâ”€â”€ README.md                  # Deployment & setup documentation
+â”œâ”€â”€ model_arch/                # Self-contained neural network architectures
+â”‚   â”œâ”€â”€ sparse_rssm.py
+â”‚   â””â”€â”€ tfcnet.py
+â””â”€â”€ assets/                    # Pre-packaged weights & benchmark slice
+    â”œâ”€â”€ model.pt               # PyTorch SparseRSSM model checkpoint (~862 KB)
+    â”œâ”€â”€ scaler.pkl             # 54-dimensional StandardScaler (~1.7 KB)
+    â””â”€â”€ cached_thursday_slice.parquet # Benchmark temporal slice (~78 KB)
 ```
 
 ---
 
-## 🛠️ Local Development
+## ðŸ› ï¸ Local Development
 
 ### 1. Install Dependencies
 ```bash
@@ -51,7 +51,7 @@ The service will start on `http://localhost:7860`. Interactive Swagger documenta
 
 ---
 
-## 🐳 Docker Containerization
+## ðŸ³ Docker Containerization
 
 To build and run the microservice via Docker:
 
@@ -67,7 +67,7 @@ docker run -d -p 7860:7860 --name aegis-model-service aegis-model-service
 
 ---
 
-## 🤗 Deploying to Hugging Face Spaces (100% Free — No Credit Card Needed)
+## ðŸ¤— Deploying to Hugging Face Spaces (100% Free â€” No Credit Card Needed)
 
 > **Important**: Hugging Face recently started asking for credit card verification on **Docker** spaces to prevent cryptomining abuse. 
 > However, **Gradio Spaces are 100% COMPLETELY FREE** with **2 vCPU and 16 GB RAM** with **zero credit card required**!
@@ -94,7 +94,7 @@ echo "gradio>=4.0.0" >> requirements.txt
 
 # Commit and push
 git add .
-git commit -m "Deploy Aegis Vantage Model Service with Gradio SDK"
+git commit -m "Deploy Flow Drishti Model Service with Gradio SDK"
 git push origin main
 ```
 
@@ -106,7 +106,7 @@ git push origin main
 
 ---
 
-## 🌐 Alternative Free Hosting Options
+## ðŸŒ Alternative Free Hosting Options
 
 If you prefer other platforms instead of Hugging Face:
 
@@ -125,7 +125,7 @@ If you prefer other platforms instead of Hugging Face:
 
 ---
 
-## 🔗 Connecting the Backend to the Microservice
+## ðŸ”— Connecting the Backend to the Microservice
 
 1. Open `server/.env` in your project.
 2. Set `ML_SERVICE_URL` to your remote Hugging Face or container URL:
@@ -146,7 +146,7 @@ If you prefer other platforms instead of Hugging Face:
 
 ---
 
-## 📡 API Endpoints
+## ðŸ“¡ API Endpoints
 
 ### 1. `GET /health`
 Returns service status, loaded PyTorch model architectures, and dataset metadata.

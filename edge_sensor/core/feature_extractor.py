@@ -1,7 +1,7 @@
-"""
+﻿"""
 Temporal Window Aggregator & 54-D State Vector Extractor
 Aggregates network flows into 2.0-second temporal windows and extracts continuous physical features
-compatible with the Aegis Vantage Cyber World Model (SparseRSSM + TFCNet).
+compatible with the Flow Drishti Cyber World Model (SparseRSSM + TFCNet).
 """
 
 import math

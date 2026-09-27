@@ -1,8 +1,8 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 model_bridge.py
 ===============
-Live PyTorch Inference Bridge for Aegis Vantage Dashboard.
+Live PyTorch Inference Bridge for Flow Drishti Dashboard.
 Runs ACTUAL neural network forward inference over real recorded network telemetry
 from the CIC-IDS-2018 benchmark dataset (Thursday-01-03-2018 EP_0001 Infiltration).
 
@@ -329,7 +329,7 @@ def run_real_model_inference(step_index: int, df: pd.DataFrame):
     else:
         alerts = []
         flows = [
-            {"src": "192.168.10.44:443", "dst": "192.168.10.1:53", "proto": "UDP", "flags": "—", "bytes": "840 B", "prob": 0.08},
+            {"src": "192.168.10.44:443", "dst": "192.168.10.1:53", "proto": "UDP", "flags": "â€”", "bytes": "840 B", "prob": 0.08},
             {"src": "192.168.10.44:51220", "dst": "192.168.10.12:80", "proto": "TCP", "flags": "ACK", "bytes": "2.4 KB", "prob": 0.11},
             {"src": "192.168.10.19:51222", "dst": "10.0.0.15:445", "proto": "TCP", "flags": "ACK", "bytes": "4.8 KB", "prob": 0.12},
         ]
@@ -457,7 +457,7 @@ def run_matrix_inference(matrix_data):
     }
 
 def main():
-    parser = argparse.ArgumentParser(description="Aegis Vantage Real PyTorch Model Inference Bridge")
+    parser = argparse.ArgumentParser(description="Flow Drishti Real PyTorch Model Inference Bridge")
     parser.add_argument("--action", choices=["init", "step", "infer_matrix"], default="step", help="Bridge action")
     parser.add_argument("--index", type=int, default=47, help="Step index [0..47]")
     parser.add_argument("--input", type=str, default="", help="Path to input JSON file for infer_matrix")

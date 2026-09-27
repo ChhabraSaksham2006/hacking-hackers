@@ -1,10 +1,10 @@
-# ===============================================================
-# Aegis Vantage — Enterprise Distributed Edge Sensor Agent
+﻿# ===============================================================
+# Flow Drishti â€” Enterprise Distributed Edge Sensor Agent
 # Lightweight, Zero-Dependency Network Telemetry Daemon
 # ===============================================================
 FROM python:3.11-alpine
 
-LABEL maintainer="Aegis Vantage Cyber World Model Team"
+LABEL maintainer="Flow Drishti Cyber World Model Team"
 LABEL description="Distributed Edge Network Sensor Agent for Real-Time Threat Forecasting"
 
 WORKDIR /app

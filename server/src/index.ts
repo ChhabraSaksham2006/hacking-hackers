@@ -1,4 +1,4 @@
-import express from 'express';
+﻿import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -14,7 +14,7 @@ import { initSocket } from './socket.js';
 import { initCronJobs } from './services/cronService.js';
 
 
-// ── Route Imports ───────────────────────────────────────
+// â”€â”€ Route Imports â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 import authRouter from './routes/auth.js';
 import dashboardRouter from './routes/dashboard.js';
 import alertsRouter from './routes/alerts.js';
@@ -37,17 +37,17 @@ import demonstrationRouter from './routes/demonstration.js';
 
 const app = express();
 
-// ── Security & parsing ──────────────────────────────────
+// â”€â”€ Security & parsing â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 app.use(helmet());
 app.use(cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// ── Logging ─────────────────────────────────────────────
+// â”€â”€ Logging â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 app.use(morgan(env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
-// ── Health check ────────────────────────────────────────
+// â”€â”€ Health check â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
@@ -61,7 +61,7 @@ app.get('/api/ready', (_req, res) => {
   res.json({ status: 'ok', database: 'connected' });
 });
 
-// ── API routes ──────────────────────────────────────────
+// â”€â”€ API routes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 app.use('/api/auth', authRouter);
 app.use('/api/dashboard', dashboardRouter);
@@ -83,32 +83,32 @@ app.use('/api/notifications', notificationsRouter);
 app.use('/api/chat', chatRouter);
 app.use('/api/demonstration', demonstrationRouter);
 
-// ── Root Route ──────────────────────────────────────────
+// â”€â”€ Root Route â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 app.get('/', (_req, res) => {
   res.json({
-    message: 'Welcome to Aegis Vantage API',
+    message: 'Welcome to Flow दृष्टि API',
     status: 'online',
     documentation: 'Internal API',
     version: '0.1.0'
   });
 });
 
-// ── 404 Route Not Found ─────────────────────────────────
+// â”€â”€ 404 Route Not Found â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 app.use((_req, _res, next) => {
   next(new AppError(404, 'Route not found'));
 });
 
-// ── Global error handler (must be last) ─────────────────
+// â”€â”€ Global error handler (must be last) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 app.use(errorHandler);
 
-// ── Start server ────────────────────────────────────────
+// â”€â”€ Start server â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function start() {
   await connectDB();
   await dashboardStore.init();
   initCronJobs();
 
   const server = app.listen(env.PORT, () => {
-    console.log(`🚀 Aegis Vantage API running on port ${env.PORT}`);
+    console.log(`ðŸš€ Flow दृष्टि API running on port ${env.PORT}`);
     console.log(`   Environment: ${env.NODE_ENV}`);
     console.log(`   Frontend:    ${env.FRONTEND_URL}`);
   });
@@ -136,7 +136,7 @@ async function start() {
 
   // Graceful shutdown
   const shutdown = async () => {
-    console.log('\n🛑 SIGTERM / SIGINT received. Shutting down gracefully...');
+    console.log('\nðŸ›‘ SIGTERM / SIGINT received. Shutting down gracefully...');
     clearInterval(ticker);
     server.close(async () => {
       console.log('   Express server closed.');

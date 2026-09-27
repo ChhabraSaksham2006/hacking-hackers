@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo } from "react";
+﻿import { useState, useRef, useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Upload,
@@ -44,7 +44,7 @@ import {
 
 export const Route = createFileRoute("/app/demonstration")({
   head: pageHead(
-    "Inference Lab — Aegis Vantage",
+    "Inference Lab â€” Flow दृष्टि",
     "On-demand Cyber World Model demonstration interface for PCAP/CSV file upload, multi-stage infiltration timelines, flagged flows, and MITRE ATT&CK annotations.",
   ),
   component: DemonstrationPage,
@@ -259,7 +259,7 @@ function DemonstrationPage() {
 
                   <div className="mt-3 flex items-center justify-between border-t border-fog-deep/30 pt-2 text-[10px] text-fog">
                     <span className="mono">{preset.duration}</span>
-                    <span className="text-teal font-medium">Run Pass →</span>
+                    <span className="text-teal font-medium">Run Pass â†’</span>
                   </div>
                 </button>
               );
@@ -305,7 +305,7 @@ function DemonstrationPage() {
                   {selectedFile.name}
                 </p>
                 <p className="mono text-[11px] text-teal">
-                  {(selectedFile.size / 1024).toFixed(1)} KB • Loaded & Processed
+                  {(selectedFile.size / 1024).toFixed(1)} KB â€¢ Loaded & Processed
                 </p>
               </div>
             ) : (
@@ -570,7 +570,7 @@ function DemonstrationPage() {
                         Phase {idx + 1}: {stage.stage}
                       </span>
                       <span className="mono text-[11px] text-fog">
-                        {stage.startOffset} → {stage.endOffset}
+                        {stage.startOffset} â†’ {stage.endOffset}
                       </span>
                     </div>
 
@@ -671,7 +671,7 @@ function DemonstrationPage() {
                             >
                               <td className="py-2.5">
                                 <div className="text-[12px] font-medium text-paper">
-                                  {flow.src} → {flow.dst}
+                                  {flow.src} â†’ {flow.dst}
                                 </div>
                                 <span className="text-[10px] text-fog">{flow.timestamp}</span>
                               </td>
@@ -711,7 +711,7 @@ function DemonstrationPage() {
                                   }}
                                   className="text-[11px] text-teal hover:underline"
                                 >
-                                  Inspect →
+                                  Inspect â†’
                                 </button>
                               </td>
                             </tr>

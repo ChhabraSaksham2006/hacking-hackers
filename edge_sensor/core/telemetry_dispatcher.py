@@ -1,6 +1,6 @@
-"""
+﻿"""
 Telemetry Dispatcher
-Formats, queues, and transmits edge telemetry frames upstream to the Aegis Vantage backend
+Formats, queues, and transmits edge telemetry frames upstream to the Flow Drishti backend
 or local telemetry sinks (JSON/NDJSON).
 """
 

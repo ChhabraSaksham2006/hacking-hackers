@@ -1,6 +1,6 @@
-"""
+﻿"""
 Neural Evaluator
-Real-time deep learning inference engine for the Aegis Vantage edge sensor.
+Real-time deep learning inference engine for the Flow Drishti edge sensor.
 Wraps the SparseRSSM + TFCNet Deep Hybrid Cyber World Model ensemble to evaluate
 54-D temporal state matrices without brittle hardcoded rules.
 """

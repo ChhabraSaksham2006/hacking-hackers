@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AuthShell, Field } from "@/components/app/AuthShell";
 import { pageHead } from "@/lib/head";
@@ -6,7 +6,7 @@ import { useForgotPassword } from "@/hooks/useApi";
 
 export const Route = createFileRoute("/forgot-password")({
   head: pageHead(
-    "Forgot Password — Aegis Vantage",
+    "Forgot Password â€” Flow दृष्टि",
     "Request a password reset link."
   ),
   component: ForgotPasswordPage,

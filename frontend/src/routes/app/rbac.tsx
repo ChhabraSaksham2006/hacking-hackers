@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Check, Minus, X } from "lucide-react";
 import { ActionButton, FlatPanel, PageTitle } from "@/components/app/panels";
@@ -6,7 +6,7 @@ import { pageHead } from "@/lib/head";
 
 export const Route = createFileRoute("/app/rbac")({
   head: pageHead(
-    "Roles and permissions — Aegis Vantage",
+    "Roles and permissions â€” Flow दृष्टि",
     "Role matrix covering alert triage, inference, user management, exports and integrations.",
   ),
   component: Rbac,

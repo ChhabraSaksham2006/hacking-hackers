@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { createFileRoute, Link, useRouter, useLocation } from "@tanstack/react-router";
 import { AuthShell, Field } from "@/components/app/AuthShell";
 import { pageHead } from "@/lib/head";
@@ -6,8 +6,8 @@ import { useVerify2FA, useSend2FAEmail } from "@/hooks/useApi";
 
 export const Route = createFileRoute("/two-factor")({
   head: pageHead(
-    "Verification — Aegis Vantage",
-    "Enter your six-digit verification code to reach the Aegis Vantage console.",
+    "Verification â€” Flow दृष्टि",
+    "Enter your six-digit verification code to reach the Flow दृष्टि console.",
   ),
   validateSearch: (search: Record<string, unknown>): { challengeId?: string | undefined } => ({
     challengeId: search['challengeId'] as string | undefined,

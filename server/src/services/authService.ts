@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+﻿import crypto from 'crypto';
 import speakeasy from 'speakeasy';
 import { User, type IUser } from '../models/User.js';
 import { Organisation } from '../models/Organisation.js';
@@ -19,12 +19,12 @@ import {
   sendTwoFactorCodeEmail,
 } from './emailService.js';
 
-// ── Single-use 2FA challenge tracking ───────────────────
+// â”€â”€ Single-use 2FA challenge tracking â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // In-memory set of consumed jti values. Acceptable for single-instance MVP.
 // For horizontal scaling, replace with a Redis SET with TTL.
 const consumedChallengeJtis = new Set<string>();
 
-// ── Types ───────────────────────────────────────────────
+// â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 interface UserSummary {
   id: unknown;
@@ -38,7 +38,7 @@ export type LoginResult =
   | { requiresTwoFactor: true; challengeId: string }
   | { requiresTwoFactor: false; accessToken: string; refreshToken: string; user: UserSummary };
 
-// ── Registration ────────────────────────────────────────
+// â”€â”€ Registration â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export interface RegisterInput {
   orgName: string;
@@ -92,7 +92,7 @@ export async function registerUser(input: RegisterInput) {
   return { user, org };
 }
 
-// ── Login ───────────────────────────────────────────────
+// â”€â”€ Login â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export interface LoginInput {
   email: string;
@@ -123,14 +123,14 @@ export async function loginUser(input: LoginInput): Promise<LoginResult> {
   return issueTokens(user);
 }
 
-// ── 2FA Setup ───────────────────────────────────────────
+// â”€â”€ 2FA Setup â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export async function setupTwoFactor(userId: string) {
   const user = await User.findById(userId);
   if (!user) throw new AppError(404, 'User not found');
 
   const secret = speakeasy.generateSecret({
-    name: `Aegis Vantage (${user.email})`,
+    name: `Flow दृष्टि (${user.email})`,
     length: 20,
   });
 
@@ -185,7 +185,7 @@ export async function verifyTwoFactor(challengeId: string, code: string): Promis
   return issueTokens(user);
 }
 
-// ── Token Refresh ───────────────────────────────────────
+// â”€â”€ Token Refresh â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export async function refreshTokens(refreshTokenValue: string) {
   let payload;
@@ -216,7 +216,7 @@ export async function refreshTokens(refreshTokenValue: string) {
     const familyId = tokenEntry.familyId;
     user.refreshTokens = user.refreshTokens.filter((t) => t.familyId !== familyId);
     await user.save();
-    throw new AppError(401, 'Refresh token reuse detected — session revoked');
+    throw new AppError(401, 'Refresh token reuse detected â€” session revoked');
   }
 
   // Atomically mark the token as used to prevent concurrency bypass
@@ -236,7 +236,7 @@ export async function refreshTokens(refreshTokenValue: string) {
     const familyId = tokenEntry.familyId;
     user.refreshTokens = user.refreshTokens.filter((t) => t.familyId !== familyId);
     await user.save();
-    throw new AppError(401, 'Refresh token reuse detected — session revoked');
+    throw new AppError(401, 'Refresh token reuse detected â€” session revoked');
   }
 
   // Issue new tokens in the same family using the updated user document
@@ -244,13 +244,13 @@ export async function refreshTokens(refreshTokenValue: string) {
   return result;
 }
 
-// ── Logout ──────────────────────────────────────────────
+// â”€â”€ Logout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export async function logoutUser(userId: string) {
   await User.findByIdAndUpdate(userId, { refreshTokens: [] });
 }
 
-// ── Get Profile ─────────────────────────────────────────
+// â”€â”€ Get Profile â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export async function getUserProfile(userId: string) {
   const user = await User.findById(userId).select('-passwordHash -refreshTokens -twoFactorSecret');
@@ -273,7 +273,7 @@ export async function getUserProfile(userId: string) {
   };
 }
 
-// ── Internal Helpers ────────────────────────────────────
+// â”€â”€ Internal Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 async function issueTokens(user: IUser, existingFamilyId?: string) {
   const accessPayload: AccessTokenPayload = {
@@ -333,7 +333,7 @@ async function findAndValidateRefreshToken(
   return null;
 }
 
-// ── Email Verification ──────────────────────────────────
+// â”€â”€ Email Verification â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export async function verifyEmail(token: string) {
   // We must scan all users with a pending verification since the token is hashed
@@ -375,12 +375,12 @@ export async function resendVerificationEmail(email: string) {
   await sendVerificationEmail(user.email, user.name, rawToken);
 }
 
-// ── Password Reset ──────────────────────────────────────
+// â”€â”€ Password Reset â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export async function requestPasswordReset(email: string) {
   const user = await User.findOne({ email });
   if (!user) {
-    // Don't reveal whether email exists — return silently
+    // Don't reveal whether email exists â€” return silently
     return;
   }
 
@@ -416,7 +416,7 @@ export async function resetPassword(token: string, newPassword: string) {
   throw new AppError(400, 'Invalid or expired reset link');
 }
 
-// ── Email-Based 2FA ─────────────────────────────────────
+// â”€â”€ Email-Based 2FA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 // In-memory store for email-based 2FA codes (single instance; use Redis for HA)
 const email2faCodes = new Map<string, { code: string; expiresAt: number }>();
@@ -446,7 +446,7 @@ export function verifyEmail2FACode(userId: string, code: string): boolean {
   return true;
 }
 
-// ── Update Alert Notifications Preference ───────────────
+// â”€â”€ Update Alert Notifications Preference â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export async function updateAlertNotifications(userId: string, enabled: boolean) {
   const user = await User.findById(userId);

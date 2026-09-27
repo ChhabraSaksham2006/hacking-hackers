@@ -1,4 +1,4 @@
-import cron from 'node-cron';
+﻿import cron from 'node-cron';
 import mongoose from 'mongoose';
 import { Alert } from '../models/Alert.js';
 import { Organisation } from '../models/Organisation.js';
@@ -60,16 +60,16 @@ export async function runDailyDigest() {
                 </li>
               `).join('')}
             </ul>
-          ` : `<p style="color: #16a34a; font-weight: bold;">🎉 No unresolved critical alerts!</p>`}
+          ` : `<p style="color: #16a34a; font-weight: bold;">ðŸŽ‰ No unresolved critical alerts!</p>`}
           
           <p style="margin-top: 40px; font-size: 12px; color: #999;">
-            This is an automated digest from Aegis Vantage. You can adjust your notification settings in your profile.
+            This is an automated digest from Flow दृष्टि. You can adjust your notification settings in your profile.
           </p>
         </div>
       `;
 
       const recipients = users.map(u => ({ email: u.email, name: u.name }));
-      await sendRaw(recipients, `Daily Security Digest — ${org.name}`, html);
+      await sendRaw(recipients, `Daily Security Digest â€” ${org.name}`, html);
       
       console.log(`[Cron] Sent digest to ${users.length} users in org ${org.name}`);
     }
@@ -102,12 +102,12 @@ export async function autoPingMLService(): Promise<void> {
 
     const elapsed = Date.now() - startTime;
     if (res.ok) {
-      console.log(`[AutoPing] 🏓 ML Service alive (${healthEndpoint}) -> HTTP ${res.status} (${elapsed}ms) [Coldstart Prevented]`);
+      console.log(`[AutoPing] ðŸ“ ML Service alive (${healthEndpoint}) -> HTTP ${res.status} (${elapsed}ms) [Coldstart Prevented]`);
     } else {
-      console.warn(`[AutoPing] ⚠️ ML Service ping responded with status ${res.status} (${elapsed}ms)`);
+      console.warn(`[AutoPing] âš ï¸ ML Service ping responded with status ${res.status} (${elapsed}ms)`);
     }
   } catch (err: any) {
-    console.warn(`[AutoPing] ❄️ ML Service warming up or unreachable (${healthEndpoint}): ${err?.message || err}`);
+    console.warn(`[AutoPing] â„ï¸ ML Service warming up or unreachable (${healthEndpoint}): ${err?.message || err}`);
   }
 }
 
@@ -117,7 +117,7 @@ export function initCronJobs() {
 
   // 2. Auto-ping ML service every 5 minutes (Render spins down after 15m of inactivity)
   cron.schedule('*/5 * * * *', autoPingMLService);
-  console.log('[Cron] ⏱️ AutoPing scheduled: pinging ML service every 5 minutes to prevent Render coldstart.');
+  console.log('[Cron] â±ï¸ AutoPing scheduled: pinging ML service every 5 minutes to prevent Render coldstart.');
 
   // 3. Immediately trigger initial warm-up ping on startup
   autoPingMLService().catch((err) => {

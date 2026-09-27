@@ -1,10 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+﻿import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shield, Lock, CheckCircle2, Server, Key, FileText, ArrowLeft } from "lucide-react";
 import { pageHead } from "@/lib/head";
 
 export const Route = createFileRoute("/security")({
   head: pageHead(
-    "Security Architecture & Compliance — Aegis Vantage",
+    "Security Architecture & Compliance â€” Flow दृष्टि",
     "Zero-trust telemetry ingestion, local on-premise neural inference, SOC2 Type II, ISO27001 compliance and cryptographic data safeguards.",
   ),
   component: SecurityPage,
@@ -17,7 +17,7 @@ function SecurityPage() {
       <header className="flex h-16 items-center justify-between border-b border-fog-deep/40 px-6 md:px-12 backdrop-blur-md bg-void-900/80">
         <Link to="/" className="flex items-center gap-2.5 text-fog hover:text-paper transition-colors">
           <ArrowLeft className="size-4 text-teal" />
-          <span className="font-mono text-xs uppercase tracking-wider">Back to Aegis Vantage</span>
+          <span className="font-mono text-xs uppercase tracking-wider">Back to Flow दृष्टि</span>
         </Link>
         <div className="flex items-center gap-3">
           <span className="size-[16px] rotate-45 rounded-[3px] border-2 border-teal" />
@@ -35,7 +35,7 @@ function SecurityPage() {
             Security Architecture & Zero-Trust Telemetry
           </h1>
           <p className="mt-3 max-w-[70ch] text-base text-fog">
-            Aegis Vantage is engineered from the ground up to operate in high-assurance government, defense, and Tier-1 financial environments where sensitive PCAP payloads never cross trust boundaries.
+            Flow दृष्टि is engineered from the ground up to operate in high-assurance government, defense, and Tier-1 financial environments where sensitive PCAP payloads never cross trust boundaries.
           </p>
         </div>
 
@@ -77,7 +77,7 @@ function SecurityPage() {
             </div>
             <h3 className="mt-4 font-display text-lg font-semibold text-paper">Compliance Certifications</h3>
             <p className="mt-2 text-sm text-fog leading-relaxed">
-              Aegis Vantage is independently audited under SOC 2 Type II (Security, Confidentiality, Availability) and certified against ISO/IEC 27001:2022 standards. Full audit logs are immutable and cryptographically chained.
+              Flow दृष्टि is independently audited under SOC 2 Type II (Security, Confidentiality, Availability) and certified against ISO/IEC 27001:2022 standards. Full audit logs are immutable and cryptographically chained.
             </p>
           </div>
         </div>
@@ -86,7 +86,7 @@ function SecurityPage() {
         <div className="mt-14 rounded-2xl border border-fog-deep/40 bg-void-800/50 p-8">
           <h2 className="font-display text-xl font-semibold text-paper">Role-Based Access Control (RBAC) & Immutable Audit</h2>
           <p className="mt-2 text-sm text-fog">
-            Granular access controls enforce strict least-privilege policies across all SOC tiers: Analyst, SOC Lead, and Admin. Every mitigation action—including automated segment quarantine—is recorded with actor identity, timestamp, and client TLS fingerprints.
+            Granular access controls enforce strict least-privilege policies across all SOC tiers: Analyst, SOC Lead, and Admin. Every mitigation actionâ€”including automated segment quarantineâ€”is recorded with actor identity, timestamp, and client TLS fingerprints.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-4 font-mono text-xs">
@@ -99,7 +99,7 @@ function SecurityPage() {
       </main>
 
       <footer className="border-t border-fog-deep/40 px-6 py-8 text-center text-xs text-fog">
-        Aegis Vantage Security Office · security@aegis-vantage.internal · PGP Key Fingerprint: 4F92 B109 82E1 773C
+        Flow दृष्टि Security Office Â· security@aegis-vantage.internal Â· PGP Key Fingerprint: 4F92 B109 82E1 773C
       </footer>
     </div>
   );

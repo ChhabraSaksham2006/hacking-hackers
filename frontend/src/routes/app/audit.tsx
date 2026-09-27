@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+﻿import { useState, useEffect, useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -52,8 +52,8 @@ import { useSocket } from "@/hooks/useSocket";
 
 export const Route = createFileRoute("/app/audit")({
   head: pageHead(
-    "Audit Log — Aegis Vantage",
-    "Append-only cryptographic compliance ledger · Retained under SOC 2 Type II controls for 7 years.",
+    "Audit Log â€” Flow दृष्टि",
+    "Append-only cryptographic compliance ledger Â· Retained under SOC 2 Type II controls for 7 years.",
   ),
   component: AuditPage,
 });
@@ -349,7 +349,7 @@ function AuditPage() {
         </div>
       </div>
 
-      {/* ── Metric Highlights & Cryptographic Seal Strip ── */}
+      {/* â”€â”€ Metric Highlights & Cryptographic Seal Strip â”€â”€ */}
       <div className="my-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <GlassPanel className="p-3.5">
           <div className="flex items-center justify-between">
@@ -358,7 +358,7 @@ function AuditPage() {
           </div>
           <div className="mt-1.5 flex items-baseline gap-2">
             <span className="font-display text-2xl font-bold tracking-tight text-paper">
-              {stats?.totalEntries?.toLocaleString() ?? "—"}
+              {stats?.totalEntries?.toLocaleString() ?? "â€”"}
             </span>
             <span className="mono text-[11px] text-teal">Append-Only</span>
           </div>
@@ -431,7 +431,7 @@ function AuditPage() {
         </GlassPanel>
       </div>
 
-      {/* ── Category Quick-Filter Tabs ── */}
+      {/* â”€â”€ Category Quick-Filter Tabs â”€â”€ */}
       <div className="mb-4 flex flex-wrap items-center gap-1.5 border-b border-fog-deep/40 pb-3">
         {CATEGORIES.map((cat) => {
           const isActive = category === cat.id;
@@ -469,7 +469,7 @@ function AuditPage() {
         })}
       </div>
 
-      {/* ── Interactive Filter & Search Bar ── */}
+      {/* â”€â”€ Interactive Filter & Search Bar â”€â”€ */}
       <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-12">
         {/* Search input */}
         <div className="relative sm:col-span-5">
@@ -548,7 +548,7 @@ function AuditPage() {
         </div>
       )}
 
-      {/* ── Audit Ledger Table ── */}
+      {/* â”€â”€ Audit Ledger Table â”€â”€ */}
       <FlatPanel bodyClassName="p-0 overflow-x-auto">
         <table className="w-full min-w-[700px] text-left">
           <thead className="border-b border-fog-deep/60 bg-void-800/50 text-[11px] uppercase tracking-wider text-fog">
@@ -672,7 +672,7 @@ function AuditPage() {
                           )}
                         </button>
                       ) : (
-                        <span className="mono text-[11px] text-fog/60">—</span>
+                        <span className="mono text-[11px] text-fog/60">â€”</span>
                       )}
                     </td>
                   </tr>
@@ -693,7 +693,7 @@ function AuditPage() {
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center justify-between">
                     <span className="text-[12px] font-medium text-paper">
-                      Forensic Telemetry Metadata · {current.event} ({current.target})
+                      Forensic Telemetry Metadata Â· {current.event} ({current.target})
                     </span>
                     <button
                       onClick={() => setExpandedId(null)}
@@ -711,7 +711,7 @@ function AuditPage() {
           </div>
         )}
 
-        {/* ── Pagination Controls ── */}
+        {/* â”€â”€ Pagination Controls â”€â”€ */}
         <div className="flex flex-col items-center justify-between gap-3 border-t border-fog-deep/40 px-5 py-3 sm:flex-row">
           <div className="text-[12px] text-fog">
             Showing{" "}

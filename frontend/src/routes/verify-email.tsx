@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+﻿import { useEffect, useState, useRef } from "react";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { AuthShell } from "@/components/app/AuthShell";
 import { pageHead } from "@/lib/head";
@@ -6,7 +6,7 @@ import { useVerifyEmail } from "@/hooks/useApi";
 
 export const Route = createFileRoute("/verify-email")({
   head: pageHead(
-    "Verify Email — Aegis Vantage",
+    "Verify Email â€” Flow दृष्टि",
     "Verifying your email address."
   ),
   validateSearch: (search: Record<string, unknown>): { token?: string } => {

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Unit tests for LiveEdgeGateway and interactive ingress verification.
 """
 
@@ -49,7 +49,7 @@ class TestLiveGateway(unittest.TestCase):
         with urllib.request.urlopen(req) as response:
             self.assertEqual(response.status, 200)
             content = response.read().decode("utf-8")
-            self.assertIn("Aegis Vantage Edge Sensor", content)
+            self.assertIn("Flow Drishti Edge Sensor", content)
             self.assertIn("predictionChart", content)
 
         # Verify packet was placed in ingress queue

@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+﻿import { createFileRoute, Link } from "@tanstack/react-router";
 import { BookOpen, Terminal, Cpu, ArrowLeft, Layers, ShieldCheck, CheckCircle2, Zap, BarChart3, Database } from "lucide-react";
 import { pageHead } from "@/lib/head";
 import { MathFormula } from "@/components/common/MathFormula";
@@ -6,7 +6,7 @@ import { GoogleTranslate } from "@/components/common/GoogleTranslate";
 
 export const Route = createFileRoute("/docs")({
   head: pageHead(
-    "Technical Documentation & Architecture Whitepaper — Aegis Vantage",
+    "Technical Documentation & Architecture Whitepaper â€” Flow दृष्टि",
     "API reference, SparseRSSM + TFCNet-F architecture specifications, mathematical formulation, and experimental benchmark record.",
   ),
   component: DocsPage,
@@ -15,11 +15,11 @@ export const Route = createFileRoute("/docs")({
 export function DocsPage() {
   return (
     <div className="network-field min-h-screen selection:bg-teal selection:text-void-900 bg-void-900 text-paper">
-      {/* ── Top Header ─────────────────────────────────── */}
+      {/* â”€â”€ Top Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-fog-deep/40 px-6 md:px-12 backdrop-blur-xl bg-void-900/85">
         <Link to="/" className="flex items-center gap-2.5 text-fog hover:text-paper transition-colors">
           <ArrowLeft className="size-4 text-teal" />
-          <span className="font-mono text-xs uppercase tracking-wider">Back to Aegis Vantage</span>
+          <span className="font-mono text-xs uppercase tracking-wider">Back to Flow दृष्टि</span>
         </Link>
         <div className="flex items-center gap-4">
           <GoogleTranslate id="google_translate_docs" />
@@ -31,24 +31,24 @@ export function DocsPage() {
       </header>
 
       <main className="mx-auto max-w-[1180px] px-6 py-14 md:px-10">
-        {/* ── Paper Title & Authors ───────────────────────── */}
+        {/* â”€â”€ Paper Title & Authors â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <div className="border-b border-fog-deep/40 pb-8">
           <div className="inline-flex items-center gap-2 rounded-full border border-teal/40 bg-teal/10 px-3.5 py-1 text-xs font-mono text-teal">
             <BookOpen className="size-3.5 text-teal" />
-            Official Research Publication · Neural AI, DTU
+            Official Research Publication Â· Neural AI, DTU
           </div>
           <h1 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-paper sm:text-4xl">
-            Temporal World Modeling for Network Attack Forecasting with Latent-Recurrent and Time–Frequency Dynamics
+            Temporal World Modeling for Network Attack Forecasting with Latent-Recurrent and Timeâ€“Frequency Dynamics
           </h1>
           <p className="mt-3 font-mono text-xs text-teal">
-            Nakshatra Yadav, Lakshay Bharti, Nidhi Jha, Saksham Chhabra, Arihant Srivastava, Soumil Srivastava · Neural AI, Delhi Technological University
+            Nakshatra Yadav, Lakshay Bharti, Nidhi Jha, Saksham Chhabra, Arihant Srivastava, Soumil Srivastava Â· Neural AI, Delhi Technological University
           </p>
           <p className="mt-4 max-w-[84ch] text-sm text-fog leading-relaxed">
             Conventional Intrusion Detection Systems (IDS) map single traffic slices to benign/malicious labels, discarding temporal evolution. We reformulate network defense as a continuous temporal forecasting problem: traffic is encoded into 54-dimensional physical network state vectors, consumed by two complementary neural backbones (SparseRSSM + TFCNet-F) to forecast future states <MathFormula math="\hat{S}_{t+1..t+K}" displayMode={false} /> and future attack risk <MathFormula math="\hat{y}_{t+K}" displayMode={false} /> at a 20-second early horizon.
           </p>
         </div>
 
-        {/* ── Key Metrics Strip ───────────────────────────── */}
+        {/* â”€â”€ Key Metrics Strip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
           <div className="rounded-xl border border-teal/30 bg-void-800/60 p-4">
             <span className="font-mono text-2xl font-bold text-teal">100%</span>
@@ -68,7 +68,7 @@ export function DocsPage() {
           </div>
         </div>
 
-        {/* ── Parameter Budget & Overview ─────────────────── */}
+        {/* â”€â”€ Parameter Budget & Overview â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <div className="mt-10 grid gap-5 sm:grid-cols-3">
           <div className="rounded-xl border border-teal/30 bg-void-800/60 p-5 backdrop-blur-md">
             <div className="size-9 rounded-lg border border-teal/40 bg-teal/10 flex items-center justify-center text-teal">
@@ -101,7 +101,7 @@ export function DocsPage() {
           </div>
         </div>
 
-        {/* ── Architectural Specifications ────────────────── */}
+        {/* â”€â”€ Architectural Specifications â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <div className="mt-14 space-y-12">
           {/* Section 1: Problem Formulation */}
           <div className="rounded-2xl border border-teal/30 bg-void-800/50 p-6 md:p-8 backdrop-blur-xl shadow-xl">
@@ -152,12 +152,12 @@ export function DocsPage() {
             </div>
 
             <p className="mt-3 text-sm text-fog leading-relaxed">
-              <em>Note on architectural provenance:</em> Unlike canonical RSSMs (e.g. Dreamer) that employ stochastic latents with a KL penalty, <strong>SparseRSSM is strictly deterministic</strong> — it utilizes a deterministic latent space regularized by Top-K sparsity with Straight-Through Estimators (STE).
+              <em>Note on architectural provenance:</em> Unlike canonical RSSMs (e.g. Dreamer) that employ stochastic latents with a KL penalty, <strong>SparseRSSM is strictly deterministic</strong> â€” it utilizes a deterministic latent space regularized by Top-K sparsity with Straight-Through Estimators (STE).
             </p>
 
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               <div className="rounded-xl border border-fog-deep/30 bg-void-950/80 p-4">
-                <span className="text-xs font-mono text-teal font-semibold">1. Deterministic Latent Encoder (54 → 128):</span>
+                <span className="text-xs font-mono text-teal font-semibold">1. Deterministic Latent Encoder (54 â†’ 128):</span>
                 <div className="mt-2">
                   <MathFormula
                     math="z_t = W_3 \operatorname{GELU}\big(W_2 \operatorname{GELU}(\operatorname{LN}(W_1 S_t + b_1)) + b_2\big) + b_3"
@@ -206,7 +206,7 @@ export function DocsPage() {
                 Section III
               </span>
               <h2 className="font-display text-2xl font-bold text-paper">
-                TFCNet-F: Time–Frequency Inverted Transformer (400,914 params)
+                TFCNet-F: Timeâ€“Frequency Inverted Transformer (400,914 params)
               </h2>
             </div>
 
@@ -269,7 +269,7 @@ export function DocsPage() {
             </div>
 
             <p className="mt-4 text-sm text-fog leading-relaxed">
-              A sensitive scout identifies early danger, a multi-path gate validates confirmation evidence, and an incident aggregator clusters alerts — adding <strong>exactly 0 trainable parameters</strong>:
+              A sensitive scout identifies early danger, a multi-path gate validates confirmation evidence, and an incident aggregator clusters alerts â€” adding <strong>exactly 0 trainable parameters</strong>:
             </p>
 
             <div className="mt-6 grid gap-4 sm:grid-cols-3">
@@ -320,7 +320,7 @@ export function DocsPage() {
                   Master Research Benchmark Evaluation Matrix (Verbatim Record)
                 </h2>
               </div>
-              <span className="font-mono text-xs text-fog">CSE-CIC-IDS2018 · K=10 (20s Lead)</span>
+              <span className="font-mono text-xs text-fog">CSE-CIC-IDS2018 Â· K=10 (20s Lead)</span>
             </div>
 
             <p className="mt-4 text-sm text-fog leading-relaxed">
@@ -350,7 +350,7 @@ export function DocsPage() {
                     <td className="p-3 text-right">99.66%</td>
                     <td className="p-3 text-right text-crimson">0.0% (0/7)</td>
                     <td className="p-3 text-right">0.00</td>
-                    <td className="p-3 text-right">—</td>
+                    <td className="p-3 text-right">â€”</td>
                   </tr>
                   <tr className="text-fog">
                     <td className="p-3">Logistic Regression (54-D)</td>
@@ -360,7 +360,7 @@ export function DocsPage() {
                     <td className="p-3 text-right">55.31%</td>
                     <td className="p-3 text-right text-amber">100% (7/7)</td>
                     <td className="p-3 text-right text-crimson">17.02</td>
-                    <td className="p-3 text-right">—</td>
+                    <td className="p-3 text-right">â€”</td>
                   </tr>
                   <tr className="text-fog">
                     <td className="p-3">Random Forest (54-D)</td>
@@ -370,7 +370,7 @@ export function DocsPage() {
                     <td className="p-3 text-right">56.00%</td>
                     <td className="p-3 text-right text-amber">100% (7/7)</td>
                     <td className="p-3 text-right text-crimson">4.99</td>
-                    <td className="p-3 text-right">—</td>
+                    <td className="p-3 text-right">â€”</td>
                   </tr>
                   <tr className="text-fog">
                     <td className="p-3">Temporal GRU (10-Step Seq)</td>
@@ -448,7 +448,7 @@ export function DocsPage() {
       </main>
 
       <footer className="border-t border-fog-deep/40 px-6 py-8 text-center text-xs font-mono text-fog bg-void-950/80">
-        Aegis Vantage Research Publications · Neural AI DTU · Verbatim Experimental Record
+        Flow दृष्टि Research Publications Â· Neural AI DTU Â· Verbatim Experimental Record
       </footer>
     </div>
   );

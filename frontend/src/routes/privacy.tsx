@@ -1,10 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+﻿import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shield, EyeOff, Database, FileCheck, ArrowLeft } from "lucide-react";
 import { pageHead } from "@/lib/head";
 
 export const Route = createFileRoute("/privacy")({
   head: pageHead(
-    "Privacy Policy & Data Sovereignty — Aegis Vantage",
+    "Privacy Policy & Data Sovereignty â€” Flow दृष्टि",
     "Detailed privacy disclosures covering zero payload retention, telemetry feature distillation, and global data sovereignty.",
   ),
   component: PrivacyPage,
@@ -16,7 +16,7 @@ function PrivacyPage() {
       <header className="flex h-16 items-center justify-between border-b border-fog-deep/40 px-6 md:px-12 backdrop-blur-md bg-void-900/80">
         <Link to="/" className="flex items-center gap-2.5 text-fog hover:text-paper transition-colors">
           <ArrowLeft className="size-4 text-teal" />
-          <span className="font-mono text-xs uppercase tracking-wider">Back to Aegis Vantage</span>
+          <span className="font-mono text-xs uppercase tracking-wider">Back to Flow दृष्टि</span>
         </Link>
         <div className="flex items-center gap-3">
           <span className="size-[16px] rotate-45 rounded-[3px] border-2 border-teal" />
@@ -35,7 +35,7 @@ function PrivacyPage() {
           </h1>
           <p className="mt-2 text-xs font-mono text-fog">Effective Date: September 15, 2026</p>
           <p className="mt-4 text-sm text-fog leading-relaxed">
-            At Aegis Vantage, we believe that advanced threat detection must never compromise personal privacy or confidential network communications. Our system operates on a strict zero-retention telemetry architecture.
+            At Flow दृष्टि, we believe that advanced threat detection must never compromise personal privacy or confidential network communications. Our system operates on a strict zero-retention telemetry architecture.
           </p>
         </div>
 
@@ -43,7 +43,7 @@ function PrivacyPage() {
           <section>
             <h2 className="font-display text-lg font-semibold text-paper">1. Statistical Feature Distillation (No Raw Payloads)</h2>
             <p className="mt-2 leading-relaxed">
-              When network captures (PCAP, IPFIX, NetFlow) enter the Aegis Vantage ingestion pipeline, our Deep Packet Inspection engine converts network events into 54 non-invertible behavioral statistical features (such as flow inter-arrival variance, destination port entropy, and flag ratios). Raw packet payloads and user data are never persisted.
+              When network captures (PCAP, IPFIX, NetFlow) enter the Flow दृष्टि ingestion pipeline, our Deep Packet Inspection engine converts network events into 54 non-invertible behavioral statistical features (such as flow inter-arrival variance, destination port entropy, and flag ratios). Raw packet payloads and user data are never persisted.
             </p>
           </section>
 
@@ -57,7 +57,7 @@ function PrivacyPage() {
           <section>
             <h2 className="font-display text-lg font-semibold text-paper">3. GDPR, CCPA, and Regulatory Compliance</h2>
             <p className="mt-2 leading-relaxed">
-              Because Aegis Vantage does not collect, track, or monetize personal identifying information (PII), our architecture adheres to GDPR (Articles 25 & 32), the California Consumer Privacy Act (CCPA), and global data protection standards.
+              Because Flow दृष्टि does not collect, track, or monetize personal identifying information (PII), our architecture adheres to GDPR (Articles 25 & 32), the California Consumer Privacy Act (CCPA), and global data protection standards.
             </p>
           </section>
 
@@ -78,7 +78,7 @@ function PrivacyPage() {
       </main>
 
       <footer className="border-t border-fog-deep/40 px-6 py-8 text-center text-xs text-fog">
-        Aegis Vantage Privacy Office · ISO/IEC 27701 Privacy Information Management Certified
+        Flow दृष्टि Privacy Office Â· ISO/IEC 27701 Privacy Information Management Certified
       </footer>
     </div>
   );

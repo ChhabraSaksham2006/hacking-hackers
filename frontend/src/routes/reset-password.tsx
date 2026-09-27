@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { AuthShell, Field } from "@/components/app/AuthShell";
 import { pageHead } from "@/lib/head";
@@ -6,7 +6,7 @@ import { useResetPassword } from "@/hooks/useApi";
 
 export const Route = createFileRoute("/reset-password")({
   head: pageHead(
-    "Reset Password — Aegis Vantage",
+    "Reset Password â€” Flow दृष्टि",
     "Choose a new password for your account."
   ),
   validateSearch: (search: Record<string, unknown>): { token?: string } => {
@@ -96,7 +96,7 @@ function ResetPasswordPage() {
         <Field
           label="New Password"
           type="password"
-          placeholder="••••••••••"
+          placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
           hint="12 characters minimum, checked against known breach corpora."
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -105,7 +105,7 @@ function ResetPasswordPage() {
         <Field
           label="Confirm Password"
           type="password"
-          placeholder="••••••••••"
+          placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           required

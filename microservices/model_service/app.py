@@ -1,8 +1,8 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 app.py
 ======
-Aegis Vantage — Cyber World Model Microservice (FastAPI).
+Flow Drishti â€” Cyber World Model Microservice (FastAPI).
 Exposes SparseRSSM + TFCNet Deep Hybrid Ensemble inference over HTTP/REST.
 
 Designed for standalone container deployment on Hugging Face Spaces,
@@ -79,7 +79,7 @@ FEATURE_NAMES = [
     "delta_flow_iat_mean", "delta_active_connection_lifetime_mean",
 ]
 
-# ── Pydantic Schemas ─────────────────────────────────────
+# â”€â”€ Pydantic Schemas â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 class TelemetrySequenceRequest(BaseModel):
     state_sequence: List[List[float]] = Field(
@@ -105,10 +105,10 @@ class PredictionResponse(BaseModel):
     neural_engine: str
     forecasted_state_delta: Optional[List[float]] = None
 
-# ── FastAPI Application ─────────────────────────────────
+# â”€â”€ FastAPI Application â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 app = FastAPI(
-    title="Aegis Vantage Cyber World Model API",
+    title="Flow Drishti Cyber World Model API",
     description="Microservice for SparseRSSM + TFCNet deep hybrid ensemble inference over network telemetry.",
     version="1.0.0",
 )
@@ -128,7 +128,7 @@ torch.set_grad_enabled(False)
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# ── Model & Data Singleton State ────────────────────────
+# â”€â”€ Model & Data Singleton State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 _RSSM_MODEL: Optional[SparseRSSM] = None
 _TFCNET_MODEL: Optional[TFCNet] = None
@@ -345,7 +345,7 @@ def execute_step_inference(step_index: int) -> Dict[str, Any]:
     else:
         alerts = []
         flows = [
-            {"src": "192.168.10.44:443", "dst": "192.168.10.1:53", "proto": "UDP", "flags": "—", "bytes": "840 B", "prob": 0.08},
+            {"src": "192.168.10.44:443", "dst": "192.168.10.1:53", "proto": "UDP", "flags": "â€”", "bytes": "840 B", "prob": 0.08},
             {"src": "192.168.10.44:51220", "dst": "192.168.10.12:80", "proto": "TCP", "flags": "ACK", "bytes": "2.4 KB", "prob": 0.11},
             {"src": "192.168.10.19:51222", "dst": "10.0.0.15:445", "proto": "TCP", "flags": "ACK", "bytes": "4.8 KB", "prob": 0.12},
         ]
@@ -389,7 +389,7 @@ def execute_step_inference(step_index: int) -> Dict[str, Any]:
         "recentFlows": flows,
     }
 
-# ── Endpoints ───────────────────────────────────────────
+# â”€â”€ Endpoints â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 @app.get("/")
 def root():
@@ -542,8 +542,8 @@ def get_dataset_metadata():
 
 try:
     import gradio as gr
-    with gr.Blocks(title="Aegis Vantage Cyber World Model API") as demo:
-        gr.Markdown("# 🛡️ Aegis Vantage — Cyber World Model Microservice\n\nDeep Hybrid Ensemble Engine (SparseRSSM + TFCNet) for real-time attack forecasting.\n\nAll REST endpoints (`/health`, `/predict/step`, `/predict/init`, `/predict`) are active and accessible via HTTP.")
+    with gr.Blocks(title="Flow Drishti Cyber World Model API") as demo:
+        gr.Markdown("# ðŸ›¡ï¸ Flow Drishti â€” Cyber World Model Microservice\n\nDeep Hybrid Ensemble Engine (SparseRSSM + TFCNet) for real-time attack forecasting.\n\nAll REST endpoints (`/health`, `/predict/step`, `/predict/init`, `/predict`) are active and accessible via HTTP.")
         btn = gr.Button("Query Service Health")
         out = gr.JSON()
         btn.click(fn=health_check, outputs=out)

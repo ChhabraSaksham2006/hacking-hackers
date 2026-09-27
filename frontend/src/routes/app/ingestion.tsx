@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Check, Loader2 } from "lucide-react";
 import {
@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/ingestion")({
   head: pageHead(
-    "Ingestion — Aegis Vantage",
+    "Ingestion â€” Flow दृष्टि",
     "Upload PCAP or NetFlow/IPFIX captures and follow the feature pipeline through to inference.",
   ),
   component: Ingestion,

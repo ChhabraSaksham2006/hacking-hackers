@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+﻿import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { graphNodes } from "./charts";
 
@@ -51,7 +51,7 @@ export function AuthShell({
         <Link to="/" className="mb-6 flex items-center gap-3">
           <span className="size-[18px] rotate-45 rounded-[4px] border-2 border-teal" />
           <span className="font-display text-[15px] font-semibold">
-            Aegis Vantage
+            Flow दृष्टि
           </span>
         </Link>
         <div className="flat p-8">

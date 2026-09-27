@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
 interface ThreeManifoldProps {
@@ -27,7 +27,7 @@ export function ThreeManifold({ className = "", themeStrategy = "glass" }: Three
       return;
     }
 
-    // ── Three.js Scene Setup ─────────────────────────────
+    // â”€â”€ Three.js Scene Setup â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const rect = container.getBoundingClientRect();
     const width = Math.floor(rect.width) || 300;
     const height = Math.floor(rect.height) || 300;
@@ -49,13 +49,13 @@ export function ThreeManifold({ className = "", themeStrategy = "glass" }: Three
     renderer.domElement.style.display = "block";
     container.appendChild(renderer.domElement);
 
-    // ── Color Theme Mappings ─────────────────────────────
-    // Colors matching Aegis Vantage tokens: signal-teal, watch-amber, void-800
+    // â”€â”€ Color Theme Mappings â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // Colors matching Flow दृष्टि tokens: signal-teal, watch-amber, void-800
     const tealColor = new THREE.Color(0x2dd4bf); // Signal Teal
     const amberColor = new THREE.Color(0xfbbf24); // Watch Amber
     const crimsonColor = new THREE.Color(0xf43f5e); // Critical Crimson
 
-    // ── Group 1: 54-D State-Space Geodesic Manifold ───────
+    // â”€â”€ Group 1: 54-D State-Space Geodesic Manifold â”€â”€â”€â”€â”€â”€â”€
     const manifoldGroup = new THREE.Group();
     scene.add(manifoldGroup);
 
@@ -96,7 +96,7 @@ export function ThreeManifold({ className = "", themeStrategy = "glass" }: Three
     const coreMesh = new THREE.Mesh(coreGeo, coreMat);
     manifoldGroup.add(coreMesh);
 
-    // ── Group 2: Dual Orbital Trajectory Rings ───────────
+    // â”€â”€ Group 2: Dual Orbital Trajectory Rings â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     // Ring 1: SparseRSSM Temporal State-Space Ring
     const ring1Geo = new THREE.TorusGeometry(6.6, 0.04, 16, 100);
     const ring1Mat = new THREE.MeshBasicMaterial({
@@ -121,7 +121,7 @@ export function ThreeManifold({ className = "", themeStrategy = "glass" }: Three
     ring2Mesh.rotation.y = Math.PI / 4;
     scene.add(ring2Mesh);
 
-    // ── Group 3: Particle Telemetry Cloud ────────────────
+    // â”€â”€ Group 3: Particle Telemetry Cloud â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const particleCount = 280;
     const particleGeo = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
@@ -155,7 +155,7 @@ export function ThreeManifold({ className = "", themeStrategy = "glass" }: Three
     const particleCloud = new THREE.Points(particleGeo, particleMat);
     scene.add(particleCloud);
 
-    // ── Lighting ─────────────────────────────────────────
+    // â”€â”€ Lighting â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
     scene.add(ambientLight);
 
@@ -167,7 +167,7 @@ export function ThreeManifold({ className = "", themeStrategy = "glass" }: Three
     crimsonPointLight.position.set(-10, -10, -10);
     scene.add(crimsonPointLight);
 
-    // ── Interactive Mouse Parallax ───────────────────────
+    // â”€â”€ Interactive Mouse Parallax â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     let mouseX = 0;
     let mouseY = 0;
     let targetX = 0;
@@ -183,7 +183,7 @@ export function ThreeManifold({ className = "", themeStrategy = "glass" }: Three
 
     window.addEventListener("pointermove", onPointerMove);
 
-    // ── Responsive Resize Observer ───────────────────────
+    // â”€â”€ Responsive Resize Observer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const resizeObserver = new ResizeObserver((entries) => {
       if (!container) return;
       for (const entry of entries) {
@@ -198,7 +198,7 @@ export function ThreeManifold({ className = "", themeStrategy = "glass" }: Three
     });
     resizeObserver.observe(container);
 
-    // ── Animation Loop ───────────────────────────────────
+    // â”€â”€ Animation Loop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     let animationFrameId: number;
     let clock = new THREE.Clock();
 
@@ -233,7 +233,7 @@ export function ThreeManifold({ className = "", themeStrategy = "glass" }: Three
 
     animate();
 
-    // ── Cleanup ──────────────────────────────────────────
+    // â”€â”€ Cleanup â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("pointermove", onPointerMove);
@@ -276,7 +276,7 @@ export function ThreeManifold({ className = "", themeStrategy = "glass" }: Three
     <div
       ref={containerRef}
       className={`relative h-full w-full max-w-full cursor-grab active:cursor-grabbing overflow-hidden ${className}`}
-      title="Interactive 3D Neural Manifold — Drag or move mouse to rotate 54-D state space"
+      title="Interactive 3D Neural Manifold â€” Drag or move mouse to rotate 54-D state space"
     />
   );
 }

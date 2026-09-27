@@ -1,4 +1,4 @@
-import { useState, useId } from "react";
+﻿import { useState, useId } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { ActionButton, FlatPanel, PageTitle } from "@/components/app/panels";
 import { Sparkline } from "@/components/app/charts";
@@ -28,7 +28,7 @@ import {
 
 export const Route = createFileRoute("/app/reports")({
   head: pageHead(
-    "Reports and export — Aegis Vantage",
+    "Reports and export â€” Flow दृष्टि",
     "Build a PDF or CSV incident report from a time window, alert or segment and preview it before export.",
   ),
   component: Reports,
@@ -42,7 +42,7 @@ function formatBytes(bytes?: number): string {
 }
 
 function formatDate(dateStr?: string | Date): string {
-  if (!dateStr) return "—";
+  if (!dateStr) return "â€”";
   const d = new Date(dateStr);
   return d.toISOString().replace("T", " ").slice(0, 16) + "Z";
 }
@@ -109,7 +109,7 @@ function Reports() {
     }
 
     try {
-      const scopeLabel = `${segmentOrAlert} · ${isCustom ? "custom" : timeWindow.replace("last ", "")}`;
+      const scopeLabel = `${segmentOrAlert} Â· ${isCustom ? "custom" : timeWindow.replace("last ", "")}`;
       const res = await generateReport.mutateAsync({
         name: customName.trim() || undefined,
         scope: scopeLabel,
@@ -222,7 +222,7 @@ function Reports() {
                 <option value="last 24 hours">last 24 hours</option>
                 <option value="last 7 days">last 7 days</option>
                 <option value="last 30 days">last 30 days</option>
-                <option value="2026-09-06 14:00–15:00Z">2026-09-06 14:00–15:00Z (incident window)</option>
+                <option value="2026-09-06 14:00â€“15:00Z">2026-09-06 14:00â€“15:00Z (incident window)</option>
                 <option value="custom">Custom date range...</option>
               </select>
             </label>
@@ -263,7 +263,7 @@ function Reports() {
                 <optgroup label="Network Segments">
                   {segments.map((s) => (
                     <option key={s._id || s.name} value={s.name}>
-                      {s.name} ({s.hosts} hosts · {s.trafficVolume} flows/s)
+                      {s.name} ({s.hosts} hosts Â· {s.trafficVolume} flows/s)
                     </option>
                   ))}
                   {segments.length === 0 && (
@@ -279,7 +279,7 @@ function Reports() {
                   <optgroup label="Active Alerts">
                     {alerts.map((a) => (
                       <option key={a._id} value={`alert ${a.alertId}`}>
-                        {a.alertId} — {a.host} ({a.stage})
+                        {a.alertId} â€” {a.host} ({a.stage})
                       </option>
                     ))}
                   </optgroup>
@@ -376,10 +376,10 @@ function Reports() {
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="font-display text-[18px] font-medium text-paper">
-                      Incident report — {preview?.segmentOrAlert || segmentOrAlert}
+                      Incident report â€” {preview?.segmentOrAlert || segmentOrAlert}
                     </p>
                     <p className="mono mt-1 text-[12px] text-fog">
-                      {formatDate(preview?.timeWindow?.start)} → {formatDate(preview?.timeWindow?.end)}
+                      {formatDate(preview?.timeWindow?.start)} â†’ {formatDate(preview?.timeWindow?.end)}
                     </p>
                   </div>
                   {preview?.metrics?.riskLevel && (
@@ -426,7 +426,7 @@ function Reports() {
                           className="flex items-center justify-between rounded bg-void-800/80 px-2 py-1"
                         >
                           <span className="truncate">
-                            {f.src} → {f.dst}
+                            {f.src} â†’ {f.dst}
                           </span>
                           <span
                             className={`ml-2 font-semibold ${

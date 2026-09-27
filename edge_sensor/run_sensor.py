@@ -1,6 +1,6 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
-Aegis Vantage — Distributed Edge Sensor Agent
+Flow Drishti â€” Distributed Edge Sensor Agent
 High-performance, lightweight network edge probe for real-time packet ingestion,
 flow tracking, 54-D feature extraction, and edge heuristic triage.
 
@@ -76,7 +76,7 @@ def run_pipeline(
     with_baseline: bool = True,
     interface: str = "",
 ):
-    print(f"[*] Initializing Aegis Vantage Edge Sensor Agent [{sensor_id}]...")
+    print(f"[*] Initializing Flow Drishti Edge Sensor Agent [{sensor_id}]...")
     display_mode = f"LIVE GATEWAY (Port {port})" if mode == "live" else f"PASSIVE TAP ({interface or 'auto'})" if mode == "tap" else f"{mode.upper()} (Speed: {speed}x)"
     print(f"[*] Operating Mode: {display_mode} | Observation Window: {window_sec}s")
 
@@ -306,7 +306,7 @@ def run_pipeline(
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Aegis Vantage Distributed Edge Sensor Agent",
+        description="Flow Drishti Distributed Edge Sensor Agent",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
@@ -322,7 +322,7 @@ def main():
     parser.add_argument("--no-baseline", action="store_true", help="Disable ambient background enterprise baseline traffic in live mode")
     parser.add_argument("--window", type=float, default=2.0, help="Temporal observation window in seconds (default 2.0)")
     parser.add_argument("--speed", type=float, default=2.5, help="Replay speed multiplier (1.0 = realtime, 2.5 = 2.5x faster, 0 = max)")
-    parser.add_argument("--upstream", type=str, default="", help="Upstream Aegis Vantage ingestion endpoint URL")
+    parser.add_argument("--upstream", type=str, default="", help="Upstream Flow Drishti ingestion endpoint URL")
     parser.add_argument("--model-url", type=str, default="", help="Remote HTTP URL for Cyber World Model service (e.g. 'http://localhost:8000/predict'). Defaults to in-process PyTorch model.")
     parser.add_argument("--heuristics", action="store_true", help="Enable legacy rule-based heuristic alerts alongside neural model (default: False)")
     parser.add_argument("--output", type=str, default="telemetry_edge.ndjson", help="Path to local telemetry log file")

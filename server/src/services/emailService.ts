@@ -1,6 +1,6 @@
-import { env } from '../config/env.js';
+﻿import { env } from '../config/env.js';
 
-// ── Brevo HTTP API Wrapper ──────────────────────────────
+// â”€â”€ Brevo HTTP API Wrapper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
 
@@ -27,7 +27,7 @@ export async function sendRaw(
 ): Promise<boolean> {
   const apiKey = env.BREVO_API_KEY;
   if (!apiKey) {
-    console.warn(`📧 [EMAIL SKIPPED] No BREVO_API_KEY set. Would have sent "${subject}" to ${to.map(r => r.email).join(', ')}`);
+    console.warn(`ðŸ“§ [EMAIL SKIPPED] No BREVO_API_KEY set. Would have sent "${subject}" to ${to.map(r => r.email).join(', ')}`);
     return false;
   }
 
@@ -54,19 +54,19 @@ export async function sendRaw(
 
     if (!response.ok) {
       const errorBody = await response.text();
-      console.error(`📧 [EMAIL ERROR] Brevo returned ${response.status}: ${errorBody}`);
+      console.error(`ðŸ“§ [EMAIL ERROR] Brevo returned ${response.status}: ${errorBody}`);
       return false;
     }
 
-    console.log(`📧 [EMAIL SENT] "${subject}" → ${to.map(r => r.email).join(', ')}`);
+    console.log(`ðŸ“§ [EMAIL SENT] "${subject}" â†’ ${to.map(r => r.email).join(', ')}`);
     return true;
   } catch (err) {
-    console.error('📧 [EMAIL ERROR] Failed to send email:', err);
+    console.error('ðŸ“§ [EMAIL ERROR] Failed to send email:', err);
     return false;
   }
 }
 
-// ── HTML Template Wrapper ───────────────────────────────
+// â”€â”€ HTML Template Wrapper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function wrapTemplate(title: string, body: string): string {
   return `<!DOCTYPE html>
@@ -88,7 +88,7 @@ function wrapTemplate(title: string, body: string): string {
                 <tr>
                   <td style="width:18px;height:18px;transform:rotate(45deg);border:2px solid #2dd4bf;border-radius:4px;"></td>
                   <td style="padding-left:12px;font-size:15px;font-weight:600;color:#e4e5e9;letter-spacing:0.5px;">
-                    Aegis Vantage
+                    Flow दृष्टि
                   </td>
                 </tr>
               </table>
@@ -103,8 +103,8 @@ function wrapTemplate(title: string, body: string): string {
           <!-- Footer -->
           <tr>
             <td style="padding-top:24px;text-align:center;font-size:12px;color:#6b7280;">
-              Aegis Vantage · Predictive Cyber-Defence Console<br>
-              This is an automated message — please do not reply.
+              Flow दृष्टि Â· Predictive Cyber-Defence Console<br>
+              This is an automated message â€” please do not reply.
             </td>
           </tr>
         </table>
@@ -127,7 +127,7 @@ function buttonHtml(text: string, url: string): string {
 </table>`;
 }
 
-// ── High-Level Email Methods ────────────────────────────
+// â”€â”€ High-Level Email Methods â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 /**
  * Send email verification link after signup.
@@ -146,7 +146,7 @@ export async function sendVerificationEmail(
       Hi ${escapeHtml(name)},
     </p>
     <p style="margin:0;font-size:15px;color:#9ca3af;line-height:1.6;">
-      Click the button below to verify your email and activate your Aegis Vantage account.
+      Click the button below to verify your email and activate your Flow दृष्टि account.
       This link expires in <strong style="color:#e4e5e9;">24 hours</strong>.
     </p>
     ${buttonHtml('Verify email address', verifyUrl)}
@@ -157,7 +157,7 @@ export async function sendVerificationEmail(
       ${escapeHtml(verifyUrl)}
     </p>`;
 
-  return sendRaw([{ email, name }], 'Verify your email — Aegis Vantage', wrapTemplate('Verify Email', body));
+  return sendRaw([{ email, name }], 'Verify your email â€” Flow दृष्टि', wrapTemplate('Verify Email', body));
 }
 
 /**
@@ -189,7 +189,7 @@ export async function sendPasswordResetEmail(
       ${escapeHtml(resetUrl)}
     </p>`;
 
-  return sendRaw([{ email, name }], 'Reset your password — Aegis Vantage', wrapTemplate('Reset Password', body));
+  return sendRaw([{ email, name }], 'Reset your password â€” Flow दृष्टि', wrapTemplate('Reset Password', body));
 }
 
 /**
@@ -222,7 +222,7 @@ export async function sendTwoFactorCodeEmail(
       If you didn't attempt to sign in, change your password immediately.
     </p>`;
 
-  return sendRaw([{ email, name }], `${code} — Aegis Vantage verification code`, wrapTemplate('Verification Code', body));
+  return sendRaw([{ email, name }], `${code} â€” Flow दृष्टि verification code`, wrapTemplate('Verification Code', body));
 }
 
 /**
@@ -289,7 +289,7 @@ export async function sendAlertNotificationEmail(
 
   return sendRaw(
     [{ email, name }],
-    `🔴 ${stateLabel} alert: ${alert.alertId} — ${alert.host}`,
+    `ðŸ”´ ${stateLabel} alert: ${alert.alertId} â€” ${alert.host}`,
     wrapTemplate('Alert Notification', body),
   );
 }
@@ -319,12 +319,12 @@ export async function sendReportEmail(
       This link is valid for 7 days from generation.
     </p>`;
 
-  return sendRaw([{ email, name }], `Report ready: ${reportTitle} — Aegis Vantage`, wrapTemplate('Report Ready', body));
+  return sendRaw([{ email, name }], `Report ready: ${reportTitle} â€” Flow दृष्टि`, wrapTemplate('Report Ready', body));
 }
 
 /**
  * Send alert notification emails to all eligible users in an org.
- * Fire-and-forget — errors are logged but never thrown.
+ * Fire-and-forget â€” errors are logged but never thrown.
  */
 export async function notifyOrgUsersOfAlert(
   orgId: string,
@@ -355,11 +355,11 @@ export async function notifyOrgUsersOfAlert(
       users.map(user => sendAlertNotificationEmail(user.email, user.name, alert)),
     );
   } catch (err) {
-    console.error('📧 [NOTIFY ERROR] Failed to notify org users:', err);
+    console.error('ðŸ“§ [NOTIFY ERROR] Failed to notify org users:', err);
   }
 }
 
-// ── Utilities ───────────────────────────────────────────
+// â”€â”€ Utilities â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function escapeHtml(str: string): string {
   return str

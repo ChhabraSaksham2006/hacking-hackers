@@ -1,7 +1,7 @@
-{
+﻿{
   "sensor_id": "edge-sensor-alpha-01",
   "version": "1.0.0",
-  "description": "Aegis Vantage Edge Sensor Agent for distributed network perimeter monitoring",
+  "description": "Flow Drishti Edge Sensor Agent for distributed network perimeter monitoring",
   "pipeline": {
     "window_seconds": 2.0,
     "feature_dimensions": 54,

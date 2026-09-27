@@ -1,7 +1,7 @@
-/**
+﻿/**
  * chatController.ts
  * ==================
- * Express controller for Aegis Vantage AI Telemetry Copilot RAG queries.
+ * Express controller for Flow दृष्टि AI Telemetry Copilot RAG queries.
  */
 
 import type { Request, Response, NextFunction } from 'express';

@@ -1,5 +1,5 @@
-"""
-Aegis Vantage Edge Sensor Core Package
+﻿"""
+Flow Drishti Edge Sensor Core Package
 High-performance, lightweight network telemetry extraction and edge anomaly sentinel.
 """
 

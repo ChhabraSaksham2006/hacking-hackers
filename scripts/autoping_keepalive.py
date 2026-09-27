@@ -1,6 +1,6 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
-Aegis Vantage — Render Services Keep-Alive & AutoPing Daemon
+Flow Drishti â€” Render Services Keep-Alive & AutoPing Daemon
 Continuously pings the ML Microservice (and backend) every 5 minutes to prevent
 Render free-tier inactivity hibernation / cold start (15-minute timeout).
 
@@ -74,7 +74,7 @@ def ping_endpoint(url: str, timeout: float = 25.0) -> dict:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Aegis Vantage AutoPing Keep-Alive Daemon for Render",
+        description="Flow Drishti AutoPing Keep-Alive Daemon for Render",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
@@ -104,7 +104,7 @@ def main():
     interval_sec = max(30, args.interval)
 
     print("=" * 68)
-    print("🛡️  Aegis Vantage — Render Keep-Alive AutoPing Daemon")
+    print("ðŸ›¡ï¸  Flow Drishti â€” Render Keep-Alive AutoPing Daemon")
     print(f"[*] Target Endpoint: {target_url}")
     print(f"[*] Ping Frequency:  Every {interval_sec}s ({interval_sec / 60:.1f} minutes)")
     print(f"[*] Purpose:         Prevent Render 15-min free tier coldstart")
@@ -117,7 +117,7 @@ def main():
         while True:
             ping_count += 1
             now_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            print(f"\n[#{ping_count:04d} | {now_str}] 🏓 Pinging {target_url} ...")
+            print(f"\n[#{ping_count:04d} | {now_str}] ðŸ“ Pinging {target_url} ...")
 
             result = ping_endpoint(target_url)
 
@@ -125,17 +125,17 @@ def main():
                 success_count += 1
                 service_info = result["data"].get("service", "ML Service") if isinstance(result["data"], dict) else "online"
                 print(
-                    f"       ✅ Status: HTTP {result['status']} | Latency: {result['latency_ms']}ms | Service: {service_info} [COLDSTART PREVENTED]"
+                    f"       âœ… Status: HTTP {result['status']} | Latency: {result['latency_ms']}ms | Service: {service_info} [COLDSTART PREVENTED]"
                 )
             else:
                 print(
-                    f"       ⚠️ Status: {result['status'] or 'TIMEOUT'} | Latency: {result['latency_ms']}ms | Warming up container: {result['error']}"
+                    f"       âš ï¸ Status: {result['status'] or 'TIMEOUT'} | Latency: {result['latency_ms']}ms | Warming up container: {result['error']}"
                 )
 
             if args.once:
                 break
 
-            print(f"       ⏱️ Next ping in {interval_sec}s... (Press Ctrl+C to stop)")
+            print(f"       â±ï¸ Next ping in {interval_sec}s... (Press Ctrl+C to stop)")
             time.sleep(interval_sec)
 
     except KeyboardInterrupt:

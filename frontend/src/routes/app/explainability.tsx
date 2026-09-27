@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+﻿import { useState, useMemo, useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Activity,
@@ -28,7 +28,7 @@ import { subscribeDashboardStream } from "@/api/dashboardApi";
 
 export const Route = createFileRoute("/app/explainability")({
   head: pageHead(
-    "Explainability — Aegis Vantage",
+    "Explainability â€” Flow दृष्टि",
     "Feature contributions, raw values and a plain-language summary behind a single prediction.",
   ),
   component: ExplainabilityPage,
@@ -129,7 +129,7 @@ function ExplainabilityPage() {
                 className="flex items-center gap-1.5 rounded-full border border-amber/50 bg-amber/10 px-2.5 py-1 text-[11px] font-mono text-amber hover:bg-amber/20 transition-colors"
               >
                 <Radio className="size-3 text-amber animate-pulse" />
-                Forensic review (paused) — Track Live Stream &rarr;
+                Forensic review (paused) â€” Track Live Stream &rarr;
               </button>
             )}
             <button
@@ -303,7 +303,7 @@ function ExplainabilityPage() {
           state={riskState}
           control={
             <span className="mono text-fog text-[12px]">
-              window #{targetWindow} · {contributions.length} driving indicators
+              window #{targetWindow} Â· {contributions.length} driving indicators
             </span>
           }
         >
@@ -369,7 +369,7 @@ function ExplainabilityPage() {
                 <span>Teal: Mitigating / baseline normalizing</span>
               </span>
             </div>
-            <span className="mono text-[11px]">Normalized L1 divergence (±0.50 max domain)</span>
+            <span className="mono text-[11px]">Normalized L1 divergence (Â±0.50 max domain)</span>
           </div>
         </HeroPanel>
 
@@ -549,7 +549,7 @@ function ExplainabilityPage() {
                         {m.attributionWeight.toFixed(2)}
                       </span>
                     ) : (
-                      <span className="text-fog-deep">—</span>
+                      <span className="text-fog-deep">â€”</span>
                     )}
                   </td>
                   <td className="px-5 py-2.5 text-center">

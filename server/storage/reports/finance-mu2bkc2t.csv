@@ -1,5 +1,5 @@
-# Aegis Vantage Threat Detection Report
-# Scope: finance · 24h
+﻿# Flow Drishti Threat Detection Report
+# Scope: finance Â· 24h
 # Time Window: 2026-09-08T06:57:16.917Z to 2026-09-15T06:57:16.919Z
 # Organization: Northwind Energy
 # Generated: 2026-09-15T06:57:17.092Z
@@ -13,5 +13,5 @@ timestamp,source,destination,protocol,flags,bytes,packets,anomaly_score,stage_cl
 "2026-09-06T14:40:00.000Z","10.24.4.19:44100","10.24.4.20:22","TCP","0x002",3120,52,0.6600,"Reconnaissance"
 "2026-09-06T14:40:00.000Z","10.24.12.77:60122","10.24.12.0/24:*","TCP","0x002",18422,424,0.5800,"Reconnaissance"
 "2026-09-06T14:40:00.000Z","10.24.6.42:57812","10.24.6.9:3389","TCP","0x012",240110,1804,0.4400,"Reconnaissance"
-"2026-09-06T14:40:00.000Z","10.24.3.55:5353","224.0.0.251:5353","UDP","—",9820,142,0.1200,"Reconnaissance"
-"2026-09-06T14:40:00.000Z","10.24.9.18:49001","10.24.2.5:53","UDP","—",4210,88,0.0900,"Reconnaissance"
+"2026-09-06T14:40:00.000Z","10.24.3.55:5353","224.0.0.251:5353","UDP","â€”",9820,142,0.1200,"Reconnaissance"
+"2026-09-06T14:40:00.000Z","10.24.9.18:49001","10.24.2.5:53","UDP","â€”",4210,88,0.0900,"Reconnaissance"

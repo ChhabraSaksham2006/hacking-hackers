@@ -1,5 +1,5 @@
-<div align="center">
-  <h1>🛡️ Aegis Vantage</h1>
+﻿<div align="center">
+  <h1>ðŸ›¡ï¸ Flow Drishti</h1>
   <p><strong>Predictive Cyber-Defence Dashboard</strong></p>
 
   <p>
@@ -12,9 +12,9 @@
 
 <br />
 
-Welcome to the frontend of **Aegis Vantage**, a cutting-edge interface designed for security operations centers (SOCs) to forecast and mitigate attacker progression *before* compromise is complete.
+Welcome to the frontend of **Flow Drishti**, a cutting-edge interface designed for security operations centers (SOCs) to forecast and mitigate attacker progression *before* compromise is complete.
 
-## ✨ Features
+## âœ¨ Features
 
 - **Real-time Predictive Analytics**: Monitor active threats and network flows via live Socket.IO streams.
 - **Dynamic Topologies**: Visualize intricate network nodes and endpoints seamlessly.
@@ -24,7 +24,7 @@ Welcome to the frontend of **Aegis Vantage**, a cutting-edge interface designed 
 
 ---
 
-## 🛠️ Tech Stack
+## ðŸ› ï¸ Tech Stack
 
 - **Framework**: [TanStack Start](https://tanstack.com/start) (SSR via Nitro)
 - **UI Architecture**: React 19 + Radix UI + shadcn/ui
@@ -35,7 +35,7 @@ Welcome to the frontend of **Aegis Vantage**, a cutting-edge interface designed 
 
 ---
 
-## 🚀 Getting Started
+## ðŸš€ Getting Started
 
 Follow these instructions to get a copy of the project up and running on your local machine for development and testing.
 
@@ -71,9 +71,9 @@ Ensure you have Node.js (>= 22.12.0) and npm installed.
 
 ---
 
-## 🌐 Deployment (Vercel)
+## ðŸŒ Deployment (Vercel)
 
-Aegis Vantage is configured for zero-hassle deployment to Vercel via Nitro's serverless preset.
+Flow Drishti is configured for zero-hassle deployment to Vercel via Nitro's serverless preset.
 
 1. **Build the Application:**
    ```bash
@@ -87,5 +87,5 @@ Aegis Vantage is configured for zero-hassle deployment to Vercel via Nitro's ser
 ---
 
 <div align="center">
-  <sub>Built with passion for next-generation cyber-security. 🔒</sub>
+  <sub>Built with passion for next-generation cyber-security. ðŸ”’</sub>
 </div>

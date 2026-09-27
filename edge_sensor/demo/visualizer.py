@@ -1,4 +1,4 @@
-"""
+﻿"""
 Terminal Dashboard & Visualizer
 Displays an animated, real-time console dashboard illustrating the flow of traffic
 through every stage of the Edge Sensor Agent.
@@ -84,11 +84,11 @@ class TerminalVisualizer:
         sys.stdout.write("\033[2J\033[H")
 
         out = []
-        out.append(f"{BG_BLUE}{WHITE}{BOLD}  AEGIS VANTAGE :: DISTRIBUTED EDGE SENSOR AGENT  {RESET}  {DIM}ID:{RESET} {CYAN}{self.sensor_id}{RESET} | {DIM}MODE:{RESET} {GREEN}{self.mode}{RESET}")
+        out.append(f"{BG_BLUE}{WHITE}{BOLD}  Flow Drishti :: DISTRIBUTED EDGE SENSOR AGENT  {RESET}  {DIM}ID:{RESET} {CYAN}{self.sensor_id}{RESET} | {DIM}MODE:{RESET} {GREEN}{self.mode}{RESET}")
         out.append(f"{DIM}Uptime: {elapsed:05.1f}s | Ingress Rate: {pkt_rate:6.1f} pkts/s | Throughput: {kb_rate:7.2f} KB/s | Active Sessions: {len(active_flows)}{RESET}")
         out.append(f"{CYAN}{'-' * 78}{RESET}")
 
-        # ── 0. Live External Device Gateway & Ingress Verification Logs ─────────
+        # â”€â”€ 0. Live External Device Gateway & Ingress Verification Logs â”€â”€â”€â”€â”€â”€â”€â”€â”€
         if gateway_url:
             out.append(f"{BOLD}[LIVE INGRESS GATEWAY]{RESET} Connect phone/laptop: {YELLOW}{BOLD}{gateway_url}{RESET}")
             if connected_devices:
@@ -113,7 +113,7 @@ class TerminalVisualizer:
                     out.append(f"  {MAGENTA}>{RESET} {DIM}{log_line}{RESET}")
             out.append(f"{CYAN}{'-' * 78}{RESET}")
 
-        # ── 1. Ingress Packet Stream (Stage 1) ──────────────────────
+        # â”€â”€ 1. Ingress Packet Stream (Stage 1) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         out.append(f"{BOLD}[STAGE 1: PACKET INGRESS & TAP]{RESET} {DIM}Latest Dissected Wire Frames:{RESET}")
         for p in self.recent_packets[-4:]:
             flag_str = f"{YELLOW}{p.tcp_flags}{RESET}" if p.tcp_flags else f"{DIM}N/A{RESET}"
@@ -124,7 +124,7 @@ class TerminalVisualizer:
                 f"{p.wire_len:4d}B  [{flag_str:10s}]"
             )
 
-        # ── 2. Active Flow Tracker Table (Stage 2) ──────────────────
+        # â”€â”€ 2. Active Flow Tracker Table (Stage 2) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         out.append(f"\n{BOLD}[STAGE 2: STATEFUL FLOW TRACKER]{RESET} {DIM}Bidirectional 5-Tuple Table (Top Sessions):{RESET}")
         out.append(f"  {DIM}{'ID':<12s} {'Source':<21s} {'Destination':<21s} {'Proto':<5s} {'Packets':<8s} {'Bytes':<8s} {'State'}{RESET}")
         
@@ -140,7 +140,7 @@ class TerminalVisualizer:
                 f"{state_color}{f.tcp_state}{RESET}"
             )
 
-        # ── 3. 2.0s Temporal Window Aggregator (Stage 3) ────────────
+        # â”€â”€ 3. 2.0s Temporal Window Aggregator (Stage 3) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         pct = min(100, int(current_progress * 100))
         bar_len = 30
         filled = int((pct / 100.0) * bar_len)
@@ -150,7 +150,7 @@ class TerminalVisualizer:
         out.append(f"\n{BOLD}[STAGE 3: TEMPORAL WINDOW AGGREGATOR (Delta-t = 2.0s)]{RESET} Window {CYAN}{win_idx_str}{RESET}")
         out.append(f"  Aggregating Buffer: [{bar}] {pct:3d}%  (Emitted Windows: {self.windows_emitted})")
 
-        # ── 4. Extracted 54-D State Vector (Stage 4) ────────────────
+        # â”€â”€ 4. Extracted 54-D State Vector (Stage 4) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         if self.last_window:
             feat = self.last_window.feature_dict
             entropy = feat.get("dst_port_entropy", 0.0)
@@ -175,7 +175,7 @@ class TerminalVisualizer:
         else:
             out.append(f"\n{BOLD}[STAGE 4: EXTRACTED 54-D CYBER WORLD MODEL VECTOR]{RESET} {DIM}Awaiting first 2.0s window tick...{RESET}")
 
-        # ── 5. Cyber World Model Sentinel (Stage 5) ─────────────
+        # â”€â”€ 5. Cyber World Model Sentinel (Stage 5) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         out.append(f"\n{BOLD}[STAGE 5: CYBER WORLD MODEL SENTINEL (Deep Hybrid Ensemble)]{RESET}")
         if self.recent_alerts:
             for a in self.recent_alerts[-2:]:

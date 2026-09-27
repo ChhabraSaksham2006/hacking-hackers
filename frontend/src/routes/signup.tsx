@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { AuthShell, Field } from "@/components/app/AuthShell";
 import { pageHead } from "@/lib/head";
@@ -6,8 +6,8 @@ import { useRegister } from "@/hooks/useApi";
 
 export const Route = createFileRoute("/signup")({
   head: pageHead(
-    "Sign up — Aegis Vantage",
-    "Create an Aegis Vantage workspace for your security operations team.",
+    "Sign up â€” Flow दृष्टि",
+    "Create an Flow दृष्टि workspace for your security operations team.",
   ),
   component: SignupPage,
 });
@@ -99,7 +99,7 @@ function SignupPage() {
         <Field
           label="Password"
           type="password"
-          placeholder="••••••••••"
+          placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
           hint="12 characters minimum, checked against known breach corpora."
           value={password}
           onChange={(e) => setPassword(e.target.value)}

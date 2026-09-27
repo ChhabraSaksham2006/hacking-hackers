@@ -1,7 +1,7 @@
-import rateLimit from 'express-rate-limit';
+﻿import rateLimit from 'express-rate-limit';
 
 /**
- * Rate-limit presets for Aegis Vantage.
+ * Rate-limit presets for Flow दृष्टि.
  *
  * These use the default in-memory store, which is appropriate for
  * single-instance deployments. Switch to `rate-limit-redis` when

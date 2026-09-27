@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ActionButton, FlatPanel, PageTitle, RiskBadge } from "@/components/app/panels";
 import { pageHead } from "@/lib/head";
@@ -7,7 +7,7 @@ import { useAuthMe, useUpdateAlertNotifications } from "@/hooks/useApi";
 
 export const Route = createFileRoute("/app/settings")({
   head: pageHead(
-    "Settings — Aegis Vantage",
+    "Settings â€” Flow दृष्टि",
     "Model configuration, data sources, notifications, integrations and team roles.",
   ),
   component: Settings,
@@ -96,8 +96,8 @@ function Settings() {
           {section === "Data sources" ? (
             <ul className="max-w-[620px] divide-y divide-fog-deep/40">
               {[
-                { name: "pcap-store-eu-west", ok: true, note: "S3 · 4.2 TB retained" },
-                { name: "netflow-collector-01", ok: true, note: "IPFIX · 12k flows/min" },
+                { name: "pcap-store-eu-west", ok: true, note: "S3 Â· 4.2 TB retained" },
+                { name: "netflow-collector-01", ok: true, note: "IPFIX Â· 12k flows/min" },
                 { name: "netflow-collector-02", ok: false, note: "no data for 41m" },
               ].map((d) => (
                 <li key={d.name} className="flex items-center justify-between py-3">
@@ -151,7 +151,7 @@ function Settings() {
               <div>
                 <p className="text-[13px] font-medium">API key</p>
                 <p className="mono mt-1.5 rounded-md border border-fog-deep bg-void-700 px-3 py-2.5">
-                  av_live_••••••••••••••••3f9c
+                  av_live_â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢3f9c
                 </p>
               </div>
               <div>

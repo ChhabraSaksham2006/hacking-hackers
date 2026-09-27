@@ -1,7 +1,7 @@
-/**
+﻿/**
  * ragService.ts
  * =============
- * Retrieval-Augmented Generation (RAG) Service for Aegis Vantage Telemetry Copilot.
+ * Retrieval-Augmented Generation (RAG) Service for Flow दृष्टि Telemetry Copilot.
  *
  * Priority Chain:
  * 1. Groq API (openai/gpt-oss-20b primary @ ~1000 tok/s, openai/gpt-oss-120b secondary)
@@ -21,7 +21,7 @@ import { env } from '../config/env.js';
 import { dashboardStore } from '../models/dashboardModel.js';
 import { getReplayDataset } from './replayService.js';
 
-// ── 1. Domain MITRE ATT&CK Knowledge Base ──────────────────────
+// â”€â”€ 1. Domain MITRE ATT&CK Knowledge Base â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export interface IMitreTechniqueKB {
   id: string;
@@ -142,7 +142,7 @@ export const MITRE_KNOWLEDGE_BASE: Record<string, IMitreTechniqueKB> = {
   },
 };
 
-// ── 2. Retrieval Context Interfaces ─────────────────────────────
+// â”€â”€ 2. Retrieval Context Interfaces â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export interface IRetrievedContext {
   windowIndex: number;
@@ -212,7 +212,7 @@ export interface IRetrievedContext {
   isLive: boolean;
 }
 
-// ── 3. Multi-source Retrieval Function ──────────────────────────
+// â”€â”€ 3. Multi-source Retrieval Function â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export function retrieveContext(
   query: string,
@@ -364,7 +364,7 @@ export function retrieveContext(
   };
 }
 
-// ── 4. Compact Prompt Formatter with Flow/Packet Deltas ────────
+// â”€â”€ 4. Compact Prompt Formatter with Flow/Packet Deltas â”€â”€â”€â”€â”€â”€â”€â”€
 
 function buildCompactSystemPrompt(ctx: IRetrievedContext): string {
   const hostSummary = ctx.flaggedHosts
@@ -388,7 +388,7 @@ function buildCompactSystemPrompt(ctx: IRetrievedContext): string {
   const ff = ctx.flowFeatures;
   const df = ctx.deltas;
 
-  return `You are Aegis Vantage AI Copilot, an elite real-time cyber security analyst and telemetry expert.
+  return `You are Flow दृष्टि AI Copilot, an elite real-time cyber security analyst and telemetry expert.
 CURRENT LIVE TELEMETRY STATE (CSE-CIC-IDS2018 Thursday Infiltration Stream):
 - Monitored Window: #${ctx.windowIndex} (${ctx.timestamp})
 - CURRENT ATTACK PROBABILITY: ${(ctx.probability * 100).toFixed(1)}% (CRITICAL: Report this exact live probability: ${(ctx.probability * 100).toFixed(1)}%, never invent or alter it)
@@ -398,7 +398,7 @@ CURRENT LIVE TELEMETRY STATE (CSE-CIC-IDS2018 Thursday Infiltration Stream):
 PACKET & FLOW LEVEL FEATURES:
 - Packet-level metrics: Mean length=${pf.pkt_len_mean}B (std=${pf.pkt_len_std}B), Zero-payload=${pf.zero_payload_ratio}%, SYN ratio=${pf.syn_ratio}, ACK ratio=${pf.ack_ratio}, RST ratio=${pf.rst_ratio}, Handshake completion=${pf.handshake_completion_ratio}%, Forward packet ratio=${pf.fwd_packet_ratio}%
 - Flow-level metrics: Active flows=${ff.flow_count}, Arrival rate=${ff.flow_rate}/s, Byte rate=${ff.byte_rate}B/s, Port entropy=${ff.dst_port_entropy} bits, Auth port ratio (445/22/3389)=${ff.auth_port_ratio}%, Session lifetime=${ff.active_connection_lifetime_mean}s
-- Flow & Packet Feature Changes / Deltas (World Model State Derivatives): Δ IP Bytes=${df.delta_total_ip_bytes}B, Δ Port Entropy=${df.delta_dst_port_entropy} bits, Δ SYN Ratio=${df.delta_syn_ratio}, Δ Flow Count=${df.delta_flow_count}, Δ Auth Port Ratio=${df.delta_auth_port_ratio}%
+- Flow & Packet Feature Changes / Deltas (World Model State Derivatives): Î” IP Bytes=${df.delta_total_ip_bytes}B, Î” Port Entropy=${df.delta_dst_port_entropy} bits, Î” SYN Ratio=${df.delta_syn_ratio}, Î” Flow Count=${df.delta_flow_count}, Î” Auth Port Ratio=${df.delta_auth_port_ratio}%
 
 ASSETS & SUSPICIOUS FLOWS:
 - Flagged Network Hosts: ${hostSummary}
@@ -418,7 +418,7 @@ INSTRUCTIONS:
 where references are 2 to 4 key entities (e.g. IP addresses, MITRE technique ID, port).`;
 }
 
-// ── 5. Provider 1: Groq API (openai/gpt-oss-20b & 120b) ─────────
+// â”€â”€ 5. Provider 1: Groq API (openai/gpt-oss-20b & 120b) â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 async function generateWithGroq(
   query: string,
@@ -431,7 +431,7 @@ async function generateWithGroq(
   for (const model of models) {
     const startTime = Date.now();
     try {
-      console.log(`[ragService] 🚀 Calling Groq API (${model}) | Prob: ${(ctx.probability * 100).toFixed(1)}% | Conf: ${(ctx.confidence * 100).toFixed(1)}% | Window: #${ctx.windowIndex}`);
+      console.log(`[ragService] ðŸš€ Calling Groq API (${model}) | Prob: ${(ctx.probability * 100).toFixed(1)}% | Conf: ${(ctx.confidence * 100).toFixed(1)}% | Window: #${ctx.windowIndex}`);
 
       const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
@@ -453,7 +453,7 @@ async function generateWithGroq(
 
       if (!res.ok) {
         const errorText = await res.text();
-        console.warn(`[ragService] ⚠️ Groq model ${model} failed (${res.status}): ${errorText.slice(0, 200)}`);
+        console.warn(`[ragService] âš ï¸ Groq model ${model} failed (${res.status}): ${errorText.slice(0, 200)}`);
         continue; // try next model
       }
 
@@ -462,7 +462,7 @@ async function generateWithGroq(
       if (!rawText) continue;
 
       const durationMs = Date.now() - startTime;
-      console.log(`[ragService] ✅ Groq API (${model}) responded in ${durationMs}ms | Tokens: ${data?.usage?.total_tokens || 'n/a'}`);
+      console.log(`[ragService] âœ… Groq API (${model}) responded in ${durationMs}ms | Tokens: ${data?.usage?.total_tokens || 'n/a'}`);
 
       const { answer, references } = extractReferences(rawText, ctx);
       return { answer, references, provider: `groq:${model}` };
@@ -474,7 +474,7 @@ async function generateWithGroq(
   return null;
 }
 
-// ── 6. Provider 2: OpenRouter API (nvidia/nemotron-3.5-lightning:free) ──
+// â”€â”€ 6. Provider 2: OpenRouter API (nvidia/nemotron-3.5-lightning:free) â”€â”€
 
 async function generateWithOpenRouter(
   query: string,
@@ -486,7 +486,7 @@ async function generateWithOpenRouter(
   const startTime = Date.now();
 
   try {
-    console.log(`[ragService] 🚀 Calling OpenRouter API (${model}) | Prob: ${(ctx.probability * 100).toFixed(1)}%`);
+    console.log(`[ragService] ðŸš€ Calling OpenRouter API (${model}) | Prob: ${(ctx.probability * 100).toFixed(1)}%`);
 
     const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
@@ -494,7 +494,7 @@ async function generateWithOpenRouter(
         'Content-Type': 'application/json',
         Authorization: `Bearer ${apiKey}`,
         'HTTP-Referer': 'https://aegisvantage.com',
-        'X-Title': 'Aegis Vantage Telemetry Copilot',
+        'X-Title': 'Flow दृष्टि Telemetry Copilot',
       },
       body: JSON.stringify({
         model,
@@ -510,7 +510,7 @@ async function generateWithOpenRouter(
 
     if (!res.ok) {
       const errorText = await res.text();
-      console.warn(`[ragService] ⚠️ OpenRouter ${model} failed (${res.status}): ${errorText.slice(0, 200)}`);
+      console.warn(`[ragService] âš ï¸ OpenRouter ${model} failed (${res.status}): ${errorText.slice(0, 200)}`);
       return null;
     }
 
@@ -519,7 +519,7 @@ async function generateWithOpenRouter(
     if (!rawText) return null;
 
     const durationMs = Date.now() - startTime;
-    console.log(`[ragService] ✅ OpenRouter (${model}) responded in ${durationMs}ms`);
+    console.log(`[ragService] âœ… OpenRouter (${model}) responded in ${durationMs}ms`);
 
     const { answer, references } = extractReferences(rawText, ctx);
     return { answer, references, provider: `openrouter:${model}` };
@@ -529,7 +529,7 @@ async function generateWithOpenRouter(
   }
 }
 
-// ── Helper: Extract JSON References ────────────────────────────
+// â”€â”€ Helper: Extract JSON References â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function extractReferences(
   rawText: string,
@@ -560,7 +560,7 @@ function extractReferences(
   return { answer, references };
 }
 
-// ── 7. Provider 3: Built-in Cyber Causality Engine (Offline Fallback) ─
+// â”€â”€ 7. Provider 3: Built-in Cyber Causality Engine (Offline Fallback) â”€
 
 export function generateWithBuiltinCyberEngine(query: string, ctx: IRetrievedContext): {
   answer: string;
@@ -739,7 +739,7 @@ Adversary activity is executing **${ctx.stage}** actions. Packet-level frame mea
   if (ctx.flaggedHosts[0]) refs.add(ctx.flaggedHosts[0].id);
 
   return {
-    answer: `### Aegis Vantage Telemetry Summary (Window #${ctx.windowIndex})
+    answer: `### Flow दृष्टि Telemetry Summary (Window #${ctx.windowIndex})
 
 **Active State:** \`${ctx.stage}\` | **Current Infiltration Probability:** \`${(ctx.probability * 100).toFixed(1)}%\` | **Status:** **${ctx.riskLevel.toUpperCase()}**
 
@@ -756,7 +756,7 @@ ${ctx.topFeatures.slice(0, 3).map((f) => `  - \`${f.feature}\`: ${f.value} (+${f
   };
 }
 
-// ── 8. Dynamic Suggested Queries Generator ─────────────────────
+// â”€â”€ 8. Dynamic Suggested Queries Generator â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export function getSuggestedQueries(windowIndex?: number): string[] {
   const ctx = retrieveContext('', { windowIndex });
@@ -785,7 +785,7 @@ export function getSuggestedQueries(windowIndex?: number): string[] {
   }
 }
 
-// ── 9. Public Unified Query Handler ────────────────────────────
+// â”€â”€ 9. Public Unified Query Handler â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export interface IAnswerResponse {
   answer: string;
@@ -834,7 +834,7 @@ export async function answerTelemetryQuery(
 
   // 3. Third: Built-in Cyber Causality Engine (Offline Fallback)
   if (!result) {
-    console.log(`[ragService] ℹ️ Falling back to Built-in Cyber Causality Engine | Prob: ${(ctx.probability * 100).toFixed(1)}%`);
+    console.log(`[ragService] â„¹ï¸ Falling back to Built-in Cyber Causality Engine | Prob: ${(ctx.probability * 100).toFixed(1)}%`);
     const fallback = generateWithBuiltinCyberEngine(query, ctx);
     result = {
       ...fallback,

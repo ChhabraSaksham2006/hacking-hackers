@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   ActionButton,
@@ -18,7 +18,7 @@ import { Loader2, AlertCircle, CheckCircle2, ShieldAlert, Zap, Layers, Cpu } fro
 
 export const Route = createFileRoute("/app/benchmark")({
   head: pageHead(
-    "Model benchmarks — Aegis Vantage",
+    "Model benchmarks â€” Flow दृष्टि",
     "Verbatim experimental record from CSE-CIC-IDS2018 across Setting A (In-Distribution), Setting B (Mixed Generalization), and Setting C (Unseen-Family OOD).",
   ),
   component: Benchmark,
@@ -41,10 +41,10 @@ interface BenchmarkRow {
 }
 
 const SETTING_C_ROWS: BenchmarkRow[] = [
-  { model: "Majority", variant: "Constant 0", params: "0", precision: "0.00%", recall: "0.00%", f1: "0.00%", fpr: "0.00%", onsetRecall: "0% (0/7)", faWin: "0.00", faInc: "0.00", stateMae: "—" },
-  { model: "Persistence", variant: "yt+10 = yt", params: "0", precision: "99.66%", recall: "99.66%", f1: "99.66%", fpr: "0.00%", onsetRecall: "0% (0/7)", faWin: "0.00", faInc: "0.00", stateMae: "—" },
-  { model: "Logistic Regression", variant: "Static 54D", params: "55", precision: "41.18%", recall: "84.18%", f1: "55.31%", fpr: "49.35%", onsetRecall: "100% (7/7)", faWin: "888.35", faInc: "17.02", stateMae: "—" },
-  { model: "Random Forest", variant: "Static 54D", params: "250k", precision: "40.90%", recall: "88.79%", f1: "56.00%", fpr: "52.67%", onsetRecall: "100% (7/7)", faWin: "948.12", faInc: "4.99", stateMae: "—" },
+  { model: "Majority", variant: "Constant 0", params: "0", precision: "0.00%", recall: "0.00%", f1: "0.00%", fpr: "0.00%", onsetRecall: "0% (0/7)", faWin: "0.00", faInc: "0.00", stateMae: "â€”" },
+  { model: "Persistence", variant: "yt+10 = yt", params: "0", precision: "99.66%", recall: "99.66%", f1: "99.66%", fpr: "0.00%", onsetRecall: "0% (0/7)", faWin: "0.00", faInc: "0.00", stateMae: "â€”" },
+  { model: "Logistic Regression", variant: "Static 54D", params: "55", precision: "41.18%", recall: "84.18%", f1: "55.31%", fpr: "49.35%", onsetRecall: "100% (7/7)", faWin: "888.35", faInc: "17.02", stateMae: "â€”" },
+  { model: "Random Forest", variant: "Static 54D", params: "250k", precision: "40.90%", recall: "88.79%", f1: "56.00%", fpr: "52.67%", onsetRecall: "100% (7/7)", faWin: "948.12", faInc: "4.99", stateMae: "â€”" },
   { model: "Temporal GRU", variant: "10-Step Seq", params: "239,517", precision: "46.91%", recall: "49.07%", f1: "47.97%", fpr: "22.78%", onsetRecall: "42.9% (3/7)", faWin: "410.00", faInc: "26.02", stateMae: "0.2656" },
   { model: "Temporal Transformer", variant: "10-Step Seq", params: "341,789", precision: "30.87%", recall: "16.12%", f1: "21.18%", fpr: "14.84%", onsetRecall: "28.6% (2/7)", faWin: "267.23", faInc: "20.63", stateMae: "0.2721" },
   { model: "SparseRSSM", variant: "Raw AR Rollout", params: "214,334", precision: "38.90%", recall: "96.05%", f1: "55.37%", fpr: "61.96%", onsetRecall: "100% (7/7)", faWin: "1115.38", faInc: "34.12", stateMae: "0.3166" },
@@ -56,10 +56,10 @@ const SETTING_C_ROWS: BenchmarkRow[] = [
 ];
 
 const SETTING_A_ROWS: BenchmarkRow[] = [
-  { model: "Majority", variant: "Constant 0", params: "0", precision: "0.00%", recall: "0.00%", f1: "0.00%", fpr: "0.00%", onsetRecall: "0% (0/29)", faWin: "0.00", faInc: "0.00", stateMae: "—" },
-  { model: "Persistence", variant: "yt+10 = yt", params: "0", precision: "94.35%", recall: "94.16%", f1: "94.25%", fpr: "1.07%", onsetRecall: "0% (0/29)", faWin: "0.00", faInc: "0.00", stateMae: "—" },
-  { model: "Logistic Regression", variant: "Static 54D", params: "55", precision: "36.26%", recall: "99.23%", f1: "53.12%", fpr: "32.93%", onsetRecall: "96.6% (28/29)", faWin: "576.74", faInc: "6.40", stateMae: "—" },
-  { model: "Random Forest", variant: "Static 54D", params: "250k", precision: "36.81%", recall: "92.67%", f1: "52.69%", fpr: "30.04%", onsetRecall: "96.6% (28/29)", faWin: "524.34", faInc: "8.91", stateMae: "—" },
+  { model: "Majority", variant: "Constant 0", params: "0", precision: "0.00%", recall: "0.00%", f1: "0.00%", fpr: "0.00%", onsetRecall: "0% (0/29)", faWin: "0.00", faInc: "0.00", stateMae: "â€”" },
+  { model: "Persistence", variant: "yt+10 = yt", params: "0", precision: "94.35%", recall: "94.16%", f1: "94.25%", fpr: "1.07%", onsetRecall: "0% (0/29)", faWin: "0.00", faInc: "0.00", stateMae: "â€”" },
+  { model: "Logistic Regression", variant: "Static 54D", params: "55", precision: "36.26%", recall: "99.23%", f1: "53.12%", fpr: "32.93%", onsetRecall: "96.6% (28/29)", faWin: "576.74", faInc: "6.40", stateMae: "â€”" },
+  { model: "Random Forest", variant: "Static 54D", params: "250k", precision: "36.81%", recall: "92.67%", f1: "52.69%", fpr: "30.04%", onsetRecall: "96.6% (28/29)", faWin: "524.34", faInc: "8.91", stateMae: "â€”" },
   { model: "Temporal GRU", variant: "10-Step Seq", params: "239,517", precision: "45.05%", recall: "99.47%", f1: "62.01%", fpr: "22.91%", onsetRecall: "96.6% (28/29)", faWin: "394.36", faInc: "10.08", stateMae: "0.2199" },
   { model: "Temporal Transformer", variant: "10-Step Seq", params: "341,789", precision: "51.14%", recall: "98.91%", f1: "67.42%", fpr: "17.84%", onsetRecall: "93.1% (27/29)", faWin: "303.02", faInc: "11.78", stateMae: "0.2354" },
   { model: "SparseRSSM", variant: "Raw AR Rollout", params: "214,334", precision: "51.06%", recall: "98.67%", f1: "67.29%", fpr: "17.86%", onsetRecall: "93.1% (27/29)", faWin: "303.68", faInc: "11.82", stateMae: "0.2234" },
@@ -71,10 +71,10 @@ const SETTING_A_ROWS: BenchmarkRow[] = [
 ];
 
 const SETTING_B_ROWS: BenchmarkRow[] = [
-  { model: "Majority", variant: "Constant 0", params: "0", precision: "0.00%", recall: "0.00%", f1: "0.00%", fpr: "0.00%", onsetRecall: "0% (0/7)", faWin: "0.00", faInc: "0.00", stateMae: "—" },
-  { model: "Persistence", variant: "yt+10 = yt", params: "0", precision: "99.66%", recall: "99.66%", f1: "99.66%", fpr: "0.00%", onsetRecall: "0% (0/7)", faWin: "0.00", faInc: "0.00", stateMae: "—" },
-  { model: "Logistic Regression", variant: "Static 54D", params: "55", precision: "41.18%", recall: "84.18%", f1: "55.31%", fpr: "49.35%", onsetRecall: "100% (7/7)", faWin: "888.35", faInc: "17.02", stateMae: "—" },
-  { model: "Random Forest", variant: "Static 54D", params: "250k", precision: "40.90%", recall: "88.79%", f1: "56.00%", fpr: "52.67%", onsetRecall: "100% (7/7)", faWin: "948.12", faInc: "4.99", stateMae: "—" },
+  { model: "Majority", variant: "Constant 0", params: "0", precision: "0.00%", recall: "0.00%", f1: "0.00%", fpr: "0.00%", onsetRecall: "0% (0/7)", faWin: "0.00", faInc: "0.00", stateMae: "â€”" },
+  { model: "Persistence", variant: "yt+10 = yt", params: "0", precision: "99.66%", recall: "99.66%", f1: "99.66%", fpr: "0.00%", onsetRecall: "0% (0/7)", faWin: "0.00", faInc: "0.00", stateMae: "â€”" },
+  { model: "Logistic Regression", variant: "Static 54D", params: "55", precision: "41.18%", recall: "84.18%", f1: "55.31%", fpr: "49.35%", onsetRecall: "100% (7/7)", faWin: "888.35", faInc: "17.02", stateMae: "â€”" },
+  { model: "Random Forest", variant: "Static 54D", params: "250k", precision: "40.90%", recall: "88.79%", f1: "56.00%", fpr: "52.67%", onsetRecall: "100% (7/7)", faWin: "948.12", faInc: "4.99", stateMae: "â€”" },
   { model: "Temporal GRU", variant: "10-Step Seq", params: "239,517", precision: "44.44%", recall: "55.72%", f1: "49.44%", fpr: "28.56%", onsetRecall: "57.1% (4/7)", faWin: "514.18", faInc: "26.17", stateMae: "0.2640" },
   { model: "Temporal Transformer", variant: "10-Step Seq", params: "341,789", precision: "36.63%", recall: "16.97%", f1: "23.19%", fpr: "12.06%", onsetRecall: "28.6% (2/7)", faWin: "217.20", faInc: "28.14", stateMae: "0.2707" },
   { model: "SparseRSSM", variant: "Raw AR Rollout", params: "214,334", precision: "46.71%", recall: "31.08%", f1: "37.32%", fpr: "14.55%", onsetRecall: "42.9% (3/7)", faWin: "261.93", faInc: "12.44", stateMae: "0.2841" },
@@ -117,7 +117,7 @@ function Benchmark() {
     return (
       <div className="flex h-64 items-center justify-center gap-2 text-fog">
         <Loader2 className="size-5 animate-spin" />
-        <span>Loading benchmark data…</span>
+        <span>Loading benchmark dataâ€¦</span>
       </div>
     );
   }
@@ -141,7 +141,7 @@ function Benchmark() {
         note="Verbatim experimental record from CSE-CIC-IDS2018 (8.28M flows, 188.5k windows) evaluated across seen, mixed, and unseen-family OOD regimes."
       />
 
-      {/* ── Key Research Highlights Summary ─────────────── */}
+      {/* â”€â”€ Key Research Highlights Summary â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-5">
         <div className="rounded-xl border border-teal/40 bg-void-900/80 p-4 shadow-sm backdrop-blur-md">
           <div className="flex items-center gap-2 text-teal font-mono text-xs font-semibold">
@@ -188,7 +188,7 @@ function Benchmark() {
         </div>
       </div>
 
-      {/* ── Master Architecture Benchmark Suite (Table V, VI, VII) ─── */}
+      {/* â”€â”€ Master Architecture Benchmark Suite (Table V, VI, VII) â”€â”€â”€ */}
       <FlatPanel
         title="Master benchmark suite (CSE-CIC-IDS2018)"
         control={
@@ -229,9 +229,9 @@ function Benchmark() {
       >
         <div className="px-5 py-2.5 bg-void-950/60 border-b border-fog-deep/40 text-xs font-mono text-fog flex flex-wrap justify-between items-center gap-2">
           <span>
-            {activeRegime === "C" && "Table VII: Setting C — Zero-day unseen-family OOD holdout (Infiltration + Botnet ARES, 7 episodes, K=10, 20s lead)"}
-            {activeRegime === "A" && "Table V: Setting A — Seen in-distribution master benchmark (29 attack episodes, K=10, 20s lead)"}
-            {activeRegime === "B" && "Table VI: Setting B — Mixed-generalisation master benchmark (7 attack episodes, K=10, 20s lead)"}
+            {activeRegime === "C" && "Table VII: Setting C â€” Zero-day unseen-family OOD holdout (Infiltration + Botnet ARES, 7 episodes, K=10, 20s lead)"}
+            {activeRegime === "A" && "Table V: Setting A â€” Seen in-distribution master benchmark (29 attack episodes, K=10, 20s lead)"}
+            {activeRegime === "B" && "Table VI: Setting B â€” Mixed-generalisation master benchmark (7 attack episodes, K=10, 20s lead)"}
           </span>
           <span className="text-teal font-semibold">Lead Horizon K=10 (20.0s)</span>
         </div>
@@ -284,16 +284,16 @@ function Benchmark() {
       </FlatPanel>
 
       <div className="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
-        {/* ── Head-to-Head Comparison ──────────────────────── */}
+        {/* â”€â”€ Head-to-Head Comparison â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <FlatPanel title="Production model versus baseline" bodyClassName="p-0">
           <table className="w-full text-left">
             <thead className="text-[12px] text-fog">
               <tr className="border-b border-fog-deep/60">
                 <th className="px-5 py-2.5 font-medium">Metric</th>
-                <th className="px-5 py-2.5 text-right font-medium">Two-Stage SOC · OOD (C)</th>
-                <th className="px-5 py-2.5 text-right font-medium">LR · OOD (C)</th>
-                <th className="px-5 py-2.5 text-right font-medium">Two-Stage SOC · Seen (A)</th>
-                <th className="px-5 py-2.5 text-right font-medium">LR · Seen (A)</th>
+                <th className="px-5 py-2.5 text-right font-medium">Two-Stage SOC Â· OOD (C)</th>
+                <th className="px-5 py-2.5 text-right font-medium">LR Â· OOD (C)</th>
+                <th className="px-5 py-2.5 text-right font-medium">Two-Stage SOC Â· Seen (A)</th>
+                <th className="px-5 py-2.5 text-right font-medium">LR Â· Seen (A)</th>
               </tr>
             </thead>
             <tbody>
@@ -313,12 +313,12 @@ function Benchmark() {
           </table>
           <div className="p-4 bg-void-950/40 border-t border-fog-deep/40 text-xs font-mono text-fog">
             <p>
-              <strong className="text-paper">Operational Takeaway:</strong> While static Logistic Regression and Random Forest obtain 100% onset recall in OOD, they do so at 49.35%–52.67% FPR (888–948 FA/hr), flooding SOC operators. Two-Stage SOC matches 100% onset recall while delivering a <strong>140× reduction</strong> in false alerts down to 0.12 FA/hr.
+              <strong className="text-paper">Operational Takeaway:</strong> While static Logistic Regression and Random Forest obtain 100% onset recall in OOD, they do so at 49.35%â€“52.67% FPR (888â€“948 FA/hr), flooding SOC operators. Two-Stage SOC matches 100% onset recall while delivering a <strong>140Ã— reduction</strong> in false alerts down to 0.12 FA/hr.
             </p>
           </div>
         </FlatPanel>
 
-        {/* ── Confusion matrices from final.pdf ────────────── */}
+        {/* â”€â”€ Confusion matrices from final.pdf â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <FlatPanel
           title="Confusion matrices (incident-level verification)"
           control={<span className="mono text-fog">CSE-CIC-IDS2018</span>}
@@ -360,7 +360,7 @@ function Benchmark() {
         </FlatPanel>
       </div>
 
-      {/* ── Capability Matrix (Table XI) ────────────────────── */}
+      {/* â”€â”€ Capability Matrix (Table XI) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <FlatPanel className="mt-5" title="Architectural capability matrix (Table XI)" bodyClassName="p-0 overflow-x-auto scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         <table className="w-full text-left text-xs font-mono">
           <thead className="text-fog border-b border-fog-deep/60 bg-void-950/40">
@@ -376,68 +376,68 @@ function Benchmark() {
           <tbody className="divide-y divide-fog-deep/30">
             <tr className="hover:bg-paper/4">
               <td className="px-5 py-2.5 text-fog">Logistic Regression</td>
-              <td className="px-4 py-2.5 text-center text-fog">✗</td>
-              <td className="px-4 py-2.5 text-center text-fog">✗</td>
-              <td className="px-4 py-2.5 text-center text-fog">✗</td>
-              <td className="px-4 py-2.5 text-center text-fog">✗</td>
-              <td className="px-4 py-2.5 text-center text-fog">✗</td>
+              <td className="px-4 py-2.5 text-center text-fog">âœ—</td>
+              <td className="px-4 py-2.5 text-center text-fog">âœ—</td>
+              <td className="px-4 py-2.5 text-center text-fog">âœ—</td>
+              <td className="px-4 py-2.5 text-center text-fog">âœ—</td>
+              <td className="px-4 py-2.5 text-center text-fog">âœ—</td>
             </tr>
             <tr className="hover:bg-paper/4">
               <td className="px-5 py-2.5 text-fog">Random Forest</td>
-              <td className="px-4 py-2.5 text-center text-fog">✗</td>
-              <td className="px-4 py-2.5 text-center text-fog">✗</td>
-              <td className="px-4 py-2.5 text-center text-fog">✗</td>
-              <td className="px-4 py-2.5 text-center text-fog">✗</td>
-              <td className="px-4 py-2.5 text-center text-fog">✗</td>
+              <td className="px-4 py-2.5 text-center text-fog">âœ—</td>
+              <td className="px-4 py-2.5 text-center text-fog">âœ—</td>
+              <td className="px-4 py-2.5 text-center text-fog">âœ—</td>
+              <td className="px-4 py-2.5 text-center text-fog">âœ—</td>
+              <td className="px-4 py-2.5 text-center text-fog">âœ—</td>
             </tr>
             <tr className="hover:bg-paper/4">
               <td className="px-5 py-2.5 text-paper">Temporal GRU</td>
-              <td className="px-4 py-2.5 text-center text-teal">✓</td>
-              <td className="px-4 py-2.5 text-center text-fog">✗</td>
-              <td className="px-4 py-2.5 text-center text-fog">✗</td>
-              <td className="px-4 py-2.5 text-center text-fog">✗</td>
-              <td className="px-4 py-2.5 text-center text-fog">✗</td>
+              <td className="px-4 py-2.5 text-center text-teal">âœ“</td>
+              <td className="px-4 py-2.5 text-center text-fog">âœ—</td>
+              <td className="px-4 py-2.5 text-center text-fog">âœ—</td>
+              <td className="px-4 py-2.5 text-center text-fog">âœ—</td>
+              <td className="px-4 py-2.5 text-center text-fog">âœ—</td>
             </tr>
             <tr className="hover:bg-paper/4">
               <td className="px-5 py-2.5 text-paper">Temporal Transformer</td>
-              <td className="px-4 py-2.5 text-center text-teal">✓</td>
-              <td className="px-4 py-2.5 text-center text-fog">✗</td>
-              <td className="px-4 py-2.5 text-center text-fog">✗</td>
-              <td className="px-4 py-2.5 text-center text-fog">✗</td>
-              <td className="px-4 py-2.5 text-center text-fog">✗</td>
+              <td className="px-4 py-2.5 text-center text-teal">âœ“</td>
+              <td className="px-4 py-2.5 text-center text-fog">âœ—</td>
+              <td className="px-4 py-2.5 text-center text-fog">âœ—</td>
+              <td className="px-4 py-2.5 text-center text-fog">âœ—</td>
+              <td className="px-4 py-2.5 text-center text-fog">âœ—</td>
             </tr>
             <tr className="hover:bg-paper/4">
               <td className="px-5 py-2.5 text-paper">SparseRSSM</td>
-              <td className="px-4 py-2.5 text-center text-teal">✓</td>
-              <td className="px-4 py-2.5 text-center text-teal">✓</td>
-              <td className="px-4 py-2.5 text-center text-fog">✗</td>
-              <td className="px-4 py-2.5 text-center text-fog">✗</td>
-              <td className="px-4 py-2.5 text-center text-teal">✓</td>
+              <td className="px-4 py-2.5 text-center text-teal">âœ“</td>
+              <td className="px-4 py-2.5 text-center text-teal">âœ“</td>
+              <td className="px-4 py-2.5 text-center text-fog">âœ—</td>
+              <td className="px-4 py-2.5 text-center text-fog">âœ—</td>
+              <td className="px-4 py-2.5 text-center text-teal">âœ“</td>
             </tr>
             <tr className="hover:bg-paper/4">
               <td className="px-5 py-2.5 text-paper">TFCNet-F</td>
-              <td className="px-4 py-2.5 text-center text-teal">✓</td>
-              <td className="px-4 py-2.5 text-center text-fog">✗</td>
-              <td className="px-4 py-2.5 text-center text-teal">✓</td>
-              <td className="px-4 py-2.5 text-center text-teal">✓</td>
-              <td className="px-4 py-2.5 text-center text-fog">✗</td>
+              <td className="px-4 py-2.5 text-center text-teal">âœ“</td>
+              <td className="px-4 py-2.5 text-center text-fog">âœ—</td>
+              <td className="px-4 py-2.5 text-center text-teal">âœ“</td>
+              <td className="px-4 py-2.5 text-center text-teal">âœ“</td>
+              <td className="px-4 py-2.5 text-center text-fog">âœ—</td>
             </tr>
             <tr className="bg-teal/15 font-bold text-paper border-t-2 border-teal/70">
               <td className="px-5 py-2.5 flex items-center gap-2">
                 <span className="size-2 rounded-full bg-teal" />
                 Two-Stage Operational SOC (Production)
               </td>
-              <td className="px-4 py-2.5 text-center text-teal">✓</td>
-              <td className="px-4 py-2.5 text-center text-teal">✓</td>
-              <td className="px-4 py-2.5 text-center text-teal">✓</td>
-              <td className="px-4 py-2.5 text-center text-teal">✓</td>
-              <td className="px-4 py-2.5 text-center text-teal">✓</td>
+              <td className="px-4 py-2.5 text-center text-teal">âœ“</td>
+              <td className="px-4 py-2.5 text-center text-teal">âœ“</td>
+              <td className="px-4 py-2.5 text-center text-teal">âœ“</td>
+              <td className="px-4 py-2.5 text-center text-teal">âœ“</td>
+              <td className="px-4 py-2.5 text-center text-teal">âœ“</td>
             </tr>
           </tbody>
         </table>
       </FlatPanel>
 
-      {/* ── Loss curve ─────────────────────────────────────── */}
+      {/* â”€â”€ Loss curve â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <HeroPanel
         className="mt-5"
         title="Training and validation loss progression"
@@ -476,7 +476,7 @@ function Benchmark() {
         )}
       </HeroPanel>
 
-      {/* ── Version history ─────────────────────────────────── */}
+      {/* â”€â”€ Version history â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <FlatPanel className="mt-5" title="Model registry & deployment history">
         {promote.isError && (
           <p className="mb-4 flex items-center gap-2 text-[13px] text-red-400">
@@ -525,7 +525,7 @@ function Benchmark() {
                   >
                     {promote.isPending ? (
                       <span className="flex items-center gap-1.5">
-                        <Loader2 className="size-3 animate-spin" /> Promoting…
+                        <Loader2 className="size-3 animate-spin" /> Promotingâ€¦
                       </span>
                     ) : (
                       "Promote to production"
@@ -533,7 +533,7 @@ function Benchmark() {
                   </ActionButton>
                 )}
                 <span className="mono ml-auto text-[12px] text-fog">
-                  F1 {v.metrics.cicIds.f1.toFixed(4)} · FPR {v.metrics.cicIds.fpr.toFixed(4)}
+                  F1 {v.metrics.cicIds.f1.toFixed(4)} Â· FPR {v.metrics.cicIds.fpr.toFixed(4)}
                 </span>
               </div>
             </li>

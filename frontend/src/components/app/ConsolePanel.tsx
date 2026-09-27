@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+﻿import { useState, useRef, useEffect } from "react";
 import {
   Terminal,
   X,
@@ -26,7 +26,7 @@ interface ChatMessage {
   provider?: string | undefined;
 }
 
-// ── Simple Markdown Renderer for Cyber Console ─────────────────
+// â”€â”€ Simple Markdown Renderer for Cyber Console â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function MarkdownContent({ content }: { content: string }) {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
@@ -261,7 +261,7 @@ function renderInlineStyles(text: string): React.ReactNode {
   return parts.length > 0 ? parts : text;
 }
 
-// ── Main Console Panel Component ──────────────────────────────
+// â”€â”€ Main Console Panel Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export function ConsolePanel() {
   const [open, setOpen] = useState(false);
@@ -281,7 +281,7 @@ export function ConsolePanel() {
     {
       id: "initial-welcome",
       role: "assistant",
-      content: `### Aegis Vantage Telemetry Copilot Initialized
+      content: `### Flow दृष्टि Telemetry Copilot Initialized
 
 Ground-truth stream connected to **SparseRSSM World Model** and **MITRE ATT&CK Engine**.
 
@@ -432,7 +432,7 @@ Inquire below about current attack probability, model confidence, flow/packet fe
           : "w-[440px] md:w-[480px] h-[580px] max-h-[85vh]"
       )}
     >
-      {/* ── Console Header ────────────────────────────────────── */}
+      {/* â”€â”€ Console Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="flex items-center justify-between border-b border-fog-deep/60 bg-void-950/80 px-4 py-3">
         <div className="flex items-center gap-2.5">
           <div className="flex size-7 items-center justify-center rounded-md border border-teal/30 bg-teal/10 text-teal">
@@ -447,8 +447,8 @@ Inquire below about current attack probability, model confidence, flow/packet fe
             </div>
             <p className="text-[11px] text-fog">
               {liveState
-                ? `Window #${liveState.windowIndex} · ${liveState.stage} · ${(liveState.probability * 100).toFixed(0)}% Risk`
-                : "Active Stream · CSE-CIC-IDS2018 Infiltration"}
+                ? `Window #${liveState.windowIndex} Â· ${liveState.stage} Â· ${(liveState.probability * 100).toFixed(0)}% Risk`
+                : "Active Stream Â· CSE-CIC-IDS2018 Infiltration"}
             </p>
           </div>
         </div>
@@ -478,7 +478,7 @@ Inquire below about current attack probability, model confidence, flow/packet fe
         </div>
       </div>
 
-      {/* ── Subheader / Telemetry Teleprompter ────────────────── */}
+      {/* â”€â”€ Subheader / Telemetry Teleprompter â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="flex items-center justify-between border-b border-fog-deep/40 bg-void-950/40 px-4 py-1.5 text-[11px] text-fog">
         <div className="flex items-center gap-2">
           <span
@@ -497,7 +497,7 @@ Inquire below about current attack probability, model confidence, flow/packet fe
         </div>
       </div>
 
-      {/* ── Message Transcript ────────────────────────────────── */}
+      {/* â”€â”€ Message Transcript â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="flex-1 overflow-y-auto px-4 py-3.5 space-y-4">
         {messages.map((m) => (
           <div key={m.id} className={cn("space-y-1.5", m.role === "user" ? "pl-4" : "pr-2")}>
@@ -578,7 +578,7 @@ Inquire below about current attack probability, model confidence, flow/packet fe
         <div ref={messagesEndRef} />
       </div>
 
-      {/* ── Suggested Query Chips ─────────────────────────────── */}
+      {/* â”€â”€ Suggested Query Chips â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="border-t border-fog-deep/50 bg-void-950/60 px-3.5 py-2">
         <div className="mb-1 flex items-center justify-between text-[10px] uppercase font-mono tracking-wider text-fog">
           <span>Suggested queries</span>
@@ -599,7 +599,7 @@ Inquire below about current attack probability, model confidence, flow/packet fe
         </div>
       </div>
 
-      {/* ── Input Box ─────────────────────────────────────────── */}
+      {/* â”€â”€ Input Box â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="border-t border-fog-deep/60 bg-void-950 px-4 py-3">
         <form
           onSubmit={(e) => {
@@ -628,7 +628,7 @@ Inquire below about current attack probability, model confidence, flow/packet fe
           </button>
         </form>
         <div className="mt-1.5 flex items-center justify-between text-[10px] text-fog mono">
-          <span>Grounded RAG · Zero-key offline engine enabled</span>
+          <span>Grounded RAG Â· Zero-key offline engine enabled</span>
           <span>Esc to minimize</span>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import fs from 'fs';
+﻿import fs from 'fs';
 import path from 'path';
 import mongoose from 'mongoose';
 import PDFDocument from 'pdfkit';
@@ -10,7 +10,7 @@ import { IReport, Report } from '../models/Report.js';
 import { Organisation } from '../models/Organisation.js';
 import { User } from '../models/User.js';
 
-// ── Preview & Reporting Data Interface ───────────────────────────────
+// â”€â”€ Preview & Reporting Data Interface â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export interface ReportDataPayload {
   reportName: string;
@@ -49,7 +49,7 @@ export interface ReportDataPayload {
   };
 }
 
-// ── Service Functions ────────────────────────────────────────────────
+// â”€â”€ Service Functions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export async function getReportPreview(
   orgId: mongoose.Types.ObjectId,
@@ -161,11 +161,11 @@ export async function getReportPreview(
 
   return {
     reportName: `incident-report-${scopeSegment.replace(/\s+/g, '-').toLowerCase()}`,
-    scope: `${scopeSegment} · ${params.timeWindow || '24h'}`,
+    scope: `${scopeSegment} Â· ${params.timeWindow || '24h'}`,
     segmentOrAlert: scopeSegment,
     timeWindow: { start, end },
     orgName,
-    generatedBy: 'Aegis Vantage SOC Engine',
+    generatedBy: 'Flow दृष्टि SOC Engine',
     createdAt: new Date(),
     sparkline,
     flaggedFlows: flaggedList,
@@ -183,7 +183,7 @@ export async function getReportPreview(
   };
 }
 
-// ── Professional PDFKit Report Builder ───────────────────────────────
+// â”€â”€ Professional PDFKit Report Builder â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export function buildPdfReport(data: ReportDataPayload): Promise<Buffer> {
   return new Promise((resolve, reject) => {
@@ -192,10 +192,10 @@ export function buildPdfReport(data: ReportDataPayload): Promise<Buffer> {
         size: 'A4',
         margin: 36,
         info: {
-          Title: `Aegis Vantage Incident Report - ${data.scope}`,
-          Author: 'Aegis Vantage Autonomous NDR Platform',
+          Title: `Flow दृष्टि Incident Report - ${data.scope}`,
+          Author: 'Flow दृष्टि Autonomous NDR Platform',
           Subject: 'Cybersecurity Threat Detection & Telemetry Audit',
-          Keywords: 'security, incident, threat detection, ndr, aegis vantage',
+          Keywords: 'security, incident, threat detection, ndr, Flow दृष्टि',
         },
       });
 
@@ -222,7 +222,7 @@ export function buildPdfReport(data: ReportDataPayload): Promise<Buffer> {
       const amberAccent = '#D97706';
       const amberLight = '#FEF3C7';
 
-      // ── Header Banner ──────────────────────────────────────────
+      // â”€â”€ Header Banner â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       doc.rect(margin, margin, contentWidth, 58).fill(slateDark);
 
       // Top teal accent strip
@@ -233,7 +233,7 @@ export function buildPdfReport(data: ReportDataPayload): Promise<Buffer> {
         .font('Helvetica-Bold')
         .fontSize(14)
         .fillColor('#FFFFFF')
-        .text('AEGIS VANTAGE', margin + 14, margin + 14);
+        .text('Flow दृष्टि', margin + 14, margin + 14);
 
       doc
         .font('Helvetica')
@@ -259,7 +259,7 @@ export function buildPdfReport(data: ReportDataPayload): Promise<Buffer> {
           align: 'center',
         });
 
-      // ── Document Metadata Strip ────────────────────────────────
+      // â”€â”€ Document Metadata Strip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       const metaY = margin + 66;
       doc.rect(margin, metaY, contentWidth, 42).fill(cardBg);
       doc.rect(margin, metaY, contentWidth, 42).lineWidth(0.75).stroke(borderSlate);
@@ -313,7 +313,7 @@ export function buildPdfReport(data: ReportDataPayload): Promise<Buffer> {
         .fillColor(slateBody)
         .text(data.createdAt.toISOString().replace('T', ' ').slice(0, 16) + 'Z', margin + colW * 3 + 6, metaY + 21);
 
-      // ── Key Risk Metric Cards (4 Tiles) ────────────────────────
+      // â”€â”€ Key Risk Metric Cards (4 Tiles) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       const metricY = metaY + 50;
       const tileGap = 8;
       const tileWidth = (contentWidth - tileGap * 3) / 4;
@@ -389,7 +389,7 @@ export function buildPdfReport(data: ReportDataPayload): Promise<Buffer> {
         .fillColor(slateMuted)
         .text('SMB Lateral Movement', tile4X + 10, metricY + 36);
 
-      // ── Executive Summary & Explainability Callout ─────────────
+      // â”€â”€ Executive Summary & Explainability Callout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       const summaryY = metricY + tileHeight + 12;
       const summaryHeight = 84;
 
@@ -425,7 +425,7 @@ export function buildPdfReport(data: ReportDataPayload): Promise<Buffer> {
           summaryY + summaryHeight - 14,
         );
 
-      // ── Top Flagged Network Flows Table ────────────────────────
+      // â”€â”€ Top Flagged Network Flows Table â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       const tableY = summaryY + summaryHeight + 14;
 
       doc
@@ -508,7 +508,7 @@ export function buildPdfReport(data: ReportDataPayload): Promise<Buffer> {
       // Outer border for table
       doc.rect(margin, tableHeadY, contentWidth, tableHeadH + rows.length * rowH).lineWidth(0.75).stroke(borderSlate);
 
-      // ── Model Attribution & Forensic Signal Breakdown ──────────
+      // â”€â”€ Model Attribution & Forensic Signal Breakdown â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       const signalY = rowY + 14;
 
       doc
@@ -553,7 +553,7 @@ export function buildPdfReport(data: ReportDataPayload): Promise<Buffer> {
         doc.roundedRect(cx, signalBoxY + 48, fillWidth, barHeight, 2).fill(item.weight > 0.15 ? crimsonAccent : tealAccent);
       }
 
-      // ── Footer ─────────────────────────────────────────────────
+      // â”€â”€ Footer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       const footerY = 841.89 - margin - 22;
 
       doc.rect(margin, footerY, contentWidth, 0.75).fill(borderSlate);
@@ -562,7 +562,7 @@ export function buildPdfReport(data: ReportDataPayload): Promise<Buffer> {
         .font('Helvetica')
         .fontSize(7)
         .fillColor(slateMuted)
-        .text('Aegis Vantage Autonomous NDR Platform · Certified Cryptographic Audit Trail', margin, footerY + 8);
+        .text('Flow दृष्टि Autonomous NDR Platform Â· Certified Cryptographic Audit Trail', margin, footerY + 8);
 
       doc
         .font('Helvetica-Bold')
@@ -586,13 +586,13 @@ export function buildPdfReport(data: ReportDataPayload): Promise<Buffer> {
   });
 }
 
-// ── Build CSV Buffer ─────────────────────────────────────────────────
+// â”€â”€ Build CSV Buffer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export function buildCsvReport(data: ReportDataPayload): Buffer {
   const lines: string[] = [];
 
   lines.push(`# ==============================================================================`);
-  lines.push(`# AEGIS VANTAGE AUTONOMOUS NDR — THREAT TELEMETRY EXPORT`);
+  lines.push(`# Flow दृष्टि AUTONOMOUS NDR â€” THREAT TELEMETRY EXPORT`);
   lines.push(`# ==============================================================================`);
   lines.push(`# Report Title: ${data.reportName}`);
   lines.push(`# Scope: ${data.scope}`);
@@ -628,7 +628,7 @@ export function buildCsvReport(data: ReportDataPayload): Buffer {
   return Buffer.from(lines.join('\r\n'), 'utf-8');
 }
 
-// ── Generate & Download Handler ──────────────────────────────────────
+// â”€â”€ Generate & Download Handler â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export async function generateAndSaveReport(
   orgId: mongoose.Types.ObjectId,

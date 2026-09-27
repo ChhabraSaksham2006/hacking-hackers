@@ -1,7 +1,7 @@
-/**
+﻿/**
  * dashboardApi.ts
  * ===============
- * API client and Server-Sent Events (SSE) streaming subscriber for Aegis Vantage Dashboard.
+ * API client and Server-Sent Events (SSE) streaming subscriber for Flow दृष्टि Dashboard.
  */
 
 export interface DashboardSummary {

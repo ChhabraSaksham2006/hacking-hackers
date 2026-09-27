@@ -1,11 +1,11 @@
-@import "tailwindcss" source(none);
+﻿@import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Aegis Vantage design system — deep instrumentation.
+ * Flow दृष्टि design system â€” deep instrumentation.
  * Three-stage semantic escalation (calm -> watch -> critical) on a cool
  * "network-space" base. All colors in oklch.
  */
@@ -154,7 +154,7 @@
     56px 56px;
 }
 
-/* Tier 1 — base glass: secondary live widgets */
+/* Tier 1 â€” base glass: secondary live widgets */
 @utility glass {
   background: var(--glass-fill);
   border: 1px solid var(--glass-border);
@@ -162,7 +162,7 @@
   border-radius: 12px;
 }
 
-/* Tier 2 — hero glass: the one dominant live surface per page */
+/* Tier 2 â€” hero glass: the one dominant live surface per page */
 @utility glass-hero {
   position: relative;
   background: var(--glass-fill);
@@ -186,7 +186,7 @@
   }
 }
 
-/* Tier 3 — flat surface: dense, read-heavy content */
+/* Tier 3 â€” flat surface: dense, read-heavy content */
 @utility flat {
   background: var(--void-800);
   border: 1px solid var(--fog-600);
@@ -300,7 +300,7 @@
 
 @import "katex/dist/katex.min.css";
 
-/* ── Refined Subtle Text Accents (De-Glowed & Crisp) ── */
+/* â”€â”€ Refined Subtle Text Accents (De-Glowed & Crisp) â”€â”€ */
 @utility text-glow-teal {
   text-shadow: 0 0 8px rgba(45, 212, 191, 0.22);
 }
@@ -378,7 +378,7 @@
 
 
 
-/* ── Scroll-Focused Section Spotlight ── */
+/* â”€â”€ Scroll-Focused Section Spotlight â”€â”€ */
 .scroll-spotlight-active {
   opacity: 1 !important;
   transform: scale(1) translateY(0) !important;

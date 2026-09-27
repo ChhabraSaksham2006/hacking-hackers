@@ -1,4 +1,4 @@
-import { Fragment, useState, useMemo, useEffect } from "react";
+﻿import { Fragment, useState, useMemo, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   ArrowRight,
@@ -28,7 +28,7 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/explorer")({
   head: pageHead(
-    "Flow & packet explorer — Aegis Vantage",
+    "Flow & packet explorer â€” Flow दृष्टि",
     "Real-time and forensic flow reference table with deep packet inspection (DPI), protocol layer hierarchy, and Wireshark hex dumps.",
   ),
   component: Explorer,
@@ -135,7 +135,7 @@ function Explorer() {
                 className="flex items-center gap-1.5 rounded-full border border-amber/50 bg-amber/10 px-2.5 py-1 text-[11px] font-mono text-amber hover:bg-amber/20 transition-colors"
               >
                 <Radio className="size-3 text-amber animate-pulse" />
-                Forensic review (paused) — Track Live Stream &rarr;
+                Forensic review (paused) â€” Track Live Stream &rarr;
               </button>
             )}
 
@@ -438,7 +438,7 @@ function Explorer() {
                       {f.iatMean.toFixed(3)}s
                     </td>
                     <td className="mono px-3 py-3 text-right text-[12px] text-fog">
-                      {f.window || "—"}
+                      {f.window || "â€”"}
                     </td>
                     <td
                       className={cn(
@@ -517,7 +517,7 @@ function Explorer() {
                                     {f.src} &rarr; {f.dst}
                                   </h4>
                                   <span className="rounded bg-teal/15 border border-teal/40 px-2 py-0.5 text-[11px] font-mono text-teal">
-                                    {f.proto} · {f.service}
+                                    {f.proto} Â· {f.service}
                                   </span>
                                   {f.mitreTechnique ? (
                                     <span className="rounded bg-crimson/15 border border-crimson/40 px-2 py-0.5 text-[11px] font-mono text-crimson">
@@ -526,7 +526,7 @@ function Explorer() {
                                   ) : null}
                                 </div>
                                 <p className="mt-0.5 text-[12px] text-fog">
-                                  Captured at {f.timestamp} · Total Payload: {formatBytes(f.bytes)} across {f.packets} packets · Duration: {f.duration}s
+                                  Captured at {f.timestamp} Â· Total Payload: {formatBytes(f.bytes)} across {f.packets} packets Â· Duration: {f.duration}s
                                 </p>
                               </div>
                             </div>
@@ -601,7 +601,7 @@ function Explorer() {
                                               {pkt.flags}
                                             </span>
                                           ) : (
-                                            "—"
+                                            "â€”"
                                           )}
                                         </td>
                                         <td className="px-3 py-1.5 text-right">{pkt.length} B</td>

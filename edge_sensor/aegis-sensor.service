@@ -1,5 +1,5 @@
-[Unit]
-Description=Aegis Vantage Distributed Edge Sensor Agent
+﻿[Unit]
+Description=Flow Drishti Distributed Edge Sensor Agent
 After=network.target
 Wants=network.target
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { X, GripVertical } from "lucide-react";
 import {
@@ -36,7 +36,7 @@ import { useSocket } from "@/hooks/useSocket";
 
 export const Route = createFileRoute("/app/alerts")({
   head: pageHead(
-    "Alerts and incident queue — Aegis Vantage",
+    "Alerts and incident queue â€” Flow दृष्टि",
     "Triage predicted compromises across new, acknowledged, investigating and resolved states.",
   ),
   component: AlertsQueue,
@@ -96,7 +96,7 @@ function SortableAlertCard({
         <div className="flex items-center justify-between gap-2">
           <RiskBadge state={alert.state} />
           <span className="mono flex size-6 items-center justify-center rounded-full bg-void-800 text-[11px] text-fog">
-            {alert.assignedTo?.initials ?? "—"}
+            {alert.assignedTo?.initials ?? "â€”"}
           </span>
         </div>
         <p className="mono mt-2">{alert.host}</p>
@@ -113,7 +113,7 @@ function AlertCardOverlay({ alert }: { alert: Alert }) {
       <div className="flex items-center justify-between gap-2">
         <RiskBadge state={alert.state} />
         <span className="mono flex size-6 items-center justify-center rounded-full bg-void-800 text-[11px] text-fog">
-          {alert.assignedTo?.initials ?? "—"}
+          {alert.assignedTo?.initials ?? "â€”"}
         </span>
       </div>
       <p className="mono mt-2">{alert.host}</p>
@@ -329,7 +329,7 @@ function AlertsQueue() {
               >
                 Mark investigating
               </ActionButton>
-              <ActionButton variant="ghost">Assign to…</ActionButton>
+              <ActionButton variant="ghost">Assign toâ€¦</ActionButton>
             </div>
           </HeroPanel>
         </aside>

@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+﻿import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   ActionButton,
@@ -29,7 +29,7 @@ import {
 
 export const Route = createFileRoute("/app/dashboard")({
   head: pageHead(
-    "Dashboard — Aegis Vantage",
+    "Dashboard â€” Flow दृष्टि",
     "Current infiltration probability, predicted ATT&CK stage and recent alerts for the monitored estate.",
   ),
   component: Dashboard,
@@ -192,10 +192,10 @@ function Dashboard() {
         title="Overview"
         note={
           liveState
-            ? `CIC-IDS-2018: Thursday-01-03-2018 · Window #${liveState.actual_window_index} [${liveState.summary.currentStage}]${
-                liveState.summary.leadTimeSeconds ? ` · ${liveState.summary.leadTimeSeconds}s advance warning` : ""
+            ? `CIC-IDS-2018: Thursday-01-03-2018 Â· Window #${liveState.actual_window_index} [${liveState.summary.currentStage}]${
+                liveState.summary.leadTimeSeconds ? ` Â· ${liveState.summary.leadTimeSeconds}s advance warning` : ""
               }`
-            : "CIC-IDS-2018 benchmark telemetry · Infiltration Episode (EP_0001) · 20.0s advance warning"
+            : "CIC-IDS-2018 benchmark telemetry Â· Infiltration Episode (EP_0001) Â· 20.0s advance warning"
         }
         actions={
           <div className="flex flex-wrap items-center gap-2">
@@ -254,7 +254,7 @@ function Dashboard() {
           control={
             <>
               <RiskBadge state={riskFromProbability(currentProbability)} />
-              <span className="mono text-fog">4h · 20s windows</span>
+              <span className="mono text-fog">4h Â· 20s windows</span>
             </>
           }
         >
