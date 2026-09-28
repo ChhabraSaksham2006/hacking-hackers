@@ -7,7 +7,7 @@ import { env } from './src/config/env.js';
 async function changePassword() {
   try {
     console.log('Connecting to MongoDB...');
-    const uri = 'mongodb+srv://SakshamChhabra:Saksham%402006@hackinghackers.zgkiwub.mongodb.net/?appName=HackingHackers';
+    const uri = env.MONGODB_URI;
     await mongoose.connect(uri);
     
     const email = 'ccsaksham2006@gmail.com';
