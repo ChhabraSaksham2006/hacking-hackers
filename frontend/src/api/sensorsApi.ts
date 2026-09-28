@@ -28,6 +28,7 @@ export interface SensorsConfigResponse {
   isLive: boolean;
   upstreamUrl: string;
   exampleCommand: string;
+  kafkaActive?: boolean;
 }
 
 export async function fetchSensorsConfig(): Promise<SensorsConfigResponse> {
