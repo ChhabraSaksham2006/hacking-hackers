@@ -525,7 +525,7 @@ function Landing() {
 
                   <div className="rounded-xl border border-teal/40 bg-void-950/90 p-4 sm:p-5 shadow-inner">
                     <span className="text-xs font-mono text-teal font-semibold">SparseRSSM Latent Dynamics & Sparsity:</span>
-                    <div className="mt-3 overflow-x-auto py-2 sm:py-3 text-center scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                    <div className="mt-3 overflow-x-auto py-2 sm:py-3 text-left sm:text-center scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                       <MathFormula
                         math="\hat{z}_t = \operatorname{TopK}(z_t, k=32), \quad h_t = \operatorname{GRUCell}(\hat{z}_t, h_{t-1}), \quad r_k = [\hat{z}_k \parallel h_k]"
                         displayMode={true}
@@ -570,7 +570,7 @@ function Landing() {
 
                   <div className="rounded-xl border border-amber/40 bg-void-950/90 p-4 sm:p-5 shadow-inner">
                     <span className="text-xs font-mono text-amber font-semibold">Time-Frequency Gated Fusion Equations:</span>
-                    <div className="mt-3 overflow-x-auto py-2 space-y-2 text-center scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                    <div className="mt-3 overflow-x-auto py-2 space-y-2 text-left sm:text-center scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                       <MathFormula
                         math="h^{(i)}_{\text{conv}} = \operatorname{GELU}\left(\operatorname{Conv1D}_{k_i, d_i}(X)\right), \quad Z_{\text{spectral}} = \operatorname{Re}(\hat{X}) W_\Re - \operatorname{Im}(\hat{X}) W_\Im"
                         displayMode={true}
@@ -601,7 +601,7 @@ function Landing() {
                     <p className="mt-3 text-sm text-fog leading-relaxed">
                       Rather than brittle representation fusion, the Two-Stage SOC couples SparseRSSM and TFCNet-F via a deterministic rule hierarchy: a sensitive Stage 1 Scout, a multi-condition Stage 2 Confirmation Gate, and a Stage 3 Temporal Aggregator.
                     </p>
-                    <div className="mt-4 overflow-x-auto py-2 scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                    <div className="mt-4 overflow-x-auto py-2 text-left sm:text-center scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                       <MathFormula
                         math="p_{\text{risk}} = \max(p_R, p_T, p_E), \quad C_t = [p \ge 0.30] \lor [\text{slope} \ge 0.05 \land p \ge 0.15]"
                         displayMode={true}
