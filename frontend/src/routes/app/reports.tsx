@@ -1,4 +1,4 @@
-﻿import { useState, useId } from "react";
+import { useState, useId } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { ActionButton, FlatPanel, PageTitle } from "@/components/app/panels";
 import { Sparkline } from "@/components/app/charts";
@@ -228,7 +228,7 @@ function Reports() {
             </label>
 
             {isCustom && (
-              <div className="grid grid-cols-2 gap-3 rounded-md border border-fog-deep/60 bg-void-800 p-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 rounded-md border border-fog-deep/60 bg-void-800 p-3">
                 <label className="block">
                   <span className="text-[11px] text-fog">Start Date &amp; Time</span>
                   <input
@@ -289,7 +289,7 @@ function Reports() {
 
             <fieldset>
               <legend className="text-[13px] font-medium">Export format</legend>
-              <div className="mt-2 flex gap-6 text-[13px]">
+              <div className="mt-2 flex flex-wrap gap-4 sm:gap-6 text-[13px]">
                 <label className="flex cursor-pointer items-center gap-2">
                   <input
                     type="radio"

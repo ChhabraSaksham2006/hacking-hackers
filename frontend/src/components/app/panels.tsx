@@ -14,12 +14,12 @@ export function PanelHeader({
   return (
     <div
       className={cn(
-        "flex items-center justify-between gap-4 px-5 py-4",
+        "flex flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-5 sm:py-4",
         className,
       )}
     >
-      <h2 className="font-display text-[20px] font-medium">{title}</h2>
-      {control ? <div className="flex items-center gap-2">{control}</div> : null}
+      <h2 className="font-display text-[18px] sm:text-[20px] font-medium text-paper">{title}</h2>
+      {control ? <div className="flex flex-wrap items-center gap-2">{control}</div> : null}
     </div>
   );
 }
@@ -51,7 +51,7 @@ export function HeroPanel({
           <div className="h-px bg-[var(--glass-border)]" />
         </>
       ) : null}
-      <div className={cn("p-5", bodyClassName)}>{children}</div>
+      <div className={cn("p-3.5 sm:p-5", bodyClassName)}>{children}</div>
     </section>
   );
 }
@@ -72,11 +72,11 @@ export function GlassPanel({
     <section className={cn("glass overflow-hidden", className)}>
       {title ? (
         <>
-          <PanelHeader title={title} control={control} className="py-3.5" />
+          <PanelHeader title={title} control={control} className="py-2.5 sm:py-3.5" />
           <div className="h-px bg-[var(--glass-border)]" />
         </>
       ) : null}
-      <div className="p-5">{children}</div>
+      <div className="p-3.5 sm:p-5">{children}</div>
     </section>
   );
 }
@@ -99,11 +99,11 @@ export function FlatPanel({
     <section className={cn("flat overflow-hidden", className)}>
       {title ? (
         <>
-          <PanelHeader title={title} control={control} className="py-3.5" />
+          <PanelHeader title={title} control={control} className="py-2.5 sm:py-3.5" />
           <div className="h-px bg-fog-deep/60" />
         </>
       ) : null}
-      <div className={cn("p-5", bodyClassName)}>{children}</div>
+      <div className={cn("p-3.5 sm:p-5", bodyClassName)}>{children}</div>
     </section>
   );
 }
@@ -123,7 +123,7 @@ export function RiskBadge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[12px] font-medium",
+        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[12px] font-medium whitespace-nowrap",
         className,
       )}
       style={{
@@ -133,7 +133,7 @@ export function RiskBadge({
       }}
     >
       <span
-        className="size-1.5 rounded-full"
+        className="size-1.5 rounded-full shrink-0"
         style={{ background: stateColorVar[state] }}
       />
       {text}
@@ -151,14 +151,14 @@ export function PageTitle({
   actions?: ReactNode;
 }) {
   return (
-    <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-      <div>
-        <h1 className="font-display text-[28px] font-semibold">{title}</h1>
+    <div className="mb-4 sm:mb-6 flex flex-wrap items-end justify-between gap-3 sm:gap-4">
+      <div className="min-w-0">
+        <h1 className="font-display text-[22px] sm:text-[28px] font-semibold text-paper leading-tight">{title}</h1>
         {note ? (
-          <p className="mt-1 max-w-[70ch] text-[15px] text-fog">{note}</p>
+          <p className="mt-1 max-w-[70ch] text-[13px] sm:text-[15px] text-fog leading-relaxed">{note}</p>
         ) : null}
       </div>
-      {actions ? <div className="flex items-center gap-2">{actions}</div> : null}
+      {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
     </div>
   );
 }

@@ -171,10 +171,10 @@ export function StageStrip({ current }: { current: number }) {
           const active = i === current;
           const passed = i < current;
           return (
-            <li key={stage} className="flex w-[19%] flex-col items-start gap-3">
+            <li key={stage} className="flex w-[19%] flex-col items-start gap-2 sm:gap-3">
               <span
                 className={cn(
-                  "size-[13px] rounded-full border",
+                  "size-[12px] sm:size-[13px] rounded-full border shrink-0",
                   active && "border-transparent",
                 )}
                 style={{
@@ -191,8 +191,8 @@ export function StageStrip({ current }: { current: number }) {
               />
               <span
                 className={cn(
-                  "text-[12px] leading-tight",
-                  active ? "text-paper" : "text-fog",
+                  "text-[10px] sm:text-[12px] leading-tight break-words hyphens-auto",
+                  active ? "text-paper font-medium" : "text-fog",
                 )}
               >
                 {stage}

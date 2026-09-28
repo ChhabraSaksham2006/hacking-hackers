@@ -1,4 +1,4 @@
-﻿import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Terminal,
   X,
@@ -382,7 +382,7 @@ Inquire below about current attack probability, model confidence, flow/packet fe
       <button
         onClick={() => setOpen(true)}
         className={cn(
-          "fixed right-6 bottom-6 z-40 flex items-center gap-2.5 rounded-lg border px-3.5 py-2.5 text-[13px] font-medium transition-all shadow-xl backdrop-blur-md",
+          "fixed right-3 bottom-3 sm:right-6 sm:bottom-6 z-40 flex items-center gap-2.5 rounded-lg border px-3 py-2 sm:px-3.5 sm:py-2.5 text-[12px] sm:text-[13px] font-medium transition-all shadow-xl backdrop-blur-md max-w-[calc(100vw-24px)]",
           isCritical
             ? "border-crimson/50 bg-void-800/90 text-paper hover:bg-void-700 hover:border-crimson"
             : isWatch
@@ -409,7 +409,7 @@ Inquire below about current attack probability, model confidence, flow/packet fe
         <Terminal className="size-4 text-teal" strokeWidth={1.75} />
         <span>Query Telemetry</span>
 
-        <span className="mono rounded bg-void-950 px-1.5 py-0.5 text-[10px] text-fog border border-fog-deep/40">
+        <span className="mono rounded bg-void-950 px-1.5 py-0.5 text-[10px] text-fog border border-fog-deep/40 hidden xs:inline">
           AI Copilot
         </span>
       </button>
@@ -426,10 +426,10 @@ Inquire below about current attack probability, model confidence, flow/packet fe
   return (
     <aside
       className={cn(
-        "fixed right-6 bottom-6 z-40 flex flex-col rounded-xl border border-fog-deep/80 bg-void-900/95 shadow-2xl backdrop-blur-xl transition-all duration-200 overflow-hidden",
+        "fixed right-2 bottom-2 sm:right-6 sm:bottom-6 z-40 flex flex-col rounded-xl border border-fog-deep/80 bg-void-900/95 shadow-2xl backdrop-blur-xl transition-all duration-200 overflow-hidden w-[calc(100vw-16px)] max-w-[calc(100vw-16px)]",
         expanded
-          ? "w-[620px] h-[720px] max-h-[90vh]"
-          : "w-[440px] md:w-[480px] h-[580px] max-h-[85vh]"
+          ? "sm:w-[620px] h-[720px] max-h-[92vh]"
+          : "sm:w-[440px] md:w-[480px] h-[560px] max-h-[85vh]"
       )}
     >
       {/* â”€â”€ Console Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}

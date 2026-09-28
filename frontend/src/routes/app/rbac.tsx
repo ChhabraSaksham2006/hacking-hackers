@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Check, Minus, X } from "lucide-react";
 import { ActionButton, FlatPanel, PageTitle } from "@/components/app/panels";
@@ -44,8 +44,8 @@ function Rbac() {
         note="Permissions are enforced server-side on every request, not in the interface."
       />
 
-      <FlatPanel title="Role matrix" bodyClassName="p-0">
-        <table className="w-full text-left">
+      <FlatPanel title="Role matrix" bodyClassName="p-0 overflow-x-auto">
+        <table className="w-full min-w-[640px] text-left">
           <thead className="text-[12px] text-fog">
             <tr className="border-b border-fog-deep/60">
               <th className="px-5 py-2.5 font-medium">Role</th>
@@ -94,8 +94,8 @@ function Rbac() {
       </h2>
 
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
-        <FlatPanel title="Organisations" bodyClassName="p-0">
-          <table className="w-full text-left">
+        <FlatPanel title="Organisations" bodyClassName="p-0 overflow-x-auto">
+          <table className="w-full min-w-[500px] text-left">
             <thead className="text-[12px] text-fog">
               <tr className="border-b border-fog-deep/60">
                 <th className="px-5 py-2.5 font-medium">Organisation</th>
@@ -143,39 +143,45 @@ function Rbac() {
       </div>
 
       {editing ? (
-        <aside className="fixed inset-y-0 right-0 z-30 w-[380px] overflow-y-auto border-l border-fog-deep bg-void-800 p-5">
-          <div className="flex items-center justify-between">
-            <p className="font-display text-[20px] font-medium">{editing}</p>
-            <button
-              onClick={() => setEditing(null)}
-              aria-label="Close role editor"
-              className="text-fog hover:text-paper"
-            >
-              <X className="size-4" />
-            </button>
-          </div>
-          <ul className="mt-5 space-y-2">
-            {perms.map((p, i) => (
-              <li
-                key={p}
-                className="flex items-center justify-between border-b border-fog-deep/40 pb-2"
+        <>
+          <div
+            className="fixed inset-0 z-30 bg-void-950/60 backdrop-blur-xs sm:hidden"
+            onClick={() => setEditing(null)}
+          />
+          <aside className="fixed inset-y-0 right-0 z-30 w-full sm:w-[380px] max-w-full overflow-y-auto border-l border-fog-deep bg-void-800 p-4 sm:p-5 shadow-2xl">
+            <div className="flex items-center justify-between">
+              <p className="font-display text-[20px] font-medium">{editing}</p>
+              <button
+                onClick={() => setEditing(null)}
+                aria-label="Close role editor"
+                className="text-fog hover:text-paper"
               >
-                <span className="text-[13px]">{p}</span>
-                <input
-                  type="checkbox"
-                  defaultChecked={
-                    roles.find((r) => r.role === editing)!.grants[i] === 1
-                  }
-                  className="accent-teal"
-                />
-              </li>
-            ))}
-          </ul>
-          <p className="mt-4 flex items-center gap-2 text-[12px] text-fog">
-            <Minus className="size-3" /> Changes apply to all users in this role.
-          </p>
-          <ActionButton className="mt-4 w-full">Save role</ActionButton>
-        </aside>
+                <X className="size-4" />
+              </button>
+            </div>
+            <ul className="mt-5 space-y-2">
+              {perms.map((p, i) => (
+                <li
+                  key={p}
+                  className="flex items-center justify-between border-b border-fog-deep/40 pb-2"
+                >
+                  <span className="text-[13px]">{p}</span>
+                  <input
+                    type="checkbox"
+                    defaultChecked={
+                      roles.find((r) => r.role === editing)!.grants[i] === 1
+                    }
+                    className="accent-teal"
+                  />
+                </li>
+              ))}
+            </ul>
+            <p className="mt-4 flex items-center gap-2 text-[12px] text-fog">
+              <Minus className="size-3" /> Changes apply to all users in this role.
+            </p>
+            <ActionButton className="mt-4 w-full">Save role</ActionButton>
+          </aside>
+        </>
       ) : null}
     </>
   );

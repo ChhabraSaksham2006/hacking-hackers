@@ -1,4 +1,4 @@
-﻿import { Fragment, useState, useMemo, useEffect } from "react";
+import { Fragment, useState, useMemo, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   ArrowRight,
@@ -231,25 +231,26 @@ function Explorer() {
       </div>
 
       {/* KPI Stats Strip */}
-      <div className="flat mb-6 grid gap-4 p-5 sm:grid-cols-2 lg:grid-cols-4">
-        <div>
-          <span className="text-[11px] font-mono uppercase tracking-wider text-fog">
+      {/* KPI Stats Strip */}
+      <div className="flat mb-6 grid grid-cols-2 gap-3 p-3.5 sm:gap-4 sm:p-5 lg:grid-cols-4 min-w-0">
+        <div className="min-w-0">
+          <span className="text-[11px] font-mono uppercase tracking-wider text-fog truncate block">
             Active Flows
           </span>
-          <p className="mono mt-1 text-[20px] font-bold text-paper">
-            {total} <span className="text-[13px] font-normal text-fog">monitored</span>
+          <p className="mono mt-1 text-[18px] sm:text-[20px] font-bold text-paper truncate">
+            {total} <span className="text-[12px] sm:text-[13px] font-normal text-fog">monitored</span>
           </p>
-          <p className="mt-0.5 text-[11px] text-fog">Window #{targetWindow} concurrent sessions</p>
+          <p className="mt-0.5 text-[11px] text-fog truncate">Window #{targetWindow} concurrent</p>
         </div>
 
-        <div>
-          <span className="text-[11px] font-mono uppercase tracking-wider text-fog">
+        <div className="min-w-0">
+          <span className="text-[11px] font-mono uppercase tracking-wider text-fog truncate block">
             Threat Anomalies
           </span>
-          <div className="mt-1 flex items-center gap-2">
+          <div className="mt-1 flex items-center gap-1.5 sm:gap-2">
             <p
               className={cn(
-                "mono text-[20px] font-bold",
+                "mono text-[18px] sm:text-[20px] font-bold",
                 summary?.threatFlows ? "text-crimson" : "text-teal",
               )}
             >
@@ -257,56 +258,57 @@ function Explorer() {
             </p>
             <RiskBadge state={riskState} label={activeStage} />
           </div>
-          <p className="mt-0.5 text-[11px] text-fog">
+          <p className="mt-0.5 text-[11px] text-fog truncate">
             {summary?.threatFlows
-              ? `${summary.threatFlows} sessions exceed anomaly threshold`
-              : "All concurrent sessions within baseline"}
+              ? `${summary.threatFlows} sessions exceed baseline`
+              : "All within baseline"}
           </p>
         </div>
 
-        <div>
-          <span className="text-[11px] font-mono uppercase tracking-wider text-fog">
+        <div className="min-w-0">
+          <span className="text-[11px] font-mono uppercase tracking-wider text-fog truncate block">
             Aggregated Volume
           </span>
-          <p className="mono mt-1 text-[20px] font-bold text-paper">
+          <p className="mono mt-1 text-[18px] sm:text-[20px] font-bold text-paper truncate">
             {formatBytes(summary?.totalBytes ?? 0)}
           </p>
-          <p className="mt-0.5 text-[11px] text-fog">
-            {(summary?.totalPackets ?? 0).toLocaleString()} packets transmitted
+          <p className="mt-0.5 text-[11px] text-fog truncate">
+            {(summary?.totalPackets ?? 0).toLocaleString()} packets
           </p>
         </div>
 
-        <div>
-          <span className="text-[11px] font-mono uppercase tracking-wider text-fog">
+        <div className="min-w-0">
+          <span className="text-[11px] font-mono uppercase tracking-wider text-fog truncate block">
             Primary Protocol
           </span>
-          <p className="mono mt-1 text-[20px] font-bold text-teal">
+          <p className="mono mt-1 text-[18px] sm:text-[20px] font-bold text-teal truncate">
             {summary?.topService ?? "TCP"}
           </p>
-          <p className="mt-0.5 text-[11px] text-fog">Dominant application layer service</p>
+          <p className="mt-0.5 text-[11px] text-fog truncate">Dominant service layer</p>
         </div>
       </div>
 
-      {/* Interactive Filter Toolbar */}
-      <div className="sticky top-14 z-10 mb-4 flex flex-wrap items-center justify-between gap-3 rounded-md border border-fog-deep/60 bg-void-800 p-3 shadow-md">
-        <div className="flex flex-wrap items-center gap-2.5">
-          <div className="relative">
+      {/* Interactive Filter Toolbar - Fully bounded and responsive */}
+      <div className="sticky top-14 z-10 mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3 rounded-md border border-fog-deep/60 bg-void-800 p-3 shadow-md max-w-full overflow-hidden">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 w-full md:w-auto min-w-0">
+          <div className="relative w-full sm:w-[240px]">
             <Search className="absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-fog" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search IP, port, service or flags..."
-              className="mono w-[260px] rounded-full border border-fog-deep/80 bg-void-700 py-1.5 pl-8 pr-3 text-[12px] text-paper outline-none placeholder:text-fog focus:border-teal"
+              placeholder="Search IP, port, service..."
+              className="mono w-full rounded-full border border-fog-deep/80 bg-void-700 py-1.5 pl-8 pr-3 text-[12px] text-paper outline-none placeholder:text-fog focus:border-teal"
             />
           </div>
 
-          <div className="flex items-center gap-1 rounded-full border border-fog-deep/60 bg-void-700 p-1">
+          {/* Horizontally scrollable protocol capsule - never overflows box */}
+          <div className="flex items-center gap-1 overflow-x-auto max-w-full scrollbar-none rounded-full border border-fog-deep/60 bg-void-700 p-1 shrink-0">
             {PROTOCOL_FILTERS.map((p) => (
               <button
                 key={p}
                 onClick={() => setSelectedProto(p)}
                 className={cn(
-                  "rounded-full px-2.5 py-0.5 text-[11px] font-mono transition-colors",
+                  "rounded-full px-2.5 py-0.5 text-[11px] font-mono whitespace-nowrap transition-colors shrink-0",
                   selectedProto === p
                     ? "bg-teal text-void-900 font-semibold"
                     : "text-fog hover:text-paper",
@@ -318,7 +320,7 @@ function Explorer() {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 w-full md:w-auto">
           <label className="flex items-center gap-2 rounded-full border border-fog-deep/60 bg-void-700 px-3 py-1 text-[12px] text-fog">
             <span>Score &ge;</span>
             <input
@@ -328,7 +330,7 @@ function Explorer() {
               step={0.05}
               value={minScore}
               onChange={(e) => setMinScore(Number(e.target.value))}
-              className="w-20 accent-teal cursor-pointer"
+              className="w-16 sm:w-20 accent-teal cursor-pointer"
             />
             <span className="mono font-semibold text-paper">{minScore.toFixed(2)}</span>
           </label>
@@ -336,17 +338,17 @@ function Explorer() {
           <button
             onClick={() => setFlaggedOnly((v) => !v)}
             className={cn(
-              "rounded-full border px-3 py-1 text-[12px] font-medium transition-colors",
+              "rounded-full border px-3 py-1 text-[12px] font-medium transition-colors whitespace-nowrap",
               flaggedOnly
                 ? "border-crimson/60 bg-crimson/15 text-crimson font-semibold"
                 : "border-fog-deep/60 text-fog hover:text-paper",
             )}
           >
-            Flagged anomalies only
+            Flagged anomalies
           </button>
 
-          <span className="mono text-[12px] text-fog">
-            Showing {rows.length} of {total} flows
+          <span className="mono text-[11px] sm:text-[12px] text-fog whitespace-nowrap ml-auto md:ml-0">
+            {rows.length} / {total} flows
           </span>
         </div>
       </div>
@@ -503,8 +505,8 @@ function Explorer() {
                   {/* Deep Packet Dissection Accordion Panel */}
                   {isOpen ? (
                     <tr className="border-b border-fog-deep/60 bg-void-900/90">
-                      <td colSpan={13} className="p-5">
-                        <div className="rounded-lg border border-fog-deep/60 bg-void-800/80 p-5 space-y-5">
+                      <td colSpan={13} className="p-2 sm:p-5">
+                        <div className="rounded-lg border border-fog-deep/60 bg-void-800/80 p-3 sm:p-5 space-y-4 sm:space-y-5 max-w-full overflow-hidden">
                           {/* Flow 5-Tuple Meta Banner */}
                           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-fog-deep/40 pb-4">
                             <div className="flex items-center gap-3">

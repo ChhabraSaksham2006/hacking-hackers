@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ActionButton, FlatPanel, PageTitle, RiskBadge } from "@/components/app/panels";
 import { pageHead } from "@/lib/head";
@@ -34,14 +34,14 @@ function Settings() {
       <PageTitle title="Settings" />
 
       <div className="grid gap-5 lg:grid-cols-[220px_minmax(0,1fr)]">
-        <nav className="flat h-fit p-2">
+        <nav className="flat h-fit p-1.5 sm:p-2 flex overflow-x-auto lg:flex-col gap-1 scrollbar-none">
           {sections.map((s) => (
             <button
               key={s}
               onClick={() => setSection(s)}
               className={cn(
-                "block w-full rounded-md px-3 py-2 text-left text-[13px] font-medium",
-                section === s ? "bg-teal/12 text-teal" : "text-fog hover:text-paper",
+                "whitespace-nowrap shrink-0 lg:w-full rounded-md px-3 py-2 text-left text-[13px] font-medium transition-colors",
+                section === s ? "bg-teal/15 text-teal font-semibold" : "text-fog hover:text-paper",
               )}
             >
               {s}

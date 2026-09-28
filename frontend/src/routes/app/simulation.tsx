@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   ActionButton,
@@ -114,8 +114,8 @@ function Simulation() {
             </div>
           </HeroPanel>
 
-          <FlatPanel title="Divergence readout" bodyClassName="p-0">
-            <table className="w-full text-left">
+          <FlatPanel title="Divergence readout" bodyClassName="p-0 overflow-x-auto">
+            <table className="w-full min-w-[440px] text-left">
               <thead className="text-[12px] text-fog">
                 <tr className="border-b border-fog-deep/60">
                   <th className="px-5 py-2.5 font-medium">Step</th>

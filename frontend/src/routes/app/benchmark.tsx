@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   ActionButton,
@@ -192,7 +192,7 @@ function Benchmark() {
       <FlatPanel
         title="Master benchmark suite (CSE-CIC-IDS2018)"
         control={
-          <div className="flex items-center gap-1.5 rounded-lg border border-fog-deep/60 bg-void-950 p-1 text-xs font-mono">
+          <div className="flex flex-wrap items-center gap-1.5 rounded-lg border border-fog-deep/60 bg-void-950 p-1 text-xs font-mono">
             <button
               onClick={() => setActiveRegime("C")}
               className={`rounded px-2.5 py-1 font-semibold transition-all ${
@@ -235,7 +235,7 @@ function Benchmark() {
           </span>
           <span className="text-teal font-semibold">Lead Horizon K=10 (20.0s)</span>
         </div>
-        <table className="w-full text-left text-xs font-mono">
+        <table className="w-full text-left text-xs font-mono min-w-[760px]">
           <thead className="text-fog border-b border-fog-deep/60 bg-void-950/40">
             <tr>
               <th className="px-4 py-2.5 font-medium">Model Architecture</th>
@@ -285,8 +285,8 @@ function Benchmark() {
 
       <div className="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
         {/* â”€â”€ Head-to-Head Comparison â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-        <FlatPanel title="Production model versus baseline" bodyClassName="p-0">
-          <table className="w-full text-left">
+        <FlatPanel title="Production model versus baseline" bodyClassName="p-0 overflow-x-auto">
+          <table className="w-full min-w-[560px] text-left">
             <thead className="text-[12px] text-fog">
               <tr className="border-b border-fog-deep/60">
                 <th className="px-5 py-2.5 font-medium">Metric</th>

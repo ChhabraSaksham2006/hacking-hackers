@@ -1,4 +1,4 @@
-﻿import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   ActionButton,
@@ -234,15 +234,15 @@ function Dashboard() {
         }
       />
 
-      <div className="flat mb-5 grid divide-fog-deep/60 sm:grid-cols-2 sm:divide-x lg:grid-cols-4">
+      <div className="flat mb-5 grid grid-cols-2 gap-px bg-fog-deep/40 sm:grid-cols-4 rounded-lg overflow-hidden border border-fog-deep/60">
         {stats.map((s) => (
-          <div key={s.label} className="px-5 py-4">
+          <div key={s.label} className="bg-void-800 px-3.5 py-3 sm:px-5 sm:py-4 min-w-0">
             <p
-              className={`font-display text-[28px] leading-none font-semibold ${s.tone ?? ""}`}
+              className={`font-display text-[20px] sm:text-[28px] leading-tight font-semibold truncate ${s.tone ?? ""}`}
             >
               {s.value}
             </p>
-            <p className="mt-1.5 text-[12px] text-fog">{s.label}</p>
+            <p className="mt-1 text-[11px] sm:text-[12px] text-fog truncate">{s.label}</p>
           </div>
         ))}
       </div>
@@ -254,7 +254,7 @@ function Dashboard() {
           control={
             <>
               <RiskBadge state={riskFromProbability(currentProbability)} />
-              <span className="mono text-fog">4h · 20s windows</span>
+              <span className="mono text-fog text-[11px] sm:text-[12px]">4h · 20s windows</span>
             </>
           }
         >
@@ -265,13 +265,13 @@ function Dashboard() {
           <GlassPanel
             title="Predicted ATT&CK stage"
             control={
-              <span className={`mono ${currentStageName === "Normal" ? "text-teal" : "text-amber"}`}>
+              <span className={`mono text-[12px] sm:text-[13px] ${currentStageName === "Normal" ? "text-teal" : "text-amber"}`}>
                 {currentStageName}
               </span>
             }
           >
             <StageStrip current={stageIndex} />
-            <p className="mt-5 text-[15px] text-fog">
+            <p className="mt-5 text-[13px] sm:text-[15px] text-fog leading-relaxed">
               {currentStageName === "Normal"
                 ? "Enterprise telemetry is currently within baseline parameters. SparseRSSM + TFCNet active surveillance."
                 : `${currentStageName} is the active forecasted MITRE ATT&CK progression phase.`}
@@ -281,20 +281,20 @@ function Dashboard() {
           <GlassPanel
             title="Recent alerts"
             control={
-              <Link to="/app/alerts" className="text-[13px] text-teal">
+              <Link to="/app/alerts" className="text-[13px] text-teal hover:underline">
                 View all
               </Link>
             }
           >
             <ul className="divide-y divide-[var(--glass-border)]">
               {recentAlerts.map((a) => (
-                <li key={a._id} className="flex gap-3 py-3 first:pt-0 last:pb-0">
+                <li key={a._id} className="flex gap-3 py-3 first:pt-0 last:pb-0 items-start">
                   <RiskBadge state={a.state as any} />
-                  <div className="min-w-0">
-                    <p className="mono truncate">
+                  <div className="min-w-0 flex-1">
+                    <p className="mono truncate text-[12px] sm:text-[13px]">
                       {a.host} <span className="text-fog">{a.detectedAt}</span>
                     </p>
-                    <p className="mt-0.5 truncate text-[13px] text-fog">
+                    <p className="mt-0.5 truncate text-[12px] sm:text-[13px] text-fog">
                       {a.reason}
                     </p>
                   </div>
@@ -310,39 +310,41 @@ function Dashboard() {
         title="Most recent flagged flows"
         bodyClassName="p-0"
       >
-        <table className="w-full text-left">
-          <thead className="text-[12px] text-fog">
-            <tr className="border-b border-fog-deep/60">
-              <th className="px-5 py-2.5 font-medium">Source</th>
-              <th className="px-5 py-2.5 font-medium">Destination</th>
-              <th className="px-5 py-2.5 font-medium">Protocol</th>
-              <th className="px-5 py-2.5 text-right font-medium">Bytes</th>
-              <th className="px-5 py-2.5 text-right font-medium">Score</th>
-              <th className="px-5 py-2.5 font-medium"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {recentFlows.map((f) => (
-              <tr
-                key={f._id}
-                className="border-b border-fog-deep/40 last:border-0 hover:bg-paper/4"
-              >
-                <td className="mono px-5 py-2.5">{f.src}</td>
-                <td className="mono px-5 py-2.5">{f.dst}</td>
-                <td className="mono px-5 py-2.5">{f.proto}</td>
-                <td className="mono px-5 py-2.5 text-right">{f.bytes}</td>
-                <td className="mono px-5 py-2.5 text-right">
-                  {typeof f.score === "number" ? f.score.toFixed(2) : f.score}
-                </td>
-                <td className="px-5 py-2.5 text-right">
-                  <Link to="/app/explorer" className="text-[13px] text-teal">
-                    View in explorer
-                  </Link>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[640px] text-left">
+            <thead className="text-[12px] text-fog">
+              <tr className="border-b border-fog-deep/60">
+                <th className="px-4 sm:px-5 py-2.5 font-medium">Source</th>
+                <th className="px-4 sm:px-5 py-2.5 font-medium">Destination</th>
+                <th className="px-4 sm:px-5 py-2.5 font-medium">Protocol</th>
+                <th className="px-4 sm:px-5 py-2.5 text-right font-medium">Bytes</th>
+                <th className="px-4 sm:px-5 py-2.5 text-right font-medium">Score</th>
+                <th className="px-4 sm:px-5 py-2.5 font-medium"></th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {recentFlows.map((f) => (
+                <tr
+                  key={f._id}
+                  className="border-b border-fog-deep/40 last:border-0 hover:bg-paper/4"
+                >
+                  <td className="mono px-4 sm:px-5 py-2.5 text-[12px] sm:text-[13px]">{f.src}</td>
+                  <td className="mono px-4 sm:px-5 py-2.5 text-[12px] sm:text-[13px]">{f.dst}</td>
+                  <td className="mono px-4 sm:px-5 py-2.5 text-[12px] sm:text-[13px]">{f.proto}</td>
+                  <td className="mono px-4 sm:px-5 py-2.5 text-right text-[12px] sm:text-[13px]">{f.bytes}</td>
+                  <td className="mono px-4 sm:px-5 py-2.5 text-right text-[12px] sm:text-[13px]">
+                    {typeof f.score === "number" ? f.score.toFixed(2) : f.score}
+                  </td>
+                  <td className="px-4 sm:px-5 py-2.5 text-right">
+                    <Link to="/app/explorer" className="text-[12px] sm:text-[13px] text-teal hover:underline whitespace-nowrap">
+                      View in explorer
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </FlatPanel>
     </>
   );

@@ -1,4 +1,4 @@
-﻿import { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   Activity,
@@ -503,14 +503,14 @@ function Topology() {
           {viewMode === "nexus" ? (
             <div className="relative overflow-hidden rounded-2xl border border-fog-deep/40 bg-void-900/90 shadow-2xl backdrop-blur-md">
               {/* Header inside canvas */}
-              <div className="flex items-center justify-between border-b border-fog-deep/30 px-5 py-3">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-fog-deep/30 px-3 sm:px-5 py-3">
                 <div className="flex items-center gap-2">
                   <Network className="size-4 text-teal" />
-                  <span className="font-mono text-[13px] font-semibold text-paper">
+                  <span className="font-mono text-[12px] sm:text-[13px] font-semibold text-paper">
                     Live Inter-Segment Flow Nexus
                   </span>
                 </div>
-                <div className="flex items-center gap-3 text-[11px] font-mono text-fog">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-[11px] font-mono text-fog">
                   <span className="flex items-center gap-1">
                     <span className="size-2 rounded-full bg-teal" /> Normal
                   </span>
@@ -518,13 +518,13 @@ function Topology() {
                     <span className="size-2 rounded-full bg-amber" /> Watch
                   </span>
                   <span className="flex items-center gap-1">
-                    <span className="size-2 rounded-full bg-crimson animate-pulse" /> Lateral Threat
+                    <span className="size-2 rounded-full bg-crimson animate-pulse" /> Threat
                   </span>
                 </div>
               </div>
 
               {/* Interactive SVG Topology Map */}
-              <div className="relative h-[480px] w-full overflow-hidden p-2">
+              <div className="relative aspect-[880/500] min-h-[260px] sm:min-h-[460px] w-full overflow-hidden p-1 sm:p-2">
                 <svg
                   viewBox="0 0 880 500"
                   className="h-full w-full select-none"

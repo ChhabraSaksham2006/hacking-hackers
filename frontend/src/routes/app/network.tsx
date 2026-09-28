@@ -1,4 +1,4 @@
-﻿import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { X, RefreshCw, Radio } from "lucide-react";
 import { HeroPanel, PageTitle, RiskBadge } from "@/components/app/panels";
@@ -117,8 +117,86 @@ function NetworkState() {
         }
       />
 
+      {/* Compact Controls for Mobile / Tablet (< lg) */}
+      <div className="flex flex-col gap-2.5 lg:hidden flat p-3 sm:p-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          {/* View Level Toggle */}
+          <div className="flex items-center gap-1 rounded-md border border-fog-deep/60 bg-void-700/80 p-0.5">
+            {(["flow", "packet"] as const).map((v) => (
+              <button
+                key={v}
+                onClick={() => setView(v)}
+                className={cn(
+                  "rounded px-2.5 py-1 text-[12px] font-medium transition-colors",
+                  view === v ? "bg-teal text-void-900 font-semibold" : "text-fog hover:text-paper",
+                )}
+              >
+                {v === "flow" ? "Flow" : "Packet"}
+              </button>
+            ))}
+          </div>
+
+          {/* Segment Selector */}
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-mono text-fog uppercase">Seg:</span>
+            <select
+              value={segmentFilter}
+              onChange={(e) => setSegmentFilter(e.target.value)}
+              className="mono rounded-md border border-fog-deep bg-void-700 px-2 py-1 text-[12px] text-paper outline-none"
+            >
+              <option>all segments</option>
+              <option>corp-core</option>
+              <option>finance</option>
+              <option>dmz-edge</option>
+            </select>
+          </div>
+
+          {/* Subnet Pill */}
+          <div className="mono text-[11px] text-fog/80 bg-void-700/50 px-2 py-1 rounded border border-fog-deep/40 hidden sm:block">
+            192.168.10.0/24
+          </div>
+        </div>
+
+        {/* Horizontally Scrollable Timeline Presets */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 pt-1 scrollbar-none border-t border-fog-deep/30">
+          <span className="mono text-[10px] text-fog uppercase tracking-wider shrink-0 pr-1">Presets:</span>
+          {[
+            { label: "Live", value: -1 },
+            { label: "Baseline", value: 0 },
+            { label: "Recon", value: 58 },
+            { label: "Initial Access", value: 72 },
+            { label: "Lateral Move", value: 85 },
+            { label: "C2 Beacon", value: 98 },
+          ].map((p) => {
+            const isSelected = p.value === -1 ? isLiveMode : (!isLiveMode && scrub === p.value);
+            return (
+              <button
+                key={p.label}
+                onClick={() => {
+                  if (p.value === -1) {
+                    setIsLiveMode(true);
+                  } else {
+                    setIsLiveMode(false);
+                    setScrub(p.value);
+                  }
+                }}
+                className={cn(
+                  "rounded-full px-2.5 py-0.5 text-[11px] font-mono whitespace-nowrap transition-colors border shrink-0",
+                  isSelected
+                    ? "border-teal/60 bg-teal/15 text-teal font-semibold shadow-sm"
+                    : "border-fog-deep/50 bg-void-700/40 text-fog hover:border-paper hover:text-paper",
+                )}
+              >
+                {p.value === -1 ? "● Live Stream" : p.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       <div className="grid gap-5 lg:grid-cols-[220px_minmax(0,1fr)]">
-        <div className="flat h-fit p-4">
+        {/* Desktop Sidebar (hidden on mobile/tablet) */}
+        <div className="hidden lg:block flat h-fit p-4">
           <p className="text-[13px] font-medium">View level</p>
           <div className="mt-2 flex flex-col gap-1">
             {(["flow", "packet"] as const).map((v) => (
@@ -126,8 +204,8 @@ function NetworkState() {
                 key={v}
                 onClick={() => setView(v)}
                 className={cn(
-                  "rounded-md px-3 py-1.5 text-left text-[13px] font-medium",
-                  view === v ? "bg-teal/12 text-teal" : "text-fog hover:text-paper",
+                  "rounded-md px-3 py-1.5 text-left text-[13px] font-medium transition-colors",
+                  view === v ? "bg-teal/12 text-teal font-semibold" : "text-fog hover:text-paper",
                 )}
               >
                 {v === "flow" ? "Flow level" : "Packet level"}
@@ -191,18 +269,18 @@ function NetworkState() {
           title="Host and flow graph"
           state={overallState}
           control={
-            <div className="flex items-center gap-3">
-              <span className="mono text-[12px] text-paper font-medium">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              <span className="mono text-[11px] sm:text-[12px] text-paper font-medium">
                 {currentPhase}
               </span>
-              <span className="mono text-fog text-[12px]">
+              <span className="mono text-fog text-[11px] sm:text-[12px]">
                 {isLiveMode ? "live telemetry" : `historical window #${currentWindow}`}
               </span>
             </div>
           }
           bodyClassName="p-0"
         >
-          <div className="p-5">
+          <div className="p-3 sm:p-5">
             <NetworkGraph
               nodes={nodes}
               edges={edges}
@@ -211,10 +289,10 @@ function NetworkState() {
               scrub={scrub}
             />
           </div>
-          <div className="flex flex-col gap-2 border-t border-[var(--glass-border)] bg-void-800/70 px-5 py-3">
-            <div className="flex items-center justify-between text-[12px]">
+          <div className="flex flex-col gap-2 border-t border-[var(--glass-border)] bg-void-800/70 px-4 sm:px-5 py-3">
+            <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] sm:text-[12px]">
               <span className="mono text-fog">Window #1750 (Baseline)</span>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <span className="mono text-paper font-semibold">Window #{currentWindow}</span>
                 <span className="text-fog">·</span>
                 <span className={cn("mono font-semibold", overallState === "critical" ? "text-crimson" : overallState === "watch" ? "text-amber" : "text-teal")}>
@@ -248,7 +326,12 @@ function NetworkState() {
       </div>
 
       {activeNode ? (
-        <aside className="fixed inset-y-0 right-0 z-30 w-[380px] overflow-y-auto border-l border-fog-deep bg-void-800 p-5 shadow-2xl">
+        <>
+          <div
+            className="fixed inset-0 z-30 bg-void-950/60 backdrop-blur-xs sm:hidden"
+            onClick={() => setSelected(null)}
+          />
+          <aside className="fixed inset-y-0 right-0 z-30 w-full sm:w-[380px] max-w-full overflow-y-auto border-l border-fog-deep bg-void-800 p-4 sm:p-5 shadow-2xl">
           <div className="flex items-start justify-between">
             <div>
               <p className="mono text-[16px] font-semibold text-paper">{activeNode.id}</p>
@@ -303,7 +386,8 @@ function NetworkState() {
             Investigate host in flow explorer →
           </Link>
         </aside>
-      ) : null}
+      </>
+    ) : null}
     </>
   );
 }

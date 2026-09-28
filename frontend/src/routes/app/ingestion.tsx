@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Check, Loader2 } from "lucide-react";
 import {
@@ -85,7 +85,7 @@ function Ingestion() {
       </div>
 
       <FlatPanel className="mt-5" title="Pipeline progress">
-        <ol className="grid gap-4 sm:grid-cols-5">
+        <ol className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
           {steps.map((s, i) => (
             <li key={s.name} className="flex items-start gap-3">
               <span className="mono w-5 shrink-0 text-fog">{i + 1}</span>
@@ -118,8 +118,8 @@ function Ingestion() {
         </ol>
       </FlatPanel>
 
-      <FlatPanel className="mt-5" title="Upload history" bodyClassName="p-0">
-        <table className="w-full text-left">
+      <FlatPanel className="mt-5" title="Upload history" bodyClassName="p-0 overflow-x-auto">
+        <table className="w-full min-w-[580px] text-left">
           <thead className="text-[12px] text-fog">
             <tr className="border-b border-fog-deep/60">
               <th className="px-5 py-2.5 font-medium">File</th>

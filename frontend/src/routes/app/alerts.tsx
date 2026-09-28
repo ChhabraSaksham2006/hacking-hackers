@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { X, GripVertical } from "lucide-react";
 import {
@@ -218,7 +218,7 @@ function AlertsQueue() {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div className="grid gap-4 xl:grid-cols-4 min-h-[500px]">
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 min-h-[500px]">
           {columns.map((col) => {
             const items = alerts.filter((a) => a.status === col);
             
@@ -258,7 +258,12 @@ function AlertsQueue() {
       </DndContext>
 
       {selected ? (
-        <aside className="fixed inset-y-0 right-0 z-30 w-[420px] overflow-y-auto p-4 bg-void-900/95 backdrop-blur-xl border-l border-fog-deep/50 shadow-2xl">
+        <>
+          <div
+            className="fixed inset-0 z-30 bg-void-950/60 backdrop-blur-xs sm:hidden"
+            onClick={() => setSelected(null)}
+          />
+          <aside className="fixed inset-y-0 right-0 z-30 w-full sm:w-[420px] max-w-full overflow-y-auto p-3 sm:p-4 bg-void-900/95 backdrop-blur-xl border-l border-fog-deep/50 shadow-2xl">
           <HeroPanel
             state={selected.state}
             className="min-h-full"
@@ -333,7 +338,8 @@ function AlertsQueue() {
             </div>
           </HeroPanel>
         </aside>
-      ) : null}
-    </>
+      </>
+    ) : null}
+  </>
   );
 }
