@@ -162,55 +162,55 @@ export function OnboardingModal({ isOpen, onClose, onConnected }: OnboardingModa
   --sensor-id ${sensorIdInput || "edge-probe-core-01"}`;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-void-950/85 p-4 backdrop-blur-md animate-fade-in">
-      <div className="relative w-full max-w-3xl rounded-xl border border-fog-deep bg-void-900 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-void-950/85 p-2 sm:p-4 backdrop-blur-md animate-fade-in">
+      <div className="relative w-full max-w-3xl rounded-xl border border-fog-deep bg-void-900 shadow-2xl overflow-hidden flex flex-col max-h-[94vh] sm:max-h-[90vh]">
         
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-fog-deep/60 px-6 py-4 bg-void-800/40">
-          <div className="flex items-center gap-3">
-            <div className="flex size-9 items-center justify-center rounded-lg bg-teal/15 text-teal border border-teal/30">
-              <Zap className="size-5" />
+        <div className="flex items-center justify-between border-b border-fog-deep/60 px-4 sm:px-6 py-3 sm:py-4 bg-void-800/40">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <div className="flex size-8 sm:size-9 items-center justify-center rounded-lg bg-teal/15 text-teal border border-teal/30 shrink-0">
+              <Zap className="size-4 sm:size-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-semibold text-paper">
-                  Connect Edge Sensor & Infrastructure Integration
+                <h2 className="text-sm sm:text-base font-semibold text-paper">
+                  Connect Edge Sensor & Infrastructure
                 </h2>
-                <span className="rounded-full bg-void-700/60 px-2 py-0.5 text-[10px] font-mono text-fog border border-fog-deep/60">
+                <span className="rounded-full bg-void-700/60 px-2 py-0.5 text-[10px] font-mono text-fog border border-fog-deep/60 hidden xs:inline">
                   v2.4
                 </span>
               </div>
-              <p className="text-xs text-fog">
-                Transition seamlessly from simulated benchmark replay to live neural threat forecasting
+              <p className="text-[11px] sm:text-xs text-fog line-clamp-1 sm:line-clamp-none">
+                Transition from benchmark replay to live neural threat forecasting
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-fog hover:bg-void-700 hover:text-paper transition-colors"
+            className="rounded-lg p-1.5 text-fog hover:bg-void-700 hover:text-paper transition-colors shrink-0"
           >
             <X className="size-4" />
           </button>
         </div>
 
         {/* Explainability Pipeline Mini-Banner */}
-        <div className="bg-void-950/70 border-b border-fog-deep/40 px-6 py-2.5 flex items-center justify-between text-[11px] text-fog">
-          <div className="flex items-center gap-2 overflow-x-auto py-0.5">
-            <span className="font-semibold text-paper shrink-0">How Live Ingestion Operates:</span>
+        <div className="bg-void-950/70 border-b border-fog-deep/40 px-4 sm:px-6 py-2 flex items-center justify-between text-[10px] sm:text-[11px] text-fog overflow-x-auto">
+          <div className="flex items-center gap-2 whitespace-nowrap py-0.5">
+            <span className="font-semibold text-paper shrink-0">Pipeline:</span>
             <span className="flex items-center gap-1 text-teal shrink-0">
               <Network className="size-3" /> Mirror/TAP
             </span>
             <span className="text-fog-deep">➔</span>
             <span className="flex items-center gap-1 text-teal shrink-0">
-              <Cpu className="size-3" /> Passive 54-D Edge AI
+              <Cpu className="size-3" /> 54-D Edge AI
             </span>
             <span className="text-fog-deep">➔</span>
             <span className="flex items-center gap-1 text-teal shrink-0">
-              <Database className="size-3" /> Apache Kafka Broker
+              <Database className="size-3" /> Apache Kafka
             </span>
             <span className="text-fog-deep">➔</span>
             <span className="flex items-center gap-1 text-teal shrink-0">
-              <Activity className="size-3" /> Live SOC Dashboard
+              <Activity className="size-3" /> SOC Dashboard
             </span>
           </div>
         </div>
@@ -219,27 +219,33 @@ export function OnboardingModal({ isOpen, onClose, onConnected }: OnboardingModa
         <div className="grid grid-cols-3 border-b border-fog-deep/40 text-center text-xs font-medium bg-void-900/60">
           <button
             onClick={() => setStep(1)}
-            className={`py-3 transition-colors flex items-center justify-center gap-2 ${
+            className={`py-2.5 sm:py-3 transition-colors flex items-center justify-center gap-1.5 ${
               step === 1 ? "border-b-2 border-teal text-teal font-semibold bg-void-800/40" : "text-fog hover:text-paper"
             }`}
           >
-            <Network className="size-3.5" /> 1. Architecture & Scope
+            <Network className="size-3.5 shrink-0" />
+            <span className="hidden sm:inline">1. Architecture & Scope</span>
+            <span className="sm:hidden">1. Scope</span>
           </button>
           <button
             onClick={() => setStep(2)}
-            className={`py-3 transition-colors flex items-center justify-center gap-2 ${
+            className={`py-2.5 sm:py-3 transition-colors flex items-center justify-center gap-1.5 ${
               step === 2 ? "border-b-2 border-teal text-teal font-semibold bg-void-800/40" : "text-fog hover:text-paper"
             }`}
           >
-            <Terminal className="size-3.5" /> 2. Sensor Deployment
+            <Terminal className="size-3.5 shrink-0" />
+            <span className="hidden sm:inline">2. Deployment</span>
+            <span className="sm:hidden">2. Deploy</span>
           </button>
           <button
             onClick={() => setStep(3)}
-            className={`py-3 transition-colors flex items-center justify-center gap-2 ${
+            className={`py-2.5 sm:py-3 transition-colors flex items-center justify-center gap-1.5 ${
               step === 3 ? "border-b-2 border-teal text-teal font-semibold bg-void-800/40" : "text-fog hover:text-paper"
             }`}
           >
-            <Activity className="size-3.5" /> 3. Live Stream Verification
+            <Activity className="size-3.5 shrink-0" />
+            <span className="hidden sm:inline">3. Verification</span>
+            <span className="sm:hidden">3. Verify</span>
           </button>
         </div>
 
@@ -341,15 +347,15 @@ export function OnboardingModal({ isOpen, onClose, onConnected }: OnboardingModa
               </div>
 
               {/* Actions */}
-              <div className="flex items-center justify-between pt-4 border-t border-fog-deep/40">
+              <div className="flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-3 pt-4 border-t border-fog-deep/40">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="text-xs text-fog hover:text-paper transition-colors"
+                  className="text-xs text-fog hover:text-paper transition-colors py-2 sm:py-0 text-center"
                 >
                   Cancel (Stay in Demo Mode)
                 </button>
-                <ActionButton type="submit" disabled={isSaving}>
+                <ActionButton type="submit" disabled={isSaving} className="w-full sm:w-auto">
                   {isSaving ? "Saving Scope..." : "Next: Sensor Deployment Guide →"}
                 </ActionButton>
               </div>
@@ -441,43 +447,43 @@ export function OnboardingModal({ isOpen, onClose, onConnected }: OnboardingModa
 
               {/* Deployment Method Tabs */}
               <div>
-                <div className="flex items-center justify-between mb-2">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
                   <label className="text-xs font-semibold uppercase tracking-wider text-fog">
                     Deployment Method
                   </label>
-                  <div className="flex rounded-lg border border-fog-deep/60 bg-void-950 p-0.5 text-xs">
+                  <div className="grid grid-cols-3 sm:flex rounded-lg border border-fog-deep/60 bg-void-950 p-0.5 text-xs w-full sm:w-auto">
                     <button
                       type="button"
                       onClick={() => setDeployMethod("docker")}
-                      className={`px-3 py-1 rounded-md transition-colors ${
+                      className={`px-2.5 sm:px-3 py-1 rounded-md transition-colors text-center ${
                         deployMethod === "docker"
                           ? "bg-teal text-void-950 font-semibold"
                           : "text-fog hover:text-paper"
                       }`}
                     >
-                      Docker (Recommended)
+                      Docker<span className="hidden sm:inline"> (Rec.)</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => setDeployMethod("python")}
-                      className={`px-3 py-1 rounded-md transition-colors ${
+                      className={`px-2.5 sm:px-3 py-1 rounded-md transition-colors text-center ${
                         deployMethod === "python"
                           ? "bg-teal text-void-950 font-semibold"
                           : "text-fog hover:text-paper"
                       }`}
                     >
-                      Python CLI
+                      Python<span className="hidden sm:inline"> CLI</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => setDeployMethod("span")}
-                      className={`px-3 py-1 rounded-md transition-colors ${
+                      className={`px-2.5 sm:px-3 py-1 rounded-md transition-colors text-center ${
                         deployMethod === "span"
                           ? "bg-teal text-void-950 font-semibold"
                           : "text-fog hover:text-paper"
                       }`}
                     >
-                      Switch SPAN Guide
+                      SPAN<span className="hidden sm:inline"> Guide</span>
                     </button>
                   </div>
                 </div>
@@ -547,15 +553,15 @@ switch(config)# monitor session 1 destination interface GigabitEthernet0/2`}
               </div>
 
               {/* Actions */}
-              <div className="flex items-center justify-between pt-3 border-t border-fog-deep/40">
+              <div className="flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-fog-deep/40">
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="text-xs text-fog hover:text-paper transition-colors"
+                  className="text-xs text-fog hover:text-paper transition-colors py-2 sm:py-0 text-center"
                 >
                   ← Back to Scope
                 </button>
-                <ActionButton onClick={() => setStep(3)}>
+                <ActionButton onClick={() => setStep(3)} className="w-full sm:w-auto">
                   I have started the sensor → Check Live Stream
                 </ActionButton>
               </div>
@@ -645,13 +651,13 @@ switch(config)# monitor session 1 destination interface GigabitEthernet0/2`}
                     </ul>
                   </div>
 
-                  <div className="flex items-center justify-center gap-3 pt-2">
-                    <ActionButton variant="ghost" onClick={() => setStep(2)}>
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                    <ActionButton variant="ghost" onClick={() => setStep(2)} className="w-full sm:w-auto">
                       ← Review Command & API Key
                     </ActionButton>
                     <button
                       onClick={onClose}
-                      className="text-xs text-fog hover:text-paper transition-colors px-3 py-2"
+                      className="text-xs text-fog hover:text-paper transition-colors px-3 py-2 w-full sm:w-auto text-center"
                     >
                       Close & Keep Exploring Demo
                     </button>

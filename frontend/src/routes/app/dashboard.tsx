@@ -263,39 +263,41 @@ function Dashboard() {
 
       {/* Telemetry Mode Banner */}
       {liveState?.isLive ? (
-        <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-teal/40 bg-teal/10 px-4 py-3 text-xs animate-fade-in">
-          <div className="flex items-center gap-2.5">
-            <span className="flex size-2.5 rounded-full bg-teal animate-pulse" />
-            <span className="font-semibold text-paper tracking-wide">
-              LIVE INFRASTRUCTURE TELEMETRY
-            </span>
-            <span className="text-fog">
-              Streaming from {liveState.activeSensorsCount || 1} active edge sensor(s) · Zero-latency neural predictions
-            </span>
-          </div>
-          <button
-            onClick={() => setIsOnboardingOpen(true)}
-            className="rounded border border-teal/40 bg-teal/20 px-3 py-1 font-medium text-teal hover:bg-teal/30 transition-colors"
-          >
-            Edge Sensor Setup
-          </button>
-        </div>
-      ) : (
-        <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-amber/40 bg-amber/10 px-4 py-3 text-xs animate-fade-in">
-          <div className="flex items-center gap-2.5">
-            <Radio className="size-4 text-amber animate-pulse shrink-0" />
-            <div>
-              <span className="font-semibold text-amber-light">
-                DEMO BENCHMARK MODE (CSE-CIC-IDS2018 Infiltration)
+        <div className="mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border border-teal/40 bg-teal/10 px-4 py-3 text-xs animate-fade-in">
+          <div className="flex items-start sm:items-center gap-2.5">
+            <span className="flex size-2.5 rounded-full bg-teal animate-pulse shrink-0 mt-1 sm:mt-0" />
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+              <span className="font-semibold text-paper tracking-wide shrink-0">
+                LIVE INFRASTRUCTURE TELEMETRY
               </span>
-              <span className="text-fog ml-2">
-                Currently displaying simulated benchmark replay. Connect your edge sensor to start real-time threat forecasting on your infrastructure.
+              <span className="text-fog">
+                Streaming from {liveState.activeSensorsCount || 1} active edge sensor(s) · Zero-latency neural predictions
               </span>
             </div>
           </div>
           <button
             onClick={() => setIsOnboardingOpen(true)}
-            className="flex items-center gap-1.5 rounded-md border border-amber/50 bg-amber/20 px-3 py-1.5 font-medium text-amber hover:bg-amber/30 transition-colors shrink-0 shadow-sm"
+            className="rounded border border-teal/40 bg-teal/20 px-3 py-1.5 font-medium text-teal hover:bg-teal/30 transition-colors shrink-0 text-center w-full sm:w-auto"
+          >
+            Edge Sensor Setup
+          </button>
+        </div>
+      ) : (
+        <div className="mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border border-amber/40 bg-amber/10 px-4 py-3 text-xs animate-fade-in">
+          <div className="flex items-start sm:items-center gap-2.5">
+            <Radio className="size-4 text-amber animate-pulse shrink-0 mt-0.5 sm:mt-0" />
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+              <span className="font-semibold text-amber-light shrink-0">
+                DEMO BENCHMARK MODE (CSE-CIC-IDS2018)
+              </span>
+              <span className="text-fog">
+                Displaying simulated benchmark replay. Connect your edge sensor to start real-time threat forecasting.
+              </span>
+            </div>
+          </div>
+          <button
+            onClick={() => setIsOnboardingOpen(true)}
+            className="flex items-center justify-center gap-1.5 rounded-md border border-amber/50 bg-amber/20 px-3 py-1.5 font-medium text-amber hover:bg-amber/30 transition-colors shrink-0 shadow-sm w-full sm:w-auto"
           >
             <Zap className="size-3.5" /> Connect Edge Sensor
           </button>
@@ -326,13 +328,13 @@ function Dashboard() {
             </>
           }
         >
-          <div className="flex flex-wrap items-center justify-between gap-2 mb-3 pt-1">
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-fog font-medium">Timeline Scope:</span>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3 pt-1">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
+              <span className="text-xs text-fog font-medium shrink-0">Timeline Scope:</span>
               <select
                 value={selectedSensor}
                 onChange={(e) => setSelectedSensor(e.target.value)}
-                className="rounded border border-fog-deep bg-void-800 px-2.5 py-1 text-xs text-paper focus:outline-none focus:border-teal"
+                className="w-full sm:w-auto max-w-full rounded border border-fog-deep bg-void-800 px-2.5 py-1 text-xs text-paper focus:outline-none focus:border-teal"
               >
                 <option value="all">Estate Aggregate (Global Max Threat across systems)</option>
                 {sensorConfig?.activeSensors?.map((s) => (
@@ -343,7 +345,7 @@ function Dashboard() {
               </select>
             </div>
             {liveState?.isLive && (
-              <span className="text-[11px] text-teal font-mono flex items-center gap-1">
+              <span className="text-[11px] text-teal font-mono flex items-center gap-1 self-start sm:self-auto">
                 <span className="size-1.5 rounded-full bg-teal animate-pulse" /> 2.0s Live Ticks
               </span>
             )}
