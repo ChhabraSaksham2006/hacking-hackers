@@ -29,8 +29,20 @@ describe('Auth Endpoints', () => {
 
       expect(res.status).toBe(201);
       expect(res.body.user.email).toBe('bob@evil.com');
-      // Registration should force 'Analyst' regardless of input
-      expect(res.body.user.role).toBe('Analyst');
+      // First user of an organisation is granted Admin, ignoring invalid roles like 'SOC Lead'
+      expect(res.body.user.role).toBe('Admin');
+
+      // Subsequent user registering for the same organisation defaults to Analyst
+      const secondRes = await request(app)
+        .post('/api/auth/register')
+        .send({
+          orgName: 'Evil Corp',
+          email: 'charlie@evil.com',
+          password: 'Password123456!',
+          name: 'Charlie',
+        });
+      expect(secondRes.status).toBe(201);
+      expect(secondRes.body.user.role).toBe('Analyst');
     });
 
     it('should prevent duplicate emails', async () => {

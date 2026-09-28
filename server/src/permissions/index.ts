@@ -10,6 +10,7 @@ export const PERMISSIONS = {
   'simulation.run': 'Run what-if forward simulations',
 
   // Users
+  'users.create': 'Add and onboard team members to the organisation',
   'users.manage': 'Create, update, delete users and change roles',
 
   // Reports
@@ -56,6 +57,7 @@ export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     'model.retrain',
     'ingestion.create',
     'simulation.run',
+    'users.create',
     'reports.export',
     'audit.read',
     'orgs.read',
@@ -68,6 +70,7 @@ export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     'model.retrain',
     'ingestion.create',
     'simulation.run',
+    'users.create',
     'users.manage',
     'reports.export',
     'audit.read',
@@ -83,6 +86,7 @@ export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     'model.retrain',
     'ingestion.create',
     'simulation.run',
+    'users.create',
     'users.manage',
     'reports.export',
     'audit.read',

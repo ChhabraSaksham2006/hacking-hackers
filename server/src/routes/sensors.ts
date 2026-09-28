@@ -2,6 +2,7 @@ import { Router, type Request, type Response, type NextFunction } from 'express'
 import { z } from 'zod';
 import crypto from 'crypto';
 import { authenticate } from '../middleware/auth.js';
+import { requirePermission } from '../middleware/rbac.js';
 import { validate } from '../middleware/validate.js';
 import { Organisation } from '../models/Organisation.js';
 import { dashboardStore } from '../models/dashboardModel.js';
@@ -154,7 +155,10 @@ router.post('/setup', validate({ body: setupSchema }), async (req: Request, res:
 });
 
 // POST /api/sensors/key/regenerate — Rotate organization sensor API key
-router.post('/key/regenerate', async (req: Request, res: Response, next: NextFunction) => {
+router.post(
+  '/key/regenerate',
+  requirePermission('integrations.manage'),
+  async (req: Request, res: Response, next: NextFunction) => {
   try {
     const newKey = `av_sec_${crypto.randomBytes(24).toString('hex')}`;
 

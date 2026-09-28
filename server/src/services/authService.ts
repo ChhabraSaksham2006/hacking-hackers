@@ -1,4 +1,4 @@
-﻿import crypto from 'crypto';
+import crypto from 'crypto';
 import speakeasy from 'speakeasy';
 import { User, type IUser } from '../models/User.js';
 import { Organisation } from '../models/Organisation.js';
@@ -73,12 +73,17 @@ export async function registerUser(input: RegisterInput) {
   const rawToken = crypto.randomBytes(32).toString('hex');
   const verificationHash = await hashToken(rawToken);
 
+  // The first/initial user of an organisation (founder) is granted Admin.
+  // Subsequent users who register for that organisation default to Analyst.
+  const existingUsersInOrg = await User.countDocuments({ orgId: org._id });
+  const role = existingUsersInOrg === 0 ? 'Admin' : 'Analyst';
+
   const user = await User.create({
     email: input.email,
     passwordHash,
     name: input.name,
     initials,
-    role: 'Analyst', // Public registration must always default to least privilege
+    role,
     orgId: org._id,
     emailVerified: process.env.NODE_ENV === 'production' ? false : true,
     emailVerificationToken: verificationHash,

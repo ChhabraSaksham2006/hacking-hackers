@@ -20,6 +20,7 @@ import {
   Users,
   LogOut,
   X,
+  Shield,
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { useAlerts, useAuthMe, useLogout } from "@/hooks/useApi";
@@ -258,7 +259,14 @@ export function AppShell({ children }: { children: ReactNode }) {
               </div>
               <NotificationBell />
               <div className="flex items-center gap-2">
-                <span className="hidden xl:inline text-fog">{user?.role ?? "SOC Lead"}</span>
+                <Link
+                  to="/app/rbac"
+                  className="hidden sm:inline-flex items-center gap-1 rounded border border-teal/40 bg-teal/10 px-2 py-0.5 text-[11px] font-mono text-teal hover:border-teal/80 transition-colors"
+                  title="View Role & Permissions Matrix"
+                >
+                  <Shield className="size-3 text-teal" />
+                  <span>{user?.role ?? "Analyst"}</span>
+                </Link>
                 <span className="mono flex size-7 sm:size-8 items-center justify-center rounded-full bg-void-700 text-[11px] font-medium text-paper">
                   {user?.initials ?? "SC"}
                 </span>

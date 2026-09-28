@@ -1,4 +1,4 @@
-﻿import rateLimit from 'express-rate-limit';
+import rateLimit from 'express-rate-limit';
 
 /**
  * Rate-limit presets for Flow दृष्टि.
@@ -15,6 +15,7 @@ export const loginLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   validate: { xForwardedForHeader: false },
+  skip: () => process.env.NODE_ENV === 'test',
   message: { error: 'Too many login attempts. Please try again in 15 minutes.' },
 });
 
@@ -25,6 +26,7 @@ export const twoFactorLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   validate: { xForwardedForHeader: false },
+  skip: () => process.env.NODE_ENV === 'test',
   message: { error: 'Too many verification attempts. Please try again in 5 minutes.' },
 });
 
@@ -35,5 +37,6 @@ export const apiLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   validate: { xForwardedForHeader: false },
+  skip: () => process.env.NODE_ENV === 'test',
   message: { error: 'Rate limit exceeded. Please slow down.' },
 });

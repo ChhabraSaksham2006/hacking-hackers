@@ -165,13 +165,29 @@ function Settings() {
           ) : null}
 
           {section === "Team and roles" ? (
-            <p className="max-w-[70ch] text-[15px] text-fog">
-              Role membership and permissions live on the{" "}
-              <Link to="/app/rbac" className="text-teal">
-                roles and permissions page
-              </Link>
-              .
-            </p>
+            <div className="space-y-4">
+              <p className="max-w-[70ch] text-[15px] text-fog">
+                Role membership, access levels, and team administration live on the{" "}
+                <Link to="/app/rbac" className="text-teal font-medium hover:underline">
+                  roles and permissions page
+                </Link>
+                .
+              </p>
+              <div className="rounded-lg border border-fog-deep/40 bg-void-800 p-4 max-w-[500px]">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[11px] font-mono uppercase tracking-wider text-fog">Your Active Role</p>
+                    <p className="text-sm font-semibold text-paper mt-0.5">{user?.role || "Analyst"}</p>
+                  </div>
+                  <Link
+                    to="/app/rbac"
+                    className="text-xs font-mono text-teal border border-teal/40 bg-teal/10 px-3 py-1.5 rounded hover:bg-teal/20 transition-colors"
+                  >
+                    Manage Team & Matrix →
+                  </Link>
+                </div>
+              </div>
+            </div>
           ) : null}
         </FlatPanel>
       </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { X, GripVertical } from "lucide-react";
+import { X, GripVertical, Lock } from "lucide-react";
 import {
   DndContext,
   DragOverlay,
@@ -33,6 +33,8 @@ import { pageHead } from "@/lib/head";
 import { probabilitySeries } from "@/lib/telemetry";
 import { useAlerts, useUpdateAlert, type Alert } from "@/hooks/useApi";
 import { useSocket } from "@/hooks/useSocket";
+import { usePermissions } from "@/hooks/usePermissions";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/app/alerts")({
   head: pageHead(
@@ -60,9 +62,11 @@ function DroppableColumn({ id, children, title, count }: { id: string, children:
 function SortableAlertCard({
   alert,
   onClick,
+  canUpdate,
 }: {
   alert: Alert;
   onClick: () => void;
+  canUpdate: boolean;
 }) {
   const {
     attributes,
@@ -71,7 +75,11 @@ function SortableAlertCard({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: alert.alertId, data: { alert } });
+  } = useSortable({
+    id: alert.alertId,
+    data: { alert },
+    disabled: !canUpdate,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -86,11 +94,21 @@ function SortableAlertCard({
       className="relative mb-2 rounded-md border border-fog-deep bg-void-700 p-3 text-left hover:bg-paper/4 group/card touch-none"
     >
       <div 
-        {...attributes} 
-        {...listeners} 
-        className="absolute left-1 top-3 cursor-grab text-fog-deep hover:text-fog opacity-0 group-hover/card:opacity-100 transition-opacity"
+        {...(canUpdate ? { ...attributes, ...listeners } : {})}
+        onClick={(e) => {
+          if (!canUpdate) {
+            e.stopPropagation();
+            toast.error("Analysts have read-only access. Only SOC Lead, Admin, or Super Admin can move or triage alerts.");
+          }
+        }}
+        className={`absolute left-1 top-3 transition-opacity ${
+          canUpdate
+            ? "cursor-grab text-fog-deep hover:text-fog opacity-0 group-hover/card:opacity-100"
+            : "cursor-not-allowed text-amber/70 opacity-70 hover:opacity-100"
+        }`}
+        title={canUpdate ? "Drag to update triage status" : "Read-only: Analysts cannot move alerts. SOC Lead or Admin required."}
       >
-        <GripVertical className="size-4" />
+        {canUpdate ? <GripVertical className="size-4" /> : <Lock className="size-3.5" />}
       </div>
       <div className="pl-5 cursor-pointer" onClick={onClick}>
         <div className="flex items-center justify-between gap-2">
@@ -129,6 +147,8 @@ function AlertsQueue() {
   const updateAlert = useUpdateAlert();
   const queryClient = useQueryClient();
   const { socket } = useSocket();
+  const { can } = usePermissions();
+  const canUpdateAlerts = can("alerts.update");
   const [selected, setSelected] = useState<Alert | null>(null);
   
   // Local optimistic state for smooth drag and drop
@@ -158,6 +178,10 @@ function AlertsQueue() {
   );
 
   const handleDragStart = (event: DragStartEvent) => {
+    if (!canUpdateAlerts) {
+      toast.error("Analysts have read-only access. Only SOC Lead, Admin, or Super Admin can move or triage alerts.");
+      return;
+    }
     const { active } = event;
     const alert = alerts.find((a) => a.alertId === active.id);
     if (alert) setActiveDragAlert(alert);
@@ -168,6 +192,11 @@ function AlertsQueue() {
     const { active, over } = event;
     
     if (!over) return;
+
+    if (!canUpdateAlerts) {
+      toast.error("Analysts have read-only access. Only SOC Lead, Admin, or Super Admin can move or triage alerts.");
+      return;
+    }
 
     const alertId = active.id as string;
     const alert = alerts.find(a => a.alertId === alertId);
@@ -209,7 +238,11 @@ function AlertsQueue() {
     <>
       <PageTitle
         title="Alerts and incident queue"
-        note="Alerts appear here once a predicted probability crosses your threshold. Drag to update status."
+        note={
+          canUpdateAlerts
+            ? "Alerts appear here once a predicted probability crosses your threshold. Drag cards to update triage status."
+            : "Read-only triage mode for Analyst role. Switch to SOC Lead or Admin in Roles/RBAC to update alert status."
+        }
       />
 
       <DndContext
@@ -236,6 +269,7 @@ function AlertsQueue() {
                         key={a.alertId} 
                         alert={a} 
                         onClick={() => setSelected(a)} 
+                        canUpdate={canUpdateAlerts}
                       />
                     ))}
                     {items.length === 0 ? (
@@ -322,20 +356,54 @@ function AlertsQueue() {
 
             <div className="mt-4 flex flex-wrap gap-2">
               <ActionButton 
-                onClick={() => updateAlert.mutate({ id: selected.alertId, status: "Acknowledged" })}
+                onClick={() => {
+                  if (!canUpdateAlerts) {
+                    toast.error("Analysts have read-only access. Only SOC Lead, Admin, or Super Admin can acknowledge alerts.");
+                    return;
+                  }
+                  updateAlert.mutate({ id: selected.alertId, status: "Acknowledged" });
+                }}
                 disabled={updateAlert.isPending}
+                className={!canUpdateAlerts ? "opacity-60 cursor-not-allowed" : ""}
+                title={canUpdateAlerts ? "Acknowledge alert" : "Requires SOC Lead, Admin, or Super Admin role"}
               >
                 Acknowledge alert
               </ActionButton>
               <ActionButton 
                 variant="ghost"
-                onClick={() => updateAlert.mutate({ id: selected.alertId, status: "Investigating" })}
+                onClick={() => {
+                  if (!canUpdateAlerts) {
+                    toast.error("Analysts have read-only access. Only SOC Lead, Admin, or Super Admin can mark alerts investigating.");
+                    return;
+                  }
+                  updateAlert.mutate({ id: selected.alertId, status: "Investigating" });
+                }}
                 disabled={updateAlert.isPending}
+                className={!canUpdateAlerts ? "opacity-60 cursor-not-allowed" : ""}
+                title={canUpdateAlerts ? "Mark investigating" : "Requires SOC Lead, Admin, or Super Admin role"}
               >
                 Mark investigating
               </ActionButton>
-              <ActionButton variant="ghost">Assign to...</ActionButton>
+              <ActionButton 
+                variant="ghost"
+                onClick={() => {
+                  if (!canUpdateAlerts) {
+                    toast.error("Analysts have read-only access. Only SOC Lead, Admin, or Super Admin can assign alerts.");
+                    return;
+                  }
+                }}
+                className={!canUpdateAlerts ? "opacity-60 cursor-not-allowed" : ""}
+                title={canUpdateAlerts ? "Assign to analyst" : "Requires SOC Lead, Admin, or Super Admin role"}
+              >
+                Assign to...
+              </ActionButton>
             </div>
+            {!canUpdateAlerts && (
+              <p className="mt-3 text-xs font-mono text-amber border border-amber/30 bg-amber/10 px-2.5 py-1.5 rounded flex items-center gap-1.5">
+                <Lock className="size-3.5 shrink-0" />
+                <span>Read-only: Analysts cannot triage alerts. SOC Lead, Admin, or Super Admin role required.</span>
+              </p>
+            )}
           </HeroPanel>
         </aside>
       </>
