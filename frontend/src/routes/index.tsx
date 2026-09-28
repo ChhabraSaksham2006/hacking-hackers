@@ -495,8 +495,8 @@ function Landing() {
           {/* Architecture Content Pane */}
           <div className="mt-8">
             {activeArchTab === "rssm" && (
-              <div className={cardStyleClass}>
-                <div className="grid gap-6 sm:gap-8 lg:grid-cols-2">
+              <div className={cn(cardStyleClass, "min-w-0 w-full overflow-hidden")}>
+                <div className="grid gap-6 sm:gap-8 lg:grid-cols-2 min-w-0 w-full">
                   <div>
                     <span className="font-mono text-xs text-teal uppercase font-bold text-glow-teal">
                       Component 1: Recurrent State-Space Model
@@ -523,7 +523,7 @@ function Landing() {
                     </ul>
                   </div>
 
-                  <div className="rounded-xl border border-teal/40 bg-void-950/90 p-4 sm:p-5 shadow-inner">
+                  <div className="rounded-xl border border-teal/40 bg-void-950/90 p-4 sm:p-5 shadow-inner min-w-0 max-w-full">
                     <span className="text-xs font-mono text-teal font-semibold">SparseRSSM Latent Dynamics & Sparsity:</span>
                     <div className="mt-3 overflow-x-auto py-2 sm:py-3 text-left sm:text-center scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                       <MathFormula
@@ -540,8 +540,8 @@ function Landing() {
             )}
 
             {activeArchTab === "tfcnet" && (
-              <div className={cardStyleClass}>
-                <div className="grid gap-6 sm:gap-8 lg:grid-cols-2">
+              <div className={cn(cardStyleClass, "min-w-0 w-full overflow-hidden")}>
+                <div className="grid gap-6 sm:gap-8 lg:grid-cols-2 min-w-0 w-full">
                   <div>
                     <span className="font-mono text-xs text-amber uppercase font-bold">
                       Component 2: Multi-Scale Time–Frequency Network
@@ -568,7 +568,7 @@ function Landing() {
                     </ul>
                   </div>
 
-                  <div className="rounded-xl border border-amber/40 bg-void-950/90 p-4 sm:p-5 shadow-inner">
+                  <div className="rounded-xl border border-amber/40 bg-void-950/90 p-4 sm:p-5 shadow-inner min-w-0 max-w-full">
                     <span className="text-xs font-mono text-amber font-semibold">Time-Frequency Gated Fusion Equations:</span>
                     <div className="mt-3 overflow-x-auto py-2 space-y-2 text-left sm:text-center scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                       <MathFormula
@@ -589,8 +589,8 @@ function Landing() {
             )}
 
             {activeArchTab === "fusion" && (
-              <div className={cardStyleClass}>
-                <div className="grid gap-6 sm:gap-8 lg:grid-cols-2">
+              <div className={cn(cardStyleClass, "min-w-0 w-full overflow-hidden")}>
+                <div className="grid gap-6 sm:gap-8 lg:grid-cols-2 min-w-0 w-full">
                   <div>
                     <span className="font-mono text-xs text-teal uppercase font-bold">
                       Component 3: Two-Stage SOC Architecture
@@ -620,7 +620,7 @@ function Landing() {
                     </div>
                   </div>
 
-                  <div className="rounded-xl border border-fog-deep/40 bg-void-900/90 p-4 sm:p-5 shadow-inner">
+                  <div className="rounded-xl border border-fog-deep/40 bg-void-900/90 p-4 sm:p-5 shadow-inner min-w-0 max-w-full">
                     <span className="text-xs font-mono text-fog">Calibrated Stage Escalation:</span>
                     <div className="mt-3 space-y-2 text-xs font-mono">
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between rounded p-2.5 bg-void-950 border border-fog-deep/30 hover:border-teal/40 transition-colors gap-1 sm:gap-2">
@@ -646,7 +646,7 @@ function Landing() {
             )}
 
             {activeArchTab === "features" && (
-              <div className={cardStyleClass}>
+              <div className={cn(cardStyleClass, "min-w-0 w-full overflow-hidden")}>
                 <span className="font-mono text-xs text-teal uppercase font-bold text-glow-teal">
                   Component 4: 54 Behavioral Dimensions
                 </span>

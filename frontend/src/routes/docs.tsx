@@ -1,4 +1,4 @@
-﻿import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { BookOpen, Terminal, Cpu, ArrowLeft, Layers, ShieldCheck, CheckCircle2, Zap, BarChart3, Database } from "lucide-react";
 import { pageHead } from "@/lib/head";
 import { MathFormula } from "@/components/common/MathFormula";
@@ -15,7 +15,7 @@ export const Route = createFileRoute("/docs")({
 export function DocsPage() {
   return (
     <div className="network-field min-h-screen selection:bg-teal selection:text-void-900 bg-void-900 text-paper">
-      {/* â”€â”€ Top Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ── Top Header ─────────────────────────────────── */}
       <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-fog-deep/40 px-6 md:px-12 backdrop-blur-xl bg-void-900/85">
         <Link to="/" className="flex items-center gap-2.5 text-fog hover:text-paper transition-colors">
           <ArrowLeft className="size-4 text-teal" />
@@ -31,14 +31,14 @@ export function DocsPage() {
       </header>
 
       <main className="mx-auto max-w-[1180px] px-6 py-14 md:px-10">
-        {/* â”€â”€ Paper Title & Authors â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+        {/* ── Paper Title & Authors ──────────────────────── */}
         <div className="border-b border-fog-deep/40 pb-8">
           <div className="inline-flex items-center gap-2 rounded-full border border-teal/40 bg-teal/10 px-3.5 py-1 text-xs font-mono text-teal">
             <BookOpen className="size-3.5 text-teal" />
             Official Research Publication · Neural AI, DTU
           </div>
           <h1 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-paper sm:text-4xl">
-            Temporal World Modeling for Network Attack Forecasting with Latent-Recurrent and Timeâ€“Frequency Dynamics
+            Temporal World Modeling for Network Attack Forecasting with Latent-Recurrent and Time-Frequency Dynamics
           </h1>
           <p className="mt-3 font-mono text-xs text-teal">
             Nakshatra Yadav, Lakshay Bharti, Nidhi Jha, Saksham Chhabra, Arihant Srivastava, Soumil Srivastava · Neural AI, Delhi Technological University
@@ -48,7 +48,7 @@ export function DocsPage() {
           </p>
         </div>
 
-        {/* â”€â”€ Key Metrics Strip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+        {/* ── Key Metrics Strip ──────────────────────────── */}
         <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
           <div className="rounded-xl border border-teal/30 bg-void-800/60 p-4">
             <span className="font-mono text-2xl font-bold text-teal">100%</span>
@@ -68,7 +68,7 @@ export function DocsPage() {
           </div>
         </div>
 
-        {/* â”€â”€ Parameter Budget & Overview â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+        {/* ── Parameter Budget & Overview ────────────────── */}
         <div className="mt-10 grid gap-5 sm:grid-cols-3">
           <div className="rounded-xl border border-teal/30 bg-void-800/60 p-5 backdrop-blur-md">
             <div className="size-9 rounded-lg border border-teal/40 bg-teal/10 flex items-center justify-center text-teal">
@@ -101,7 +101,7 @@ export function DocsPage() {
           </div>
         </div>
 
-        {/* â”€â”€ Architectural Specifications â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+        {/* ── Architectural Specifications ───────────────── */}
         <div className="mt-14 space-y-12">
           {/* Section 1: Problem Formulation */}
           <div className="rounded-2xl border border-teal/30 bg-void-800/50 p-6 md:p-8 backdrop-blur-xl shadow-xl">
@@ -155,8 +155,8 @@ export function DocsPage() {
               <em>Note on architectural provenance:</em> Unlike canonical RSSMs (e.g. Dreamer) that employ stochastic latents with a KL penalty, <strong>SparseRSSM is strictly deterministic</strong> — it utilizes a deterministic latent space regularized by Top-K sparsity with Straight-Through Estimators (STE).
             </p>
 
-            <div className="mt-6 grid gap-4 md:grid-cols-2">
-              <div className="rounded-xl border border-fog-deep/30 bg-void-950/80 p-4">
+            <div className="mt-6 grid gap-4 md:grid-cols-2 min-w-0 w-full">
+              <div className="rounded-xl border border-fog-deep/30 bg-void-950/80 p-4 min-w-0 max-w-full">
                 <span className="text-xs font-mono text-teal font-semibold">1. Deterministic Latent Encoder (54 → 128):</span>
                 <div className="mt-2">
                   <MathFormula
@@ -166,7 +166,7 @@ export function DocsPage() {
                 </div>
               </div>
 
-              <div className="rounded-xl border border-fog-deep/30 bg-void-950/80 p-4">
+              <div className="rounded-xl border border-fog-deep/30 bg-void-950/80 p-4 min-w-0 max-w-full">
                 <span className="text-xs font-mono text-teal font-semibold">2. Top-K Sparsity & STE Gradients:</span>
                 <div className="mt-2">
                   <MathFormula
@@ -177,7 +177,7 @@ export function DocsPage() {
               </div>
             </div>
 
-            <div className="mt-4 rounded-xl border border-teal/30 bg-void-950/90 p-4">
+            <div className="mt-4 rounded-xl border border-teal/30 bg-void-950/90 p-4 min-w-0 max-w-full">
               <span className="text-xs font-mono text-teal font-semibold">3. Latent Dynamics & Auto-Regressive Rollout:</span>
               <p className="mt-2 text-xs text-fog leading-relaxed">
                 Recurrent memory <MathFormula math="h_t = \operatorname{GRUCell}(\hat{z}_t, h_{t-1})" displayMode={false} /> combines with latent state into <MathFormula math="r_k = [\hat{z}_k \parallel h_k] \in \mathbb{R}^{256}" displayMode={false} />:
@@ -206,7 +206,7 @@ export function DocsPage() {
                 Section III
               </span>
               <h2 className="font-display text-2xl font-bold text-paper">
-                TFCNet-F: Timeâ€“Frequency Inverted Transformer (400,914 params)
+                TFCNet-F: Time-Frequency Inverted Transformer (400,914 params)
               </h2>
             </div>
 
@@ -214,8 +214,8 @@ export function DocsPage() {
               TFCNet-F treats each variable <MathFormula math="j \in \{1..54\}" displayMode={false} /> as its own univariate signal, combining 4 parallel dilated convolutions with a Real Fast Fourier Transform (RFFT) spectral branch:
             </p>
 
-            <div className="mt-4 grid gap-4 md:grid-cols-2">
-              <div className="rounded-xl border border-fog-deep/30 bg-void-950/80 p-4">
+            <div className="mt-4 grid gap-4 md:grid-cols-2 min-w-0 w-full">
+              <div className="rounded-xl border border-fog-deep/30 bg-void-950/80 p-4 min-w-0 max-w-full">
                 <span className="text-xs font-mono text-amber font-semibold">Temporal Multi-Scale Dilated Convolutions:</span>
                 <p className="mt-1 text-[11px] text-fog">
                   Co=32 channels each, <MathFormula math="(k, d) \in \{(1,1), (3,1), (5,1), (3,2)\}" displayMode={false} />, effective receptive fields 1, 3, 5, 5 steps:
@@ -228,7 +228,7 @@ export function DocsPage() {
                 </div>
               </div>
 
-              <div className="rounded-xl border border-fog-deep/30 bg-void-950/80 p-4">
+              <div className="rounded-xl border border-fog-deep/30 bg-void-950/80 p-4 min-w-0 max-w-full">
                 <span className="text-xs font-mono text-amber font-semibold">Learned RFFT Spectral Projection:</span>
                 <p className="mt-1 text-[11px] text-fog">
                   <MathFormula math="\lfloor P/2 \rfloor + 1 = 6" displayMode={false} /> frequency bins, projected via <MathFormula math="W_\Re, W_\Im \in \mathbb{R}^{6 \times 64}" displayMode={false} />:
@@ -242,7 +242,7 @@ export function DocsPage() {
               </div>
             </div>
 
-            <div className="mt-4 rounded-xl border border-amber/30 bg-void-950/90 p-4">
+            <div className="mt-4 rounded-xl border border-amber/30 bg-void-950/90 p-4 min-w-0 max-w-full">
               <span className="text-xs font-mono text-amber font-semibold">Sigmoid Gated Fusion & Variable-Token Attention:</span>
               <div className="mt-2 space-y-2">
                 <MathFormula

@@ -24,7 +24,7 @@ export function MathFormula({ math, displayMode = false, className = "" }: MathF
   if (displayMode) {
     return (
       <div
-        className={`katex-block-container block w-full overflow-x-auto py-2 scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden text-left sm:text-center ${className}`}
+        className={`katex-block-container block w-full max-w-full overflow-x-auto py-2 scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden text-left sm:text-center ${className}`}
         dangerouslySetInnerHTML={{ __html: html }}
       />
     );

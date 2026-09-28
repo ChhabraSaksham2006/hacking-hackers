@@ -1,4 +1,4 @@
-﻿@import "tailwindcss" source(none);
+@import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
 
@@ -361,6 +361,12 @@
   overflow-y: hidden !important;
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
+}
+
+@media (max-width: 640px) {
+  .katex-display {
+    text-align: left !important;
+  }
 }
 
 .katex-display::-webkit-scrollbar,
