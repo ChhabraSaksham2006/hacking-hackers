@@ -52,4 +52,7 @@ flowSchema.index({ orgId: 1, score: -1 });
 flowSchema.index({ orgId: 1, src: 1 });
 flowSchema.index({ orgId: 1, timestamp: -1 });
 
+// TTL index: auto-delete flows after 3 days (biggest space consumer)
+flowSchema.index({ createdAt: 1 }, { expireAfterSeconds: 3 * 24 * 60 * 60 });
+
 export const Flow = mongoose.model<IFlow>('Flow', flowSchema);

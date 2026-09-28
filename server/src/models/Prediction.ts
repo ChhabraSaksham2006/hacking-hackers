@@ -65,6 +65,9 @@ predictionSchema.pre('validate', function (next) {
 
 predictionSchema.index({ orgId: 1, windowEnd: -1 });
 
+// TTL index: auto-delete predictions after 7 days
+predictionSchema.index({ createdAt: 1 }, { expireAfterSeconds: 7 * 24 * 60 * 60 });
+
 export const Prediction = mongoose.model<IPrediction>(
   'Prediction',
   predictionSchema,

@@ -32,4 +32,7 @@ const notificationSchema = new Schema<INotification>(
 // Index to quickly fetch a user's notifications in an org
 notificationSchema.index({ orgId: 1, userId: 1, isRead: 1 });
 
+// TTL index: auto-delete notifications after 7 days (MongoDB handles this automatically)
+notificationSchema.index({ createdAt: 1 }, { expireAfterSeconds: 7 * 24 * 60 * 60 });
+
 export const Notification = mongoose.model<INotification>('Notification', notificationSchema);

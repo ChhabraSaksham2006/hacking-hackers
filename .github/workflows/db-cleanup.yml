@@ -1,0 +1,40 @@
+name: MongoDB Cleanup (Scheduled)
+
+# Runs every 6 hours to purge stale data from the free-tier MongoDB cluster.
+# Also runs on manual dispatch for emergency cleanup.
+on:
+  schedule:
+    # Every 6 hours: 00:00, 06:00, 12:00, 18:00 UTC
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for manual cleanup'
+        required: false
+        default: 'Manual cleanup'
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
+
+      - name: Install server dependencies
+        working-directory: server
+        run: npm ci --ignore-scripts
+
+      - name: Run database cleanup
+        working-directory: server
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+        run: npx tsx scripts/cleanup_db.ts

@@ -31,6 +31,9 @@ const auditEntrySchema = new Schema<IAuditEntry>(
 auditEntrySchema.index({ orgId: 1, timestamp: -1 });
 auditEntrySchema.index({ orgId: 1, event: 1 });
 
+// TTL index: auto-delete audit entries after 30 days
+auditEntrySchema.index({ timestamp: 1 }, { expireAfterSeconds: 30 * 24 * 60 * 60 });
+
 export const AuditEntry = mongoose.model<IAuditEntry>(
   'AuditEntry',
   auditEntrySchema,

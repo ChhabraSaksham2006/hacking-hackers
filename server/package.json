@@ -8,6 +8,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "seed": "tsx src/seed/seed.ts",
+    "cleanup": "tsx scripts/cleanup_db.ts",
     "test": "vitest run"
   },
   "dependencies": {
