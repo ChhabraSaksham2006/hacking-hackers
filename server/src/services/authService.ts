@@ -18,6 +18,7 @@ import {
   sendPasswordResetEmail,
   sendTwoFactorCodeEmail,
 } from './emailService.js';
+import { env } from '../config/env.js';
 
 // â”€â”€ Single-use 2FA challenge tracking â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // In-memory set of consumed jti values. Acceptable for single-instance MVP.
@@ -79,7 +80,7 @@ export async function registerUser(input: RegisterInput) {
     initials,
     role: 'Analyst', // Public registration must always default to least privilege
     orgId: org._id,
-    emailVerified: false,
+    emailVerified: process.env.NODE_ENV === 'production' ? false : true,
     emailVerificationToken: verificationHash,
     emailVerificationExpires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24h
   });
@@ -110,8 +111,8 @@ export async function loginUser(input: LoginInput): Promise<LoginResult> {
     throw new AppError(401, 'Invalid email or password');
   }
 
-  // Require email verification before allowing login (bypass in test env)
-  if (!user.emailVerified && process.env.NODE_ENV !== 'test') {
+  // Require email verification before allowing login in production
+  if (!user.emailVerified && process.env.NODE_ENV === 'production') {
     throw new AppError(403, 'Please verify your email before logging in. Check your inbox for a verification link.');
   }
 
@@ -301,6 +302,8 @@ async function issueTokens(user: IUser, existingFamilyId?: string) {
   user.refreshTokens.push({ tokenHash, familyId, expiresAt });
   await user.save();
 
+  const org = await Organisation.findById(user.orgId).select('name').lean();
+
   return {
     requiresTwoFactor: false as const,
     accessToken,
@@ -311,6 +314,7 @@ async function issueTokens(user: IUser, existingFamilyId?: string) {
       name: user.name,
       initials: user.initials,
       role: user.role,
+      org: org ? { id: org._id.toString(), name: org.name } : undefined,
     },
   };
 }

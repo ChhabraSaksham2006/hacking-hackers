@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 Flow Drishti â€” Distributed Edge Sensor Agent
 High-performance, lightweight network edge probe for real-time packet ingestion,
@@ -65,6 +65,9 @@ def run_pipeline(
     window_sec: float = 2.0,
     speed: float = 2.0,
     upstream_url: str = "",
+    api_key: str = "",
+    kafka_brokers: str = "",
+    kafka_topic: str = "aegis.telemetry.raw",
     model_url: str = "",
     enable_heuristics: bool = False,
     output_file: str = "telemetry_edge.ndjson",
@@ -88,6 +91,9 @@ def run_pipeline(
     dispatcher = TelemetryDispatcher(
         sensor_id=sensor_id,
         upstream_url=upstream_url if upstream_url else None,
+        api_key=api_key if api_key else None,
+        kafka_brokers=kafka_brokers if kafka_brokers else None,
+        kafka_topic=kafka_topic,
         ndjson_path=output_file if output_file else None,
     )
     visualizer = TerminalVisualizer(sensor_id=sensor_id, mode=display_mode)
@@ -204,7 +210,7 @@ def run_pipeline(
 
                         if alerts:
                             total_alerts += len(alerts)
-                        dispatcher.dispatch(window, alerts)
+                        dispatcher.dispatch(window, alerts, pred)
                         visualizer.update_window(window, alerts)
 
                         # 2. Update live mobile prediction dashboard directly from neural model output
@@ -247,7 +253,7 @@ def run_pipeline(
                     if alerts:
                         total_alerts += len(alerts)
 
-                    dispatcher.dispatch(window, alerts)
+                    dispatcher.dispatch(window, alerts, pred)
                     visualizer.update_window(window, alerts)
 
                     if headless:
@@ -276,7 +282,7 @@ def run_pipeline(
             final_alerts = list(pred.alerts)
             if enable_heuristics:
                 final_alerts.extend(edge_sentinel.evaluate(final_window))
-            dispatcher.dispatch(final_window, final_alerts)
+            dispatcher.dispatch(final_window, final_alerts, pred)
             visualizer.update_window(final_window, final_alerts)
 
     except KeyboardInterrupt:
@@ -315,19 +321,22 @@ def main():
         default="live",
         help="Sensor operating mode: 'live' (interactive mobile/LAN device gateway), 'tap' (passive live network interface sniffer), 'demo' (synthetic traffic visualizer), 'pcap' (binary capture replay), 'headless' (NDJSON stream)",
     )
-    parser.add_argument("--interface", type=str, default="", help="Network interface name for live passive tap (e.g., 'eth0', 'enp3s0')")
+    parser.add_argument("--interface", type=str, default=os.environ.get("AEGIS_INTERFACE", ""), help="Network interface name for live passive tap (e.g., 'eth0', 'enp3s0')")
     parser.add_argument("--headless", action="store_true", help="Run in headless daemon mode without terminal visualizer")
     parser.add_argument("--file", type=str, default="", help="Path to input .pcap file for pcap replay mode")
-    parser.add_argument("--port", type=int, default=8888, help="Port for live external device ingress portal (default: 8888)")
+    parser.add_argument("--port", type=int, default=int(os.environ.get("PORT", "8888")), help="Port for live external device ingress portal (default: 8888)")
     parser.add_argument("--no-baseline", action="store_true", help="Disable ambient background enterprise baseline traffic in live mode")
     parser.add_argument("--window", type=float, default=2.0, help="Temporal observation window in seconds (default 2.0)")
     parser.add_argument("--speed", type=float, default=2.5, help="Replay speed multiplier (1.0 = realtime, 2.5 = 2.5x faster, 0 = max)")
-    parser.add_argument("--upstream", type=str, default="", help="Upstream Flow Drishti ingestion endpoint URL")
-    parser.add_argument("--model-url", type=str, default="", help="Remote HTTP URL for Cyber World Model service (e.g. 'http://localhost:8000/predict'). Defaults to in-process PyTorch model.")
+    parser.add_argument("--upstream", type=str, default=os.environ.get("AEGIS_UPSTREAM_URL", ""), help="Upstream ingestion endpoint URL (e.g. 'http://localhost:5000/api/sensors/telemetry')")
+    parser.add_argument("--api-key", type=str, default=os.environ.get("AEGIS_API_KEY", ""), help="Organization sensor API key (av_sec_...)")
+    parser.add_argument("--kafka-brokers", type=str, default=os.environ.get("AEGIS_KAFKA_BROKERS", ""), help="Kafka bootstrap broker addresses (e.g. 'localhost:9092') for direct message broker dispatch")
+    parser.add_argument("--kafka-topic", type=str, default=os.environ.get("AEGIS_KAFKA_TOPIC", "aegis.telemetry.raw"), help="Kafka destination topic (default: 'aegis.telemetry.raw')")
+    parser.add_argument("--model-url", type=str, default=os.environ.get("AEGIS_MODEL_URL", ""), help="Remote HTTP URL for Cyber World Model service (e.g. 'http://localhost:8000/predict'). Defaults to in-process PyTorch model.")
     parser.add_argument("--heuristics", action="store_true", help="Enable legacy rule-based heuristic alerts alongside neural model (default: False)")
     parser.add_argument("--output", type=str, default="telemetry_edge.ndjson", help="Path to local telemetry log file")
     parser.add_argument("--ingress-log", type=str, default="live_ingress.log", help="Path to structured live ingress verification log")
-    parser.add_argument("--sensor-id", type=str, default="edge-sensor-alpha-01", help="Sensor agent identifier")
+    parser.add_argument("--sensor-id", type=str, default=os.environ.get("AEGIS_SENSOR_ID", "edge-sensor-alpha-01"), help="Sensor agent identifier")
     parser.add_argument("--duration", type=float, default=0.0, help="Run duration in seconds (0 = run indefinitely until Ctrl+C)")
 
     args = parser.parse_args()
@@ -346,6 +355,9 @@ def main():
         window_sec=args.window,
         speed=args.speed,
         upstream_url=args.upstream,
+        api_key=args.api_key,
+        kafka_brokers=args.kafka_brokers,
+        kafka_topic=args.kafka_topic,
         model_url=args.model_url,
         enable_heuristics=args.heuristics,
         output_file=args.output,

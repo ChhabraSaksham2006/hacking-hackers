@@ -231,7 +231,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               <span className="hidden sm:inline-block h-4 w-px bg-fog-deep shrink-0" />
 
               <span className="font-medium truncate max-w-[100px] sm:max-w-none text-paper/90">
-                {user?.org?.name ?? "Northwind Energy"}
+                {user?.org?.name || (user?.name ? `${user.name}'s Organization` : "Organization")}
               </span>
 
               <span className="h-4 w-px bg-fog-deep shrink-0 hidden xs:inline-block" />

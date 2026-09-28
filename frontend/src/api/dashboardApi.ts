@@ -41,6 +41,10 @@ export interface DashboardFlow {
 }
 
 export interface FullDashboardState {
+  isLive?: boolean;
+  isDemo?: boolean;
+  selectedSensor?: string;
+  activeSensorsCount?: number;
   step_index: number;
   actual_window_index: number;
   timestamp: string;
@@ -52,8 +56,9 @@ export interface FullDashboardState {
   timeline: number[];
 }
 
-export async function fetchFullDashboardState(): Promise<FullDashboardState> {
-  const res = await fetch('/api/dashboard', { credentials: 'include' });
+export async function fetchFullDashboardState(sensor?: string): Promise<FullDashboardState> {
+  const url = sensor && sensor !== 'all' ? `/api/dashboard?sensor=${encodeURIComponent(sensor)}` : '/api/dashboard';
+  const res = await fetch(url, { credentials: 'include' });
   if (!res.ok) throw new Error('Failed to fetch full dashboard state');
   return res.json();
 }
@@ -113,12 +118,14 @@ export async function jumpDashboard(): Promise<any> {
 export function subscribeDashboardStream(
   onUpdate: (state: FullDashboardState) => void,
   onError?: (err: Event) => void,
+  sensor?: string,
 ): () => void {
   let eventSource: EventSource | null = null;
   let isClosed = false;
 
   try {
-    eventSource = new EventSource('/api/dashboard/stream', { withCredentials: true });
+    const url = sensor && sensor !== 'all' ? `/api/dashboard/stream?sensor=${encodeURIComponent(sensor)}` : '/api/dashboard/stream';
+    eventSource = new EventSource(url, { withCredentials: true });
 
     eventSource.onmessage = (event) => {
       if (isClosed || !event.data) return;

@@ -14,6 +14,7 @@ export const loginLimiter = rateLimit({
   max: 10,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { xForwardedForHeader: false },
   message: { error: 'Too many login attempts. Please try again in 15 minutes.' },
 });
 
@@ -23,6 +24,7 @@ export const twoFactorLimiter = rateLimit({
   max: 5,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { xForwardedForHeader: false },
   message: { error: 'Too many verification attempts. Please try again in 5 minutes.' },
 });
 
@@ -32,5 +34,6 @@ export const apiLimiter = rateLimit({
   max: 100,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { xForwardedForHeader: false },
   message: { error: 'Rate limit exceeded. Please slow down.' },
 });
