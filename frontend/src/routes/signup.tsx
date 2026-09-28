@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { AuthShell, Field } from "@/components/app/AuthShell";
 import { pageHead } from "@/lib/head";
@@ -99,7 +99,7 @@ function SignupPage() {
         <Field
           label="Password"
           type="password"
-          placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+          placeholder="********"
           hint="12 characters minimum, checked against known breach corpora."
           value={password}
           onChange={(e) => setPassword(e.target.value)}
