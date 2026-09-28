@@ -22,9 +22,11 @@ export function errorHandler(
 ): void {
   // Zod validation errors
   if (err instanceof ZodError) {
+    const firstIssue = err.issues[0]?.message || 'Request validation failed';
     res.status(400).json({
-      error: 'VALIDATION_ERROR',
-      message: 'Request validation failed',
+      error: firstIssue,
+      message: firstIssue,
+      code: 'VALIDATION_ERROR',
       details: err.issues.map((i) => ({
         path: i.path.join('.'),
         message: i.message,
@@ -36,7 +38,7 @@ export function errorHandler(
   // Known operational errors
   if (err instanceof AppError) {
     res.status(err.statusCode).json({
-      error: err.name,
+      error: err.message,
       message: err.message,
       statusCode: err.statusCode,
     });
@@ -46,7 +48,7 @@ export function errorHandler(
   // Mongoose duplicate key
   if (err.name === 'MongoServerError' && (err as any).code === 11000) {
     res.status(409).json({
-      error: 'DUPLICATE_KEY',
+      error: 'A record with that value already exists',
       message: 'A record with that value already exists',
       statusCode: 409,
     });
@@ -56,7 +58,7 @@ export function errorHandler(
   // Mongoose validation error
   if (err.name === 'ValidationError') {
     res.status(400).json({
-      error: 'VALIDATION_ERROR',
+      error: err.message,
       message: err.message,
       statusCode: 400,
     });
