@@ -7,10 +7,6 @@
     {
       "source": "/api/:path*",
       "destination": "https://hacking-hackers-backend.onrender.com/api/:path*"
-    },
-    {
-      "source": "/socket.io/:path*",
-      "destination": "https://hacking-hackers-backend.onrender.com/socket.io/:path*"
     }
   ]
 }

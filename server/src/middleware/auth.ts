@@ -20,7 +20,9 @@ export function authenticate(
   _res: Response,
   next: NextFunction,
 ): void {
-  const token = req.cookies?.access_token as string | undefined;
+  const token =
+    (req.cookies?.access_token as string | undefined) ||
+    req.headers.authorization?.replace(/^Bearer\s+/i, '');
 
   if (!token) {
     return next(new AppError(401, 'Authentication required'));

@@ -1,37 +1,74 @@
 import { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { useAuthMe } from './useApi';
+import { apiFetch } from '@/lib/api';
 
 let socketInstance: Socket | null = null;
+
+/**
+ * Determine backend Socket.io URL:
+ * - Localhost: undefined (Vite proxy at http://localhost:8080/socket.io).
+ * - Production: Direct connection to Render backend (wss://...) because Vercel edge proxy
+ *   does not support persistent WebSockets and corrupts long-polling response encoding.
+ */
+function getSocketUrl(): string | undefined {
+  if (typeof window === 'undefined') return undefined;
+  const isLocalhost =
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1';
+  if (isLocalhost) return undefined;
+
+  return (
+    import.meta.env.VITE_API_URL ||
+    'https://hacking-hackers-backend.onrender.com'
+  ).trim().replace(/\/$/, '');
+}
 
 export function useSocket() {
   const { data: user } = useAuthMe();
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    // If no user is logged in, don't connect
-    if (!user) return;
+    // If no user is logged in, disconnect any active socket
+    if (!user) {
+      if (socketInstance) {
+        socketInstance.disconnect();
+        socketInstance = null;
+      }
+      setIsConnected(false);
+      return;
+    }
 
     if (!socketInstance) {
-      // By passing undefined, socket.io will connect to the same origin as the frontend.
-      // In production, Vercel will proxy this to the backend using the vercel.json rewrite rule,
-      // preserving the SameSite=Strict cookies.
-      socketInstance = io(undefined, {
+      const socketUrl = getSocketUrl();
+
+      socketInstance = io(socketUrl, {
+        auth: (cb) => {
+          // Dynamic auth callback: retrieves a fresh signed socket token from backend
+          // using the secure session cookie. Automatically invoked on connect and reconnections.
+          apiFetch<{ token: string }>('/api/auth/socket-token')
+            .then((res) => cb({ token: res.token }))
+            .catch((err) => {
+              console.warn('[Socket.io] Failed to obtain socket token:', err?.message || err);
+              cb({});
+            });
+        },
+        transports: ['websocket', 'polling'],
         withCredentials: true,
         reconnection: true,
         reconnectionDelay: 1000,
         reconnectionDelayMax: 5000,
-        reconnectionAttempts: Infinity
+        reconnectionAttempts: Infinity,
       });
     }
 
-    // Set initial connection state based on the current socket state
+    // Set initial connection state based on current socket state
     setIsConnected(socketInstance.connected);
 
     const onConnect = () => setIsConnected(true);
     const onDisconnect = () => setIsConnected(false);
     const onError = (err: Error) => {
-      console.error('Socket connection error:', err.message);
+      console.warn('Socket connection error:', err.message);
       setIsConnected(false);
     };
 
@@ -57,3 +94,4 @@ export function disconnectSocket() {
     socketInstance = null;
   }
 }
+

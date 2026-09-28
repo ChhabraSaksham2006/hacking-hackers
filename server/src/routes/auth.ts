@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { validate } from '../middleware/validate.js';
 import { authenticate } from '../middleware/auth.js';
 import { loginLimiter, twoFactorLimiter } from '../middleware/rateLimit.js';
-import { setAuthCookies, clearAuthCookies } from '../utils/jwt.js';
+import { setAuthCookies, clearAuthCookies, signAccessToken } from '../utils/jwt.js';
 import { logAuditEvent } from '../services/auditService.js';
 import {
   registerUser,
@@ -195,6 +195,18 @@ router.get('/me', authenticate, async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+});
+
+// ── GET /api/auth/socket-token ───────────────────────────
+
+router.get('/socket-token', authenticate, (req, res) => {
+  const token = signAccessToken({
+    userId: req.user!.userId,
+    email: req.user!.email,
+    role: req.user!.role,
+    orgId: req.user!.orgId,
+  });
+  res.json({ token });
 });
 
 // ── GET /api/auth/verify-email ──────────────────────────

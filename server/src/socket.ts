@@ -8,12 +8,14 @@ let io: Server;
 export function initSocket(httpServer: HttpServer) {
   io = new Server(httpServer, {
     cors: corsOptions,
+    transports: ['websocket', 'polling'],
   });
 
   // Middleware for JWT authentication
   io.use((socket: Socket, next) => {
-    // We expect the access_token in the cookies
-    let token = socket.handshake.auth.token || socket.handshake.headers['authorization']?.replace('Bearer ', '');
+    let token =
+      socket.handshake.auth?.token ||
+      socket.handshake.headers['authorization']?.replace(/^Bearer\s+/i, '');
     
     if (!token && socket.handshake.headers.cookie) {
       const match = socket.handshake.headers.cookie.match(/(?:^|;\s*)access_token=([^;]*)/);
