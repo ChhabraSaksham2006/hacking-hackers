@@ -1,10 +1,10 @@
-﻿# Flow Drishti â€” Cyber World Model Microservice
+# Flow Drishti - Cyber World Model Microservice
 
 Standalone **FastAPI** deep learning inference microservice powering the **Flow Drishti** attack forecasting engine. Offloads heavy PyTorch tensor math and temporal state-space modeling from the primary Node.js / Express backend into a dedicated, containerized microservice.
 
 ---
 
-## ðŸš€ Architecture Highlights
+## Architecture Highlights
 
 - **Models**:
   - **SparseRSSM**: 54-D State-Space World Model with 256-D recurrent latent dynamics forecasting up to 20 seconds into the future ($K=10$).
@@ -67,7 +67,7 @@ docker run -d -p 7860:7860 --name aegis-model-service aegis-model-service
 
 ---
 
-## ðŸ¤— Deploying to Hugging Face Spaces (100% Free â€” No Credit Card Needed)
+## Deploying to Hugging Face Spaces (100% Free - No Credit Card Needed)
 
 > **Important**: Hugging Face recently started asking for credit card verification on **Docker** spaces to prevent cryptomining abuse. 
 > However, **Gradio Spaces are 100% COMPLETELY FREE** with **2 vCPU and 16 GB RAM** with **zero credit card required**!
@@ -125,7 +125,7 @@ If you prefer other platforms instead of Hugging Face:
 
 ---
 
-## ðŸ”— Connecting the Backend to the Microservice
+## Connecting the Backend to the Microservice
 
 1. Open `server/.env` in your project.
 2. Set `ML_SERVICE_URL` to your remote Hugging Face or container URL:
@@ -146,7 +146,7 @@ If you prefer other platforms instead of Hugging Face:
 
 ---
 
-## ðŸ“¡ API Endpoints
+## API Endpoints
 
 ### 1. `GET /health`
 Returns service status, loaded PyTorch model architectures, and dataset metadata.

@@ -115,7 +115,7 @@ async function start() {
   await kafkaService.init();
 
   const server = app.listen(env.PORT, () => {
-    console.log(`ðŸš€ Flow दृष्टि API running on port ${env.PORT}`);
+    console.log(`[START] Flow Drishti API running on port ${env.PORT}`);
     console.log(`   Environment: ${env.NODE_ENV}`);
     console.log(`   Frontend:    ${env.FRONTEND_URL}`);
   });
@@ -143,7 +143,7 @@ async function start() {
 
   // Graceful shutdown
   const shutdown = async () => {
-    console.log('\nðŸ›‘ SIGTERM / SIGINT received. Shutting down gracefully...');
+    console.log('\n[STOP] SIGTERM / SIGINT received. Shutting down gracefully...');
     clearInterval(ticker);
     await kafkaService.disconnect();
     server.close(async () => {

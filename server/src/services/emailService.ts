@@ -1,4 +1,4 @@
-﻿import { env } from '../config/env.js';
+import { env } from '../config/env.js';
 
 // â”€â”€ Brevo HTTP API Wrapper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
@@ -27,7 +27,7 @@ export async function sendRaw(
 ): Promise<boolean> {
   const apiKey = env.BREVO_API_KEY;
   if (!apiKey) {
-    console.warn(`ðŸ“§ [EMAIL SKIPPED] No BREVO_API_KEY set. Would have sent "${subject}" to ${to.map(r => r.email).join(', ')}`);
+    console.warn(`[EMAIL SKIPPED] No BREVO_API_KEY set. Would have sent "${subject}" to ${to.map(r => r.email).join(', ')}`);
     return false;
   }
 
@@ -54,14 +54,14 @@ export async function sendRaw(
 
     if (!response.ok) {
       const errorBody = await response.text();
-      console.error(`ðŸ“§ [EMAIL ERROR] Brevo returned ${response.status}: ${errorBody}`);
+      console.error(`[EMAIL ERROR] Brevo returned ${response.status}: ${errorBody}`);
       return false;
     }
 
-    console.log(`ðŸ“§ [EMAIL SENT] "${subject}" → ${to.map(r => r.email).join(', ')}`);
+    console.log(`[EMAIL SENT] "${subject}" → ${to.map(r => r.email).join(', ')}`);
     return true;
   } catch (err) {
-    console.error('ðŸ“§ [EMAIL ERROR] Failed to send email:', err);
+    console.error('[EMAIL ERROR] Failed to send email:', err);
     return false;
   }
 }
@@ -355,7 +355,7 @@ export async function notifyOrgUsersOfAlert(
       users.map(user => sendAlertNotificationEmail(user.email, user.name, alert)),
     );
   } catch (err) {
-    console.error('ðŸ“§ [NOTIFY ERROR] Failed to notify org users:', err);
+    console.error('[NOTIFY ERROR] Failed to notify org users:', err);
   }
 }
 

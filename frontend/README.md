@@ -1,4 +1,4 @@
-﻿<div align="center">
+<div align="center">
   <h1>ðŸ›¡ï¸ Flow Drishti</h1>
   <p><strong>Predictive Cyber-Defence Dashboard</strong></p>
 
@@ -35,7 +35,7 @@ Welcome to the frontend of **Flow Drishti**, a cutting-edge interface designed f
 
 ---
 
-## ðŸš€ Getting Started
+## Getting Started
 
 Follow these instructions to get a copy of the project up and running on your local machine for development and testing.
 
@@ -87,5 +87,5 @@ Flow Drishti is configured for zero-hassle deployment to Vercel via Nitro's serv
 ---
 
 <div align="center">
-  <sub>Built with passion for next-generation cyber-security. ðŸ”’</sub>
+  <sub>Built with passion for next-generation cyber-security.</sub>
 </div>

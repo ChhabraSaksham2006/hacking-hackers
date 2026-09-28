@@ -222,7 +222,7 @@ function Reports() {
                 <option value="last 24 hours">last 24 hours</option>
                 <option value="last 7 days">last 7 days</option>
                 <option value="last 30 days">last 30 days</option>
-                <option value="2026-09-06 14:00â€“15:00Z">2026-09-06 14:00â€“15:00Z (incident window)</option>
+                <option value="2026-09-06 14:00-15:00Z">2026-09-06 14:00-15:00Z (incident window)</option>
                 <option value="custom">Custom date range...</option>
               </select>
             </label>

@@ -117,7 +117,7 @@ function Benchmark() {
     return (
       <div className="flex h-64 items-center justify-center gap-2 text-fog">
         <Loader2 className="size-5 animate-spin" />
-        <span>Loading benchmark dataâ€¦</span>
+        <span>Loading benchmark data...</span>
       </div>
     );
   }
@@ -313,7 +313,7 @@ function Benchmark() {
           </table>
           <div className="p-4 bg-void-950/40 border-t border-fog-deep/40 text-xs font-mono text-fog">
             <p>
-              <strong className="text-paper">Operational Takeaway:</strong> While static Logistic Regression and Random Forest obtain 100% onset recall in OOD, they do so at 49.35%â€“52.67% FPR (888â€“948 FA/hr), flooding SOC operators. Two-Stage SOC matches 100% onset recall while delivering a <strong>140Ã— reduction</strong> in false alerts down to 0.12 FA/hr.
+              <strong className="text-paper">Operational Takeaway:</strong> While static Logistic Regression and Random Forest obtain 100% onset recall in OOD, they do so at 49.35%-52.67% FPR (888-948 FA/hr), flooding SOC operators. Two-Stage SOC matches 100% onset recall while delivering a <strong>140x reduction</strong> in false alerts down to 0.12 FA/hr.
             </p>
           </div>
         </FlatPanel>
@@ -525,7 +525,7 @@ function Benchmark() {
                   >
                     {promote.isPending ? (
                       <span className="flex items-center gap-1.5">
-                        <Loader2 className="size-3 animate-spin" /> Promotingâ€¦
+                        <Loader2 className="size-3 animate-spin" /> Promoting...
                       </span>
                     ) : (
                       "Promote to production"

@@ -334,7 +334,7 @@ function AlertsQueue() {
               >
                 Mark investigating
               </ActionButton>
-              <ActionButton variant="ghost">Assign toâ€¦</ActionButton>
+              <ActionButton variant="ghost">Assign to...</ActionButton>
             </div>
           </HeroPanel>
         </aside>

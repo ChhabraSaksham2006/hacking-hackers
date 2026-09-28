@@ -151,7 +151,7 @@ function Settings() {
               <div>
                 <p className="text-[13px] font-medium">API key</p>
                 <p className="mono mt-1.5 rounded-md border border-fog-deep bg-void-700 px-3 py-2.5">
-                  av_live_â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢3f9c
+                  av_live_****************3f9c
                 </p>
               </div>
               <div>

@@ -1,4 +1,4 @@
-﻿import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Upload,
@@ -305,7 +305,7 @@ function DemonstrationPage() {
                   {selectedFile.name}
                 </p>
                 <p className="mono text-[11px] text-teal">
-                  {(selectedFile.size / 1024).toFixed(1)} KB â€¢ Loaded & Processed
+                  {(selectedFile.size / 1024).toFixed(1)} KB * Loaded & Processed
                 </p>
               </div>
             ) : (

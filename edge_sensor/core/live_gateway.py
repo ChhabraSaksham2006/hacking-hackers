@@ -1,4 +1,4 @@
-﻿"""
+"""
 Live Ingress Gateway & Interactive Device Portal
 Enables external devices (smartphones, laptops, judges) on any network interface
 (Wi-Fi, Mobile Hotspot, Localhost, or Public Tunnel) to connect directly to the
@@ -95,7 +95,7 @@ PORTAL_HTML = """<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Flow Drishti Edge Sensor â€” Live Telemetry & Threat Dashboard</title>
+<title>Flow Drishti Edge Sensor - Live Telemetry & Threat Dashboard</title>
 <style>
   :root {
     --bg-dark: #070b14;
@@ -310,7 +310,7 @@ PORTAL_HTML = """<!DOCTYPE html>
   <!-- Real-time Threat Status & Live Canvas Graph -->
   <div class="card">
     <div class="threat-banner threat-normal" id="threat-banner">
-      <span id="threat-text">â— NORMAL BASELINE OPERATIONS</span>
+      <span id="threat-text">[NORMAL] NORMAL BASELINE OPERATIONS</span>
       <span id="threat-prob" style="font-family: ui-monospace, Menlo, monospace;">8% Risk</span>
     </div>
 
@@ -368,22 +368,22 @@ PORTAL_HTML = """<!DOCTYPE html>
     <div class="card-title">Interactive Attack Demonstrator</div>
     <div class="btn-grid">
       <button class="btn-green" onclick="sendAction('normal')">
-        <span>ðŸŸ¢ Send Normal HTTP Traffic</span>
+        <span>[OK] Send Normal HTTP Traffic</span>
         <span class="btn-sub">HTTP 200 Keepalive</span>
       </button>
 
       <button class="btn-yellow" onclick="sendAction('recon')">
-        <span>ðŸŸ¡ Simulate Recon / Port Sweep</span>
+        <span>[WARN] Simulate Recon / Port Sweep</span>
         <span class="btn-sub">Multi-Port Entropy Surge</span>
       </button>
 
       <button class="btn-red" onclick="sendAction('auth_burst')">
-        <span>ðŸ”´ Simulate SMB / Auth Burst</span>
+        <span>[ALERT] Simulate SMB / Auth Burst</span>
         <span class="btn-sub">Target Port 445 / 22 Surge</span>
       </button>
 
       <button class="btn-purple" onclick="sendAction('exfil')">
-        <span>ðŸŸ£ Simulate Exfiltration Surge</span>
+        <span>[EXFIL] Simulate Exfiltration Surge</span>
         <span class="btn-sub">High Byte-Rate Buffer</span>
       </button>
     </div>
@@ -550,15 +550,15 @@ PORTAL_HTML = """<!DOCTYPE html>
       banner.className = 'threat-banner';
       if (pct >= 65) {
         banner.classList.add('threat-critical');
-        text.innerText = 'â˜ ï¸ CRITICAL: ' + (stage || 'LATERAL MOVEMENT ATTACK').toUpperCase();
+        text.innerText = '[CRITICAL] CRITICAL: ' + (stage || 'LATERAL MOVEMENT ATTACK').toUpperCase();
         document.getElementById('val-prob').style.color = '#ef4444';
       } else if (pct >= 35) {
         banner.classList.add('threat-watch');
-        text.innerText = 'â–² ELEVATED: ' + (stage || 'RECONNAISSANCE SWEEP').toUpperCase();
+        text.innerText = '[ELEVATED] ELEVATED: ' + (stage || 'RECONNAISSANCE SWEEP').toUpperCase();
         document.getElementById('val-prob').style.color = '#f59e0b';
       } else {
         banner.classList.add('threat-normal');
-        text.innerText = 'â— NORMAL BASELINE OPERATIONS';
+        text.innerText = '[NORMAL] NORMAL BASELINE OPERATIONS';
         document.getElementById('val-prob').style.color = '#10b981';
       }
     }
@@ -697,7 +697,7 @@ class LiveEdgeGateway:
         # Initialize/clear log file with header
         try:
             with open(self.log_path, "w", encoding="utf-8") as f:
-                f.write(f"# Flow Drishti Edge Sensor â€” Live Ingress Verification Log Sink\n")
+                f.write(f"# Flow Drishti Edge Sensor - Live Ingress Verification Log Sink\n")
                 f.write(f"# Sensor ID: {self.sensor_id} | Host: {self.lan_ip}:{self.port} | Started: {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
                 f.write(f"# FORMAT: [TIMESTAMP] [SRC_IP:PORT] -> [DST_IP:PORT] PROTO LEN FLAGS ACTION DETAILS\n\n")
         except Exception as e:

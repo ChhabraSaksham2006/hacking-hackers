@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Flow Drishti â€” Distributed Edge Sensor Agent
+Flow Drishti — Distributed Edge Sensor Agent
 High-performance, lightweight network edge probe for real-time packet ingestion,
 flow tracking, 54-D feature extraction, and edge heuristic triage.
 

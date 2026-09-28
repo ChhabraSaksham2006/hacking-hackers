@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ragService.ts
  * =============
  * Retrieval-Augmented Generation (RAG) Service for Flow दृष्टि Telemetry Copilot.
@@ -431,7 +431,7 @@ async function generateWithGroq(
   for (const model of models) {
     const startTime = Date.now();
     try {
-      console.log(`[ragService] ðŸš€ Calling Groq API (${model}) | Prob: ${(ctx.probability * 100).toFixed(1)}% | Conf: ${(ctx.confidence * 100).toFixed(1)}% | Window: #${ctx.windowIndex}`);
+      console.log(`[ragService] [START] Calling Groq API (${model}) | Prob: ${(ctx.probability * 100).toFixed(1)}% | Conf: ${(ctx.confidence * 100).toFixed(1)}% | Window: #${ctx.windowIndex}`);
 
       const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
@@ -453,7 +453,7 @@ async function generateWithGroq(
 
       if (!res.ok) {
         const errorText = await res.text();
-        console.warn(`[ragService] âš ï¸ Groq model ${model} failed (${res.status}): ${errorText.slice(0, 200)}`);
+        console.warn(`[ragService] [WARN] Groq model ${model} failed (${res.status}): ${errorText.slice(0, 200)}`);
         continue; // try next model
       }
 
@@ -462,7 +462,7 @@ async function generateWithGroq(
       if (!rawText) continue;
 
       const durationMs = Date.now() - startTime;
-      console.log(`[ragService] âœ… Groq API (${model}) responded in ${durationMs}ms | Tokens: ${data?.usage?.total_tokens || 'n/a'}`);
+      console.log(`[ragService] [SUCCESS] Groq API (${model}) responded in ${durationMs}ms | Tokens: ${data?.usage?.total_tokens || 'n/a'}`);
 
       const { answer, references } = extractReferences(rawText, ctx);
       return { answer, references, provider: `groq:${model}` };
@@ -486,7 +486,7 @@ async function generateWithOpenRouter(
   const startTime = Date.now();
 
   try {
-    console.log(`[ragService] ðŸš€ Calling OpenRouter API (${model}) | Prob: ${(ctx.probability * 100).toFixed(1)}%`);
+    console.log(`[ragService] [START] Calling OpenRouter API (${model}) | Prob: ${(ctx.probability * 100).toFixed(1)}%`);
 
     const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
@@ -510,7 +510,7 @@ async function generateWithOpenRouter(
 
     if (!res.ok) {
       const errorText = await res.text();
-      console.warn(`[ragService] âš ï¸ OpenRouter ${model} failed (${res.status}): ${errorText.slice(0, 200)}`);
+      console.warn(`[ragService] [WARN] OpenRouter ${model} failed (${res.status}): ${errorText.slice(0, 200)}`);
       return null;
     }
 
@@ -519,7 +519,7 @@ async function generateWithOpenRouter(
     if (!rawText) return null;
 
     const durationMs = Date.now() - startTime;
-    console.log(`[ragService] âœ… OpenRouter (${model}) responded in ${durationMs}ms`);
+    console.log(`[ragService] [SUCCESS] OpenRouter (${model}) responded in ${durationMs}ms`);
 
     const { answer, references } = extractReferences(rawText, ctx);
     return { answer, references, provider: `openrouter:${model}` };
@@ -834,7 +834,7 @@ export async function answerTelemetryQuery(
 
   // 3. Third: Built-in Cyber Causality Engine (Offline Fallback)
   if (!result) {
-    console.log(`[ragService] â„¹ï¸ Falling back to Built-in Cyber Causality Engine | Prob: ${(ctx.probability * 100).toFixed(1)}%`);
+    console.log(`[ragService] [INFO] Falling back to Built-in Cyber Causality Engine | Prob: ${(ctx.probability * 100).toFixed(1)}%`);
     const fallback = generateWithBuiltinCyberEngine(query, ctx);
     result = {
       ...fallback,

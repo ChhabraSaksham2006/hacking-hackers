@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 model_bridge.py
 ===============
@@ -329,7 +329,7 @@ def run_real_model_inference(step_index: int, df: pd.DataFrame):
     else:
         alerts = []
         flows = [
-            {"src": "192.168.10.44:443", "dst": "192.168.10.1:53", "proto": "UDP", "flags": "â€”", "bytes": "840 B", "prob": 0.08},
+            {"src": "192.168.10.44:443", "dst": "192.168.10.1:53", "proto": "UDP", "flags": "-", "bytes": "840 B", "prob": 0.08},
             {"src": "192.168.10.44:51220", "dst": "192.168.10.12:80", "proto": "TCP", "flags": "ACK", "bytes": "2.4 KB", "prob": 0.11},
             {"src": "192.168.10.19:51222", "dst": "10.0.0.15:445", "proto": "TCP", "flags": "ACK", "bytes": "4.8 KB", "prob": 0.12},
         ]
