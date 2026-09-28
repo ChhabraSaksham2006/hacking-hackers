@@ -39,6 +39,14 @@ const envSchema = z.object({
   BREVO_SENDER_EMAIL: z.string().email().default('noreply@aegisvantage.com'),
   BREVO_SENDER_NAME: z.string().default('Aegis Vantage'),
 
+  // Apache Kafka Message Broker (Optional — Graceful in-memory fallback when not set)
+  KAFKA_BROKERS: z.string().optional().default(''),
+  KAFKA_CLIENT_ID: z.string().optional().default('aegis-vantage'),
+  KAFKA_GROUP_ID: z.string().optional().default('aegis-core-consumers'),
+  KAFKA_USERNAME: z.string().optional().default(''),
+  KAFKA_PASSWORD: z.string().optional().default(''),
+  KAFKA_SSL: z.enum(['true', 'false']).optional().default('false').transform(v => v === 'true'),
+
   // AI Chat & RAG LLM Providers (Groq -> OpenRouter -> Cyber Engine fallback)
   GROQ_API_KEY: z.string().optional().default(() => (process.env.GROQ_API_KEY || process.env.GR0Q_API_KEY || process.env.GROK_API_KEY || '').trim()),
   OPENROUTER_API_KEY: z.string().optional().default(() => (process.env.OPENROUTER_API_KEY || '').trim()),

@@ -26,6 +26,9 @@ import {
   jumpDashboard,
   type FullDashboardState,
 } from "@/api/dashboardApi";
+import { OnboardingModal } from "@/components/app/OnboardingModal";
+import { fetchSensorsConfig, type SensorsConfigResponse } from "@/api/sensorsApi";
+import { Zap, Radio } from "lucide-react";
 
 export const Route = createFileRoute("/app/dashboard")({
   head: pageHead(
@@ -49,6 +52,29 @@ function Dashboard() {
   const [isStreaming, setIsStreaming] = useState<boolean>(false);
   const [isActionPending, setIsActionPending] = useState<boolean>(false);
 
+  // Sensor Onboarding & Scope State
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState<boolean>(false);
+  const [selectedSensor, setSelectedSensor] = useState<string>("all");
+  const [sensorConfig, setSensorConfig] = useState<SensorsConfigResponse | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    const loadConfig = async () => {
+      try {
+        const data = await fetchSensorsConfig();
+        if (isMounted) {
+          setSensorConfig(data);
+        }
+      } catch (err) {
+        console.warn("Could not load sensor config:", err);
+      }
+    };
+    loadConfig();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   useEffect(() => {
     // Subscribe to SSE stream (/api/dashboard/stream)
     const unsubscribe = subscribeDashboardStream(
@@ -60,12 +86,13 @@ function Dashboard() {
         // Fallback gracefully to REST on network blip
         setIsStreaming(false);
       },
+      selectedSensor,
     );
 
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [selectedSensor]);
 
   // Merged values (SSE stream takes precedence once connected)
   const currentProbability =
@@ -234,6 +261,47 @@ function Dashboard() {
         }
       />
 
+      {/* Telemetry Mode Banner */}
+      {liveState?.isLive ? (
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-teal/40 bg-teal/10 px-4 py-3 text-xs animate-fade-in">
+          <div className="flex items-center gap-2.5">
+            <span className="flex size-2.5 rounded-full bg-teal animate-pulse" />
+            <span className="font-semibold text-paper tracking-wide">
+              LIVE INFRASTRUCTURE TELEMETRY
+            </span>
+            <span className="text-fog">
+              Streaming from {liveState.activeSensorsCount || 1} active edge sensor(s) · Zero-latency neural predictions
+            </span>
+          </div>
+          <button
+            onClick={() => setIsOnboardingOpen(true)}
+            className="rounded border border-teal/40 bg-teal/20 px-3 py-1 font-medium text-teal hover:bg-teal/30 transition-colors"
+          >
+            Edge Sensor Setup
+          </button>
+        </div>
+      ) : (
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-amber/40 bg-amber/10 px-4 py-3 text-xs animate-fade-in">
+          <div className="flex items-center gap-2.5">
+            <Radio className="size-4 text-amber animate-pulse shrink-0" />
+            <div>
+              <span className="font-semibold text-amber-light">
+                DEMO BENCHMARK MODE (CSE-CIC-IDS2018 Infiltration)
+              </span>
+              <span className="text-fog ml-2">
+                Currently displaying simulated benchmark replay. Connect your edge sensor to start real-time threat forecasting on your infrastructure.
+              </span>
+            </div>
+          </div>
+          <button
+            onClick={() => setIsOnboardingOpen(true)}
+            className="flex items-center gap-1.5 rounded-md border border-amber/50 bg-amber/20 px-3 py-1.5 font-medium text-amber hover:bg-amber/30 transition-colors shrink-0 shadow-sm"
+          >
+            <Zap className="size-3.5" /> Connect Edge Sensor
+          </button>
+        </div>
+      )}
+
       <div className="flat mb-5 grid divide-fog-deep/60 sm:grid-cols-2 sm:divide-x lg:grid-cols-4">
         {stats.map((s) => (
           <div key={s.label} className="px-5 py-4">
@@ -258,6 +326,28 @@ function Dashboard() {
             </>
           }
         >
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-3 pt-1">
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-fog font-medium">Timeline Scope:</span>
+              <select
+                value={selectedSensor}
+                onChange={(e) => setSelectedSensor(e.target.value)}
+                className="rounded border border-fog-deep bg-void-800 px-2.5 py-1 text-xs text-paper focus:outline-none focus:border-teal"
+              >
+                <option value="all">Estate Aggregate (Global Max Threat across systems)</option>
+                {sensorConfig?.activeSensors?.map((s) => (
+                  <option key={s.sensorId} value={s.sensorId}>
+                    Sensor: {s.sensorId} ({s.stage || "Active"})
+                  </option>
+                ))}
+              </select>
+            </div>
+            {liveState?.isLive && (
+              <span className="text-[11px] text-teal font-mono flex items-center gap-1">
+                <span className="size-1.5 rounded-full bg-teal animate-pulse" /> 2.0s Live Ticks
+              </span>
+            )}
+          </div>
           <ProbabilityTimeline series={series} height={280} />
         </HeroPanel>
 
@@ -344,6 +434,12 @@ function Dashboard() {
           </tbody>
         </table>
       </FlatPanel>
+
+      <OnboardingModal
+        isOpen={isOnboardingOpen}
+        onClose={() => setIsOnboardingOpen(false)}
+        onConnected={() => setIsOnboardingOpen(false)}
+      />
     </>
   );
 }

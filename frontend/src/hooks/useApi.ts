@@ -131,7 +131,10 @@ export function useLogin() {
         method: "POST",
         body: JSON.stringify(data),
       }),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      if (data.user) {
+        queryClient.setQueryData(["auth", "me"], data.user);
+      }
       queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
     },
   });

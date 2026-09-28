@@ -44,8 +44,75 @@ function isH3SwallowedErrorBody(body: string): boolean {
   }
 }
 
+async function proxyToBackend(request: Request, url: URL): Promise<Response> {
+  const backendBase =
+    process.env["BACKEND_URL"] ||
+    (process.env["NODE_ENV"] === "production"
+      ? "https://hacking-hackers-backend.onrender.com"
+      : "http://localhost:5000");
+
+  const targetUrl = new URL(url.pathname + url.search, backendBase);
+
+  const headers = new Headers(request.headers);
+  headers.set("host", targetUrl.host);
+  headers.set("x-forwarded-host", url.host);
+  headers.set("x-forwarded-proto", url.protocol.replace(":", ""));
+
+  const init: RequestInit = {
+    method: request.method,
+    headers,
+    redirect: "manual",
+  };
+
+  if (request.method !== "GET" && request.method !== "HEAD") {
+    // @ts-expect-error duplex is required in Node.js fetch for stream bodies
+    init.duplex = "half";
+    init.body = request.body;
+  }
+
+  try {
+    const backendRes = await fetch(targetUrl.toString(), init);
+
+    const resHeaders = new Headers(backendRes.headers);
+
+    // Node 18+ provides getSetCookie() to accurately preserve multiple Set-Cookie headers
+    if (typeof backendRes.headers.getSetCookie === "function") {
+      resHeaders.delete("set-cookie");
+      for (const cookie of backendRes.headers.getSetCookie()) {
+        resHeaders.append("set-cookie", cookie);
+      }
+    }
+
+    return new Response(backendRes.body, {
+      status: backendRes.status,
+      statusText: backendRes.statusText,
+      headers: resHeaders,
+    });
+  } catch (err) {
+    console.error(
+      `[Proxy Error] Failed to forward ${request.method} ${url.pathname} to ${targetUrl}:`,
+      err,
+    );
+    return new Response(
+      JSON.stringify({
+        error: "Backend Unavailable",
+        message: "Failed to connect to Aegis Vantage backend server on port 5000.",
+        target: targetUrl.toString(),
+      }),
+      {
+        status: 502,
+        headers: { "content-type": "application/json" },
+      },
+    );
+  }
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
+    const url = new URL(request.url);
+    if (url.pathname.startsWith("/api") || url.pathname.startsWith("/socket.io")) {
+      return await proxyToBackend(request, url);
+    }
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);

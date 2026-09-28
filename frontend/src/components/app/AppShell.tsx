@@ -117,7 +117,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="flex min-w-0 flex-1 flex-col">
           <header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-4 border-b border-fog-deep/50 bg-void-900/75 px-6 backdrop-blur-md">
             <div className="flex items-center gap-4 text-[13px]">
-              <span className="font-medium">{user?.org?.name ?? "Northwind Energy"}</span>
+              <span className="font-medium">{user?.org?.name || (user?.name ? `${user.name}'s Organization` : "Organization")}</span>
               <span className="h-4 w-px bg-fog-deep" />
               <span className="text-fog">
                 <span className="mono text-crimson">{openAlerts}</span> open

@@ -12,6 +12,7 @@ import mongoose from 'mongoose';
 import { dashboardStore } from './models/dashboardModel.js';
 import { initSocket } from './socket.js';
 import { initCronJobs } from './services/cronService.js';
+import { kafkaService } from './services/kafkaService.js';
 
 
 // ── Route Imports ───────────────────────────────────────
@@ -34,8 +35,12 @@ import explainabilityRouter from './routes/explainability.js';
 import notificationsRouter from './routes/notifications.js';
 import chatRouter from './routes/chat.js';
 import demonstrationRouter from './routes/demonstration.js';
+import sensorsRouter from './routes/sensors.js';
 
 const app = express();
+
+// Trust reverse proxy (Vite dev server, Render, Vercel)
+app.set('trust proxy', 1);
 
 // ── Security & parsing ──────────────────────────────────
 app.use(helmet());
@@ -82,6 +87,7 @@ app.use('/api/explainability', explainabilityRouter);
 app.use('/api/notifications', notificationsRouter);
 app.use('/api/chat', chatRouter);
 app.use('/api/demonstration', demonstrationRouter);
+app.use('/api/sensors', sensorsRouter);
 
 // ── Root Route ──────────────────────────────────────────
 app.get('/', (_req, res) => {
@@ -106,6 +112,7 @@ async function start() {
   await connectDB();
   await dashboardStore.init();
   initCronJobs();
+  await kafkaService.init();
 
   const server = app.listen(env.PORT, () => {
     console.log(`🚀 Aegis Vantage API running on port ${env.PORT}`);
@@ -138,6 +145,7 @@ async function start() {
   const shutdown = async () => {
     console.log('\n🛑 SIGTERM / SIGINT received. Shutting down gracefully...');
     clearInterval(ticker);
+    await kafkaService.disconnect();
     server.close(async () => {
       console.log('   Express server closed.');
       await mongoose.connection.close();

@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  # ── Apache Kafka (KRaft compatible Redpanda broker) ───────────────────
+  kafka:
+    image: docker.redpanda.com/redpandadata/redpanda:v23.3.11
+    container_name: aegis-kafka-broker
+    command:
+      - redpanda
+      - start
+      - --smp
+      - '1'
+      - --memory
+      - 512M
+      - --reserve-memory
+      - 0M
+      - --overprovisioned
+      - --node-id
+      - '0'
+      - --kafka-addr
+      - PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092
+      - --advertise-kafka-addr
+      - PLAINTEXT://kafka:29092,OUTSIDE://localhost:9092
+    ports:
+      - "9092:9092"
+      - "9644:9644"
+    volumes:
+      - redpanda_data:/var/lib/redpanda/data
+
+  # ── Kafka Web Console UI (Inspect topics, consumer groups, lag) ───────
+  console:
+    image: docker.redpanda.com/redpandadata/console:v2.4.4
+    container_name: aegis-kafka-console
+    depends_on:
+      - kafka
+    environment:
+      KAFKA_BROKERS: "kafka:29092"
+    ports:
+      - "8085:8080"
+
+volumes:
+  redpanda_data:
+    driver: local

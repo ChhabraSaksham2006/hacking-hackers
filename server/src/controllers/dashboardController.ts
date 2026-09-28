@@ -1,28 +1,35 @@
 import type { Request, Response } from 'express';
 import { dashboardStore } from '../models/dashboardModel.js';
 
-export function getSummary(_req: Request, res: Response): void {
-  res.json(dashboardStore.getSummary());
+export function getSummary(req: Request, res: Response): void {
+  const orgId = req.user?.orgId?.toString();
+  res.json(dashboardStore.getSummary(orgId));
 }
 
-export function getTimeline(_req: Request, res: Response): void {
-  res.json(dashboardStore.getTimeline());
+export function getTimeline(req: Request, res: Response): void {
+  const orgId = req.user?.orgId?.toString();
+  res.json(dashboardStore.getTimeline(orgId));
 }
 
-export function getStages(_req: Request, res: Response): void {
-  res.json(dashboardStore.getStages());
+export function getStages(req: Request, res: Response): void {
+  const orgId = req.user?.orgId?.toString();
+  res.json(dashboardStore.getStages(orgId));
 }
 
-export function getAlerts(_req: Request, res: Response): void {
-  res.json(dashboardStore.getAlerts());
+export function getAlerts(req: Request, res: Response): void {
+  const orgId = req.user?.orgId?.toString();
+  res.json(dashboardStore.getAlerts(orgId));
 }
 
-export function getFlows(_req: Request, res: Response): void {
-  res.json(dashboardStore.getFlows());
+export function getFlows(req: Request, res: Response): void {
+  const orgId = req.user?.orgId?.toString();
+  res.json(dashboardStore.getFlows(orgId));
 }
 
-export function getFullState(_req: Request, res: Response): void {
-  res.json(dashboardStore.getState());
+export function getFullState(req: Request, res: Response): void {
+  const orgId = req.user?.orgId?.toString();
+  const sensor = req.query.sensor as string | undefined;
+  res.json(dashboardStore.getState(orgId, sensor));
 }
 
 import { applyWindowToDatabase } from '../services/replayService.js';
@@ -99,23 +106,31 @@ export function streamDashboard(req: Request, res: Response): void {
   res.setHeader('Connection', 'keep-alive');
   res.setHeader('X-Accel-Buffering', 'no');
 
+  const orgId = req.user?.orgId?.toString();
+  const sensor = req.query.sensor as string | undefined;
+
   // Send immediate initial state
-  res.write(`data: ${JSON.stringify(dashboardStore.getState())}\n\n`);
+  res.write(`data: ${JSON.stringify(dashboardStore.getState(orgId, sensor))}\n\n`);
 
   const onTick = (state: unknown) => {
     if (res.writableEnded || !res.writable) {
+      if (orgId) dashboardStore.off(`tick:${orgId}`, onTick);
       dashboardStore.off('tick', onTick);
       return;
     }
     res.write(`data: ${JSON.stringify(state)}\n\n`);
   };
 
+  if (orgId) {
+    dashboardStore.on(`tick:${orgId}`, onTick);
+  }
   dashboardStore.on('tick', onTick);
 
   // Heartbeat to keep connection active across proxies
   const heartbeatTimer = setInterval(() => {
     if (res.writableEnded || !res.writable) {
       clearInterval(heartbeatTimer);
+      if (orgId) dashboardStore.off(`tick:${orgId}`, onTick);
       dashboardStore.off('tick', onTick);
       return;
     }
@@ -124,6 +139,7 @@ export function streamDashboard(req: Request, res: Response): void {
 
   req.on('close', () => {
     clearInterval(heartbeatTimer);
+    if (orgId) dashboardStore.off(`tick:${orgId}`, onTick);
     dashboardStore.off('tick', onTick);
   });
 }
