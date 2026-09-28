@@ -620,5 +620,5 @@ This project is proprietary. All rights reserved.
 ---
 
 <p align="center">
-  <sub>Built by team <strong>Hacking Hackers</strong>— Forecasting threats before they strike.</sub>
+  <sub>Built by team <strong>Hacking Hackers</strong>— Forecasting threats before they strike .</sub>
 </p>
