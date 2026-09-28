@@ -2,10 +2,15 @@ name: MongoDB Cleanup (Scheduled)
 
 # Runs every 6 hours to purge stale data from the free-tier MongoDB cluster.
 # Also runs on manual dispatch for emergency cleanup.
+# Push trigger on this file forces GitHub to re-register the cron schedule.
 on:
   schedule:
     # Every 6 hours: 00:00, 06:00, 12:00, 18:00 UTC
     - cron: '0 */6 * * *'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/db-cleanup.yml'
   workflow_dispatch:
     inputs:
       reason:
@@ -13,19 +18,29 @@ on:
         required: false
         default: 'Manual cleanup'
 
+concurrency:
+  group: db-cleanup
+  cancel-in-progress: false
+
 jobs:
   cleanup:
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
     steps:
+      - name: Log trigger info
+        run: |
+          echo "🕐 Triggered at: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+          echo "📌 Trigger event: ${{ github.event_name }}"
+          echo "📝 Reason: ${{ github.event.inputs.reason || 'Scheduled / Auto' }}"
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
           cache-dependency-path: server/package-lock.json
 
