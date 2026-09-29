@@ -38,55 +38,27 @@ async function cleanup() {
 
   const now = new Date();
 
-  // ── 1. Notifications: delete all older than 7 days ─────────────
-  const notifCutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-  const notifResult = await Notification.deleteMany({ createdAt: { $lt: notifCutoff } });
-  console.log(`🗑️  Notifications (>7d old): ${notifResult.deletedCount} deleted`);
+  const sixHoursCutoff = new Date(now.getTime() - 6 * 60 * 60 * 1000);
 
-  // Also delete read notifications older than 1 day (they're noise)
-  const readNotifCutoff = new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000);
-  const readNotifResult = await Notification.deleteMany({ isRead: true, createdAt: { $lt: readNotifCutoff } });
-  console.log(`🗑️  Read notifications (>1d old): ${readNotifResult.deletedCount} deleted`);
+  // ── 1. Notifications: delete > 6h ─────────────
+  const notifResult = await Notification.deleteMany({ createdAt: { $lt: sixHoursCutoff } });
+  console.log(`🗑️  Notifications (>6h old): ${notifResult.deletedCount} deleted`);
 
-  // ── 2. Predictions: delete all older than 7 days ───────────────
-  const predCutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-  const predResult = await Prediction.deleteMany({ createdAt: { $lt: predCutoff } });
-  console.log(`🗑️  Predictions (>7d old): ${predResult.deletedCount} deleted`);
+  // ── 2. Predictions: delete > 6h ───────────────
+  const predResult = await Prediction.deleteMany({ createdAt: { $lt: sixHoursCutoff } });
+  console.log(`🗑️  Predictions (>6h old): ${predResult.deletedCount} deleted`);
 
-  // ── 3. Flows: delete all older than 3 days ─────────────────────
-  const flowCutoff = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000);
-  const flowResult = await Flow.deleteMany({ createdAt: { $lt: flowCutoff } });
-  console.log(`🗑️  Flows (>3d old): ${flowResult.deletedCount} deleted`);
+  // ── 3. Flows: delete > 6h ─────────────────────
+  const flowResult = await Flow.deleteMany({ createdAt: { $lt: sixHoursCutoff } });
+  console.log(`🗑️  Flows (>6h old): ${flowResult.deletedCount} deleted`);
 
-  // ── 4. Audit entries: delete all older than 30 days ────────────
-  const auditCutoff = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-  const auditResult = await AuditEntry.deleteMany({ timestamp: { $lt: auditCutoff } });
-  console.log(`🗑️  Audit entries (>30d old): ${auditResult.deletedCount} deleted`);
+  // ── 4. Audit entries: delete > 6h ────────────
+  const auditResult = await AuditEntry.deleteMany({ timestamp: { $lt: sixHoursCutoff } });
+  console.log(`🗑️  Audit entries (>6h old): ${auditResult.deletedCount} deleted`);
 
-  // ── 5. Resolved alerts: delete alerts resolved >14 days ago ────
-  const alertCutoff = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
-  const alertResult = await Alert.deleteMany({ status: 'Resolved', updatedAt: { $lt: alertCutoff } });
-  console.log(`🗑️  Resolved alerts (>14d old): ${alertResult.deletedCount} deleted`);
-
-  // ── 6. Aggressive secondary pass: delete everything older than 24h for flows/predictions ──
-  // This ensures we stay well within free tier limits even after the TTL-based cleanup above
-  const aggressiveFlowCutoff = new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000);
-  const aggFlowResult = await Flow.deleteMany({ createdAt: { $lt: aggressiveFlowCutoff } });
-  if (aggFlowResult.deletedCount > 0) {
-    console.log(`   📉 Aggressive pass: ${aggFlowResult.deletedCount} more flows (>24h) deleted`);
-  }
-
-  const aggressivePredCutoff = new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000);
-  const aggPredResult = await Prediction.deleteMany({ createdAt: { $lt: aggressivePredCutoff } });
-  if (aggPredResult.deletedCount > 0) {
-    console.log(`   📉 Aggressive pass: ${aggPredResult.deletedCount} more predictions (>2d) deleted`);
-  }
-
-  const aggressiveNotifCutoff = new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000);
-  const aggNotifResult = await Notification.deleteMany({ createdAt: { $lt: aggressiveNotifCutoff } });
-  if (aggNotifResult.deletedCount > 0) {
-    console.log(`   📉 Aggressive pass: ${aggNotifResult.deletedCount} more notifications (>2d) deleted`);
-  }
+  // ── 5. Alerts: delete > 6h ────
+  const alertResult = await Alert.deleteMany({ createdAt: { $lt: sixHoursCutoff } });
+  console.log(`🗑️  Alerts (>6h old): ${alertResult.deletedCount} deleted`);
 
   // ── 7. Print remaining counts ──────────────────────────────────
   console.log('\n📊 Remaining document counts:');

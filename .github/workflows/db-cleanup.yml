@@ -3,6 +3,7 @@ name: MongoDB Cleanup (Scheduled)
 # Runs every 6 hours to purge stale data from the free-tier MongoDB cluster.
 # Also runs on manual dispatch for emergency cleanup.
 # Push trigger on this file forces GitHub to re-register the cron schedule.
+# Triggering re-registration for deleting all notifications and alerts.
 on:
   schedule:
     # Every 6 hours: 00:00, 06:00, 12:00, 18:00 UTC
