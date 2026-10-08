@@ -44,7 +44,7 @@ function getSocketUrl(): string | undefined {
 
   return (
     import.meta.env['VITE_API_URL'] ||
-    'https://hacking-hackers-backend.onrender.com'
+    'https://flow-drishti-server.onrender.com'
   ).trim().replace(/\/$/, '');
 }
 

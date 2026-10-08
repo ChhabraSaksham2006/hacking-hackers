@@ -48,7 +48,7 @@ async function proxyToBackend(request: Request, url: URL): Promise<Response> {
   const backendBase =
     process.env["BACKEND_URL"] ||
     (process.env["NODE_ENV"] === "production"
-      ? "https://hacking-hackers-backend.onrender.com"
+      ? "https://flow-drishti-server.onrender.com"
       : "http://localhost:5000");
 
   const targetUrl = new URL(url.pathname + url.search, backendBase);

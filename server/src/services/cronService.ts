@@ -85,7 +85,7 @@ import { env } from '../config/env.js';
  * to prevent free-tier spinning down / coldstart (15m inactivity threshold).
  */
 export async function autoPingMLService(): Promise<void> {
-  const rawUrl = env.ML_SERVICE_URL || 'https://hacking-hackers.onrender.com';
+  const rawUrl = env.ML_SERVICE_URL || 'https://flow-drishti-model.onrender.com';
   const mlUrl = rawUrl.replace(/\/+$/, '');
   const healthEndpoint = `${mlUrl}/health`;
 
