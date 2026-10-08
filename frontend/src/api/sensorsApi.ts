@@ -4,6 +4,8 @@
  * API client for managing edge sensors, onboarding setup, and API keys.
  */
 
+import { apiFetch } from '@/lib/api';
+
 export interface ActiveSensorInfo {
   sensorId: string;
   window_idx: number;
@@ -32,9 +34,7 @@ export interface SensorsConfigResponse {
 }
 
 export async function fetchSensorsConfig(): Promise<SensorsConfigResponse> {
-  const res = await fetch('/api/sensors', { credentials: 'include' });
-  if (!res.ok) throw new Error('Failed to fetch sensor configuration');
-  return res.json();
+  return apiFetch<SensorsConfigResponse>('/api/sensors');
 }
 
 export async function saveSensorSetup(data: {
@@ -42,22 +42,14 @@ export async function saveSensorSetup(data: {
   environmentType: string;
   sensorSetupCompleted?: boolean;
 }): Promise<any> {
-  const res = await fetch('/api/sensors/setup', {
+  return apiFetch<any>('/api/sensors/setup', {
     method: 'POST',
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
-  if (!res.ok) throw new Error('Failed to save sensor setup');
-  return res.json();
 }
 
 export async function regenerateSensorKey(): Promise<{ sensorApiKey: string }> {
-  const res = await fetch('/api/sensors/key/regenerate', {
+  return apiFetch<{ sensorApiKey: string }>('/api/sensors/key/regenerate', {
     method: 'POST',
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
   });
-  if (!res.ok) throw new Error('Failed to regenerate sensor API key');
-  return res.json();
 }

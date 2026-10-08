@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -258,7 +258,10 @@ function AuditPage() {
       if (debouncedSearch.trim()) queryParams.set("search", debouncedSearch.trim());
       queryParams.set("format", formatType);
 
-      const res = await fetch(`/api/audit/export?${queryParams.toString()}`, {
+      const targetUrl = import.meta.env.DEV 
+        ? `http://localhost:5000/api/audit/export?${queryParams.toString()}` 
+        : `/api/audit/export?${queryParams.toString()}`;
+      const res = await fetch(targetUrl, {
         credentials: "include",
       });
 

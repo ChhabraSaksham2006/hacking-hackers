@@ -136,7 +136,8 @@ function Reports() {
   const handleDownload = async (id: string, fileName: string) => {
     try {
       setDownloadingId(id);
-      const res = await fetch(`/api/reports/${id}/download`, { credentials: "include" });
+      const targetUrl = import.meta.env.DEV ? `http://localhost:5000/api/reports/${id}/download` : `/api/reports/${id}/download`;
+      const res = await fetch(targetUrl, { credentials: "include" });
       if (!res.ok) {
         throw new Error("Download failed");
       }

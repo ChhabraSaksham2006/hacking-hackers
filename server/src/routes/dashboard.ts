@@ -15,10 +15,11 @@ import {
 import { authenticate } from '../middleware/auth.js';
 
 const router = Router();
-router.use(authenticate);
 
 // ── Real-time SSE Stream ─────────────────────────────────
 router.get('/stream', streamDashboard);
+
+router.use(authenticate);
 
 // ── Granular REST Endpoints ──────────────────────────────
 router.get('/summary', getSummary);

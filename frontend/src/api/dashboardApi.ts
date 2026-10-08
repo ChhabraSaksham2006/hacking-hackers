@@ -5,6 +5,7 @@
  */
 
 import { onPageActivityChange } from '@/lib/pageActivity';
+import { apiFetch } from '@/lib/api';
 
 export interface DashboardSummary {
   infiltrationProbability: number;
@@ -60,57 +61,37 @@ export interface FullDashboardState {
 
 export async function fetchFullDashboardState(sensor?: string): Promise<FullDashboardState> {
   const url = sensor && sensor !== 'all' ? `/api/dashboard?sensor=${encodeURIComponent(sensor)}` : '/api/dashboard';
-  const res = await fetch(url, { credentials: 'include' });
-  if (!res.ok) throw new Error('Failed to fetch full dashboard state');
-  return res.json();
+  return apiFetch<FullDashboardState>(url);
 }
 
 export async function fetchDashboardSummary(): Promise<any> {
-  const res = await fetch('/api/dashboard/summary', { credentials: 'include' });
-  if (!res.ok) throw new Error('Failed to fetch dashboard summary');
-  return res.json();
+  return apiFetch<any>('/api/dashboard/summary');
 }
 
 export async function fetchDashboardTimeline(): Promise<{ series: number[]; windowStart: string; windowEnd: string }> {
-  const res = await fetch('/api/dashboard/timeline', { credentials: 'include' });
-  if (!res.ok) throw new Error('Failed to fetch dashboard timeline');
-  return res.json();
+  return apiFetch<{ series: number[]; windowStart: string; windowEnd: string }>('/api/dashboard/timeline');
 }
 
 export async function fetchDashboardStages(): Promise<any> {
-  const res = await fetch('/api/dashboard/stages', { credentials: 'include' });
-  if (!res.ok) throw new Error('Failed to fetch dashboard stages');
-  return res.json();
+  return apiFetch<any>('/api/dashboard/stages');
 }
 
 export async function stepDashboard(): Promise<any> {
-  const res = await fetch('/api/dashboard/step', {
+  return apiFetch<any>('/api/dashboard/step', {
     method: 'POST',
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
   });
-  if (!res.ok) throw new Error('Failed to step simulation');
-  return res.json();
 }
 
 export async function resetDashboard(): Promise<any> {
-  const res = await fetch('/api/dashboard/reset', {
+  return apiFetch<any>('/api/dashboard/reset', {
     method: 'POST',
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
   });
-  if (!res.ok) throw new Error('Failed to reset simulation');
-  return res.json();
 }
 
 export async function jumpDashboard(): Promise<any> {
-  const res = await fetch('/api/dashboard/jump', {
+  return apiFetch<any>('/api/dashboard/jump', {
     method: 'POST',
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
   });
-  if (!res.ok) throw new Error('Failed to jump simulation to attack onset');
-  return res.json();
 }
 
 /**
@@ -124,8 +105,7 @@ export function subscribeDashboardStream(
 ): () => void {
   let eventSource: EventSource | null = null;
   let isClosed = false;
-  const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-  const baseUrl = isLocalhost ? '' : (import.meta.env['VITE_API_URL'] || 'https://flow-drishti-server.onrender.com').trim().replace(/\/$/, '');
+  const baseUrl = import.meta.env.DEV ? 'http://localhost:5000' : (import.meta.env['VITE_API_URL'] || 'https://flow-drishti-server.onrender.com').trim().replace(/\/$/, '');
   const url = baseUrl + (sensor && sensor !== 'all' ? `/api/dashboard/stream?sensor=${encodeURIComponent(sensor)}` : '/api/dashboard/stream');
 
   const open = () => {

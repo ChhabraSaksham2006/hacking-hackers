@@ -16,7 +16,11 @@ export async function apiFetch<T>(
   endpoint: string,
   options: RequestInit = {},
 ): Promise<T> {
-  const url = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+  let finalUrl = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+
+  if (import.meta.env.DEV) {
+    finalUrl = `http://localhost:5000${finalUrl}`;
+  }
 
   // When SSR in TanStack Start, you might need a full URL if relative fails,
   // but let's stick to standard relative URL for now since it relies on Vite proxy.
@@ -29,7 +33,7 @@ export async function apiFetch<T>(
     Object.assign(headers, options.headers);
   }
 
-  const response = await fetch(url, {
+  const response = await fetch(finalUrl, {
     ...options,
     credentials: "include",
     headers,

@@ -37,10 +37,7 @@ function stopWatchingPageActivity() {
  */
 function getSocketUrl(): string | undefined {
   if (typeof window === 'undefined') return undefined;
-  const isLocalhost =
-    window.location.hostname === 'localhost' ||
-    window.location.hostname === '127.0.0.1';
-  if (isLocalhost) return undefined;
+  if (import.meta.env.DEV) return 'http://localhost:5000';
 
   return (
     import.meta.env['VITE_API_URL'] ||
