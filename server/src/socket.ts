@@ -77,3 +77,15 @@ export function emitToOrg(orgId: string | { toString(): string }, event: string,
   console.log(`[Socket.io] Emitting '${event}' to room 'org:${orgString}'`);
   io.to(`org:${orgString}`).emit(event, payload);
 }
+
+/**
+ * Returns the set of orgIds that currently have at least one connected socket client.
+ */
+export function getActiveSocketOrgIds(): Set<string> {
+  const orgIds = new Set<string>();
+  if (!io) return orgIds;
+  for (const socket of io.sockets.sockets.values()) {
+    if (socket.data?.orgId) orgIds.add(String(socket.data.orgId));
+  }
+  return orgIds;
+}

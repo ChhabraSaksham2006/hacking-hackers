@@ -123,18 +123,34 @@ async function start() {
   // Initialize Socket.io
   initSocket(server);
 
-  // Master Clock / Ticker Loop: step simulation every 3,000 ms
+  // Master Clock / Ticker Loop: step simulation every 3,000 ms.
+  // Only runs when someone is actually watching (socket.io or SSE client), and
+  // only for those orgs. Automatic steps are kept in memory (persist: false) to
+  // avoid writing Prediction/Flow docs to MongoDB on every tick.
+  const getActiveOrgIds = async (): Promise<Set<string>> => {
+    const { getActiveSocketOrgIds } = await import('./socket.js');
+    const active = getActiveSocketOrgIds();
+    for (const eventName of dashboardStore.eventNames()) {
+      if (typeof eventName === 'string' && eventName.startsWith('tick:') && dashboardStore.listenerCount(eventName) > 0) {
+        active.add(eventName.slice('tick:'.length));
+      }
+    }
+    return active;
+  };
+
   const ticker = setInterval(async () => {
     try {
+      const activeOrgIds = await getActiveOrgIds();
+      if (activeOrgIds.size === 0) return; // nobody watching — skip ML call & DB work
+
       const state = await dashboardStore.stepForward();
-      
+
       // Lazily import to avoid circular dependencies during initialization
       const { applyWindowToDatabase } = await import('./services/replayService.js');
-      const { Organisation } = await import('./models/Organisation.js');
-      
-      const orgs = await Organisation.find({}, '_id');
-      for (const org of orgs) {
-        await applyWindowToDatabase(org._id.toString(), state.actual_window_index);
+
+      for (const orgId of activeOrgIds) {
+        if (!mongoose.isValidObjectId(orgId)) continue;
+        await applyWindowToDatabase(orgId, state.actual_window_index, { persist: false });
       }
     } catch (err) {
       console.error('Ticker step error:', err);

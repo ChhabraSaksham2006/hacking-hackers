@@ -63,6 +63,52 @@ export interface IReplayDataset {
 let cachedDataset: IReplayDataset | null = null;
 const orgCurrentWindow = new Map<string, number>();
 
+/**
+ * Latest prediction per org, kept in memory so automatic (ticker-driven) replay
+ * steps don't have to write a Prediction document to MongoDB every 3 seconds.
+ * Shape mirrors a lean Prediction document so readers can use it interchangeably.
+ */
+export interface ILivePredictionSnapshot {
+  _id: string;
+  orgId: mongoose.Types.ObjectId;
+  segmentName: string;
+  windowStart: Date;
+  windowEnd: Date;
+  probability: number;
+  stage: string;
+  confidence: number;
+  series: number[];
+  featureContributions: IFeatureContribution[];
+  summary: string;
+  modelVersion: string;
+  createdAt: Date;
+  isLiveSnapshot: true;
+}
+
+const orgLiveSnapshot = new Map<string, ILivePredictionSnapshot>();
+// Last risk state seen per org — used to only touch the Alerts collection on transitions
+const orgLastRiskState = new Map<string, IReplayWindow['riskState']>();
+
+export interface IApplyWindowOptions {
+  /**
+   * When true (default — manual actions), writes Prediction + Flow documents and
+   * always syncs the alert. When false (automatic ticker), only updates the
+   * in-memory snapshot and touches Alerts only when the risk state changes.
+   */
+  persist?: boolean;
+}
+
+/**
+ * Returns the freshest prediction for an org: the in-memory live snapshot if
+ * one exists, otherwise the most recent persisted Prediction document.
+ */
+export async function getLatestPrediction(orgId: string | { toString(): string }) {
+  const key = orgId.toString();
+  const snapshot = orgLiveSnapshot.get(key);
+  if (snapshot) return snapshot;
+  return Prediction.findOne({ orgId: key }).sort({ windowEnd: -1 }).lean();
+}
+
 export function getReplayDataset(): IReplayDataset {
   if (!cachedDataset) {
     const raw = fs.readFileSync(REPLAY_FILE, 'utf-8');
@@ -82,7 +128,12 @@ export function setCurrentWindowIndex(orgId: string, index: number): void {
   orgCurrentWindow.set(orgId, clamped);
 }
 
-export async function applyWindowToDatabase(orgId: string, windowIndex?: number) {
+export async function applyWindowToDatabase(
+  orgId: string,
+  windowIndex?: number,
+  options: IApplyWindowOptions = {},
+) {
+  const persist = options.persist !== false;
   const dataset = getReplayDataset();
   const idx = windowIndex !== undefined ? windowIndex : getCurrentWindowIndex(orgId);
   const clampedIdx = Math.max(dataset.startIndex, Math.min(dataset.endIndex, idx));
@@ -92,11 +143,10 @@ export async function applyWindowToDatabase(orgId: string, windowIndex?: number)
   const orgObjectId = new mongoose.Types.ObjectId(orgId);
   const now = new Date();
 
-  // 1. Create or update Prediction document
-  const prediction = await Prediction.create({
+  const predictionFields = {
     orgId: orgObjectId,
     segmentName: 'corp-core',
-    windowStart: new Date(Date.now() - 20 * 1000),
+    windowStart: new Date(now.getTime() - 20 * 1000),
     windowEnd: now,
     probability: win.probability,
     stage: win.stage,
@@ -105,10 +155,31 @@ export async function applyWindowToDatabase(orgId: string, windowIndex?: number)
     featureContributions: win.featureContributions,
     summary: win.summary,
     modelVersion: 'wm-v4.2.1-cicids2018',
-  });
+  };
 
-  // 2. Generate Alert if in watch or critical phase
-  if (win.riskState === 'critical' || win.riskState === 'watch') {
+  // 1. Prediction: persist on manual actions, otherwise keep in memory only
+  let prediction: any;
+  if (persist) {
+    prediction = await Prediction.create(predictionFields);
+    orgLiveSnapshot.delete(orgId); // persisted doc is now the freshest
+  } else {
+    const snapshot: ILivePredictionSnapshot = {
+      _id: `live-${orgId}-${win.windowIndex}`,
+      ...predictionFields,
+      createdAt: now,
+      isLiveSnapshot: true,
+    };
+    orgLiveSnapshot.set(orgId, snapshot);
+    prediction = snapshot;
+  }
+
+  const previousRisk = orgLastRiskState.get(orgId);
+  orgLastRiskState.set(orgId, win.riskState);
+  const riskChanged = previousRisk !== win.riskState;
+
+  // 2. Generate Alert if in watch or critical phase.
+  // Automatic ticks only touch MongoDB when the risk state transitions.
+  if ((win.riskState === 'critical' || win.riskState === 'watch') && (persist || riskChanged)) {
     // Append the last 6 chars of the orgId to the alertId to ensure global uniqueness 
     // across multiple orgs, since alertId has a unique index in the schema.
     const alertId = `AV-EP0001-${orgId.slice(-6)}`; 
@@ -186,8 +257,9 @@ export async function applyWindowToDatabase(orgId: string, windowIndex?: number)
     }
   }
 
-  // 3. Insert real active flows for this window
-  if (win.flows && win.flows.length > 0) {
+  // 3. Insert real active flows for this window (manual actions only —
+  // live flow views are served from the in-memory replay dataset)
+  if (persist && win.flows && win.flows.length > 0) {
     const flowDocs = win.flows.map((f) => ({
       src: f.src,
       dst: f.dst,

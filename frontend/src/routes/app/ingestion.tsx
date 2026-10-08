@@ -92,7 +92,10 @@ function IngestionPage() {
     };
 
     load();
-    const interval = setInterval(load, 3000);
+    // Skip polling while the tab is hidden to save bandwidth
+    const interval = setInterval(() => {
+      if (!document.hidden) load();
+    }, 3000);
     return () => {
       isMounted = false;
       clearInterval(interval);

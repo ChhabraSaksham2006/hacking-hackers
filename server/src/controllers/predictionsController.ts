@@ -7,14 +7,13 @@ import {
   resetReplay,
   jumpToAttack,
   applyWindowToDatabase,
+  getLatestPrediction as getLatestReplayPrediction,
 } from '../services/replayService.js';
 
 // ── GET /api/predictions/latest ─────────────────────────
 export async function getLatestPrediction(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const prediction = await Prediction.findOne({ orgId: req.user!.orgId })
-      .sort({ windowEnd: -1 })
-      .lean();
+    const prediction = await getLatestReplayPrediction(req.user!.orgId);
 
     if (!prediction) {
       res.status(404).json({ error: 'No predictions found' });

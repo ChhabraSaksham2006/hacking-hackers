@@ -3,7 +3,7 @@ import { authenticate } from '../middleware/auth.js';
 import { requirePermission } from '../middleware/rbac.js';
 import { Segment, type ISegment } from '../models/Segment.js';
 import { Alert } from '../models/Alert.js';
-import { Prediction } from '../models/Prediction.js';
+import { getLatestPrediction } from '../services/replayService.js';
 import { dashboardStore } from '../models/dashboardModel.js';
 import { logAuditEvent } from '../services/auditService.js';
 import { z } from 'zod';
@@ -251,9 +251,7 @@ router.get('/topology', async (req, res, next) => {
 
     const alerts = await Alert.find({ orgId: req.user!.orgId }).lean();
     const simSummary = dashboardStore.getSummary();
-    const latestPrediction = await Prediction.findOne({ orgId: req.user!.orgId })
-      .sort({ createdAt: -1 })
-      .lean();
+    const latestPrediction = await getLatestPrediction(req.user!.orgId);
 
     const segments = await Promise.all(
       rawSegments.map((s) => enrichSegment(s as unknown as ISegment, alerts, simSummary))
@@ -445,9 +443,7 @@ router.get(
 
       const alerts = await Alert.find({ orgId: req.user!.orgId }).lean();
       const simSummary = dashboardStore.getSummary();
-      const latestPrediction = await Prediction.findOne({ orgId: req.user!.orgId })
-        .sort({ createdAt: -1 })
-        .lean();
+      const latestPrediction = await getLatestPrediction(req.user!.orgId);
 
       const enriched = await enrichSegment(segment as unknown as ISegment, alerts, simSummary);
 

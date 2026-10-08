@@ -78,7 +78,10 @@ export function OnboardingModal({ isOpen, onClose, onConnected }: OnboardingModa
 
     loadConfig();
 
-    const interval = setInterval(loadConfig, 3000);
+    // Skip polling while the tab is hidden to save bandwidth
+    const interval = setInterval(() => {
+      if (!document.hidden) loadConfig();
+    }, 3000);
     return () => {
       isMounted = false;
       clearInterval(interval);

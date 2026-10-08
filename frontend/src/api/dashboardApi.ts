@@ -1,8 +1,10 @@
-﻿/**
+/**
  * dashboardApi.ts
  * ===============
  * API client and Server-Sent Events (SSE) streaming subscriber for Flow दृष्टि Dashboard.
  */
+
+import { onPageActivityChange } from '@/lib/pageActivity';
 
 export interface DashboardSummary {
   infiltrationProbability: number;
@@ -122,35 +124,49 @@ export function subscribeDashboardStream(
 ): () => void {
   let eventSource: EventSource | null = null;
   let isClosed = false;
+  const url = sensor && sensor !== 'all' ? `/api/dashboard/stream?sensor=${encodeURIComponent(sensor)}` : '/api/dashboard/stream';
 
-  try {
-    const url = sensor && sensor !== 'all' ? `/api/dashboard/stream?sensor=${encodeURIComponent(sensor)}` : '/api/dashboard/stream';
-    eventSource = new EventSource(url, { withCredentials: true });
+  const open = () => {
+    if (isClosed || eventSource) return;
+    try {
+      eventSource = new EventSource(url, { withCredentials: true });
 
-    eventSource.onmessage = (event) => {
-      if (isClosed || !event.data) return;
-      try {
-        const payload = JSON.parse(event.data) as FullDashboardState;
-        onUpdate(payload);
-      } catch (err) {
-        console.error('Failed to parse SSE payload:', err);
-      }
-    };
+      eventSource.onmessage = (event) => {
+        if (isClosed || !event.data) return;
+        try {
+          const payload = JSON.parse(event.data) as FullDashboardState;
+          onUpdate(payload);
+        } catch (err) {
+          console.error('Failed to parse SSE payload:', err);
+        }
+      };
 
-    eventSource.onerror = (err) => {
-      if (onError && !isClosed) {
-        onError(err);
-      }
-    };
-  } catch (e) {
-    console.error('Error establishing SSE stream:', e);
-  }
+      eventSource.onerror = (err) => {
+        if (onError && !isClosed) {
+          onError(err);
+        }
+      };
+    } catch (e) {
+      console.error('Error establishing SSE stream:', e);
+    }
+  };
 
-  return () => {
-    isClosed = true;
+  const close = () => {
     if (eventSource) {
       eventSource.close();
       eventSource = null;
     }
+  };
+
+  open();
+
+  // Only keep the stream open while the tab is actively viewed — an open stream
+  // keeps the backend replay ticker running for this org.
+  const stopActivityWatch = onPageActivityChange(open, close);
+
+  return () => {
+    isClosed = true;
+    stopActivityWatch();
+    close();
   };
 }

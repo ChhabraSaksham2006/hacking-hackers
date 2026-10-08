@@ -1,18 +1,18 @@
 import { Alert } from '../models/Alert.js';
 import { Flow } from '../models/Flow.js';
-import { Prediction } from '../models/Prediction.js';
-import { applyWindowToDatabase, getReplayStatus } from './replayService.js';
+import {
+  applyWindowToDatabase,
+  getReplayStatus,
+  getLatestPrediction as getLatestReplayPrediction,
+} from './replayService.js';
 
 async function getLatestPrediction(orgId: string) {
-  let prediction = await Prediction.findOne({ orgId })
-    .sort({ windowEnd: -1 })
-    .lean();
+  // Prefers the in-memory live snapshot (ticker-driven), falls back to MongoDB
+  let prediction = await getLatestReplayPrediction(orgId);
 
   if (!prediction) {
     await applyWindowToDatabase(orgId, 1796);
-    prediction = await Prediction.findOne({ orgId })
-      .sort({ windowEnd: -1 })
-      .lean();
+    prediction = await getLatestReplayPrediction(orgId);
   }
 
   return prediction;

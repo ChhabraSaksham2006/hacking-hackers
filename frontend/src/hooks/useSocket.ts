@@ -2,8 +2,32 @@ import { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { useAuthMe } from './useApi';
 import { apiFetch } from '@/lib/api';
+import { onPageActivityChange } from '@/lib/pageActivity';
 
 let socketInstance: Socket | null = null;
+let stopActivityWatch: (() => void) | null = null;
+
+/**
+ * Disconnect the socket while the tab is inactive (hidden > grace period) and
+ * reconnect when the user comes back. An open socket counts as an active
+ * viewer on the backend and keeps the replay ticker running for the org.
+ */
+function watchPageActivity() {
+  if (stopActivityWatch) return;
+  stopActivityWatch = onPageActivityChange(
+    () => {
+      if (socketInstance && !socketInstance.connected) socketInstance.connect();
+    },
+    () => {
+      if (socketInstance?.connected) socketInstance.disconnect();
+    },
+  );
+}
+
+function stopWatchingPageActivity() {
+  stopActivityWatch?.();
+  stopActivityWatch = null;
+}
 
 /**
  * Determine backend Socket.io URL:
@@ -19,7 +43,7 @@ function getSocketUrl(): string | undefined {
   if (isLocalhost) return undefined;
 
   return (
-    import.meta.env.VITE_API_URL ||
+    import.meta.env['VITE_API_URL'] ||
     'https://hacking-hackers-backend.onrender.com'
   ).trim().replace(/\/$/, '');
 }
@@ -31,6 +55,7 @@ export function useSocket() {
   useEffect(() => {
     // If no user is logged in, disconnect any active socket
     if (!user) {
+      stopWatchingPageActivity();
       if (socketInstance) {
         socketInstance.disconnect();
         socketInstance = null;
@@ -62,6 +87,8 @@ export function useSocket() {
       });
     }
 
+    watchPageActivity();
+
     // Set initial connection state based on current socket state
     setIsConnected(socketInstance.connected);
 
@@ -89,6 +116,7 @@ export function useSocket() {
 }
 
 export function disconnectSocket() {
+  stopWatchingPageActivity();
   if (socketInstance) {
     socketInstance.disconnect();
     socketInstance = null;
