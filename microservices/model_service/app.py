@@ -392,16 +392,19 @@ def execute_step_inference(step_index: int) -> Dict[str, Any]:
 # â”€â”€ Endpoints â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 @app.get("/")
+@app.head("/")
 def root():
     return {
         "status": "online",
-        "service": "aegis-vantage-model-microservice",
+        "service": "flow-drishti-model-microservice",
         "docs": "/docs",
         "health": "/health",
+        "ui": "/ui",
         "runtime": "Render / Containerized",
     }
 
 @app.get("/health")
+@app.head("/health")
 def health_check():
     return {
         "status": "online",
@@ -547,7 +550,7 @@ try:
         btn = gr.Button("Query Service Health")
         out = gr.JSON()
         btn.click(fn=health_check, outputs=out)
-    app = gr.mount_gradio_app(app, demo, path="/")
+    app = gr.mount_gradio_app(app, demo, path="/ui")
 except Exception:
     pass
 
