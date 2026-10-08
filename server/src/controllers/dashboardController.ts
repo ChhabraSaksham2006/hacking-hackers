@@ -111,14 +111,20 @@ export function streamDashboard(req: Request, res: Response): void {
 
   // Send immediate initial state
   res.write(`data: ${JSON.stringify(dashboardStore.getState(orgId, sensor))}\n\n`);
+  if (typeof (res as any).flush === 'function') {
+    (res as any).flush();
+  }
 
-  const onTick = (state: unknown) => {
+  const onTick = () => {
     if (res.writableEnded || !res.writable) {
       if (orgId) dashboardStore.off(`tick:${orgId}`, onTick);
       dashboardStore.off('tick', onTick);
       return;
     }
-    res.write(`data: ${JSON.stringify(state)}\n\n`);
+    res.write(`data: ${JSON.stringify(dashboardStore.getState(orgId, sensor))}\n\n`);
+    if (typeof (res as any).flush === 'function') {
+      (res as any).flush();
+    }
   };
 
   if (orgId) {
@@ -135,6 +141,9 @@ export function streamDashboard(req: Request, res: Response): void {
       return;
     }
     res.write(': keepalive\n\n');
+    if (typeof (res as any).flush === 'function') {
+      (res as any).flush();
+    }
   }, 15000);
 
   req.on('close', () => {

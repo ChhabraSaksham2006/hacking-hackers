@@ -124,7 +124,9 @@ export function subscribeDashboardStream(
 ): () => void {
   let eventSource: EventSource | null = null;
   let isClosed = false;
-  const url = sensor && sensor !== 'all' ? `/api/dashboard/stream?sensor=${encodeURIComponent(sensor)}` : '/api/dashboard/stream';
+  const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  const baseUrl = isLocalhost ? '' : (import.meta.env['VITE_API_URL'] || 'https://flow-drishti-server.onrender.com').trim().replace(/\/$/, '');
+  const url = baseUrl + (sensor && sensor !== 'all' ? `/api/dashboard/stream?sensor=${encodeURIComponent(sensor)}` : '/api/dashboard/stream');
 
   const open = () => {
     if (isClosed || eventSource) return;
